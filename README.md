@@ -6,9 +6,9 @@ Powerful log analysis platform developed by CAT team.
 * mvn clean install
 
 #### Development Environment
-* Intellij IDEA 
-   1. mvn clean install
-   2. mvn idea:idea
-* Eclipse
-	1. mvn clean install
-	2. mvn eclipse:eclipse -DdownloadSource=true
+##### Intellij IDEA 
+       $ mvn clean install
+       $ mvn idea:idea
+##### Eclipse
+       $ mvn clean install
+       $ mvn eclipse:eclipse -DdownloadSource=true
