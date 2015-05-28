@@ -8,7 +8,7 @@ Powerful log analysis platform developed by CAT team.
 - Maven 3.0+ [http://maven.apache.org](http://maven.apache.org)
 
 #### Maven build from Source
-       $ git clone [https://github.com/zyyettie/CATLaaS.git](https://github.com/zyyettie/CATLaaS.git)
+       $ git clone https://github.com/zyyettie/CATLaaS.git
        $ mvn clean install
 
 #### Development Environment
