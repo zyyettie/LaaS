@@ -1,4 +1,4 @@
-CATLaSS
+CATLaaS
 ----------
 Powerful log analysis platform developed by CAT team. 
 
