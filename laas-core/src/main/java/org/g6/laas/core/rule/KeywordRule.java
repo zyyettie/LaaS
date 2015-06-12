@@ -1,11 +1,10 @@
-package com.hp.sm.cat.laas.rule;
+package org.g6.laas.core.rule;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Created with IntelliJ IDEA.
  * User: Pitt Zhou
  * Date: Jun/11/2015
  * Time: 1:50 PM
@@ -28,9 +27,9 @@ public class KeywordRule extends AbstractRule {
     public boolean isSatisfied(Object content) {
         if (content == null)
             return false;
-        else if (getKeyword()==null || getKeyword()=="")
+        else if ("".equals(getKeyword()) || getKeyword() == null)
             return false;
         else
-            return content.toString().indexOf(getKeyword()) != -1;
+            return content.toString().contains(getKeyword());
     }
 }

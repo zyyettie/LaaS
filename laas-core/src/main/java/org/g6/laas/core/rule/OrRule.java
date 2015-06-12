@@ -1,4 +1,4 @@
-package com.hp.sm.cat.laas.rule;
+package org.g6.laas.core.rule;
 
 public class OrRule extends AbstractRule{
 

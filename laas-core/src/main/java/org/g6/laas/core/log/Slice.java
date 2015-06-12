@@ -1,6 +1,6 @@
-package com.hp.sm.cat.laas.log;
+package org.g6.laas.core.log;
 
-import com.hp.sm.cat.laas.field.Field;
+import org.g6.laas.core.field.Field;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

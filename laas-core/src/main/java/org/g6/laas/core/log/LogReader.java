@@ -1,4 +1,4 @@
-package com.hp.sm.cat.laas.log;
+package org.g6.laas.core.log;
 
 import java.io.File;
 import java.io.IOException;

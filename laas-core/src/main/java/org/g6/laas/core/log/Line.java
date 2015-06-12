@@ -1,6 +1,5 @@
-package com.hp.sm.cat.laas.log;
+package org.g6.laas.core.log;
 
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.File;
