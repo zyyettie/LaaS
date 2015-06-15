@@ -1,31 +1,29 @@
 package org.g6.laas.core.file;
 
-import java.io.*;
+import org.g6.util.Constants;
+
+import java.io.File;
 
 public class LogFile implements ILogFile {
-    private File file;
-    BufferedReader reader = null;
+    private String file;
 
-    public LogFile(String fileName) {
-        file = new File(fileName);
+    public LogFile(String file) {
+        this.file = file;
     }
 
     @Override
     public String getName() {
-        return file.getName();
+        return new File(file).getName();
     }
 
     @Override
-    public BufferedReader getReader() throws FileNotFoundException {
-        reader = new BufferedReader(new FileReader(file));
-        return reader;
+    public String getPath() {
+        return file;
     }
 
     @Override
-    public void close() throws IOException {
-        if (reader != null)
-            reader.close();
+    public int getType() {
+        return Constants.LOG_TYPE_FILE;
     }
-
 
 }
