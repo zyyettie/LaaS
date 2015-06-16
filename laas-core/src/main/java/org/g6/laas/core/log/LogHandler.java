@@ -8,12 +8,11 @@ import java.util.Iterator;
 import java.util.List;
 
 public abstract class LogHandler{
-    private ILogFile file;
     List<ILogFile> list;
 
-    public LogHandler(FileReader reader) {
+    public LogHandler(ILogFile iLogFile) {
         list = new ArrayList<ILogFile>();
-        list.add(file);
+        list.add(iLogFile);
     }
 
     public LogHandler(List<ILogFile> list){
