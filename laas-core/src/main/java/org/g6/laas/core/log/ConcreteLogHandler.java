@@ -28,6 +28,12 @@ public class ConcreteLogHandler extends LogHandler {
     public Iterator<? extends Slice> handle(LaaSContext context) throws IOException {
         Collection<Line> collection = new ArrayList<>();
         for (ILogFile iLogFile : list) {
+            //TODO
+            //Here we may need to check which file is the first one.
+            //There are two ways
+            //1. open each file and read the first line and check the timestamp and then compare. after that, start reading one by one
+            //2. open each file and read each line and apply rules. at last order the result according to the timestamp column
+            //The disadvantage of #2 is in some scenarios all files should be opened in order. for example, get RAD calling related data.
             LogFileReader reader = new LogFileReader(iLogFile);
             reader.open();
             String str;
@@ -39,7 +45,7 @@ public class ConcreteLogHandler extends LogHandler {
                     collection.add(line);
                 }
             }
-
+            reader.close();
         }
         return collection.iterator();
     }
