@@ -36,7 +36,6 @@ public class SMRTELogInputFormat implements InputFormat {
     @Override
     public Map<String[], List<FieldFormat>> getFormats() {
          //TODO the keyword parts will be from property file or database. now it can be hardcoded.
-
         return null;
     }
 }

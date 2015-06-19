@@ -1,5 +1,6 @@
 package org.g6.laas.core.log;
 
+import org.g6.laas.LaaSContext;
 import org.g6.laas.core.field.Field;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.rule.Rule;
@@ -24,22 +25,22 @@ public class ConcreteLogHandler extends LogHandler {
     }
 
     @Override
-    public Iterator<? extends Slice> handle() throws IOException {
+    public Iterator<? extends Slice> handle(LaaSContext context) throws IOException {
         Collection<Line> collection = new ArrayList<>();
-        for(ILogFile iLogFile:list) {
+        for (ILogFile iLogFile : list) {
             LogFileReader reader = new LogFileReader(iLogFile);
             reader.open();
             String str;
-            int number=0;
-            while ((str = reader.readLine())!=null) {
+            int number = 0;
+            while ((str = reader.readLine()) != null) {
                 number++;
                 if (rule.isSatisfied(str)) {
-                    Line line = new LogLine(iLogFile, str, number);
+                    Line line = new LogLine(iLogFile, str, number, context.isSplitable());
                     collection.add(line);
                 }
             }
 
         }
-        return collection.iterator();  //To change body of implemented methods use File | Settings | File Templates.
+        return collection.iterator();
     }
 }

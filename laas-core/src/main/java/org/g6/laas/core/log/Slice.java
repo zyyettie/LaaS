@@ -18,11 +18,12 @@ including [start, end) content
 @AllArgsConstructor
 public abstract class Slice {
 
-  private ILogFile file;
-  private String content;
-  private int start;
-  private int end;
+    private ILogFile file;
+    private String content;
+    private int start;
+    private int end;
+    boolean splitable;
 
-  public abstract Collection<Field> split();
+    public abstract Collection<Field> split();
 
 }

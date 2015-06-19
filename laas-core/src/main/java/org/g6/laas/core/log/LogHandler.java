@@ -1,5 +1,6 @@
 package org.g6.laas.core.log;
 
+import org.g6.laas.LaaSContext;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.rule.Rule;
 
@@ -31,6 +32,6 @@ public abstract class LogHandler{
         this.rule = rule;
     }
 
-    public abstract Iterator<? extends Slice> handle() throws IOException;
+    public abstract Iterator<? extends Slice> handle(LaaSContext conext) throws IOException;
 
 }

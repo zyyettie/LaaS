@@ -16,12 +16,14 @@ public class LogLine extends Line {
     public LogLine() {
     }
 
-    public LogLine(ILogFile file, String content, int lineNumber) {
-        super(file, content, lineNumber);
+    public LogLine(ILogFile file, String content, int lineNumber, boolean isSplitable) {
+        super(file, content, lineNumber, isSplitable);
     }
 
     @Override
     public Collection<Field> split() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        if (!isSplitable()) return null;
+
+        return null;
     }
 }
