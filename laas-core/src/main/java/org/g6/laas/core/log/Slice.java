@@ -4,8 +4,8 @@ import org.g6.laas.core.field.Field;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.g6.laas.core.file.ILogFile;
 
-import java.io.File;
 import java.util.Collection;
 
 /*
@@ -18,7 +18,7 @@ including [start, end) content
 @AllArgsConstructor
 public abstract class Slice {
 
-  private File file;
+  private ILogFile file;
   private String content;
   private int start;
   private int end;

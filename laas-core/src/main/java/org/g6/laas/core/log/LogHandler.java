@@ -13,13 +13,21 @@ public abstract class LogHandler{
     Rule  rule;
 
     public LogHandler(ILogFile file, Rule rule) {
-        list = new ArrayList<ILogFile>();
+        list = new ArrayList<>();
         list.add(file);
         this.rule = rule;
     }
 
     public LogHandler(List<ILogFile> list, Rule rule){
         this.list = list;
+        this.rule = rule;
+    }
+
+    public void addFile(ILogFile file) {
+        list.add(file);
+    }
+
+    public void setRule(Rule rule) {
         this.rule = rule;
     }
 
