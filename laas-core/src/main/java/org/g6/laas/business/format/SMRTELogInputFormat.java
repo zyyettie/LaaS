@@ -1,5 +1,7 @@
-package org.g6.laas.core.format;
+package org.g6.laas.business.format;
 
+import org.g6.laas.core.format.FieldFormat;
+import org.g6.laas.core.format.InputFormat;
 import org.g6.util.Constants;
 
 import java.util.List;
@@ -33,7 +35,7 @@ public class SMRTELogInputFormat implements InputFormat {
 
     @Override
     public Map<String[], List<FieldFormat>> getFormats() {
-
+         //TODO the keyword parts will be from property file or database. now it can be hardcoded.
 
         return null;
     }
