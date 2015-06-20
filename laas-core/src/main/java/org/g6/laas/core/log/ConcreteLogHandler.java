@@ -1,27 +1,23 @@
 package org.g6.laas.core.log;
 
 import org.g6.laas.LaaSContext;
-import org.g6.laas.core.field.Field;
 import org.g6.laas.core.file.ILogFile;
+import org.g6.laas.core.format.InputFormat;
 import org.g6.laas.core.rule.Rule;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: zhouzhan
- * Date: 6/18/15
- * Time: 2:05 PM
- * To change this template use File | Settings | File Templates.
- */
 public class ConcreteLogHandler extends LogHandler {
-    public ConcreteLogHandler(ILogFile iLogFile, Rule rule) {
-        super(iLogFile, rule);
+    public ConcreteLogHandler(ILogFile iLogFile, Rule rule, InputFormat format) {
+        super(iLogFile, rule, format);
     }
 
-    public ConcreteLogHandler(List<ILogFile> list, Rule rule) {
-        super(list, rule);
+    public ConcreteLogHandler(List<ILogFile> list, Rule rule, InputFormat format) {
+        super(list, rule, format);
     }
 
     @Override
@@ -41,7 +37,7 @@ public class ConcreteLogHandler extends LogHandler {
             while ((str = reader.readLine()) != null) {
                 number++;
                 if (rule.isSatisfied(str)) {
-                    Line line = new LogLine(iLogFile, str, number, context.isSplitable());
+                    Line line = new LogLine(iLogFile, str, number, format);
                     collection.add(line);
                 }
             }
