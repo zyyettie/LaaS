@@ -6,10 +6,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public abstract class AbstractField<T> implements Field<T> {
-  private String content;
-  private String name;
+    private String content;
+    private String name;
+    private boolean sortable;
+    private int priority;
 
-  public AbstractField(String content){
-    this.content = content;
-  }
+    public AbstractField(String content) {
+        this.content = content;
+    }
 }
