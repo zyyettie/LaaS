@@ -12,10 +12,17 @@ import java.util.Iterator;
 import java.util.List;
 
 public class ConcreteLogHandler extends LogHandler {
+
+    public ConcreteLogHandler(ILogFile iLogFile, Rule rule) {
+        super(iLogFile, rule, null);
+    }
     public ConcreteLogHandler(ILogFile iLogFile, Rule rule, InputFormat format) {
         super(iLogFile, rule, format);
     }
 
+    public ConcreteLogHandler(List<ILogFile> list, Rule rule) {
+        super(list, rule, null);
+    }
     public ConcreteLogHandler(List<ILogFile> list, Rule rule, InputFormat format) {
         super(list, rule, format);
     }

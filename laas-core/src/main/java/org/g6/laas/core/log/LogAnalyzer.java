@@ -1,5 +1,6 @@
 package org.g6.laas.core.log;
 
+import org.g6.laas.LaaSContext;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.file.LogFile;
 import org.g6.laas.core.rule.Rule;
@@ -14,7 +15,7 @@ public class LogAnalyzer {
         Rule rule = new KeywordRule("RTE D");
         LogHandler handle = new ConcreteLogHandler(file, rule);
         try {
-            handle.handle();
+            handle.handle(new LaaSContext());
         } catch (Exception e) {
             e.printStackTrace();
         }
