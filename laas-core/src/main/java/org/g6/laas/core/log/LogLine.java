@@ -11,14 +11,11 @@ import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.format.FieldFormat;
 import org.g6.laas.core.format.InputFormat;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @NoArgsConstructor
 public class LogLine extends Line {
-    private String sortValue;
+    Object sortValue;
 
     public LogLine(ILogFile file, String content, int lineNumber) {
         super(file, content, lineNumber, null);
@@ -29,6 +26,12 @@ public class LogLine extends Line {
         split();
     }
 
+    /**
+     * Consider how to split this line from SM RTE log file:
+     * 9584(  9124) 06/20/2015 17:05:22  RTE D DBQUERY^F^triggers(sqlserver I)^0^0.000000^ ^13^0.016000^"table.name="cm3t""^{"table.name", "trigger.type"}^0.000000^0.000000 ( [ 1] display show.rio )
+     *
+     * @return
+     */
     @Override
     public Collection<Field> split() {
         if (isSplitable()) {
@@ -71,8 +74,9 @@ public class LogLine extends Line {
                 String fieldFormatType = ff.getName();
 
                 if (fieldFormatType.equals("String")) {
-                    if (ff.isSplitable()) {
-                        String[] secSplitValues = fieldContents[i].split(ff.getSeperator());
+                    //assume you split the column just because you want to get sortable value
+                    if (ff.isSortable() && ff.isSplitable()) {
+                        String[] secSplitValues = fieldContents[i].split(ff.getSeparator());
                         f = new TextField(secSplitValues[ff.getIndexOfValue()]);
                         this.sortValue = secSplitValues[ff.getIndexOfValue()];
                     } else {
@@ -99,11 +103,20 @@ public class LogLine extends Line {
 
     @Override
     public int compareTo(Object o) {
-        //TODO here need to check which type of value will be used to compare. e.g. double, String, Date
+        if (sortValue instanceof Double) {
+            Double d1 = (Double) this.sortValue;
+            Double d2 = (Double) ((LogLine) o).sortValue;
+
+            return (-1) * d1.compareTo(d2); //sort by desc
+        } else if (sortValue instanceof String) {
+            //TODO
+            //need to check what is the real type e.g. double, date etc.
+        }
         return 0;
     }
 
-    public String getSortValue() {
+    public Object getSortValue() {
         return sortValue;
     }
+
 }
