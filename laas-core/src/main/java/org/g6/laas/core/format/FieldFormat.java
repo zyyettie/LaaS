@@ -5,7 +5,8 @@ public interface FieldFormat {
     boolean isRelatedToPrev();
     boolean isRelatedToNext();
     String getValue();
+    boolean isSortable();
     boolean isSplitable();
-    String getSeperator();
+    String getSeparator();
     int getIndexOfValue();
 }
