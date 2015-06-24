@@ -1,0 +1,91 @@
+括号内为要查询的关键字：
+
+DB Query file (DBACCESS - Group        against file)
+7076(  6028) 05/11/2015 16:49:52  RTE D (0x09E8A060)      DBACCESS - Group        against file Todo in 9.843000 seconds [rc=0 ]
+
+DB Call
+call#:14988 --> (sqmssqlSelectSome - EXECUTE)
+7076(  6028) 05/11/2015 16:49:54  RTE D sql*diff 0.109  total 6.637  call#:14988 --> sqmssqlSelectSome - EXECUTE:SELECT "RIT_APPROVERS","RECORD_ID","ITEMTYPE" FROM TODOLISTA1 WHERE "RECORD_ID"=? and "ITEMTYPE"=?
+call#:36515 --> (sqmssqlCommit:COMMIT)
+7076(  6028) 05/11/2015 16:50:50  RTE D sql diff 0.078  total 17.900  call#:36515 --> sqmssqlCommit:COMMIT
+
+call#:8142 --> (sqmssqlSelect - EXECUTE)
+7076(  6028) 05/11/2015 16:49:44  RTE D sql diff 0.031  total 2.323  call#:8142 --> sqmssqlSelect - EXECUTE:SELECT * FROM TODOLISTM1 READCOMMITTED WHERE "RECORD_ID"=? AND "ITEMTYPE"=?
+
+(SCRIPTTRACE)
+4536( 12784) 06/15/2015 04:43:30  RTE D SCRIPTTRACE: ProcessDesignerEnablement.isPDEnabled entered, line 107
+4536( 12784) 06/15/2015 04:43:30  RTE D SCRIPTTRACE: ProcessDesignerEnablement.isPDEnabled exited, elapsed: 0 ms
+
+(Response-Total:) 20.022
+7076(  6028) 05/11/2015 16:50:12  RTE D Response-Total: 20.022 -- RAD:0.000  JS:0.016 Log:1.512 Database:20.006  LoadBalancer: 0.000 (CPU 7.593) Transaction - format:rit.sc.manage.ToDo.g application:display,fdisp.1 option:51
+
+DBQUERY(RTE D DBQUERY)
+7076(  6028) 05/11/2015 16:49:45  RTE D DBQUERY^F^Todo(sqlserver I)^0^0.000000^P^262^2.921000^"(itemType="incidents" and status~="Resolved")"^{"itemType"}^0.000000^0.000000 ( [ 0] display fdisp.1 )
+Detailed explanation for DBQUERY
+who	DBFIND or DBQUERY
+where	F = foreground or B = background
+file	The file name followed by database type: Oracle, DB2, SQL server or LDAP, or JOIN. If you add a letter I suffix, then the file name is case-insensitive.
+key	The number of the selected key. If an asterisk character (*) follows the key number, Service Manager selected that key based on sort requirements, not query requirements. The system first uses a key that satisfies the sort criteria because a physical sort of the data is not required.
+weight	The calculated weight for the key Service Manager selects for that specific query. For additional information, see the Key selection algorithms Help topic.
+keytype	P = Partially keyed, I = IR expert search
+record count	The number of records that satisfy the query. The system adds the DBQUERY entry to the log after processing the select panel and then returns the first 128 records that satisfy that query.
+seconds till result came back	The amount of time required to satisfy the query.
+query	The actual query from the user.
+sortfields	The sort order in which the records are requested.
+extracttime	The time required to read data records and extract the key values needed for sorting. This is only necessary if a key satisfying the requested sort order does not exist.
+sorttime	The time required to sort all data records matching the query. This is only necessary if a key satisfying the requested sort order does not exist.
+
+
+DBFIND(RTE D DBFIND)
+7076(  6028) 05/11/2015 16:49:32  RTE D DBFIND^F^operator(sqlserver I)^1^0.000000^ ^1^0.078000^"name="WRZJRO""^ ^0.000000^0.000000 ( [ 0] login call.user.login )
+
+DBCOUNT(RTE D DBCOUNT)
+7076(  6028) 05/11/2015 16:49:34  RTE D DBCOUNT^F^inbox(sqlserver I)^3^0.000000^ ^0^0.016000^"inbox.type="bakrit110cm3r" and (inbox.class="classList" or inbox.class="classView") and (operator.name="WRZJRO" or operator.name="%NONE%" and (audience.type="everyone" or audience.type="groups" and groups isin {"WRZJRO", "Interactions", "R-IT Default", "R-IT Default", "rit.change.analyst", "Change Management", "Change Management Tasks", "rit.change.coordinator", "Change Management", "Change Management Approvals", "Change Management Tasks", "Change Management", "R-IT Default"} or audience.type="role" and role="NONE")) and is.mobile.used=NULL"^ ^0.000000^0.000000 ( [ 0] scm.get.files count.inbox.for.table )
+
+RADTRACE(RTE D RADTRACE)
+7076(  6028) 05/11/2015 16:49:33  RTE D RADTRACE   1031 [ 0] apm.global.initer                   next                      process      CPU(    0    655 )
+
+sql diff(RTE D sql diff)
+4536( 12784) 06/15/2015 04:43:30  RTE D sql diff 0.000  total 0.109  call#:999
+4536( 12784) 06/15/2015 04:43:30  RTE D 999: sqmssqlSelectSome - FETCH:SELECT m1."PRIORITY",m1."TARGET_DATE",m1."RECORD_ID",m1."ITEMTYPE" FROM TODOLISTM1 m1 JOIN TODOLISTA1 a1 ON (((m1."RECORD_ID" = a1."RECORD_ID") OR (m1."RECORD_ID" IS NULL AND a1."RECORD_ID" IS NULL)) AND ((m1."ITEMTYPE" = a1."ITEM
+4536( 12784) 06/15/2015 04:43:30  RTE D 999: TYPE") OR (m1."ITEMTYPE" IS NULL AND a1."ITEMTYPE" IS NULL))) WHERE (((m1."ITEMTYPE"=? or m1."ITEMTYPE"=? and m1."STATUS" <> ? or m1."ITEMTYPE"=? or m1."ITEMTYPE"=? or m1."ITEMTYPE"=?) and not m1."GROUP" IS NULL  and m1."GROUP" IN (?,?,?,?,?,?) or m1."ITEM
+4536( 12784) 06/15/2015 04:43:30  RTE D 999: TYPE"=? and (m1."RIT_CHANGECATEGORY" <> ? and m1."RIT_CHANGECATEGORY" <> ? and m1."RIT_CHANGECATEGORY" <> ?) and (not m1."GROUP" IS NULL  and m1."GROUP" IN (?,?,?,?,?,?) or 1=1) or m1."ITEMTYPE"=? and ((m1."RIT_TASKPHASE"=? or m1."RIT_TASKPHASE"=?) and (no
+4536( 12784) 06/15/2015 04:43:30  RTE D 999: t m1."GROUP" IS NULL  and m1."GROUP" IN (?,?,?,?,?,?)) or m1."RIT_TASKPHASE"=? and m1."RIT_2ND_GROUP" IN (?,?,?,?,?,?)) or (m1."ITEMTYPE"=? or m1."ITEMTYPE"=?) and m1."GROUP"=?)) ORDER BY m1."PRIORITY" ASC,m1."TARGET_DATE" ASC,m1."RECORD_ID" ASC,m1."ITEMTY
+4536( 12784) 06/15/2015 04:43:30  RTE D 999: PE" ASC
+
+SOAP Request(RTE D Parsing request document)
+7076(  6028) 05/11/2015 16:49:42  RTE D Parsing request document: <?xml version="1.0" encoding="utf-8"?><SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><SOAP-ENV:Header/><SOAP-ENV:Body><getList><thread>0</thread><count>50</count></getList></SOAP-ENV:Body></SOAP-ENV:Envelope>
+
+SOAP Response(RTE D Returning response)
+7076(  6028) 05/11/2015 16:49:58  RTE D Returning response: <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><SOAP-ENV:Body><getListResponse attachmentCompressed="false" supportSelectAll="1" xmlns="http://servicecenter.peregrine.com/PWS"><model count="50" more="1" name="Todo" query="(itemType=&quot;incidents&quot; and status~=&quot;
+
+(RTE I)
+7076(  6748) 05/11/2015 16:48:58  RTE I Command line: sm -httpPort:13990 -httpsPort:13991 -RTM:3 -debugdbquery:999 -debughttp:1 -sqldebug:1 -log:server_side_webclient.log -debugnode:1 -sqljoinsok:Todo
+
+(RTE W)
+7076(  6028) 05/11/2015 16:50:23  RTE W could not find field "RefreshIT" in dbdict for file Todo
+
+(RTE E)
+15300(  9496) 06/17/2015 03:56:02  RTE E Cannot evaluate expression (sc.activity,set.activityactions.name)
+
+(RTE A)
+7076(  6028) 05/11/2015 16:49:37  RTE A Performance-2-Todo, Partial File Scan for query involving fields {itemType, status, group, rit.changeCategory, rit.approvers, rit.taskPhase, rit.2nd.group} ; application(scm.advanced), panel(get.records.1)
+
+(JRTE D)
+(JRTE I)
+7076(  5560) 05/11/2015 16:49:32 JRTE I SSL: Verifying client's certificate...
+(JRTE E)
+(JRTE F)
+(RAD I)
+(RAD W)
+(RAD E)
+(RAD D)
+(RAD A)
+(JS I)
+(JS W)
+(JS E)
+(JS D)
+(JS A)
+(Unknown)
+05/11/2015 16:51:56  RTE I CTRL-Close received, terminating process
+
