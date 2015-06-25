@@ -27,20 +27,18 @@ public class LogLine extends Line {
     }
 
     /**
-     * Consider how to split this line from SM RTE log file:
-     * 9584(  9124) 06/20/2015 17:05:22  RTE D DBQUERY^F^triggers(sqlserver I)^0^0.000000^ ^13^0.016000^"table.name="cm3t""^{"table.name", "trigger.type"}^0.000000^0.000000 ( [ 1] display show.rio )
      *
      * @return
      */
     @Override
     public Collection<Field> split() {
-        if (isSplitable()) {
+        if (isSplitNeeded()) {
             List<FieldFormat> fieldFormatList = null;
             List<String> errorKeyList = new ArrayList<>();
             int counter = 0;
             //here if only split with separator, the line format should not be special
-            Map<String, List<FieldFormat>> lineFormats = format.getFormats();
-            for (Map.Entry<String, List<FieldFormat>> entry : lineFormats.entrySet()) {
+            Map<String, List<FieldFormat>> formats = getLineFormats().getFormats();
+            for (Map.Entry<String, List<FieldFormat>> entry : formats.entrySet()) {
                 if (getContent().contains(entry.getKey())) {
                     errorKeyList.add(entry.getKey());
                     counter++;
@@ -65,7 +63,7 @@ public class LogLine extends Line {
             if (fieldFormatList == null)
                 throw new InputFormatNotFoundException("InputFormat not found");
 
-            String[] fieldContents = getContent().split(format.getSeperator());
+            String[] fieldContents = getContent().split(getLineFormats().getSeperator());
             Collection<Field> fieldList = new ArrayList<>();
 
             for (int i = 0; i < fieldContents.length; i++) {
@@ -101,6 +99,14 @@ public class LogLine extends Line {
         return null;
     }
 
+    /**
+     * Here should be a limitation that only Double and Date type
+     * can be compared. in split method, no matter what field format type should be
+     * sortValue always must be either Double and Date.
+     *
+     * @param o
+     * @return
+     */
     @Override
     public int compareTo(Object o) {
         if (sortValue instanceof Double) {

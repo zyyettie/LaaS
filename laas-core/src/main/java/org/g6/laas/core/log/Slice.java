@@ -16,23 +16,16 @@ including [start, end) content
 @Data
 @NoArgsConstructor
 public abstract class Slice {
-    private ILogFile file;
     private String content;
     private int start;
     private int end;
-    InputFormat format;
-    boolean splitable;
+    private Collection<Line> lines;
 
-    public Slice(ILogFile file, String content, int start, int end, InputFormat format) {
-        this.file = file;
-        this.content = content;
-        this.start = start;
-        this.end = end;
-        this.format = format;
-        if (format != null)
-            setSplitable(true);
+    public Slice(Collection<Line> lines) {
+        this.lines = lines;
     }
 
-    public abstract Collection<Field> split();
-
+    void addLine(Line line){
+        lines.add(line);
+    }
 }
