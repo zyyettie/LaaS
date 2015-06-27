@@ -27,7 +27,15 @@ public class LogLine extends Line {
     }
 
     /**
+     * Whether split depends on the search result. From the code design, if InputFormat comes
+     * we think each line in the return result should be split according to matching format.
      *
+     * But there are some limitations. one is all lines must have matching formats, otherwise
+     * the InputFormatNotFoundException is thrown.
+     *
+     * The specified InputFormat can not cover all the ones. so the split method can be overwritten
+     * and no matter whether the InputFormat is needed or not, because the code will run on the line
+     * content directly.
      * @return
      */
     @Override
@@ -73,7 +81,7 @@ public class LogLine extends Line {
 
                 if (fieldFormatType.equals("String")) {
                     //assume you split the column just because you want to get sortable value
-                    if (ff.isSortable() && ff.isSplitable()) {
+                    if (ff.isSortable() && ff.isSplitNeeded()) {
                         String[] secSplitValues = fieldContents[i].split(ff.getSeparator());
                         f = new TextField(secSplitValues[ff.getIndexOfValue()]);
                         this.sortValue = secSplitValues[ff.getIndexOfValue()];
