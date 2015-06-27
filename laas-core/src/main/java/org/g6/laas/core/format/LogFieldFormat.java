@@ -11,7 +11,7 @@ public class LogFieldFormat implements FieldFormat {
     private String name;
     private String value;
     private boolean sortable;
-    private boolean splitable;
+    private boolean splitNeeded;
     private String separator;
     private int indexOfValue;
     private boolean relatedToPrev; //This is most for Date and Time fields

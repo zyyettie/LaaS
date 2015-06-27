@@ -54,5 +54,6 @@
 
     <modules>
         <module>laas-core</module>
+        <module>laas-sm</module>
     </modules>
 </project>
