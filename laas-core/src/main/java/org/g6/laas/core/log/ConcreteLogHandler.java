@@ -14,21 +14,15 @@ import java.util.List;
 public class ConcreteLogHandler extends LogHandler {
 
     public ConcreteLogHandler(ILogFile iLogFile, Rule rule) {
-        super(iLogFile, rule, null);
-    }
-    public ConcreteLogHandler(ILogFile iLogFile, Rule rule, InputFormat format) {
-        super(iLogFile, rule, format);
+        super(iLogFile, rule);
     }
 
     public ConcreteLogHandler(List<ILogFile> list, Rule rule) {
-        super(list, rule, null);
-    }
-    public ConcreteLogHandler(List<ILogFile> list, Rule rule, InputFormat format) {
-        super(list, rule, format);
+        super(list, rule);
     }
 
     @Override
-    public Iterator<? extends Slice> handle(LaaSContext context) throws IOException {
+    public Iterator<? extends Line> handle(LaaSContext context) throws IOException {
         Collection<Line> collection = new ArrayList<>();
         for (ILogFile iLogFile : list) {
             //TODO
@@ -44,7 +38,7 @@ public class ConcreteLogHandler extends LogHandler {
             while ((str = reader.readLine()) != null) {
                 number++;
                 if (rule.isSatisfied(str)) {
-                    Line line = new LogLine(iLogFile, str, number, format);
+                    Line line = new LogLine(iLogFile, str, number, context.getInputFormat());
                     collection.add(line);
                 }
             }

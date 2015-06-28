@@ -15,17 +15,15 @@ public abstract class LogHandler{
     Rule  rule;
     InputFormat format;
 
-    public LogHandler(ILogFile file, Rule rule, InputFormat format) {
+    public LogHandler(ILogFile file, Rule rule) {
         list = new ArrayList<>();
         list.add(file);
         this.rule = rule;
-        this.format = format;
     }
 
-    public LogHandler(List<ILogFile> list, Rule rule, InputFormat format){
+    public LogHandler(List<ILogFile> list, Rule rule){
         this.list = list;
         this.rule = rule;
-        this.format = format;
     }
 
     public void addFile(ILogFile file) {
@@ -36,6 +34,6 @@ public abstract class LogHandler{
         this.rule = rule;
     }
 
-    public abstract Iterator<? extends Slice> handle(LaaSContext context) throws IOException;
+    public abstract Iterator<? extends Line> handle(LaaSContext context) throws IOException;
 
 }

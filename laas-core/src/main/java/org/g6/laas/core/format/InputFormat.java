@@ -11,6 +11,7 @@ public interface InputFormat {
     String[] getFormat() throws IllegalAccessException;
     // is it possible to have more than one key word?
     // Here is to assume the line can be recognized by some key words
-    Map<String, List<FieldFormat>> getFormats();
+    Map<String, List<FieldFormat>> getLineFormatsByKey();
     //if some lines should be ignored e.g. SOAP message
+    Map<String, String> getRegex4LineSplit();
 }

@@ -14,15 +14,15 @@ public abstract class Line implements Comparable {
     private ILogFile file;
     private String content;
     private int lineNumber;
-    private InputFormat lineFormats = null;
+    private InputFormat inputFormat = null;
     private boolean splitNeeded;
 
-    public Line(ILogFile file, String content, int lineNumber, InputFormat lineFormats) {
+    public Line(ILogFile file, String content, int lineNumber, InputFormat inputFormat) {
         this.file = file;
         this.content = content;
         this.lineNumber = lineNumber;
-        this.lineFormats = lineFormats;
-        if (lineFormats != null) {
+        this.inputFormat = inputFormat;
+        if (inputFormat != null) {
             setSplitNeeded(true);
         }
     }
