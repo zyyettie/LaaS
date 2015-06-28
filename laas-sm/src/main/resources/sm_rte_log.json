@@ -1,0 +1,15 @@
+[
+    {"key":"RTE D DBQUERY","regex":"xxxxxxxx",
+        "fields":[
+            {"name":"process id","type":"Integer","sortable":"false"},
+            {"name":"thread id","type":"Integer","sortable":"false"},
+            {"name":"datetime","type":"DateTime","sortable":"false"},
+            {"name":"execution time","type":"Double","sortable":"true"}
+        ]
+    },
+    {"key":"SCRIPTTRACE","regex":"xxxxxxxx",
+        "fields":[
+            {"name":"process id","value":"xxxx","sortable":"false"}
+        ]
+    }
+]

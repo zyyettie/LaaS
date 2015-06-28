@@ -1,4 +1,4 @@
-package org.g6.laas.sm;
+package org.g6.laas.sm.format;
 
 import org.g6.laas.core.format.FieldFormat;
 import org.g6.laas.core.format.InputFormat;
@@ -34,8 +34,13 @@ public class SMRTELogInputFormat implements InputFormat {
     }
 
     @Override
-    public Map<String, List<FieldFormat>> getFormats() {
+    public Map<String, List<FieldFormat>> getLineFormatsByKey() {
          //TODO the keyword parts will be from property file or database. now it can be hardcoded.
+        return null;
+    }
+
+    @Override
+    public Map<String, String> getRegex4LineSplit() {
         return null;
     }
 }
