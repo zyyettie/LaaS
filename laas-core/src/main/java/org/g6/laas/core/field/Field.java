@@ -1,11 +1,11 @@
 package org.g6.laas.core.field;
 
-public interface Field<T> {
+public interface Field<T> extends Comparable<Field> {
 
-  String getContent();
+    String getContent();
 
-  String getName();
+    String getName();
 
-  T getValue();
+    T getValue();
 
 }
