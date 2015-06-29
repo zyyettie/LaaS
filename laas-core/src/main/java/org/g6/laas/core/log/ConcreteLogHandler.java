@@ -1,6 +1,7 @@
 package org.g6.laas.core.log;
 
 import org.g6.laas.LaaSContext;
+import org.g6.laas.core.engine.AnalysisContext;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.format.InputFormat;
 import org.g6.laas.core.rule.Rule;
@@ -22,7 +23,7 @@ public class ConcreteLogHandler extends LogHandler {
     }
 
     @Override
-    public Iterator<? extends Line> handle(LaaSContext context) throws IOException {
+    public Iterator<? extends Line> handle(AnalysisContext context) throws IOException {
         Collection<Line> collection = new ArrayList<>();
         for (ILogFile iLogFile : list) {
             //TODO

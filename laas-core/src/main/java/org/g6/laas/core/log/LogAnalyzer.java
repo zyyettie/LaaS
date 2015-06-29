@@ -15,7 +15,8 @@ public class LogAnalyzer {
         Rule rule = new KeywordRule("RTE D");
         LogHandler handle = new ConcreteLogHandler(file, rule);
         try {
-            handle.handle(new LaaSContext());
+            //todo
+            //handle.handle(new LaaSContext());
         } catch (Exception e) {
             e.printStackTrace();
         }

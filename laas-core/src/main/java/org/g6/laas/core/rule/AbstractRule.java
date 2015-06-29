@@ -44,6 +44,7 @@ public abstract class AbstractRule implements Rule {
     class OrRule extends AbstractRule {
         private Rule one;
         private Rule other;
+        private Rule selected;
 
         public OrRule(Rule one, Rule other) {
             this.one = one;
@@ -51,7 +52,16 @@ public abstract class AbstractRule implements Rule {
         }
 
         public boolean isSatisfied(Object content) {
-            return one.isSatisfied(content) || other.isSatisfied(content);
+            if(one.isSatisfied((content))){
+                selected = one;
+            }else if(other.isSatisfied(content)){
+                selected = other;
+            }
+            return selected != null;
+        }
+
+        public Rule getSelected(){
+            return selected;
         }
     }
 }
