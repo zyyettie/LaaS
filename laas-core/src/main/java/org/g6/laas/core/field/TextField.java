@@ -9,4 +9,8 @@ public class TextField extends AbstractField<String> {
   public TextField(String content){
     super(content);
   }
+
+  public int compareTo(Field o){
+      return this.getValue().compareTo((String)o.getValue());
+  }
 }

@@ -11,4 +11,9 @@ public class DateTimeField extends AbstractField<Date>{
     public DateTimeField(String content){
         super(content);
     }
+
+    @Override
+    public int compareTo(Field o) {
+        return getValue().compareTo((Date)o);
+    }
 }

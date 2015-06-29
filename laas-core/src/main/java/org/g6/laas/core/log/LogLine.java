@@ -19,6 +19,8 @@ import java.util.*;
 public class LogLine extends Line {
     Object sortValue;
 
+    Field sortedField = null;
+
     public LogLine(ILogFile file, String content, int lineNumber) {
         super(file, content, lineNumber, null);
     }
@@ -114,18 +116,11 @@ public class LogLine extends Line {
      * @param o
      * @return
      */
+
+
     @Override
     public int compareTo(Object o) {
-        if (sortValue instanceof Double) {
-            Double d1 = (Double) this.sortValue;
-            Double d2 = (Double) ((LogLine) o).sortValue;
-
-            return (-1) * d1.compareTo(d2); //sort by desc
-        } else if (sortValue instanceof String) {
-            //TODO
-            //need to check what is the real type e.g. double, date etc.
-        }
-        return 0;
+        return sortedField.compareTo(((LogLine)o).sortedField);
     }
 
     public Object getSortValue() {
