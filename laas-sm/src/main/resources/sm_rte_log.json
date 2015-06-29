@@ -9,7 +9,7 @@
     },
     {"key":"SCRIPTTRACE","regex":"xxxxxxxx",
         "fields":[
-            {"name":"process id","value":"xxxx","sortable":"false"}
+            {"name":"process id","type":"xxxx","sortable":"false"}
         ]
     }
 ]
