@@ -8,7 +8,9 @@ import org.g6.laas.core.field.*;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.format.FieldFormat;
 import org.g6.laas.core.format.InputFormat;
+import org.g6.util.Constants;
 import org.g6.util.RegexUtil;
+import org.g6.util.StringUtil;
 
 import java.util.*;
 
@@ -40,11 +42,25 @@ public class LogLine extends Line {
 
         Map<String, List<FieldFormat>> formats = getInputFormat().getLineFormatsByKey();
         for (Map.Entry<String, List<FieldFormat>> entry : formats.entrySet()) {
-            if (getContent().contains(entry.getKey())) {
-                errorKeyList.add(entry.getKey());
-                counter++;
-                fieldFormatList = entry.getValue();
-                lineSplitRegex = getInputFormat().getRegex4LineSplit().get(entry.getKey());
+            String lineFormatKey = entry.getKey();
+
+            if (lineFormatKey.startsWith(Constants.REGEX_PREFIX)) {// the key is regex
+                String regex = lineFormatKey.substring(Constants.REGEX_PREFIX.length());
+                String matchedValue = RegexUtil.getValue(getContent(), regex);
+
+                if(!StringUtil.isNull(matchedValue)){
+                    errorKeyList.add(lineFormatKey);
+                    counter++;
+                    fieldFormatList = entry.getValue();
+                    lineSplitRegex = getInputFormat().getRegex4LineSplit().get(lineFormatKey);
+                }
+            } else {
+                if (getContent().contains(lineFormatKey)) {
+                    errorKeyList.add(entry.getKey());
+                    counter++;
+                    fieldFormatList = entry.getValue();
+                    lineSplitRegex = getInputFormat().getRegex4LineSplit().get(lineFormatKey);
+                }
             }
         }
 
@@ -61,11 +77,10 @@ public class LogLine extends Line {
                 if (errorKeyList.size() != keyCount) {
                     sb.append(", ");
                 }
-                keyCount ++;
+                keyCount++;
             }
             throw new LaaSRuntimeException(sb.toString());
         }
-
         if (fieldFormatList == null)
             throw new InputFormatNotFoundException("InputFormat not found");
         if (lineSplitRegex == null)
