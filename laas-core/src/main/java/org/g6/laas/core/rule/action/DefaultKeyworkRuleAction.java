@@ -12,27 +12,20 @@ import java.util.List;
 public class DefaultKeyworkRuleAction extends ContextRuleAction {
 
   @Override
-  public void doAction() {
+  public void doAction(Object content) {
 
-    KeywordRule rule = (KeywordRule) getRule();
-
-    KeywordRule keywordRule = (KeywordRule) rule;
-    Line matched = (Line) keywordRule.getMatched();
-    List<Line> matchedLines = (List<Line>) getContext().get(keywordRule);
+    List<Line> matchedLines = (List<Line>) getContext().get(getRule());
     if (matchedLines == null) {
       matchedLines = new ArrayList<>();
-      matchedLines.add(matched);
-      getContext().set(rule, matchedLines);
+      matchedLines.add((Line)content);
+      getContext().set(getRule(), matchedLines);
     } else {
-      matchedLines.add(matched);
+      matchedLines.add((Line)content);
     }
 
   }
 
   public DefaultKeyworkRuleAction(AnalysisContext context, Rule rule) {
     super(context, rule);
-    if (!(rule instanceof KeywordRule)) {
-      throw new LaaSRuntimeException("Default KeywordRuleAction only accept Keyword rule.");
-    }
   }
 }

@@ -36,8 +36,13 @@ public class ConcreteLogHandler extends LogHandler {
       int number = 0;
       while ((str = reader.readLine()) != null) {
         number++;
-        if (rule.isSatisfied(str)) {
-          Line line = new LogLine(iLogFile, str, number, context.getInputFormat());
+        if(rule != null){
+          if (rule.isSatisfied(str)) {
+            Line line = new LogLine(iLogFile, str, number, context.getInputFormat());
+            collection.add(line);
+          }
+        }else{
+          Line line = new LogLine(iLogFile, str, number);
           collection.add(line);
         }
       }

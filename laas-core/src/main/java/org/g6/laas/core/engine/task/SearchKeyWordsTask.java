@@ -12,35 +12,30 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SearchKeyWordsTask extends AbstractAnalysisTask<Map<String, Collection<Line>>> {
+public class SearchKeyWordsTask extends AbstractAnalysisTask<Map<Rule, Collection<Line>>> {
 
   @Override
-  protected Map<String, Collection<Line>> process() {
-    Map<String, Collection<Line>> result = new HashMap<>();
+  protected Map<Rule, Collection<Line>> process() {
+    Map<Rule, Collection<Line>> result = new HashMap<>();
     AnalysisContext context = this.getContext();
     for (Rule rule : context.getRules()) {
-      if (rule instanceof KeywordRule) {
-        Collection<Line> matchedLines = (Collection<Line>) context.get(rule);
-        if (matchedLines != null) {
-          result.put(((KeywordRule) rule).getKeyword(), matchedLines);
-        }
+        result.put(rule,(Collection<Line>)context.get(rule));
       }
-
-    }
     return result;
   }
 
   public SearchKeyWordsTask(Collection<Rule> rules){
     super(rules);
     for(Rule rule : rules){
-      if(rule instanceof KeywordRule){
         rule.addActionListener(new DefaultKeyworkRuleAction(getContext(), rule), ActionCondition.SATISFIED);
         getContext().getRules().add(rule);
-      }
     }
   }
 
   public SearchKeyWordsTask(AnalysisContext context){
     super(context);
+    for(Rule rule : context.getRules()){
+      rule.addActionListener(new DefaultKeyworkRuleAction(getContext(), rule), ActionCondition.SATISFIED);
+    }
   }
 }

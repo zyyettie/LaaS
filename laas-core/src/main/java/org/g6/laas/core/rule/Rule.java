@@ -15,5 +15,5 @@ public interface Rule {
 
   void addActionListener(RuleAction action, ActionCondition condition);
 
-  void triggerAction(ActionCondition condition);
+  void triggerAction(ActionCondition condition,Object content);
 }

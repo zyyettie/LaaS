@@ -25,11 +25,11 @@ public abstract class AbstractRule implements Rule {
     return new NotRule(this);
   }
 
-  public void triggerAction(ActionCondition condition) {
+  public void triggerAction(ActionCondition condition, Object content) {
     List<RuleAction> actionList = actions.get(condition);
     if (actionList != null) {
       for (RuleAction action : actionList) {
-        action.doAction();
+        action.doAction(content);
       }
     }
   }
@@ -41,7 +41,7 @@ public abstract class AbstractRule implements Rule {
       actionList = new ArrayList<>();
       actionList.add(action);
       actions.put(condition, actionList);
-    }else{
+    } else {
       actionList.add(action);
     }
   }
@@ -75,7 +75,6 @@ public abstract class AbstractRule implements Rule {
   class OrRule extends AbstractRule {
     private Rule one;
     private Rule other;
-    private Rule selected;
 
     public OrRule(Rule one, Rule other) {
       this.one = one;
@@ -83,16 +82,7 @@ public abstract class AbstractRule implements Rule {
     }
 
     public boolean isSatisfied(Object content) {
-      if (one.isSatisfied((content))) {
-        selected = one;
-      } else if (other.isSatisfied(content)) {
-        selected = other;
-      }
-      return selected != null;
-    }
-
-    public Rule getSelected() {
-      return selected;
+      return one.isSatisfied(content) || other.isSatisfied(content);
     }
   }
 }

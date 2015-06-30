@@ -3,13 +3,13 @@ package org.g6.laas.core.rule;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.g6.laas.core.log.Line;
 
 @Data
 @NoArgsConstructor
 @Slf4j
 public class KeywordRule extends AbstractRule {
   private String keyword;
-  private Object matched;
 
   public KeywordRule(String keyword) {
     this.keyword = keyword;
@@ -25,7 +25,6 @@ public class KeywordRule extends AbstractRule {
     else if ("".equals(getKeyword()) || getKeyword() == null)
       return false;
     else {
-      matched = content;
       return content.toString().contains(getKeyword());
     }
   }

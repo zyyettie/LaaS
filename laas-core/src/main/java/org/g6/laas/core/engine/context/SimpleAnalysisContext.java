@@ -15,9 +15,9 @@ import java.util.Map;
 @Data
 public class SimpleAnalysisContext implements AnalysisContext {
 
-  LogHandler handler;
+  private LogHandler handler;
 
-  Collection<Rule> rules = new ArrayList<>();
+  private Collection<Rule> rules = new ArrayList<>();
 
   private Map<Object, Object> holder = new HashMap<>();
 

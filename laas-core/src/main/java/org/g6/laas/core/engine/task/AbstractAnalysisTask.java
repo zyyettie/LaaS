@@ -41,10 +41,10 @@ public abstract class AbstractAnalysisTask<T> implements AnalysisTask<T> {
     while (lines.hasNext()) {
       Line line = lines.next();
       for (Rule rule : rules) {
-        if (rule.isSatisfied(line)) {
-          rule.triggerAction(ActionCondition.SATISFIED);
+        if (rule.isSatisfied(line.getContent())) {
+          rule.triggerAction(ActionCondition.SATISFIED,line);
         } else {
-          rule.triggerAction(ActionCondition.NOTSATISFIED);
+          rule.triggerAction(ActionCondition.NOTSATISFIED,line);
         }
       }
     }

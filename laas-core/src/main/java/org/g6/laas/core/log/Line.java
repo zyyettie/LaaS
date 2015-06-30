@@ -24,4 +24,9 @@ public abstract class Line implements Comparable {
     }
 
     public abstract Collection<Field> split();
+
+    @Override
+    public String toString(){
+        return "File=" + file.getPath() + ";line=" + lineNumber + ";content=" + content;
+    }
 }
