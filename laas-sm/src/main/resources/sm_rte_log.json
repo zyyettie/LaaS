@@ -8,7 +8,7 @@
                 {"name":"execution_time","type":"Double","sortable":"true"}
             ]
         },
-        {"key":"SCRIPTTRACE","regex":"xxxxxxxx",
+        {"key":"REGEX:SCRIPTTRACE","regex":"xxxxxxxx",
             "fields":[
                 {"name":"process id","type":"xxxx","sortable":"false"}
             ]

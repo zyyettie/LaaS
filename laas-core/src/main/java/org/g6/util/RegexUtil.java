@@ -28,4 +28,15 @@ public class RegexUtil {
         return matcher.matches();
     }
 
+    public static String getValue(String str, String regex){
+        Pattern p = Pattern.compile(regex);
+        Matcher matcher = p.matcher(str);
+        String value = null;
+
+        if (matcher.find()) {
+            value = matcher.group();
+        }
+        return value;
+    }
+
 }
