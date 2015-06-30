@@ -9,8 +9,8 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Data
 public class SimpleAnalysisContext implements AnalysisContext {
@@ -19,7 +19,7 @@ public class SimpleAnalysisContext implements AnalysisContext {
 
   Collection<Rule> rules = new ArrayList<>();
 
-  private Map<Object, Object> holder = new ConcurrentHashMap<>();
+  private Map<Object, Object> holder = new HashMap<>();
 
   @Override
   public InputFormat getInputFormat() {

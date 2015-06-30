@@ -39,9 +39,11 @@ public abstract class AbstractRule implements Rule {
     List<RuleAction> actionList = actions.get(condition);
     if (actionList == null) {
       actionList = new ArrayList<>();
+      actionList.add(action);
+      actions.put(condition, actionList);
+    }else{
+      actionList.add(action);
     }
-    actionList.add(action);
-    actions.put(condition, actionList);
   }
 
   class NotRule extends AbstractRule {
