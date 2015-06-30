@@ -33,11 +33,22 @@ public class Application {
 
     Collection<Rule> rules = new ArrayList<>();
 
-    rules.add(new KeywordRule("DBQUERY").or(new KeywordRule("DBFIND")));
+    Rule rule1 = new KeywordRule("DBQUERY");
+    Rule rule2 = new KeywordRule("DBFIND");
+    Rule rule3 = rule1.and(rule2);
+    Rule rule4 = rule1.or(rule2);
+
+    rules.add(rule1);
+    rules.add(rule2);
+    rules.add(rule3);
+    rules.add(rule4);
 
     SimpleAnalysisContext context = new SimpleAnalysisContext();
+
     context.setHandler(new ConcreteLogHandler(new LogFile("C:\\gitRepo\\LaaS\\laas-core\\src\\main\\resources\\RTE_log_format.txt"), null));
+
     context.setRules(rules);
+
     SearchKeyWordsTask task = new SearchKeyWordsTask(context);
 
     StrategyAnalysisEngine engine = new StrategyAnalysisEngine();
@@ -48,13 +59,13 @@ public class Application {
     try {
       Map<Rule, Collection<Line>> result = future.get();
       log.info("Task execute result: ");
-      log.info("******************************************");
+      log.info("_______________________________________________");
       for (Map.Entry<Rule, Collection<Line>> entry : result.entrySet()) {
-        log.info(entry.getKey().getClass().toString());
+        log.info(entry.getKey().toString());
+        log.info("******************************************");
         for (Line line : entry.getValue()) {
           log.info(line.toString());
         }
-        log.info("******************************************");
       }
     } catch (Exception e) {
       String errorMsg = "execute task " + task.toString() + " failed";

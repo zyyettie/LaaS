@@ -28,4 +28,9 @@ public class KeywordRule extends AbstractRule {
       return content.toString().contains(getKeyword());
     }
   }
+
+  @Override
+  public String toString(){
+    return "keyword=" + keyword;
+  }
 }

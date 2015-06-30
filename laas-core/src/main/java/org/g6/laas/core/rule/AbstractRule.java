@@ -56,6 +56,11 @@ public abstract class AbstractRule implements Rule {
     public boolean isSatisfied(Object content) {
       return !wrapper.isSatisfied(content);
     }
+
+    @Override
+    public String toString(){
+      return "not " + wrapper.toString();
+    }
   }
 
   class AndRule extends AbstractRule {
@@ -70,6 +75,11 @@ public abstract class AbstractRule implements Rule {
     public boolean isSatisfied(Object content) {
       return one.isSatisfied(content) && other.isSatisfied(content);
     }
+
+    @Override
+    public String toString(){
+      return one.toString() + " and " + other.toString();
+    }
   }
 
   class OrRule extends AbstractRule {
@@ -83,6 +93,11 @@ public abstract class AbstractRule implements Rule {
 
     public boolean isSatisfied(Object content) {
       return one.isSatisfied(content) || other.isSatisfied(content);
+    }
+
+    @Override
+    public String toString(){
+      return one.toString() + " or " + other.toString();
     }
   }
 }
