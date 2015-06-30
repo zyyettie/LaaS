@@ -1,6 +1,6 @@
 {"file_name":"sm.log", "date_time_format":"MM/dd/yyyy HH:mm:ss","lines":
     [
-        {"key":"RTE D DBQUERY","regex":"xxxxxxxx",
+        {"key":"RTE D DBQUERY","regex":"xxxxxxxxx",
             "fields":[
                 {"name":"process_id","type":"Integer","sortable":"false"},
                 {"name":"thread_id","type":"Integer","sortable":"false"},
