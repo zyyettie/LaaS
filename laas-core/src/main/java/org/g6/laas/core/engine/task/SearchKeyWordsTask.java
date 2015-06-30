@@ -13,11 +13,13 @@ import java.util.Map;
 
 public class SearchKeyWordsTask extends AbstractAnalysisTask<Map<Rule, Collection<Line>>> {
 
+    private Collection<Rule> rules;
+
     @Override
     protected Map<Rule, Collection<Line>> process() {
         Map<Rule, Collection<Line>> result = new HashMap<>();
         AnalysisContext context = this.getContext();
-        for (Rule rule : context.getRules()) {
+        for (Rule rule : rules) {
             result.put(rule, (Collection<Line>) context.get(rule));
         }
         return result;
@@ -26,11 +28,12 @@ public class SearchKeyWordsTask extends AbstractAnalysisTask<Map<Rule, Collectio
     public SearchKeyWordsTask(Collection<Rule> rules, LogHandler handler) {
         SimpleAnalysisContext context = new SimpleAnalysisContext();
         context.setHandler(handler);
-        for (Rule rule : rules) {
+        this.rules = rules;
+        for (Rule rule : this.rules) {
             rule.addActionListener(new DefaultRuleAction(context));
-            context.getRules().add(rule);
         }
-        this.setContext(context);
+        context.setRules(this.rules);
+        setContext(context);
     }
 
     public SearchKeyWordsTask(AnalysisContext context) {
