@@ -1,6 +1,7 @@
 package org.g6.util;
 
 import org.g6.laas.core.exception.LaaSExceptionHandler;
+import org.g6.laas.core.exception.LaaSRuntimeException;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -16,11 +17,34 @@ public class FileUtil {
      * @return
      */
     public static InputStream getRelativeInputStream(String file) {
-        return FileUtil.class.getResourceAsStream(file);
+        InputStream is = FileUtil.class.getResourceAsStream(file);
+        return is;
+    }
+
+    /**
+     * Assume the file is not big, and also each line is not needed to analyze while reading
+     *
+     * @param is
+     * @return
+     */
+    public static List<String> readFile(InputStream is) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+
+            List<String> list = new ArrayList<>();
+            String line;
+            while (null != (line = br.readLine()))
+                list.add(line);
+
+            return list;
+        } catch (IOException e) {
+            throw new LaaSRuntimeException("Exception is thrown when reading file", e);
+        }
+
     }
 
     /**
      * Create a file from the input stream
+     *
      * @param is
      * @param outFile
      */
@@ -36,11 +60,11 @@ public class FileUtil {
             }
         } catch (Exception e) {
             LaaSExceptionHandler.handleException("Error happens when create the file : " + outFile, e);
-        }finally{
-            try{
+        } finally {
+            try {
                 os.close();
                 is.close();
-            }catch(IOException ioe){
+            } catch (IOException ioe) {
                 LaaSExceptionHandler.handleException("Error happens on closing the input stream and output steam  during creating file : " + outFile, ioe);
             }
         }
@@ -193,6 +217,7 @@ public class FileUtil {
 
     /**
      * Check if it is valid directory
+     *
      * @param file
      * @return
      */
@@ -203,6 +228,7 @@ public class FileUtil {
 
     /**
      * Get file name
+     *
      * @param file
      * @return
      */
