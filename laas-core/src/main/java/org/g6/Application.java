@@ -1,9 +1,9 @@
 package org.g6;
 
 import lombok.extern.slf4j.Slf4j;
-import org.g6.laas.core.engine.AnalysisTask;
 import org.g6.laas.core.engine.StrategyAnalysisEngine;
 import org.g6.laas.core.engine.ThreadPoolExecutionStrategy;
+import org.g6.laas.core.engine.task.AnalysisTask;
 import org.g6.laas.core.engine.task.SearchKeyWordsTask;
 import org.g6.laas.core.exception.LaaSRuntimeException;
 import org.g6.laas.core.log.Line;
@@ -30,7 +30,7 @@ public class Application {
 
     Collection<Rule> rules = new ArrayList<>();
 
-    rules.add(new KeywordRule("DBQUERY"));
+    rules.add(new KeywordRule("DBQUERY").or(new KeywordRule("DBFIND")));
 
     AnalysisTask<Map<String, Collection<Line>>> task = new SearchKeyWordsTask(rules);
 

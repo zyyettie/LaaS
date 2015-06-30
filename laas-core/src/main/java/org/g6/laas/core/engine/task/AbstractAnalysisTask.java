@@ -3,7 +3,6 @@ package org.g6.laas.core.engine.task;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.g6.laas.core.engine.AnalysisTask;
 import org.g6.laas.core.engine.context.AnalysisContext;
 import org.g6.laas.core.engine.context.SimpleAnalysisContext;
 import org.g6.laas.core.exception.LaaSRuntimeException;
@@ -63,11 +62,11 @@ public abstract class AbstractAnalysisTask<T> implements AnalysisTask<T> {
     return result;
   }
 
-  public AbstractAnalysisTask(AnalysisContext context){
+  public AbstractAnalysisTask(AnalysisContext context) {
     this.context = context;
   }
 
-  public AbstractAnalysisTask(Collection<Rule> rules){
+  public AbstractAnalysisTask(Collection<Rule> rules) {
     this.context = new SimpleAnalysisContext();
   }
 }
