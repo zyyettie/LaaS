@@ -5,45 +5,48 @@ import org.g6.laas.core.engine.context.SimpleAnalysisContext;
 import org.g6.laas.core.engine.task.AbstractAnalysisTask;
 import org.g6.laas.core.field.Field;
 import org.g6.laas.core.log.Line;
+import org.g6.laas.core.log.SplitResult;
 import org.g6.laas.core.rule.KeywordRule;
 import org.g6.laas.core.rule.Rule;
 import org.g6.laas.core.rule.action.DefaultRuleAction;
 import org.g6.laas.sm.log.DBQueryLine;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
-public class TopNQueryTask extends AbstractAnalysisTask<Map<Line, Double>> {
+public class TopNQueryTask extends AbstractAnalysisTask<Map<Double, Line>> {
 
     private int N = 50;
 
+    private Rule rule;
+
     @Override
-    protected Map<Line, Double> process() {
-        Map<Line, Double> result = new HashMap<>();
+    protected Map<Double, Line> process() {
+        Map<Double, Line> result = new TreeMap<>();
         AnalysisContext context = getContext();
-        for (Rule rule : context.getRules()) {
-            Collection<Line> lines = (Collection<Line>) context.get(rule);
+
+        Collection<Line> lines = (Collection<Line>) context.get(rule);
+        if (lines != null) {
+            loop:
             for (Line line : lines) {
-                Collection<Field> fields = new DBQueryLine(line).split();
-                for (Field field : fields) {
-                    if ("execution_time".equals(field.getName())) {
-                        Double time = (Double) field.getValue();
-                        result.put(line, time);
-                    }
-                }
+                SplitResult splitResult = new DBQueryLine(line).split();
+                Field field = splitResult.get("execution_time");
+                Double time = (Double) field.getValue();
+                result.put(time, line);
+                if (result.size() == N) break loop;
             }
         }
-        //todo sort by time that return
+
         return result;
     }
 
     public TopNQueryTask(int N) {
         this.N = N;
         AnalysisContext context = new SimpleAnalysisContext();
-        Rule rule = new KeywordRule("RTE D DBQUERY^");
+        rule = new KeywordRule("RTE D DBQUERY^");
         rule.addActionListener(new DefaultRuleAction(context));
         context.getRules().add(rule);
-        this.setContext(context);
+        setContext(context);
     }
 }

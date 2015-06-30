@@ -34,7 +34,7 @@ public class LogLine extends Line {
      * @return
      */
     @Override
-    public Collection<Field> split() {
+    public SplitResult split() {
         String lineSplitRegex = null;
         List<FieldFormat> fieldFormatList = null;
         List<String> errorKeyList = new ArrayList<>();
@@ -109,7 +109,7 @@ public class LogLine extends Line {
             }
             fieldList.add(f);
         }
-        return fieldList;
+        return new BasicSplitResult(fieldList);
     }
 
     @Override

@@ -23,7 +23,7 @@ public abstract class Line implements Comparable {
         this.inputFormat = inputFormat;
     }
 
-    public abstract Collection<Field> split();
+    public abstract SplitResult split();
 
     @Override
     public String toString(){

@@ -4,6 +4,7 @@ import org.g6.laas.core.field.Field;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.format.InputFormat;
 import org.g6.laas.core.log.Line;
+import org.g6.laas.core.log.SplitResult;
 
 import java.util.Collection;
 
@@ -17,7 +18,7 @@ public class DBQueryLine extends Line {
     }
 
     @Override
-    public Collection<Field> split() {
+    public SplitResult split() {
         return null;
     }
 
