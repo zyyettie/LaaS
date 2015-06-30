@@ -1,17 +1,14 @@
 package org.g6.laas.core.rule;
 
 
-import org.g6.laas.core.rule.action.ActionCondition;
 import org.g6.laas.core.rule.action.RuleAction;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public abstract class AbstractRule implements Rule {
 
-  private Map<ActionCondition, List<RuleAction>> actions = new HashMap<>();
+  private List<RuleAction> actions = new ArrayList<>();
 
   public Rule and(Rule rule) {
     return new AndRule(this, rule);
@@ -25,25 +22,19 @@ public abstract class AbstractRule implements Rule {
     return new NotRule(this);
   }
 
-  public void triggerAction(ActionCondition condition, Object content) {
-    List<RuleAction> actionList = actions.get(condition);
-    if (actionList != null) {
-      for (RuleAction action : actionList) {
+  public void triggerAction( Object content) {
+
+
+      for (RuleAction action : actions) {
         action.doAction(content);
       }
-    }
+
   }
 
   @Override
-  public void addActionListener(RuleAction action, ActionCondition condition) {
-    List<RuleAction> actionList = actions.get(condition);
-    if (actionList == null) {
-      actionList = new ArrayList<>();
-      actionList.add(action);
-      actions.put(condition, actionList);
-    } else {
-      actionList.add(action);
-    }
+  public void addActionListener(RuleAction action) {
+    action.bindRule(this);
+    actions.add(action);
   }
 
   class NotRule extends AbstractRule {

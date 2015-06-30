@@ -8,7 +8,6 @@ import org.g6.laas.core.engine.context.SimpleAnalysisContext;
 import org.g6.laas.core.exception.LaaSRuntimeException;
 import org.g6.laas.core.log.Line;
 import org.g6.laas.core.rule.Rule;
-import org.g6.laas.core.rule.action.ActionCondition;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -19,54 +18,48 @@ import java.util.Iterator;
 @NoArgsConstructor
 public abstract class AbstractAnalysisTask<T> implements AnalysisTask<T> {
 
-  private AnalysisContext context;
+    private AnalysisContext context = new SimpleAnalysisContext();
 
-  protected void started() {
-    log.info("Task " + this.toString() + " started");
-  }
-
-  protected abstract T process();
-
-  protected Iterator<? extends Line> openReader() {
-    try {
-      return context.getHandler().handle(context);
-    } catch (IOException e) {
-      throw new LaaSRuntimeException("open log handler failed.");
+    protected void started() {
+        log.info("Task " + this.toString() + " started");
     }
-  }
 
-  protected void processRules() {
-    Iterator<? extends Line> lines = openReader();
-    Collection<Rule> rules = context.getRules();
-    while (lines.hasNext()) {
-      Line line = lines.next();
-      for (Rule rule : rules) {
-        if (rule.isSatisfied(line.getContent())) {
-          rule.triggerAction(ActionCondition.SATISFIED,line);
-        } else {
-          rule.triggerAction(ActionCondition.NOTSATISFIED,line);
+    protected abstract T process();
+
+    protected Iterator<? extends Line> openReader() {
+        try {
+            return context.getHandler().handle(context);
+        } catch (IOException e) {
+            throw new LaaSRuntimeException("open log handler failed.");
         }
-      }
     }
-  }
 
-  protected void finished() {
-    log.info("Task " + this.toString() + " finished");
-  }
+    protected void processRules() {
+        Iterator<? extends Line> lines = openReader();
+        Collection<Rule> rules = context.getRules();
+        while (lines.hasNext()) {
+            Line line = lines.next();
+            for (Rule rule : rules) {
+                if (rule.isSatisfied(line.getContent())) {
+                    rule.triggerAction(line);
+                }
+            }
+        }
+    }
 
-  public T analyze() {
-    started();
-    processRules();
-    T result = process();
-    finished();
-    return result;
-  }
+    protected void finished() {
+        log.info("Task " + this.toString() + " finished");
+    }
 
-  public AbstractAnalysisTask(AnalysisContext context) {
-    this.context = context;
-  }
+    public T analyze() {
+        started();
+        processRules();
+        T result = process();
+        finished();
+        return result;
+    }
 
-  public AbstractAnalysisTask(Collection<Rule> rules) {
-    this.context = new SimpleAnalysisContext();
-  }
+    public AbstractAnalysisTask(AnalysisContext context) {
+        this.context = context;
+    }
 }

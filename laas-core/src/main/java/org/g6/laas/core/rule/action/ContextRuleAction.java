@@ -9,8 +9,7 @@ public abstract class ContextRuleAction extends AbstractRuleAction {
 
   private AnalysisContext context;
 
-  public ContextRuleAction(AnalysisContext context, Rule rule) {
-    super(rule);
+  public ContextRuleAction(AnalysisContext context) {
     this.context = context;
   }
 }

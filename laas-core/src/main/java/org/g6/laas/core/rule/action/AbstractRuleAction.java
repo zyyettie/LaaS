@@ -9,7 +9,8 @@ public abstract class AbstractRuleAction implements RuleAction {
 
   private Rule rule;
 
-  AbstractRuleAction(Rule rule) {
-    this.rule = rule;
+  @Override
+  public void bindRule(Rule rule){
+    this.setRule(rule);
   }
 }

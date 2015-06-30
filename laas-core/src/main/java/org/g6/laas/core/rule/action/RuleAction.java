@@ -8,4 +8,6 @@ public interface RuleAction {
 
   Rule getRule();
 
+  void bindRule(Rule rule);
+
 }

@@ -9,6 +9,7 @@ import org.g6.laas.core.exception.LaaSRuntimeException;
 import org.g6.laas.core.file.LogFile;
 import org.g6.laas.core.log.ConcreteLogHandler;
 import org.g6.laas.core.log.Line;
+import org.g6.laas.core.log.LogHandler;
 import org.g6.laas.core.rule.KeywordRule;
 import org.g6.laas.core.rule.Rule;
 import org.springframework.boot.SpringApplication;
@@ -43,24 +44,23 @@ public class Application {
     rules.add(rule3);
     rules.add(rule4);
 
-    SimpleAnalysisContext context = new SimpleAnalysisContext();
+    LogHandler handler = new ConcreteLogHandler(new LogFile("E:\\gitRepo\\LaaS\\laas-core\\src\\main\\resources\\RTE_log_format.txt"), null);
 
-    context.setHandler(new ConcreteLogHandler(new LogFile("C:\\gitRepo\\LaaS\\laas-core\\src\\main\\resources\\RTE_log_format.txt"), null));
 
-    context.setRules(rules);
-
-    SearchKeyWordsTask task = new SearchKeyWordsTask(context);
+    SearchKeyWordsTask task = new SearchKeyWordsTask(rules,handler);
 
     StrategyAnalysisEngine engine = new StrategyAnalysisEngine();
 
     engine.setStrategy(new ThreadPoolExecutionStrategy());
 
     Future<Map<Rule, Collection<Line>>> future = engine.submit(task);
+    engine.shutdown();
     try {
       Map<Rule, Collection<Line>> result = future.get();
       log.info("Task execute result: ");
       log.info("_______________________________________________");
       for (Map.Entry<Rule, Collection<Line>> entry : result.entrySet()) {
+        log.info("******************************************");
         log.info(entry.getKey().toString());
         log.info("******************************************");
         for (Line line : entry.getValue()) {

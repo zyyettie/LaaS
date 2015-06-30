@@ -9,7 +9,7 @@ import org.g6.laas.core.rule.Rule;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefaultKeyworkRuleAction extends ContextRuleAction {
+public class DefaultRuleAction extends ContextRuleAction {
 
   @Override
   public void doAction(Object content) {
@@ -22,10 +22,9 @@ public class DefaultKeyworkRuleAction extends ContextRuleAction {
     } else {
       matchedLines.add((Line)content);
     }
-
   }
 
-  public DefaultKeyworkRuleAction(AnalysisContext context, Rule rule) {
-    super(context, rule);
+  public DefaultRuleAction(AnalysisContext context) {
+    super(context);
   }
 }
