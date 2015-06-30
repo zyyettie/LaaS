@@ -4,10 +4,7 @@ import lombok.NoArgsConstructor;
 import org.g6.laas.core.exception.InputFormatNotFoundException;
 import org.g6.laas.core.exception.LaaSRuntimeException;
 import org.g6.laas.core.exception.Regex4LineSplitNotFoundException;
-import org.g6.laas.core.field.DoubleField;
-import org.g6.laas.core.field.Field;
-import org.g6.laas.core.field.IntegerField;
-import org.g6.laas.core.field.TextField;
+import org.g6.laas.core.field.*;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.format.FieldFormat;
 import org.g6.laas.core.format.InputFormat;
@@ -87,7 +84,7 @@ public class LogLine extends Line {
             } else if (fieldFormatType.equals("Integer")) {
                 f = new IntegerField(fieldContents[i]);
             } else if (fieldFormatType.equals("DateTime")) {
-                //DODO
+                f = new DateTimeField(fieldContents[i], ff.getDateFormat());
             } else if (fieldFormatType.equals("Double")) {
                 f = new DoubleField(fieldContents[i]);
             }
