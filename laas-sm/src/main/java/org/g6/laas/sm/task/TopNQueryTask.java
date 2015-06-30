@@ -5,6 +5,7 @@ import org.g6.laas.core.engine.context.SimpleAnalysisContext;
 import org.g6.laas.core.engine.task.AbstractAnalysisTask;
 import org.g6.laas.core.field.Field;
 import org.g6.laas.core.log.Line;
+import org.g6.laas.core.log.LogHandler;
 import org.g6.laas.core.log.SplitResult;
 import org.g6.laas.core.rule.KeywordRule;
 import org.g6.laas.core.rule.Rule;
@@ -41,12 +42,17 @@ public class TopNQueryTask extends AbstractAnalysisTask<Map<Double, Line>> {
         return result;
     }
 
-    public TopNQueryTask(int N) {
+    public TopNQueryTask(int N,LogHandler handler) {
         this.N = N;
-        AnalysisContext context = new SimpleAnalysisContext();
+        SimpleAnalysisContext context = new SimpleAnalysisContext();
+        context.setHandler(handler);
         rule = new KeywordRule("RTE D DBQUERY^");
         rule.addActionListener(new DefaultRuleAction(context));
         context.getRules().add(rule);
         setContext(context);
+    }
+
+    public TopNQueryTask(AnalysisContext context) {
+        super(context);
     }
 }
