@@ -4,10 +4,6 @@ import org.g6.laas.core.rule.Rule;
 
 public interface RuleAction {
 
-  void doAction(Object content);
-
-  Rule getRule();
-
-  void bindRule(Rule rule);
+  void satisfied(Rule rule,Object content);
 
 }

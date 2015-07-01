@@ -24,16 +24,13 @@ public abstract class AbstractRule implements Rule {
 
   public void triggerAction( Object content) {
 
-
       for (RuleAction action : actions) {
-        action.doAction(content);
+        action.satisfied(this,content);
       }
-
   }
 
   @Override
-  public void addActionListener(RuleAction action) {
-    action.bindRule(this);
+  public void addAction(RuleAction action) {
     actions.add(action);
   }
 

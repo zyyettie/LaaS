@@ -2,15 +2,16 @@ package org.g6.laas.core.rule.action;
 
 
 import lombok.Data;
+import org.g6.laas.core.engine.context.AnalysisContext;
 import org.g6.laas.core.rule.Rule;
 
 @Data
 public abstract class AbstractRuleAction implements RuleAction {
 
-  private Rule rule;
+  private AnalysisContext context;
 
-  @Override
-  public void bindRule(Rule rule){
-    this.setRule(rule);
+  public AbstractRuleAction(AnalysisContext context) {
+    this.context = context;
   }
+
 }

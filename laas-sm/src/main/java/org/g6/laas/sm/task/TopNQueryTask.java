@@ -10,8 +10,10 @@ import org.g6.laas.core.log.SplitResult;
 import org.g6.laas.core.rule.KeywordRule;
 import org.g6.laas.core.rule.Rule;
 import org.g6.laas.core.rule.action.DefaultRuleAction;
+import org.g6.laas.core.rule.action.RuleAction;
 import org.g6.laas.sm.log.DBQueryLine;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
@@ -22,13 +24,11 @@ public class TopNQueryTask extends AbstractAnalysisTask<Map<Double, Line>> {
 
     private Rule rule;
 
+    private Collection<Line> lines = new ArrayList<>();
+
     @Override
     protected Map<Double, Line> process() {
         Map<Double, Line> result = new TreeMap<>();
-        AnalysisContext context = getContext();
-
-        Collection<Line> lines = (Collection<Line>) context.get(rule);
-        if (lines != null) {
             loop:
             for (Line line : lines) {
                 SplitResult splitResult = new DBQueryLine(line).split();
@@ -37,8 +37,6 @@ public class TopNQueryTask extends AbstractAnalysisTask<Map<Double, Line>> {
                 result.put(time, line);
                 if (result.size() == N) break loop;
             }
-        }
-
         return result;
     }
 
@@ -47,7 +45,12 @@ public class TopNQueryTask extends AbstractAnalysisTask<Map<Double, Line>> {
         SimpleAnalysisContext context = new SimpleAnalysisContext();
         context.setHandler(handler);
         rule = new KeywordRule("RTE D DBQUERY^");
-        rule.addActionListener(new DefaultRuleAction(context));
+        rule.addAction(new RuleAction(){
+            @Override
+            public void satisfied(Rule rule, Object content) {
+               lines.add((Line)content);
+            }
+        });
         context.getRules().add(rule);
         setContext(context);
     }

@@ -12,7 +12,7 @@ public interface Rule {
 
     Rule not();
 
-    void addActionListener(RuleAction action);
+    void addAction(RuleAction action);
 
     void triggerAction(Object content);
 }
