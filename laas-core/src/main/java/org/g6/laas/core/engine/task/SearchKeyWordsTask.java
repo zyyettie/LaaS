@@ -37,8 +37,4 @@ public class SearchKeyWordsTask extends AbstractAnalysisTask<Map<Rule, Collectio
     context.setRules(this.rules);
     setContext(context);
   }
-
-  public SearchKeyWordsTask(AnalysisContext context) {
-    super(context);
-  }
 }

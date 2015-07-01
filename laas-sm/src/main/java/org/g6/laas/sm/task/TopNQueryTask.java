@@ -54,8 +54,4 @@ public class TopNQueryTask extends AbstractAnalysisTask<Map<Double, Line>> {
         context.getRules().add(rule);
         setContext(context);
     }
-
-    public TopNQueryTask(AnalysisContext context) {
-        super(context);
-    }
 }
