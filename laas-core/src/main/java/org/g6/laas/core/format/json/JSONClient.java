@@ -10,20 +10,22 @@ import java.util.List;
 @Slf4j
 public class JSONClient {
 
-    public static JSONFile<JSONLine> main(String jsonfile) {
-        List<String> list = FileUtil.readFile(FileUtil.getRelativeInputStream("/sm_rte_log.json"));
+    /**
+     * @param jsonFile json file, need to use relative path here e.g./org/g6/xxx.json
+     * @return
+     */
+    public static JSONFile<JSONLine> getFormatFromJSON(String jsonFile) {
+        List<String> list = FileUtil.readFile(FileUtil.getRelativeInputStream(jsonFile));
         String jsonStr = "";
-        for(String str: list){
+        for (String str : list) {
             jsonStr += str.trim();
         }
 
-        System.out.print(jsonStr);
+        log.debug(jsonStr);
 
+        JSONFile<JSONLine> jsonObj = JSONUtil.fromJson(jsonStr, new TypeToken<JSONFile<JSONLine>>() {
+        }.getType());
 
-        JSONFile<JSONLine> common = new JSONFile();
-
-        JSONFile<JSONLine> jsonObj = JSONUtil.fromJson(jsonStr, new TypeToken<JSONFile<JSONLine>>() {}.getType());
-
-         return jsonObj;
+        return jsonObj;
     }
 }
