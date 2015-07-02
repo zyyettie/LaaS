@@ -94,13 +94,13 @@ public class LogLine extends Line {
             FieldFormat ff = fieldFormatList.get(i);
             String fieldFormatType = ff.getType();
 
-            if (fieldFormatType.equals("String")) {
+            if (fieldFormatType.equals(Constants.FIELD_FORMAT_TYPE_STRING)) {
                 f = new TextField(fieldContents[i]);
-            } else if (fieldFormatType.equals("Integer")) {
+            } else if (fieldFormatType.equals(Constants.FIELD_FORMAT_TYPE_INTEGER)) {
                 f = new IntegerField(fieldContents[i]);
-            } else if (fieldFormatType.equals("DateTime")) {
+            } else if (fieldFormatType.equals(Constants.FIELD_FORMAT_TYPE_DATETIME)) {
                 f = new DateTimeField(fieldContents[i], ff.getDateFormat());
-            } else if (fieldFormatType.equals("Double")) {
+            } else if (fieldFormatType.equals(Constants.FIELD_FORMAT_TYPE_DOUBLE)) {
                 f = new DoubleField(fieldContents[i]);
             }
 
