@@ -12,7 +12,7 @@ public interface InputFormat {
     void setDefaultFormats(String[] defaultFormats);
     String[] getFormats() throws IllegalAccessException;
     void setFormats(String[] formats);
-    Map<String, List<FieldFormat>> getLineFormatsByKey();
+    Map<String, List<LogFieldFormat>> getLineFormatsByKey();
     void setLineFormatsByKey(Map<String, List<LogFieldFormat>> lineFormats);
     Map<String, String> getRegex4LineSplit();
     void setRegex4LineSplit(Map<String, String> regex);

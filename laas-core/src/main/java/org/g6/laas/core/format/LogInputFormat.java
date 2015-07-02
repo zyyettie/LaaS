@@ -11,6 +11,6 @@ public class LogInputFormat implements InputFormat{
     boolean defaultFormat;
     String[] defaultFormats;
     String[] formats;
-    Map<String, List<FieldFormat>> lineFormatsByKey;
+    Map<String, List<LogFieldFormat>> lineFormatsByKey;
     Map<String, String> regex4LineSplit;
 }
