@@ -1,7 +1,9 @@
 package org.g6.laas.core.log;
 
+import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.core.engine.context.AnalysisContext;
 import org.g6.laas.core.file.ILogFile;
+import org.g6.laas.core.file.validator.FileValidator;
 import org.g6.laas.core.rule.Rule;
 
 import java.io.IOException;
@@ -10,6 +12,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+@Slf4j
 public class ConcreteLogHandler extends LogHandler {
 
   public ConcreteLogHandler(ILogFile iLogFile, Rule rule) {
@@ -20,10 +23,28 @@ public class ConcreteLogHandler extends LogHandler {
     super(list, rule);
   }
 
+  private Collection<ILogFile> validatLogFiles(Collection<ILogFile> lofFiles){
+    FileValidator validator = this.getValidator();
+    if(validator != null){
+      Collection<ILogFile> list = new ArrayList<>();
+      for (ILogFile iLogFile : lofFiles){
+        if(validator.validate(iLogFile)){
+          list.add(iLogFile);
+        }else{
+          log.warn(iLogFile.getName() + " maybe contain incorrect format. Skip it.");
+        }
+      }
+      return list;
+    }
+    return lofFiles;
+  }
+
   @Override
   public Iterator<? extends Line> handle(AnalysisContext context) throws IOException {
     Collection<Line> collection = new ArrayList<>();
-    for (ILogFile iLogFile : list) {
+
+    Collection<ILogFile> logFiles = validatLogFiles(getList());
+    for (ILogFile iLogFile : logFiles) {
       //TODO
       //Here we may need to check which file is the first one.
       //There are two ways
@@ -36,8 +57,8 @@ public class ConcreteLogHandler extends LogHandler {
       int number = 0;
       while ((str = reader.readLine()) != null) {
         number++;
-        if(rule != null){
-          if (rule.isSatisfied(str)) {
+        if(getRule() != null){
+          if (getRule().isSatisfied(str)) {
             Line line = new LogLine(iLogFile, str, number, context.getInputFormat());
             collection.add(line);
           }
