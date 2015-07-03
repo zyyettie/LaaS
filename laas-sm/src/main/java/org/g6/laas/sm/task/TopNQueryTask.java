@@ -29,14 +29,20 @@ public class TopNQueryTask extends AbstractAnalysisTask<Map<Double, Line>> {
     @Override
     protected Map<Double, Line> process() {
         Map<Double, Line> result = new TreeMap<>();
-            loop:
-            for (Line line : lines) {
-                SplitResult splitResult = new DBQueryLine(line).split();
-                Field field = splitResult.get("execution_time");
-                Double time = (Double) field.getValue();
-                result.put(time, line);
-                if (result.size() == N) break loop;
-            }
+        Map<Double, Line> cached = new TreeMap<>();
+        for (Line line : lines) {
+            SplitResult splitResult = new DBQueryLine(line).split();
+            Field field = splitResult.get("execution_time");
+            Double time = (Double) field.getValue();
+            cached.put(time, line);
+        }
+        if(cached.size() <= N) return cached;
+        int count = 0;
+        for (Map.Entry<Double,Line> entry:cached.entrySet()) {
+            if(count >= N) break;
+            result.put(entry.getKey(),entry.getValue());
+            count++;
+        }
         return result;
     }
 
