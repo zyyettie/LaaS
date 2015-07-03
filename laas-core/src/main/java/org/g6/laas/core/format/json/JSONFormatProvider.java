@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.core.format.FieldFormat;
 import org.g6.laas.core.format.InputFormat;
 import org.g6.laas.core.format.LogFieldFormat;
+import org.g6.laas.core.format.LogInputFormat;
 import org.g6.util.Constants;
-import org.g6.util.FileUtil;
 import org.g6.util.JSONUtil;
 
 import java.util.ArrayList;
@@ -15,35 +15,31 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-public class JSONClient {
+public class JSONFormatProvider extends FormatProvider {
 
-    /**
-     * @param jsonFile json file, need to use relative path here e.g./org/g6/xxx.json
-     * @return
-     */
-    public static JSONFile<JSONLine> getFormatFromJSON(String jsonFile) {
-        List<String> list = FileUtil.readFile(FileUtil.getRelativeInputStream(jsonFile));
+    public JSONFormatProvider(String file) {
+        super(file);
+    }
+
+    @Override
+    InputFormat parse(List<String> lineList) {
         String jsonStr = "";
-        for (String str : list) {
+        for (String str : lineList) {
             jsonStr += str.trim();
         }
 
         log.debug(jsonStr);
 
-        JSONFile<JSONLine> jsonObj = JSONUtil.fromJson(jsonStr, new TypeToken<JSONFile<JSONLine>>() {
+        JSONFile<JSONLine> jsonFile = JSONUtil.fromJson(jsonStr, new TypeToken<JSONFile<JSONLine>>() {
         }.getType());
 
-        return jsonObj;
-    }
-
-    public static void getInputFormat(JSONFile<JSONLine> jsonFile, InputFormat format) {
         String dateFormat = jsonFile.getDateTimeFormat();
         List<JSONLine> jsonLines = jsonFile.getLines();
 
         Map<String, List<FieldFormat>> fieldFormatMap = new HashMap<>();
         Map<String, String> regexMap = new HashMap<>();
 
-        for(JSONLine line : jsonLines){
+        for (JSONLine line : jsonLines) {
             String key = line.getKey();
             String regex = line.getRegex();
             regexMap.put(key, regex);
@@ -51,17 +47,18 @@ public class JSONClient {
             List<LogFieldFormat> fields = line.getFields();
             List<FieldFormat> tempFields = new ArrayList<>();
 
-            for(LogFieldFormat field : fields){
-                if(field.getType().equals(Constants.FIELD_FORMAT_TYPE_DATETIME)){
+            for (LogFieldFormat field : fields) {
+                if (field.getType().equals(Constants.FIELD_FORMAT_TYPE_DATETIME)) {
                     field.setDateFormat(dateFormat);
                 }
                 tempFields.add(field);
             }
             fieldFormatMap.put(key, tempFields);
         }
+        LogInputFormat inputFormat = new LogInputFormat();
+        inputFormat.setLineFormatsByKey(fieldFormatMap);
+        inputFormat.setRegex4LineSplit(regexMap);
 
-        format.setLineFormatsByKey(fieldFormatMap);
-        format.setRegex4LineSplit(regexMap);
+        return inputFormat;
     }
-
 }
