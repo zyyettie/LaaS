@@ -42,31 +42,36 @@ public class FileUtil {
 
     }
 
+    public static boolean createFile(List<String> lineList, String outFile) {
+        try (FileWriter writer = new FileWriter(outFile);
+             BufferedWriter bw = new BufferedWriter(writer);) {
+            for (String str : lineList) {
+                bw.write(str);
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            LaaSExceptionHandler.handleException("Error happens when create the file : " + outFile, e);
+        }
+
+        return true;
+    }
+
     /**
      * Create a file from the input stream
      *
-     * @param is
+     * @param stream
      * @param outFile
      */
-    public static boolean createFile(InputStream is, String outFile) {
+    public static boolean createFile(InputStream stream, String outFile) {
         byte[] buffer = new byte[4 * 1024];
-        FileOutputStream os = null;
 
-        try {
-            os = new FileOutputStream(outFile);
+        try (FileOutputStream os = new FileOutputStream(outFile); InputStream is = stream;) {
             int read;
             while ((read = is.read(buffer)) > 0) {
                 os.write(buffer, 0, read);
             }
         } catch (Exception e) {
             LaaSExceptionHandler.handleException("Error happens when create the file : " + outFile, e);
-        } finally {
-            try {
-                os.close();
-                is.close();
-            } catch (IOException ioe) {
-                LaaSExceptionHandler.handleException("Error happens on closing the input stream and output steam  during creating file : " + outFile, ioe);
-            }
         }
         return true;
     }
