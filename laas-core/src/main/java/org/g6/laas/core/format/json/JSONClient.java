@@ -40,7 +40,7 @@ public class JSONClient {
         String dateFormat = jsonFile.getDateTimeFormat();
         List<JSONLine> jsonLines = jsonFile.getLines();
 
-        Map<String, List<LogFieldFormat>> fieldFormatMap = new HashMap<>();
+        Map<String, List<FieldFormat>> fieldFormatMap = new HashMap<>();
         Map<String, String> regexMap = new HashMap<>();
 
         for(JSONLine line : jsonLines){
@@ -49,7 +49,7 @@ public class JSONClient {
             regexMap.put(key, regex);
 
             List<LogFieldFormat> fields = line.getFields();
-            List<LogFieldFormat> tempFields = new ArrayList<>();
+            List<FieldFormat> tempFields = new ArrayList<>();
 
             for(LogFieldFormat field : fields){
                 if(field.getType().equals(Constants.FIELD_FORMAT_TYPE_DATETIME)){
