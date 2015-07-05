@@ -6,7 +6,7 @@ import org.g6.laas.core.format.LogFieldFormat;
 import java.util.List;
 
 @Data
-public class JSONLine {
+public class JSONLineFormat {
     private String key;
     private String regex;
     private List<LogFieldFormat> fields;

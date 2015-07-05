@@ -22,7 +22,7 @@ public class JSONFormatProvider extends FormatProvider {
     }
 
     @Override
-    InputFormat parse(List<String> lineList) {
+    public InputFormat parse(List<String> lineList) {
         String jsonStr = "";
         for (String str : lineList) {
             jsonStr += str.trim();
@@ -30,21 +30,21 @@ public class JSONFormatProvider extends FormatProvider {
 
         log.debug(jsonStr);
 
-        JSONFile<JSONLine> jsonFile = JSONUtil.fromJson(jsonStr, new TypeToken<JSONFile<JSONLine>>() {
+        JSONFileFormat<JSONLineFormat> jsonFileFormat = JSONUtil.fromJson(jsonStr, new TypeToken<JSONFileFormat<JSONLineFormat>>() {
         }.getType());
 
-        String dateFormat = jsonFile.getDateTimeFormat();
-        List<JSONLine> jsonLines = jsonFile.getLines();
+        String dateFormat = jsonFileFormat.getDateTimeFormat();
+        List<JSONLineFormat> jsonLineFormats = jsonFileFormat.getLines();
 
         Map<String, List<FieldFormat>> fieldFormatMap = new HashMap<>();
         Map<String, String> regexMap = new HashMap<>();
 
-        for (JSONLine line : jsonLines) {
-            String key = line.getKey();
-            String regex = line.getRegex();
+        for (JSONLineFormat lineFormat : jsonLineFormats) {
+            String key = lineFormat.getKey();
+            String regex = lineFormat.getRegex();
             regexMap.put(key, regex);
 
-            List<LogFieldFormat> fields = line.getFields();
+            List<LogFieldFormat> fields = lineFormat.getFields();
             List<FieldFormat> tempFields = new ArrayList<>();
 
             for (LogFieldFormat field : fields) {

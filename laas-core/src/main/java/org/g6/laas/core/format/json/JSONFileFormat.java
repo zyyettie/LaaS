@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class JSONFile<T> implements Serializable {
+public class JSONFileFormat<T> implements Serializable {
     @SerializedName("file_name")
     String fileName;
     @SerializedName("date_time_format")

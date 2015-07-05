@@ -10,7 +10,7 @@ import java.util.List;
 public abstract class FormatProvider {
     private String file;
 
-    InputFormat getInputFormat() {
+    public InputFormat getInputFormat() {
         List<String> list = FileUtil.readFile(FileUtil.getRelativeInputStream(file));
         return parse(list);
     }
