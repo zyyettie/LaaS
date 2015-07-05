@@ -42,7 +42,7 @@ public class FileUtil {
 
     }
 
-    public static boolean createFile(List<String> lineList, String outFile) {
+    public static boolean writeFile(List<String> lineList, String outFile) {
         try (FileWriter writer = new FileWriter(outFile);
              BufferedWriter bw = new BufferedWriter(writer);) {
             for (String str : lineList) {
