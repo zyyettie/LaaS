@@ -24,36 +24,6 @@ import java.util.concurrent.Future;
 public class DemoTest {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        /*String str = "REGEX:1234567";
-        System.out.println(str.substring(Constants.REGEX_PREFIX.length()));
-        System.out.println(RegexUtil.getValue(str, "REGEX:"));*/
-
-        /*ILogFile file = new LogFile("e:\\sm.log");
-        Rule rule = new KeywordRule("RTE D DBQUERY");
-
-        LogHandler handler = new BasicLogHandler(file, rule);
-        AnalysisContext context = new SimpleAnalysisContext();
-        try {
-            Iterator<? extends Line> lines = handler.handle(context);
-            List<Line> sortList = new ArrayList<>();
-
-            while (lines.hasNext()) {
-                Line line = lines.next();
-                line.split();
-                sortList.add(line);
-            }
-            Collections.sort(sortList, new LineComparator());
-
-            List<String> contentList = new ArrayList<>();
-            for(Line line : sortList){
-               contentList.add(line.getContent());
-            }
-
-            FileUtil.writeFile(contentList, "e:\\target.log");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
         ILogFile file = new LogFile("e:\\sm.log");
         Rule rule = new KeywordRule("RTE D DBQUERY");
 
