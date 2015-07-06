@@ -1,6 +1,6 @@
 {"file_name":"sm.log", "date_time_format":"MM/dd/yyyy HH:mm:ss","lines":
     [
-        {"key":"REGEX:RTE D DBQUERY","regex":"^(\d+)\(\s+(\d+)\)\s+(\d+/\d+/\d+\s+\d+:\d+:\d+)\s+RTE D.+DBACCESS.+(\d+\.\d+)\s+seconds.*",
+        {"key":"RTE D DBACCESS","line_split_regex":"^(\d+)\(\s+(\d+)\)\s+(\d+/\d+/\d+\s+\d+:\d+:\d+)\s+RTE D.+DBACCESS.+(\d+\.\d+)\s+seconds.*",
             "fields":[
                 {"name":"process_id","type":"Integer","sortable":"false"},
                 {"name":"thread_id","type":"Integer","sortable":"false"},
@@ -8,7 +8,7 @@
                 {"name":"execution_time","type":"Double","sortable":"true"}
             ]
         },
-        {"key":"REGEX:SCRIPTTRACE","regex":"^(\d+)\(\s+(\d+)\)\s+(\d+/\d+/\d+\s+\d+:\d+:\d+)\s+RTE D SCRIPTTRACE:.+elapsed: (\d+) ms",
+        {"key":"REGEX:SCRIPTTRACE","line_split_regex":"^(\d+)\(\s+(\d+)\)\s+(\d+/\d+/\d+\s+\d+:\d+:\d+)\s+RTE D SCRIPTTRACE:.+elapsed: (\d+) ms",
             "fields":[
                 {"name":"process id","type":"Integer","sortable":"false"},
                 {"name":"thread_id","type":"Integer","sortable":"false"},
@@ -16,7 +16,7 @@
                 {"name":"execution_time","type":"Double","sortable":"true"}
             ]
         },
-        {"key":"REGEX:RTE D DBQUERY","regex":"^(\d+)\(\s+(\d+)\)\s+(\d+/\d+/\d+\s+\d+:\d+:\d+)\s+RTE D DBQUERY(?:\^[^\^]+){6}\^(\d+\.\d+).*",
+        {"key":"REGEX:RTE D DBQUERY","line_split_regex":"^(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D DBQUERY(?:\\^[^\\^]+){6}\\^(\\d+\\.\\d+).*",
             "fields":[
                 {"name":"process id","type":"Integer","sortable":"false"},
                 {"name":"thread_id","type":"Integer","sortable":"false"},
@@ -24,7 +24,7 @@
                 {"name":"execution_time","type":"Double","sortable":"true"}
             ]
         },
-        {"key":"REGEX:RTE D DBFIND","regex":"^(\d+)\(\s+(\d+)\)\s+(\d+/\d+/\d+\s+\d+:\d+:\d+)\s+RTE D DBFIND(?:\^[^\^]+){6}\^(\d+\.\d+).*",
+        {"key":"REGEX:RTE D DBFIND","line_split_regex":"^(\d+)\(\s+(\d+)\)\s+(\d+/\d+/\d+\s+\d+:\d+:\d+)\s+RTE D DBFIND(?:\^[^\^]+){6}\^(\d+\.\d+).*",
             "fields":[
                 {"name":"process id","type":"Integer","sortable":"false"},
                 {"name":"thread_id","type":"Integer","sortable":"false"},
