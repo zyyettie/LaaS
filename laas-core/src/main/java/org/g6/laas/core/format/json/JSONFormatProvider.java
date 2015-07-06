@@ -1,28 +1,39 @@
 package org.g6.laas.core.format.json;
 
+import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.core.format.FieldFormat;
 import org.g6.laas.core.format.InputFormat;
 import org.g6.laas.core.format.LogFieldFormat;
 import org.g6.laas.core.format.LogInputFormat;
 import org.g6.util.Constants;
+import org.g6.util.FileUtil;
 import org.g6.util.JSONUtil;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Slf4j
-public class JSONFormatProvider extends FormatProvider {
+@Data
+public class JSONFormatProvider implements FormatProvider {
+    private String jsonFile;
+    List<String> lineList;
 
-    public JSONFormatProvider(String file) {
-        super(file);
+    public JSONFormatProvider(String jsonFile) {
+        this.jsonFile = jsonFile;
     }
 
-    @Override
-    public InputFormat parse(List<String> lineList) {
+    public InputFormat getInputFormat() {
+        lineList = FileUtil.readFile(FileUtil.getRelativeInputStream(jsonFile));
+        return parse();
+    }
+
+    protected InputFormat parse() {
         String jsonStr = "";
         for (String str : lineList) {
             jsonStr += str.trim();
@@ -60,5 +71,24 @@ public class JSONFormatProvider extends FormatProvider {
         inputFormat.setRegex4LineSplit(regexMap);
 
         return inputFormat;
+    }
+
+    @Data
+    class JSONFileFormat<T> implements Serializable {
+        @SerializedName("file_name")
+        String fileName;
+        @SerializedName("date_time_format")
+        String dateTimeFormat;
+
+        private List<T> lines;
+
+    }
+
+    @Data
+    public class JSONLineFormat {
+        private String key;
+        @SerializedName("line_split_regex")
+        private String regex;
+        private List<LogFieldFormat> fields;
     }
 }
