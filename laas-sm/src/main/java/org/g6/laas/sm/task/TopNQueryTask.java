@@ -6,7 +6,6 @@ import org.g6.laas.core.log.Line;
 import org.g6.laas.core.log.LogHandler;
 import org.g6.laas.core.rule.KeywordRule;
 import org.g6.laas.core.rule.Rule;
-import org.g6.laas.core.rule.action.RuleAction;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,12 +26,7 @@ public class TopNQueryTask extends AbstractAnalysisTask<Collection<Line>> {
         SimpleAnalysisContext context = new SimpleAnalysisContext();
         context.setHandler(handler);
         rule = new KeywordRule("RTE D DBQUERY^");
-        rule.addAction(new RuleAction(){
-            @Override
-            public void satisfied(Rule rule, Object content) {
-                lines.add((Line)content);
-            }
-        });
+        //here not need to specify action for rules
         context.getRules().add(rule);
         setContext(context);
     }
