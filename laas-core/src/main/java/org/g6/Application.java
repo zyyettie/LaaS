@@ -3,11 +3,10 @@ package org.g6;
 import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.core.engine.StrategyAnalysisEngine;
 import org.g6.laas.core.engine.ThreadPoolExecutionStrategy;
-import org.g6.laas.core.engine.context.SimpleAnalysisContext;
 import org.g6.laas.core.engine.task.SearchKeyWordsTask;
 import org.g6.laas.core.exception.LaaSRuntimeException;
 import org.g6.laas.core.file.LogFile;
-import org.g6.laas.core.log.ConcreteLogHandler;
+import org.g6.laas.core.log.BasicLogHandler;
 import org.g6.laas.core.log.Line;
 import org.g6.laas.core.log.LogHandler;
 import org.g6.laas.core.rule.KeywordRule;
@@ -44,7 +43,7 @@ public class Application {
     rules.add(rule3);
     rules.add(rule4);
 
-    LogHandler handler = new ConcreteLogHandler(new LogFile("C:\\gitRepo\\LaaS\\laas-core\\src\\main\\resources\\RTE_log_format.txt"), null);
+    LogHandler handler = new BasicLogHandler(new LogFile("C:\\gitRepo\\LaaS\\laas-core\\src\\main\\resources\\RTE_log_format.txt"), null);
 
 
     SearchKeyWordsTask task = new SearchKeyWordsTask(rules,handler);

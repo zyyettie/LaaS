@@ -1,33 +1,42 @@
 package org.g6.laas.sm.task;
 
+import org.g6.laas.core.engine.context.AnalysisContext;
 import org.g6.laas.core.engine.context.SimpleAnalysisContext;
 import org.g6.laas.core.engine.task.AbstractAnalysisTask;
+import org.g6.laas.core.engine.task.SortingTask;
 import org.g6.laas.core.log.Line;
+import org.g6.laas.core.log.LineComparator;
 import org.g6.laas.core.log.LogHandler;
 import org.g6.laas.core.rule.KeywordRule;
 import org.g6.laas.core.rule.Rule;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
-public class TopNQueryTask extends AbstractAnalysisTask<Collection<Line>> {
+public class TopNQueryTask extends SortingTask {
     private int N = 50;
-    private Rule rule;
-
-    private Collection<Line> lines = new ArrayList<>();
 
     @Override
     protected Collection<Line> process() {
-        return null;
+        List<Line> lines = (List<Line>) getContext().get("SORTING");
+        Collections.sort(lines, new LineComparator());
+
+        List<Line> topNList = new ArrayList<>();
+
+        int counter = 0;
+        for (Line line : lines) {
+            if (counter < N) {
+                topNList.add(line);
+            }
+            counter++;
+        }
+        return lines;
     }
 
-    public TopNQueryTask(int N, LogHandler handler) {
-        this.N = N;
-        SimpleAnalysisContext context = new SimpleAnalysisContext();
-        context.setHandler(handler);
-        rule = new KeywordRule("RTE D DBQUERY^");
-        //here not need to specify action for rules
-        context.getRules().add(rule);
+    public TopNQueryTask(AnalysisContext context) {
+        this.N = context.get("COUNTER") != null ? ((Integer) context.get("COUNTER")).intValue() : N;
         setContext(context);
     }
 }
