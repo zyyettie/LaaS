@@ -85,7 +85,7 @@ public class LogLine extends Line {
             throw new InputFormatNotFoundException("InputFormat not found");
         if (lineSplitRegex == null)
             throw new Regex4LineSplitNotFoundException("Regex not found for " + getContent());
-
+        String test = getContent();
         String[] fieldContents = RegexUtil.getValues(getContent(), lineSplitRegex);
         Collection<Field> fieldList = new ArrayList<>();
 

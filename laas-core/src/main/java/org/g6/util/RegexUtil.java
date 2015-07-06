@@ -7,15 +7,15 @@ public class RegexUtil {
 
     public static String[] getValues(String str, String regex) {
         Pattern p = Pattern.compile(regex);
-        Matcher matcher = p.matcher(str);
+        Matcher matcher = p.matcher(str.trim());
         String[] values = null;
 
         if (matcher.find()) {
             int gc = matcher.groupCount();
-            values = new String[gc - 1];
+            values = new String[gc];
 
             for (int i = 1; i <= gc; i++) {
-                values[i] = matcher.group(i);
+                values[i - 1] = matcher.group(i);
             }
         }
         return values;
