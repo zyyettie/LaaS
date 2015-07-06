@@ -1,4 +1,5 @@
 import org.g6.laas.core.engine.context.AnalysisContext;
+import org.g6.laas.core.engine.context.SimpleAnalysisContext;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.file.LogFile;
 import org.g6.laas.core.log.BasicLogHandler;
@@ -7,7 +8,6 @@ import org.g6.laas.core.log.LineComparator;
 import org.g6.laas.core.log.LogHandler;
 import org.g6.laas.core.rule.KeywordRule;
 import org.g6.laas.core.rule.Rule;
-import org.g6.laas.sm.context.SMContext;
 import org.g6.util.FileUtil;
 
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class DemoTest {
         Rule rule = new KeywordRule("RTE D DBQUERY");
 
         LogHandler handler = new BasicLogHandler(file, rule);
-        AnalysisContext context = new SMContext();
+        AnalysisContext context = new SimpleAnalysisContext();
         try {
             Iterator<? extends Line> lines = handler.handle(context);
             List<Line> sortList = new ArrayList<>();
