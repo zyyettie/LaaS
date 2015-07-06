@@ -13,13 +13,13 @@ import java.util.Iterator;
 import java.util.List;
 
 @Slf4j
-public class ConcreteLogHandler extends LogHandler {
+public class BasicLogHandler extends LogHandler {
 
-  public ConcreteLogHandler(ILogFile iLogFile, Rule rule) {
+  public BasicLogHandler(ILogFile iLogFile, Rule rule) {
     super(iLogFile, rule);
   }
 
-  public ConcreteLogHandler(List<ILogFile> list, Rule rule) {
+  public BasicLogHandler(List<ILogFile> list, Rule rule) {
     super(list, rule);
   }
 

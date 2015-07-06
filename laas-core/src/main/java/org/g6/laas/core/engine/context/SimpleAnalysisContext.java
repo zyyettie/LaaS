@@ -15,35 +15,38 @@ import java.util.Map;
 @Data
 public class SimpleAnalysisContext implements AnalysisContext {
 
-  private LogHandler handler;
+    private LogHandler handler;
 
-  private Collection<Rule> rules = new ArrayList<>();
+    private Collection<Rule> rules = new ArrayList<>();
 
-  private Map<Object, Object> holder = new HashMap<>();
+    private Map<Object, Object> holder = new HashMap<>();
 
-  @Override
-  public InputFormat getInputFormat() {
-    throw new NotImplementedException();
-  }
+    private InputFormat inputForm;
 
-  @Override
-  public LogHandler getHandler() {
-    return handler;
-  }
 
-  @Override
-  public Collection<Rule> getRules() {
-    return rules;
-  }
+    @Override
+    public InputFormat getInputFormat() {
+        return inputForm;
+    }
 
-  @Override
-  public void set(Object key, Object value) {
-    holder.put(key, value);
-  }
+    @Override
+    public LogHandler getHandler() {
+        return handler;
+    }
 
-  @Override
-  public Object get(Object key) {
-    return holder.get(key);
-  }
+    @Override
+    public Collection<Rule> getRules() {
+        return rules;
+    }
+
+    @Override
+    public void set(Object key, Object value) {
+        holder.put(key, value);
+    }
+
+    @Override
+    public Object get(Object key) {
+        return holder.get(key);
+    }
 
 }
