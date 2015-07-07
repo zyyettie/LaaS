@@ -22,7 +22,7 @@ public class LogLine extends Line {
         super(file, content, lineNumber, null);
     }
 
-    public LogLine(ILogFile file, String content, int lineNumber, InputFormat lineFormat) {
+    public LogLine(ILogFile file, String content, int lineNumber, InputFormat<LineAttributes> lineFormat) {
         super(file, content, lineNumber, lineFormat);
     }
 
@@ -40,9 +40,12 @@ public class LogLine extends Line {
         List<String> errorKeyList = new ArrayList<>();
         int counter = 0;
 
-        Map<String, List<FieldFormat>> formats = getInputFormat().getLineFormatsByKey();
-        for (Map.Entry<String, List<FieldFormat>> entry : formats.entrySet()) {
+        Map<String, LineAttributes> lineAttrMap = (Map<String, LineAttributes>)getInputFormat().getLineFormat();
+
+
+        for (Map.Entry<String, LineAttributes> entry : lineAttrMap.entrySet()) {
             String lineFormatKey = entry.getKey();
+            LineAttributes lineAttr = entry.getValue();
 
             if (lineFormatKey.startsWith(Constants.REGEX_PREFIX)) {// the key is regex
                 String regex = lineFormatKey.substring(Constants.REGEX_PREFIX.length());
@@ -51,15 +54,15 @@ public class LogLine extends Line {
                 if(!StringUtil.isNull(matchedValue)){
                     errorKeyList.add(lineFormatKey);
                     counter++;
-                    fieldFormatList = entry.getValue();
-                    lineSplitRegex = getInputFormat().getRegex4LineSplit().get(lineFormatKey);
+                    fieldFormatList = lineAttr.getFieldFormats();
+                    lineSplitRegex = lineAttr.getSplitRegex();
                 }
             } else {
                 if (getContent().contains(lineFormatKey)) {
                     errorKeyList.add(entry.getKey());
                     counter++;
-                    fieldFormatList = entry.getValue();
-                    lineSplitRegex = getInputFormat().getRegex4LineSplit().get(lineFormatKey);
+                    fieldFormatList = lineAttr.getFieldFormats();
+                    lineSplitRegex = lineAttr.getSplitRegex();
                 }
             }
         }

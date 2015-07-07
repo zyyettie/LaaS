@@ -6,8 +6,9 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.core.format.FieldFormat;
 import org.g6.laas.core.format.InputFormat;
+import org.g6.laas.core.format.IrregularInputFormat;
 import org.g6.laas.core.format.LogFieldFormat;
-import org.g6.laas.core.format.LogInputFormat;
+import org.g6.laas.core.log.LineAttributes;
 import org.g6.util.Constants;
 import org.g6.util.FileUtil;
 import org.g6.util.JSONUtil;
@@ -48,13 +49,13 @@ public class JSONFormatProvider implements FormatProvider {
         String dateFormat = jsonFileFormat.getDateTimeFormat();
         List<JSONLineFormat> jsonLineFormats = jsonFileFormat.getLines();
 
-        Map<String, List<FieldFormat>> fieldFormatMap = new HashMap<>();
-        Map<String, String> regexMap = new HashMap<>();
+        Map<String, LineAttributes> fieldFormatMap = new HashMap<>();
 
         for (JSONLineFormat lineFormat : jsonLineFormats) {
             String key = lineFormat.getKey();
             String regex = lineFormat.getRegex();
-            regexMap.put(key, regex);
+            LineAttributes lineAttr = new LineAttributes();
+            lineAttr.setSplitRegex(regex);
 
             List<LogFieldFormat> fields = lineFormat.getFields();
             List<FieldFormat> tempFields = new ArrayList<>();
@@ -70,11 +71,11 @@ public class JSONFormatProvider implements FormatProvider {
                 }
                 tempFields.add(field);
             }
-            fieldFormatMap.put(key, tempFields);
+            lineAttr.setFieldFormats(tempFields);
+            fieldFormatMap.put(key, lineAttr);
         }
-        LogInputFormat inputFormat = new LogInputFormat();
-        inputFormat.setLineFormatsByKey(fieldFormatMap);
-        inputFormat.setRegex4LineSplit(regexMap);
+        IrregularInputFormat inputFormat = new IrregularInputFormat();
+        inputFormat.setLineFormat(fieldFormatMap);
 
         return inputFormat;
     }
