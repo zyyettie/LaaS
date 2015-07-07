@@ -1,5 +1,6 @@
 package org.g6.laas.core.format;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 public class LogFieldFormat implements FieldFormat {
     private String name;
     private String type;
+    @SerializedName("date_time_format")
     private String dateFormat;
     private boolean sortable;
 
