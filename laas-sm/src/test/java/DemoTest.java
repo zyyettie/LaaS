@@ -1,23 +1,19 @@
 import org.g6.laas.core.engine.StrategyAnalysisEngine;
 import org.g6.laas.core.engine.ThreadPoolExecutionStrategy;
-import org.g6.laas.core.engine.context.AnalysisContext;
 import org.g6.laas.core.engine.context.SimpleAnalysisContext;
-import org.g6.laas.core.engine.task.AnalysisTask;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.file.LogFile;
 import org.g6.laas.core.format.json.FormatProvider;
 import org.g6.laas.core.format.json.JSONFormatProvider;
 import org.g6.laas.core.log.BasicLogHandler;
 import org.g6.laas.core.log.Line;
-import org.g6.laas.core.log.LineComparator;
 import org.g6.laas.core.log.LogHandler;
 import org.g6.laas.core.rule.KeywordRule;
 import org.g6.laas.core.rule.Rule;
 import org.g6.laas.sm.task.TopNQueryTask;
-import org.g6.util.FileUtil;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -43,7 +39,6 @@ public class DemoTest {
 
         Future<Collection<Line>> future = engine.submit(task);
         engine.shutdown();
-
 
         List<Line> lines = (List<Line>)future.get();
 

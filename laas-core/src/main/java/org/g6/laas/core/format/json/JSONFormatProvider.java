@@ -41,7 +41,8 @@ public class JSONFormatProvider implements FormatProvider {
 
         log.debug(jsonStr);
 
-        JSONFileFormat<JSONLineFormat> jsonFileFormat = JSONUtil.fromJson(jsonStr, new TypeToken<JSONFileFormat<JSONLineFormat>>() {
+        JSONFileFormat<JSONLineFormat> jsonFileFormat = JSONUtil.fromJson(
+                jsonStr, new TypeToken<JSONFileFormat<JSONLineFormat>>() {
         }.getType());
 
         String dateFormat = jsonFileFormat.getDateTimeFormat();
@@ -60,7 +61,12 @@ public class JSONFormatProvider implements FormatProvider {
 
             for (LogFieldFormat field : fields) {
                 if (field.getType().equals(Constants.FIELD_FORMAT_TYPE_DATETIME)) {
-                    field.setDateFormat(dateFormat);
+                    // if date format is specified for a field in JSON file e.g.
+                    // {"name":"datetime","type":"DateTime","sortable":"false","date_time_format": "MM/dd/yyyy HH:mm:ss"}
+                    // the one defined on file level will be used
+                    if (field.getDateFormat() == null) {
+                        field.setDateFormat(dateFormat);
+                    }
                 }
                 tempFields.add(field);
             }
