@@ -19,7 +19,7 @@ public class HDFSFileReader implements Closeable {
         this.file = file;
     }
 
-    public void open() throws IOException{
+    public void open() throws IOException {
         Configuration conf = new Configuration();
         FileSystem fs = FileSystem.get(conf);
 

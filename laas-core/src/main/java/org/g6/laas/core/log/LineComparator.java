@@ -10,8 +10,8 @@ import java.util.Comparator;
 public class LineComparator implements Comparator<Line> {
     boolean desc = true;
 
-    public LineComparator(boolean desc){
-         this.desc = desc;
+    public LineComparator(boolean desc) {
+        this.desc = desc;
     }
 
     @Override

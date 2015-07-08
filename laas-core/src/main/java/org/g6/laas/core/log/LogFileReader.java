@@ -6,15 +6,15 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class LogFileReader{
-    private BufferedReader reader = null;
+public class LogFileReader {
     ILogFile file;
+    private BufferedReader reader = null;
 
     LogFileReader(ILogFile file) {
         this.file = file;
     }
 
-    public void open() throws IOException{
+    public void open() throws IOException {
         reader = new BufferedReader(new FileReader(file.getPath()));
     }
 

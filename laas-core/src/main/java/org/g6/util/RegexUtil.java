@@ -21,14 +21,14 @@ public class RegexUtil {
         return values;
     }
 
-    public static boolean isMatched(String str, String regex){
+    public static boolean isMatched(String str, String regex) {
         Pattern p = Pattern.compile(regex);
         Matcher matcher = p.matcher(str);
 
         return matcher.matches();
     }
 
-    public static String getValue(String str, String regex){
+    public static String getValue(String str, String regex) {
         Pattern p = Pattern.compile(regex);
         Matcher matcher = p.matcher(str);
         String value = null;

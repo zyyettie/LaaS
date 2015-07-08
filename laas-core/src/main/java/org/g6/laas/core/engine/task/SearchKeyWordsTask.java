@@ -14,27 +14,27 @@ import java.util.Map;
 
 public class SearchKeyWordsTask extends AbstractAnalysisTask<Map<Rule, Collection<Line>>> {
 
-  private Collection<Rule> rules;
+    private Collection<Rule> rules;
 
-  @Override
-  protected Map<Rule, Collection<Line>> process() {
-    Map<Rule, Collection<Line>> result = new HashMap<>();
-    AnalysisContext context = this.getContext();
-    for (Rule rule : rules) {
-      result.put(rule, (Collection<Line>) context.get(rule));
+    public SearchKeyWordsTask(Collection<Rule> rules, LogHandler handler) {
+        SimpleAnalysisContext context = new SimpleAnalysisContext();
+        context.setHandler(handler);
+        this.rules = rules;
+        RuleAction action = new DefaultRuleAction(context);
+        for (Rule rule : this.rules) {
+            rule.addAction(action);
+        }
+        context.setRules(this.rules);
+        setContext(context);
     }
-    return result;
-  }
 
-  public SearchKeyWordsTask(Collection<Rule> rules, LogHandler handler) {
-    SimpleAnalysisContext context = new SimpleAnalysisContext();
-    context.setHandler(handler);
-    this.rules = rules;
-    RuleAction action = new DefaultRuleAction(context);
-    for (Rule rule : this.rules) {
-      rule.addAction(action);
+    @Override
+    protected Map<Rule, Collection<Line>> process() {
+        Map<Rule, Collection<Line>> result = new HashMap<>();
+        AnalysisContext context = this.getContext();
+        for (Rule rule : rules) {
+            result.put(rule, (Collection<Line>) context.get(rule));
+        }
+        return result;
     }
-    context.setRules(this.rules);
-    setContext(context);
-  }
 }

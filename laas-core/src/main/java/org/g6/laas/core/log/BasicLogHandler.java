@@ -3,7 +3,6 @@ package org.g6.laas.core.log;
 import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.core.engine.context.AnalysisContext;
 import org.g6.laas.core.file.ILogFile;
-import org.g6.laas.core.file.validator.FileValidator;
 import org.g6.laas.core.filter.IFilter;
 
 import java.io.IOException;
@@ -23,21 +22,17 @@ public class BasicLogHandler extends LogHandler {
     super(list, filter);
   }
 
-  private Collection<ILogFile> validateLogFiles(Collection<ILogFile> lofFiles){
-    FileValidator validator = this.getValidator();
-    if(validator != null){
-      Collection<ILogFile> list = new ArrayList<>();
-      for (ILogFile iLogFile : lofFiles){
-        if(validator.validate(iLogFile)){
-          list.add(iLogFile);
-        }else{
-          log.warn(iLogFile.getName() + " maybe contain incorrect format. Skip it.");
+    private Collection<ILogFile> validateLogFiles(Collection<ILogFile> lofFiles) {
+        Collection<ILogFile> list = new ArrayList<>();
+        for (ILogFile iLogFile : lofFiles) {
+            if (iLogFile.isValid()) {
+                list.add(iLogFile);
+            } else {
+                log.warn(iLogFile.getName() + " maybe contain incorrect format. Skip it.");
+            }
         }
-      }
-      return list;
+        return list;
     }
-    return lofFiles;
-  }
 
   @Override
   public Iterator<? extends Line> handle(AnalysisContext context) throws IOException {

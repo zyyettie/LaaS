@@ -1,6 +1,6 @@
 package org.g6.laas.core.exception;
 
-public class LaaSRuntimeException extends RuntimeException{
+public class LaaSRuntimeException extends RuntimeException {
     public LaaSRuntimeException() {
         super();
     }

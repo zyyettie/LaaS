@@ -1,9 +1,12 @@
 package org.g6.util;
 
+import com.google.common.io.Resources;
 import org.g6.laas.core.exception.LaaSExceptionHandler;
 import org.g6.laas.core.exception.LaaSRuntimeException;
 
 import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +22,11 @@ public class FileUtil {
     public static InputStream getRelativeInputStream(String file) {
         InputStream is = FileUtil.class.getResourceAsStream(file);
         return is;
+    }
+
+    public static File getFile(String file) throws URISyntaxException {
+        URL url = Resources.getResource(file);
+        return new File(url.toURI());
     }
 
     /**

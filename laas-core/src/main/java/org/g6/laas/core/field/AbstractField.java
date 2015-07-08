@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public abstract class AbstractField<T> implements Field<T>{
+public abstract class AbstractField<T> implements Field<T> {
     private String content;
     private String name;
     private boolean sortable;

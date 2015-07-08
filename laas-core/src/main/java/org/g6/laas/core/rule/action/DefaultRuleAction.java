@@ -9,8 +9,12 @@ import java.util.List;
 
 public class DefaultRuleAction extends AbstractRuleAction {
 
+    public DefaultRuleAction(AnalysisContext context) {
+        super(context);
+    }
+
     @Override
-    public void satisfied(Rule rule,Object content) {
+    public void satisfied(Rule rule, Object content) {
 
         List<Line> matchedLines = (List<Line>) getContext().get(rule);
         if (matchedLines == null) {
@@ -20,9 +24,5 @@ public class DefaultRuleAction extends AbstractRuleAction {
         } else {
             matchedLines.add((Line) content);
         }
-    }
-
-    public DefaultRuleAction(AnalysisContext context) {
-        super(context);
     }
 }

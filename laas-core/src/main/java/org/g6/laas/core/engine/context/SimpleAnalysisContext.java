@@ -5,7 +5,6 @@ import lombok.Data;
 import org.g6.laas.core.format.InputFormat;
 import org.g6.laas.core.log.LogHandler;
 import org.g6.laas.core.rule.Rule;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.Collection;

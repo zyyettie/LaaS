@@ -1,26 +1,55 @@
 package org.g6.laas.sm.task;
 
-import org.g6.laas.core.engine.context.AnalysisContext;
 import org.g6.laas.core.engine.context.SimpleAnalysisContext;
 import org.g6.laas.core.engine.task.AbstractAnalysisTask;
-import org.g6.laas.core.engine.task.SortingTask;
+import org.g6.laas.core.file.ILogFile;
+import org.g6.laas.core.file.LogFile;
+import org.g6.laas.core.format.provider.DefaultFormatProvider;
+import org.g6.laas.core.format.provider.FormatProvider;
+import org.g6.laas.core.log.BasicLogHandler;
 import org.g6.laas.core.log.Line;
 import org.g6.laas.core.log.LineComparator;
 import org.g6.laas.core.log.LogHandler;
 import org.g6.laas.core.rule.KeywordRule;
 import org.g6.laas.core.rule.Rule;
+import org.g6.laas.core.rule.action.RuleAction;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class TopNQueryTask extends SortingTask {
+public class TopNQueryTask extends AbstractAnalysisTask<List<Line>> {
     private int N = 50;
+    private List<Line> lines = new ArrayList<>();
+
+    public TopNQueryTask(int topN, String file) {
+        this.N = topN;
+        ILogFile logFile = new LogFile(file);
+        Rule rule = new KeywordRule("RTE D DBQUERY");
+
+        LogHandler handler = new BasicLogHandler(logFile, rule);
+        FormatProvider provider = new DefaultFormatProvider("/sm_rte_log.json");
+
+        SimpleAnalysisContext context = new SimpleAnalysisContext();
+
+        context.setHandler(handler);
+        context.setInputForm(provider.getInputFormat());
+
+        rule.addAction(new RuleAction() {
+            @Override
+            public void satisfied(Rule rule, Object content) {
+                Line line = (Line) content;
+                line.split();
+                lines.add(line);
+            }
+        });
+        context.getRules().add(rule);
+
+        setContext(context);
+    }
 
     @Override
-    protected Collection<Line> process() {
-        List<Line> lines = (List<Line>) getContext().get("SORTING");
+    protected List<Line> process() {
         Collections.sort(lines, new LineComparator());
 
         List<Line> topNList = new ArrayList<>();
@@ -32,11 +61,6 @@ public class TopNQueryTask extends SortingTask {
             }
             counter++;
         }
-        return lines;
-    }
-
-    public TopNQueryTask(AnalysisContext context) {
-        this.N = context.get("COUNTER") != null ? ((Integer) context.get("COUNTER")).intValue() : N;
-        setContext(context);
+        return topNList;
     }
 }

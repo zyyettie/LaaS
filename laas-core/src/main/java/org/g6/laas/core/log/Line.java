@@ -2,11 +2,8 @@ package org.g6.laas.core.log;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.g6.laas.core.field.Field;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.format.InputFormat;
-
-import java.util.Collection;
 
 @Data
 @NoArgsConstructor
@@ -26,7 +23,7 @@ public abstract class Line implements Comparable {
     public abstract SplitResult split();
 
     @Override
-    public String toString(){
+    public String toString() {
         return "File=" + file.getPath() + ";line=" + lineNumber + ";content=" + content;
     }
 }

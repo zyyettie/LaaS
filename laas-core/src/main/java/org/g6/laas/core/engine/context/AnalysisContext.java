@@ -9,14 +9,14 @@ import java.util.Collection;
 
 public interface AnalysisContext {
 
-  InputFormat getInputFormat();
+    InputFormat getInputFormat();
 
-  LogHandler getHandler();
+    LogHandler getHandler();
 
-  Collection<Rule> getRules();
+    Collection<Rule> getRules();
 
-  void set(Object key, Object value);
+    void set(Object key, Object value);
 
-  Object get(Object key);
+    Object get(Object key);
 
 }

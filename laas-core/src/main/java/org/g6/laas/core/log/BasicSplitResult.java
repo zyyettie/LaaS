@@ -8,15 +8,15 @@ import java.util.*;
 
 public class BasicSplitResult implements SplitResult {
 
-    private Map<String,Field> byName = new HashMap<>();
+    private Map<String, Field> byName = new HashMap<>();
 
     private List<Field> byIndex = new ArrayList<>();
 
-    public BasicSplitResult(Collection<Field> fields){
+    public BasicSplitResult(Collection<Field> fields) {
         byIndex.addAll(fields);
-        for(Field field : fields){
-            if(!Strings.isNullOrEmpty(field.getName()))
-               byName.put(field.getName(),field);
+        for (Field field : fields) {
+            if (!Strings.isNullOrEmpty(field.getName()))
+                byName.put(field.getName(), field);
         }
     }
 

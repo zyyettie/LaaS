@@ -27,49 +27,49 @@ import java.util.concurrent.Future;
 @Slf4j
 public class Application {
 
-  public static void main(String[] args) {
+    public static void main(String[] args) {
 
-    SpringApplication.run(Application.class, args);
+        SpringApplication.run(Application.class, args);
 
-    Collection<Rule> rules = new ArrayList<>();
+        Collection<Rule> rules = new ArrayList<>();
 
-    Rule rule1 = new KeywordRule("DBQUERY");
-    Rule rule2 = new KeywordRule("DBFIND");
-    Rule rule3 = rule1.and(rule2);
-    Rule rule4 = rule1.or(rule2);
+        Rule rule1 = new KeywordRule("DBQUERY");
+        Rule rule2 = new KeywordRule("DBFIND");
+        Rule rule3 = rule1.and(rule2);
+        Rule rule4 = rule1.or(rule2);
 
-    rules.add(rule1);
-    rules.add(rule2);
-    rules.add(rule3);
-    rules.add(rule4);
+        rules.add(rule1);
+        rules.add(rule2);
+        rules.add(rule3);
+        rules.add(rule4);
 
-    LogHandler handler = new BasicLogHandler(new LogFile("C:\\gitRepo\\LaaS\\laas-core\\src\\main\\resources\\RTE_log_format.txt"), null);
+        LogHandler handler = new BasicLogHandler(new LogFile("C:\\gitRepo\\LaaS\\laas-core\\src\\main\\resources\\RTE_log_format.txt"), null);
 
 
-    SearchKeyWordsTask task = new SearchKeyWordsTask(rules,handler);
+        SearchKeyWordsTask task = new SearchKeyWordsTask(rules, handler);
 
-    StrategyAnalysisEngine engine = new StrategyAnalysisEngine();
+        StrategyAnalysisEngine engine = new StrategyAnalysisEngine();
 
-    engine.setStrategy(new ThreadPoolExecutionStrategy());
+        engine.setStrategy(new ThreadPoolExecutionStrategy());
 
-    Future<Map<Rule, Collection<Line>>> future = engine.submit(task);
-    engine.shutdown();
-    try {
-      Map<Rule, Collection<Line>> result = future.get();
-      log.info("Task execute result: ");
-      log.info("_______________________________________________");
-      for (Map.Entry<Rule, Collection<Line>> entry : result.entrySet()) {
-        log.info("******************************************");
-        log.info(entry.getKey().toString());
-        log.info("******************************************");
-        for (Line line : entry.getValue()) {
-          log.info(line.toString());
+        Future<Map<Rule, Collection<Line>>> future = engine.submit(task);
+        engine.shutdown();
+        try {
+            Map<Rule, Collection<Line>> result = future.get();
+            log.info("Task execute result: ");
+            log.info("_______________________________________________");
+            for (Map.Entry<Rule, Collection<Line>> entry : result.entrySet()) {
+                log.info("******************************************");
+                log.info(entry.getKey().toString());
+                log.info("******************************************");
+                for (Line line : entry.getValue()) {
+                    log.info(line.toString());
+                }
+            }
+        } catch (Exception e) {
+            String errorMsg = "execute task " + task.toString() + " failed";
+            log.error(errorMsg);
+            throw new LaaSRuntimeException(errorMsg, e);
         }
-      }
-    } catch (Exception e) {
-      String errorMsg = "execute task " + task.toString() + " failed";
-      log.error(errorMsg);
-      throw new LaaSRuntimeException(errorMsg, e);
     }
-  }
 }
