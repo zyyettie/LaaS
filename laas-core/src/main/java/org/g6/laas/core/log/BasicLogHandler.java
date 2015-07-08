@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.core.engine.context.AnalysisContext;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.file.validator.FileValidator;
-import org.g6.laas.core.rule.Rule;
+import org.g6.laas.core.filter.IFilter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,15 +15,15 @@ import java.util.List;
 @Slf4j
 public class BasicLogHandler extends LogHandler {
 
-  public BasicLogHandler(ILogFile iLogFile, Rule rule) {
-    super(iLogFile, rule);
+  public BasicLogHandler(ILogFile iLogFile, IFilter filter) {
+    super(iLogFile, filter);
   }
 
-  public BasicLogHandler(List<ILogFile> list, Rule rule) {
-    super(list, rule);
+  public BasicLogHandler(List<ILogFile> list, IFilter filter) {
+    super(list, filter);
   }
 
-  private Collection<ILogFile> validatLogFiles(Collection<ILogFile> lofFiles){
+  private Collection<ILogFile> validateLogFiles(Collection<ILogFile> lofFiles){
     FileValidator validator = this.getValidator();
     if(validator != null){
       Collection<ILogFile> list = new ArrayList<>();
@@ -43,7 +43,7 @@ public class BasicLogHandler extends LogHandler {
   public Iterator<? extends Line> handle(AnalysisContext context) throws IOException {
     Collection<Line> collection = new ArrayList<>();
 
-    Collection<ILogFile> logFiles = validatLogFiles(getList());
+    Collection<ILogFile> logFiles = validateLogFiles(getList());
     for (ILogFile iLogFile : logFiles) {
       //TODO
       //Here we may need to check which file is the first one.
@@ -57,8 +57,8 @@ public class BasicLogHandler extends LogHandler {
       int number = 0;
       while ((str = reader.readLine()) != null) {
         number++;
-        if(getRule() != null){
-          if (getRule().isSatisfied(str)) {
+        if(getFilter() != null){
+          if (!getFilter().isFiltered(str)) {
             Line line = new LogLine(iLogFile, str, number, context.getInputFormat());
             collection.add(line);
           }
