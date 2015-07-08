@@ -13,6 +13,7 @@ import org.g6.util.Constants;
 import org.g6.util.FileUtil;
 import org.g6.util.JSONUtil;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +24,9 @@ import java.util.Map;
 @Data
 public final class DefaultFormatProvider extends FileFormatProvider {
 
-  private List<String> lineList;
+  public DefaultFormatProvider(File jsonFile) {
+    super(jsonFile);
+  }
 
   public DefaultFormatProvider(String jsonFile) {
     super(jsonFile);
@@ -31,7 +34,7 @@ public final class DefaultFormatProvider extends FileFormatProvider {
 
   @Override
   protected InputFormat parse() {
-    lineList = FileUtil.readFile(FileUtil.getRelativeInputStream(getFile().getName()));
+    List<String> lineList = FileUtil.readFile(FileUtil.getRelativeInputStream(getFile().getName()));
     String jsonStr = "";
     for (String str : lineList) {
       jsonStr += str.trim();
