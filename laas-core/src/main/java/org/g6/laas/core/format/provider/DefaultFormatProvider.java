@@ -1,9 +1,11 @@
 package org.g6.laas.core.format.provider;
 
+import com.google.common.io.Files;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.g6.laas.core.exception.LaaSRuntimeException;
 import org.g6.laas.core.format.FieldFormat;
 import org.g6.laas.core.format.InputFormat;
 import org.g6.laas.core.format.IrregularInputFormat;
@@ -14,7 +16,9 @@ import org.g6.util.FileUtil;
 import org.g6.util.JSONUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +38,16 @@ public final class DefaultFormatProvider extends FileFormatProvider {
 
   @Override
   protected InputFormat parse() {
-    List<String> lineList = FileUtil.readFile(FileUtil.getRelativeInputStream(getFile().getName()));
+    List<String> lineList = null;
+
+    try{
+      lineList = Files.readLines(getFile(), Charset.defaultCharset());
+    }catch(IOException e){
+      String errMsg = "format definition file read fail";
+      log.error(errMsg);
+      throw new LaaSRuntimeException(errMsg,e);
+    }
+
     String jsonStr = "";
     for (String str : lineList) {
       jsonStr += str.trim();
