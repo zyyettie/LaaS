@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.g6.laas.core.engine.context.AnalysisContext;
 import org.g6.laas.core.file.ILogFile;
+import org.g6.laas.core.file.validator.FileValidator;
 import org.g6.laas.core.filter.IFilter;
 import org.g6.laas.core.rule.Rule;
 
