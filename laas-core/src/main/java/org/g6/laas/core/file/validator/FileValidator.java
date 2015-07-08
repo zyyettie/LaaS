@@ -6,6 +6,6 @@ import org.g6.laas.core.file.ILogFile;
 
 public interface FileValidator {
 
-  boolean validate(ILogFile file);
+    boolean validate(ILogFile file);
 
 }

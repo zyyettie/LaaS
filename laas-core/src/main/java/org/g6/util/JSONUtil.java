@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 public class JSONUtil {
     /**
      * Java Object to JSON transformation
+     *
      * @param obj
      * @return
      */
@@ -18,8 +19,9 @@ public class JSONUtil {
 
     /**
      * json string to Java Object transformation
+     *
      * @param str
-     * @param type  {@code new TypeToken<List<Bean>>(){}.getType()}
+     * @param type {@code new TypeToken<List<Bean>>(){}.getType()}
      * @return
      */
     public static <T> T fromJson(String str, Type type) {
@@ -30,6 +32,7 @@ public class JSONUtil {
 
     /**
      * JSON string to Java Object transformation
+     *
      * @param str
      * @param type
      * @return

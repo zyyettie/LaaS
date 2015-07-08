@@ -2,10 +2,11 @@ package org.g6.laas.core.exception;
 
 public class InputFormatNotFoundException extends LaaSRuntimeException {
 
-    public InputFormatNotFoundException(String message, Throwable cause){
-              super(message, cause);
+    public InputFormatNotFoundException(String message, Throwable cause) {
+        super(message, cause);
     }
-    public InputFormatNotFoundException(String message){
+
+    public InputFormatNotFoundException(String message) {
         super(message);
     }
 }

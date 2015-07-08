@@ -10,9 +10,9 @@ import java.util.concurrent.Future;
 @Component
 public class ThreadPoolExecutionStrategy implements ExecutionStrategy {
 
-  private ExecutorService executor = Executors.newCachedThreadPool();
+    private ExecutorService executor = Executors.newCachedThreadPool();
 
-  public <T> Future<T> execute(Callable<T> c) {
-    return executor.submit(c);
-  }
+    public <T> Future<T> execute(Callable<T> c) {
+        return executor.submit(c);
+    }
 }

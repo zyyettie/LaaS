@@ -9,7 +9,7 @@ import java.util.concurrent.Future;
 
 public class DemoTest {
 
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
 
         TopNQueryTask task = new TopNQueryTask(50, "e:\\sm.log");
 

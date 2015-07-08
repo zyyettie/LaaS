@@ -13,6 +13,6 @@ public class RegexRule extends AbstractRule {
 
     @Override
     public boolean isSatisfied(Object content) {
-        return RegexUtil.isMatched(content.toString(),regex);
+        return RegexUtil.isMatched(content.toString(), regex);
     }
 }

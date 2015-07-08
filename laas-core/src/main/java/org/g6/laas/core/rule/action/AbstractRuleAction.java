@@ -3,15 +3,14 @@ package org.g6.laas.core.rule.action;
 
 import lombok.Data;
 import org.g6.laas.core.engine.context.AnalysisContext;
-import org.g6.laas.core.rule.Rule;
 
 @Data
 public abstract class AbstractRuleAction implements RuleAction {
 
-  private AnalysisContext context;
+    private AnalysisContext context;
 
-  public AbstractRuleAction(AnalysisContext context) {
-    this.context = context;
-  }
+    public AbstractRuleAction(AnalysisContext context) {
+        this.context = context;
+    }
 
 }

@@ -2,9 +2,6 @@ package org.g6.laas.core.log;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.g6.laas.core.field.Field;
-import org.g6.laas.core.file.ILogFile;
-import org.g6.laas.core.format.InputFormat;
 
 import java.util.Collection;
 
@@ -25,7 +22,7 @@ public abstract class Slice {
         this.lines = lines;
     }
 
-    void addLine(Line line){
+    void addLine(Line line) {
         lines.add(line);
     }
 }

@@ -15,23 +15,23 @@ import java.util.concurrent.Future;
 @Service
 public class StrategyAnalysisEngine implements AnalysisEngine {
 
-  @Autowired
-  private ExecutionStrategy strategy;
+    @Autowired
+    private ExecutionStrategy strategy;
 
-  private boolean isShutdown = false;
+    private boolean isShutdown = false;
 
-  public void shutdown() {
-    isShutdown = true;
-  }
+    public void shutdown() {
+        isShutdown = true;
+    }
 
-  public <T> Future<T> submit(final AnalysisTask<T> task) {
-    if (isShutdown)
-      throw new LaaSRuntimeException("analysis engine has been shutdown can not submit more tasks.");
-    Callable<T> callable = new Callable<T>() {
-      public T call() throws Exception {
-        return task.analyze();
-      }
-    };
-    return strategy.execute(callable);
-  }
+    public <T> Future<T> submit(final AnalysisTask<T> task) {
+        if (isShutdown)
+            throw new LaaSRuntimeException("analysis engine has been shutdown can not submit more tasks.");
+        Callable<T> callable = new Callable<T>() {
+            public T call() throws Exception {
+                return task.analyze();
+            }
+        };
+        return strategy.execute(callable);
+    }
 }

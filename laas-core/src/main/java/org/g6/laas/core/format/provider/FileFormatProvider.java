@@ -11,23 +11,23 @@ import java.io.File;
 @NoArgsConstructor
 public abstract class FileFormatProvider implements FormatProvider {
 
-  private File file;
+    private File file;
 
-  public FileFormatProvider(File file) {
-    if (file == null || !file.exists())
-      throw new IllegalArgumentException("must provide file containing format definition.");
-    this.file = file;
-  }
+    public FileFormatProvider(File file) {
+        if (file == null || !file.exists())
+            throw new IllegalArgumentException("must provide file containing format definition.");
+        this.file = file;
+    }
 
-  public FileFormatProvider(String file) {
-    this(new File(file));
-  }
+    public FileFormatProvider(String file) {
+        this(new File(file));
+    }
 
-  @Override
-  public InputFormat getInputFormat() {
-    return parse();
-  }
+    @Override
+    public InputFormat getInputFormat() {
+        return parse();
+    }
 
-  protected abstract InputFormat parse();
+    protected abstract InputFormat parse();
 
 }

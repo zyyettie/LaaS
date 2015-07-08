@@ -13,10 +13,10 @@ public class LogFile implements ILogFile {
     private FileValidator validator;
 
     public LogFile(String file) {
-        this(file,null);
+        this(file, null);
     }
 
-    public LogFile(String file,FileValidator validator) {
+    public LogFile(String file, FileValidator validator) {
         this.file = file;
         this.validator = validator;
     }

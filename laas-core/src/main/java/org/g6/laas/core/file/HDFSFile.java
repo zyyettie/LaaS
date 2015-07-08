@@ -6,15 +6,15 @@ import org.g6.util.Constants;
 
 @Data
 public class HDFSFile implements ILogFile {
-    private String url;
     public static final String SEPARATOR = "/";
+    private String url;
     private FileValidator validator;
 
     public HDFSFile(String url) {
-        this(url,null);
+        this(url, null);
     }
 
-    public HDFSFile(String url,FileValidator validator) {
+    public HDFSFile(String url, FileValidator validator) {
         this.url = url;
         this.validator = validator;
     }
@@ -22,7 +22,7 @@ public class HDFSFile implements ILogFile {
     @Override
     public String getName() {
         int slash = url.lastIndexOf(SEPARATOR);
-        return url.substring(slash+1);
+        return url.substring(slash + 1);
     }
 
     @Override

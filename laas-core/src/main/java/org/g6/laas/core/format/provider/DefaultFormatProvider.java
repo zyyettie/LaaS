@@ -11,18 +11,18 @@ import java.io.File;
 @Data
 public final class DefaultFormatProvider extends FileFormatProvider {
 
-  public DefaultFormatProvider(File jsonFile) {
-    super(jsonFile);
-  }
+    public DefaultFormatProvider(File jsonFile) {
+        super(jsonFile);
+    }
 
-  public DefaultFormatProvider(String jsonFile) {
-    super(jsonFile);
-  }
+    public DefaultFormatProvider(String jsonFile) {
+        super(jsonFile);
+    }
 
-  @Override
-  protected InputFormat parse() {
-    DefaultInputFormat result = new DefaultInputFormat(getFile());
-    result.build();
-    return result;
-  }
+    @Override
+    protected InputFormat parse() {
+        DefaultInputFormat result = new DefaultInputFormat(getFile());
+        result.build();
+        return result;
+    }
 }

@@ -20,6 +20,10 @@ public abstract class AbstractAnalysisTask<T> implements AnalysisTask<T> {
 
     private AnalysisContext context = new SimpleAnalysisContext();
 
+    public AbstractAnalysisTask(AnalysisContext context) {
+        this.context = context;
+    }
+
     protected void started() {
         log.info("Task " + this.toString() + " started");
     }
@@ -57,9 +61,5 @@ public abstract class AbstractAnalysisTask<T> implements AnalysisTask<T> {
         T result = process();
         finished();
         return result;
-    }
-
-    public AbstractAnalysisTask(AnalysisContext context) {
-        this.context = context;
     }
 }
