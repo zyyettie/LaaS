@@ -13,17 +13,11 @@ import java.util.List;
 public class FileUtil {
 
     /**
-     * Using the below method to get input stream of the files in Jar
      *
-     * @param file The path is based on jar path. for example, if file is /com/hp/aaa.txt in jar, the absolute path
-     *             should be {jar path}/com/hp/aaa.txt
+     * @param file the format of this parameter should be package/file e.g. org/g6/laas/sm/sm_rte_log.json
      * @return
+     * @throws URISyntaxException
      */
-    public static InputStream getRelativeInputStream(String file) {
-        InputStream is = FileUtil.class.getResourceAsStream(file);
-        return is;
-    }
-
     public static File getFile(String file) throws URISyntaxException {
         URL url = Resources.getResource(file);
         return new File(url.toURI());
