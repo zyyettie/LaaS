@@ -9,7 +9,8 @@ import org.g6.laas.core.format.InputFormat;
 @NoArgsConstructor
 @Data
 public class LogLine extends Line {
-  Field sortedField = null;
+
+  private Field sortedField = null;
 
   public LogLine(ILogFile file, String content, int lineNumber) {
     super(file, content, lineNumber, null);
