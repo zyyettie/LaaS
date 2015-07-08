@@ -1,4 +1,4 @@
-package org.g6.laas.core.format.json;
+package org.g6.laas.core.format.provider;
 
 import org.g6.laas.core.format.InputFormat;
 import org.g6.util.FileUtil;
