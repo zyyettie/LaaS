@@ -3,7 +3,6 @@ package org.g6.laas.core.log;
 import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.core.engine.context.AnalysisContext;
 import org.g6.laas.core.file.ILogFile;
-import org.g6.laas.core.file.validator.FileValidator;
 import org.g6.laas.core.rule.Rule;
 
 import java.io.IOException;
@@ -23,20 +22,16 @@ public class BasicLogHandler extends LogHandler {
     super(list, rule);
   }
 
-  private Collection<ILogFile> validatLogFiles(Collection<ILogFile> lofFiles){
-    FileValidator validator = this.getValidator();
-    if(validator != null){
-      Collection<ILogFile> list = new ArrayList<>();
-      for (ILogFile iLogFile : lofFiles){
-        if(validator.validate(iLogFile)){
-          list.add(iLogFile);
-        }else{
-          log.warn(iLogFile.getName() + " maybe contain incorrect format. Skip it.");
-        }
+  private Collection<ILogFile> validatLogFiles(Collection<ILogFile> lofFiles) {
+    Collection<ILogFile> list = new ArrayList<>();
+    for (ILogFile iLogFile : lofFiles) {
+      if (iLogFile.isValid()) {
+        list.add(iLogFile);
+      } else {
+        log.warn(iLogFile.getName() + " maybe contain incorrect format. Skip it.");
       }
-      return list;
     }
-    return lofFiles;
+    return list;
   }
 
   @Override
@@ -57,12 +52,12 @@ public class BasicLogHandler extends LogHandler {
       int number = 0;
       while ((str = reader.readLine()) != null) {
         number++;
-        if(getRule() != null){
+        if (getRule() != null) {
           if (getRule().isSatisfied(str)) {
             Line line = new LogLine(iLogFile, str, number, context.getInputFormat());
             collection.add(line);
           }
-        }else{
+        } else {
           Line line = new LogLine(iLogFile, str, number);
           collection.add(line);
         }

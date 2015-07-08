@@ -18,8 +18,6 @@ import java.util.List;
 public abstract class LogHandler {
   private List<ILogFile> list;
   private Rule rule;
-  private InputFormat format;
-  private FileValidator validator;
 
   public LogHandler(ILogFile file, Rule rule) {
 
@@ -29,13 +27,8 @@ public abstract class LogHandler {
   }
 
   public LogHandler(List<ILogFile> list, Rule rule) {
-    this(list,rule,null);
-  }
-
-  public LogHandler(List<ILogFile> list, Rule rule, FileValidator validator) {
     this.list = list;
     this.rule = rule;
-    this.validator = validator;
   }
 
   public void addFile(ILogFile file) {
