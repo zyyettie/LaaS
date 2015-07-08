@@ -15,10 +15,6 @@ public final class DefaultFormatProvider extends FileFormatProvider {
         super(jsonFile);
     }
 
-    public DefaultFormatProvider(String jsonFile) {
-        super(jsonFile);
-    }
-
     @Override
     protected InputFormat parse() {
         DefaultInputFormat result = new DefaultInputFormat(getFile());

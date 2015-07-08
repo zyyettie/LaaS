@@ -19,10 +19,6 @@ public abstract class FileFormatProvider implements FormatProvider {
         this.file = file;
     }
 
-    public FileFormatProvider(String file) {
-        this(new File(file));
-    }
-
     @Override
     public InputFormat getInputFormat() {
         return parse();
