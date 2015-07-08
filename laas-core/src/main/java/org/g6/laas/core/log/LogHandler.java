@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.g6.laas.core.engine.context.AnalysisContext;
 import org.g6.laas.core.file.ILogFile;
-import org.g6.laas.core.file.validator.FileValidator;
 import org.g6.laas.core.filter.IFilter;
 import org.g6.laas.core.rule.Rule;
 
@@ -29,10 +28,6 @@ public abstract class LogHandler {
   }
 
   public LogHandler(List<ILogFile> list, IFilter filter) {
-    this(list,filter,null);
-  }
-
-  public LogHandler(List<ILogFile> list, IFilter filter, FileValidator validator) {
     this.list = list;
     this.filter = filter;
   }
