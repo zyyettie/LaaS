@@ -12,10 +12,14 @@ import org.g6.laas.core.exception.InputFormatNotFoundException;
 import org.g6.laas.core.exception.LaaSRuntimeException;
 import org.g6.laas.core.exception.Regex4LineSplitNotFoundException;
 import org.g6.laas.core.field.*;
+import org.g6.laas.core.format.cache.InputFormatCache;
 import org.g6.laas.core.log.*;
 import org.g6.util.Constants;
 import org.g6.util.JSONUtil;
 import org.g6.util.RegexUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,8 +28,10 @@ import java.nio.charset.Charset;
 import java.util.*;
 
 @Slf4j
+@Component
 public final class DefaultInputFormat implements InputFormat {
-
+    @Autowired
+    InputFormatCache cache;
     private File file;
 
     private Map<String, LineAttributes> lineAttrMap = new HashMap<>();
