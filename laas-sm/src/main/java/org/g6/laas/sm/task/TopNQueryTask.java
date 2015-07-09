@@ -4,6 +4,7 @@ import org.g6.laas.core.engine.context.SimpleAnalysisContext;
 import org.g6.laas.core.engine.task.AbstractAnalysisTask;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.file.LogFile;
+import org.g6.laas.core.filter.KeywordRuleFilter;
 import org.g6.laas.core.format.provider.DefaultFormatProvider;
 import org.g6.laas.core.format.provider.FormatProvider;
 import org.g6.laas.core.log.BasicLogHandler;
@@ -13,6 +14,7 @@ import org.g6.laas.core.log.LogHandler;
 import org.g6.laas.core.rule.KeywordRule;
 import org.g6.laas.core.rule.Rule;
 import org.g6.laas.core.rule.action.RuleAction;
+import org.g6.util.FileUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,8 +29,8 @@ public class TopNQueryTask extends AbstractAnalysisTask<List<Line>> {
         ILogFile logFile = new LogFile(file);
         Rule rule = new KeywordRule("RTE D DBQUERY");
 
-        LogHandler handler = new BasicLogHandler(logFile, rule);
-        FormatProvider provider = new DefaultFormatProvider("/sm_rte_log.json");
+        LogHandler handler = new BasicLogHandler(logFile, new KeywordRuleFilter("RTE D DBQUERY"));
+        FormatProvider provider = new DefaultFormatProvider(FileUtil.getFile("/sm_rte_log.json"));
 
         SimpleAnalysisContext context = new SimpleAnalysisContext();
 

@@ -18,9 +18,15 @@ public class FileUtil {
      * @return
      * @throws URISyntaxException
      */
-    public static File getFile(String file) throws URISyntaxException {
+    public static File getFile(String file) {
         URL url = Resources.getResource(file);
-        return new File(url.toURI());
+        File result = null;
+        try{
+            result = new File(url.toURI());
+        }catch(URISyntaxException e){
+            throw new LaaSRuntimeException(file + " is not found.");
+        }
+        return result;
     }
 
     /**
