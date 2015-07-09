@@ -25,6 +25,13 @@ public class RegexUtil {
         Pattern p = Pattern.compile(regex);
         Matcher matcher = p.matcher(str);
 
+        return matcher.find();
+    }
+
+    public static boolean isFullyMatched(String str, String regex) {
+        Pattern p = Pattern.compile(regex);
+        Matcher matcher = p.matcher(str);
+
         return matcher.matches();
     }
 

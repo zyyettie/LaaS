@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.g6.laas.core.exception.InputFormatNotFoundException;
 import org.g6.laas.core.exception.LaaSRuntimeException;
 import org.g6.laas.core.exception.Regex4LineSplitNotFoundException;
@@ -15,7 +16,6 @@ import org.g6.laas.core.log.*;
 import org.g6.util.Constants;
 import org.g6.util.JSONUtil;
 import org.g6.util.RegexUtil;
-import org.g6.util.StringUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +35,7 @@ public final class DefaultInputFormat implements InputFormat {
     }
 
     public void build() {
-        List<String> lineList = null;
+        List<String> lineList;
 
         try {
             lineList = Files.readLines(file, Charset.defaultCharset());
@@ -85,7 +85,7 @@ public final class DefaultInputFormat implements InputFormat {
     }
 
     @Override
-    public SplitResult splitLine(Line line) {
+    public SplitResult getSplits(Line line) {
         String lineSplitRegex = null;
         List<FieldFormat> fieldFormatList = null;
         List<String> errorKeyList = new ArrayList<>();
@@ -99,7 +99,7 @@ public final class DefaultInputFormat implements InputFormat {
                 String regex = lineFormatKey.substring(Constants.REGEX_PREFIX.length());
                 String matchedValue = RegexUtil.getValue(line.getContent(), regex);
 
-                if (!StringUtil.isNull(matchedValue)) {
+                if (!StringUtils.isBlank(matchedValue)) {
                     errorKeyList.add(lineFormatKey);
                     counter++;
                     fieldFormatList = lineAttr.getFieldFormats();

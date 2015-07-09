@@ -30,7 +30,7 @@ public class LogLine extends Line {
     @Override
     public SplitResult split() {
         InputFormat inputFormat = getInputFormat();
-        return (inputFormat == null ? null : inputFormat.splitLine(this));
+        return (inputFormat == null ? null : inputFormat.getSplits(this));
     }
 
     @Override
