@@ -1,6 +1,8 @@
 package org.g6.laas.core.format;
 
-public interface FieldFormat {
+import java.io.Serializable;
+
+public interface FieldFormat extends Serializable {
     String getName();
 
     String getType();
