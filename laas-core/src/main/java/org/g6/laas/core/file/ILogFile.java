@@ -7,5 +7,7 @@ public interface ILogFile {
 
     int getType();
 
+    String getFormatKey();
+
     boolean isValid();
 }
