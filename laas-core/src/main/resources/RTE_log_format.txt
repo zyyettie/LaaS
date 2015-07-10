@@ -89,3 +89,11 @@ SOAP Response(RTE D Returning response)
 (Unknown)
 05/11/2015 16:51:56  RTE I CTRL-Close received, terminating process
 
+#Login start
+(RTE I Using "utalloc" memory manager)
+  9584(  9124) 06/20/2015 17:02:17  RTE I Using "utalloc" memory manager, mode [0]
+
+#Login end
+(RTE D Response-Total  xxxxxxxxx        format:sc.manage.ToDo.g application:display)
+  9584(  9124) 06/20/2015 17:02:17  RTE D Response-Total: 0.328 -- RAD:0.109  JS:0.172 Log:0.047 Database:0.047  (CPU 0.405) Transaction - format:sc.manage.ToDo.g application:display,fdisp.1 option:0
+
