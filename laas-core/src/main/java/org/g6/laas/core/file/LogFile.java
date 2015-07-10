@@ -38,11 +38,6 @@ public class LogFile implements ILogFile {
     }
 
     @Override
-    public int getType() {
-        return Constants.LOG_TYPE_FILE;
-    }
-
-    @Override
     public boolean isValid() {
         return validator == null ? true : validator.validate(this);
     }
