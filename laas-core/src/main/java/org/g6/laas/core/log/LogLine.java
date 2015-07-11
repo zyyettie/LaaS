@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.g6.laas.core.field.Field;
 import org.g6.laas.core.file.ILogFile;
+import org.g6.laas.core.format.DefaultInputFormat;
 import org.g6.laas.core.format.InputFormat;
 
 @NoArgsConstructor
@@ -30,7 +31,10 @@ public class LogLine extends Line {
     @Override
     public SplitResult split() {
         InputFormat inputFormat = getInputFormat();
-        return (inputFormat == null ? null : inputFormat.getSplits(this));
+        if(inputFormat == null)
+            inputFormat = new DefaultInputFormat(getFile());
+
+        return inputFormat.getSplits(this);
     }
 
     @Override

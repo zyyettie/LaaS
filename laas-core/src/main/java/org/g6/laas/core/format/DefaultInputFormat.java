@@ -12,6 +12,7 @@ import org.g6.laas.core.exception.InputFormatNotFoundException;
 import org.g6.laas.core.exception.LaaSCoreRuntimeException;
 import org.g6.laas.core.exception.Regex4LineSplitNotFoundException;
 import org.g6.laas.core.field.*;
+import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.format.cache.InputFormatCache;
 import org.g6.laas.core.log.*;
 import org.g6.util.Constants;
@@ -31,66 +32,18 @@ import java.util.*;
 public final class DefaultInputFormat implements InputFormat {
     @Autowired
     InputFormatCache cache;
-    private File file;
+    private ILogFile file;
 
-    private Map<String, LineAttributes> lineAttrMap = new HashMap<>();
-
-    public DefaultInputFormat(File file) {
+    public DefaultInputFormat(ILogFile file) {
         this.file = file;
-    }
-
-    public void build() {
-        List<String> lineList;
-
-        try {
-            lineList = Files.readLines(file, Charset.defaultCharset());
-        } catch (IOException e) {
-            String errMsg = "format definition file read fail";
-            log.error(errMsg);
-            throw new LaaSCoreRuntimeException(errMsg, e);
-        }
-
-        String jsonStr = "";
-        for (String str : lineList) {
-            jsonStr += str.trim();
-        }
-
-        log.debug(jsonStr);
-
-        JSONFileFormat<JSONLineFormat> jsonFileFormat = JSONUtil.fromJson(
-                jsonStr, new TypeToken<JSONFileFormat<JSONLineFormat>>() {
-                }.getType());
-
-        String dateFormat = jsonFileFormat.getDateTimeFormat();
-        List<JSONLineFormat> jsonLineFormats = jsonFileFormat.getLines();
-
-        for (JSONLineFormat lineFormat : jsonLineFormats) {
-            String key = lineFormat.getKey();
-            String regex = lineFormat.getRegex();
-            LineAttributes lineAttr = new LineAttributes();
-            lineAttr.setSplitRegex(regex);
-
-            List<LogFieldFormat> fields = lineFormat.getFields();
-            List<FieldFormat> tempFields = new ArrayList<>();
-
-            for (LogFieldFormat field : fields) {
-                if (field.getType().equals(Constants.FIELD_FORMAT_TYPE_DATETIME)) {
-                    // if date format is specified for a field in JSON file e.g.
-                    // {"name":"datetime","type":"DateTime","sortable":"false","date_time_format": "MM/dd/yyyy HH:mm:ss"}
-                    // the one defined on file level will be used
-                    if (field.getDateFormat() == null) {
-                        field.setDateFormat(dateFormat);
-                    }
-                }
-                tempFields.add(field);
-            }
-            lineAttr.setFieldFormats(tempFields);
-            lineAttrMap.put(key, lineAttr);
-        }
     }
 
     @Override
     public SplitResult getSplits(Line line) {
+        //cache object should be injected by Spring
+        if(cache == null)
+            cache = new InputFormatCache();
+        Map<String, LineAttributes> lineAttrMap =cache.getAllInputFormats().get(file.getFormatKey());
         String lineSplitRegex = null;
         List<FieldFormat> fieldFormatList = null;
         List<String> errorKeyList = new ArrayList<>();

@@ -1,5 +1,6 @@
 package org.g6.laas.core.log;
 
+import org.apache.commons.lang.StringUtils;
 import org.g6.laas.core.engine.context.AnalysisContext;
 import org.g6.laas.core.engine.context.SimpleAnalysisContext;
 import org.g6.laas.core.file.ILogFile;
@@ -42,11 +43,13 @@ public class ConcreteLogHandler extends LogHandler {
 
             String str;
             while ((str = reader.readLine()) != null) {
+                if(StringUtils.isBlank(str))
+                    continue;
                 lineNumber++;
-                if (getFilter().isFiltered(str))
+                if (getFilter() != null && getFilter().isFiltered(str))
                     continue;
 
-                return new LogLine(iLogFile, str, lineNumber, context.getInputFormat());
+                return new LogLine(iLogFile, str, lineNumber);
             }
             reader.close();
             reader = null;
