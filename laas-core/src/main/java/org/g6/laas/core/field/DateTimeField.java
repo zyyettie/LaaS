@@ -1,6 +1,6 @@
 package org.g6.laas.core.field;
 
-import org.g6.laas.core.exception.LaaSRuntimeException;
+import org.g6.laas.core.exception.LaaSCoreRuntimeException;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -42,7 +42,7 @@ public class DateTimeField extends AbstractField<Date> {
         try {
             parse(content);
         } catch (ParseException e) {
-            throw new LaaSRuntimeException("Exception is thrown when parsing "
+            throw new LaaSCoreRuntimeException("Exception is thrown when parsing "
                     + content
                     + "with the format "
                     + datePattern, e);

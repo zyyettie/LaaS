@@ -7,7 +7,7 @@ public class LaaSExceptionHandler {
 
     public static void handleException(String msg) {
         log.error(msg);
-        throw new LaaSRuntimeException(msg);
+        throw new LaaSCoreRuntimeException(msg);
     }
 
     public static void handleException(String msg, Exception e) {
@@ -17,6 +17,6 @@ public class LaaSExceptionHandler {
     public static void handleException(String msg, Exception e, boolean isThrown) {
         log.error(msg, e);
         if (isThrown)
-            throw new LaaSRuntimeException(msg, e);
+            throw new LaaSCoreRuntimeException(msg, e);
     }
 }

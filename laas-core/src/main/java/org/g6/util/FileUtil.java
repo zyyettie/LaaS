@@ -1,8 +1,8 @@
 package org.g6.util;
 
 import com.google.common.io.Resources;
+import org.g6.laas.core.exception.LaaSCoreRuntimeException;
 import org.g6.laas.core.exception.LaaSExceptionHandler;
-import org.g6.laas.core.exception.LaaSRuntimeException;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -23,7 +23,7 @@ public class FileUtil {
             }
             return propMap;
         } catch (IOException e) {
-            throw new LaaSRuntimeException(file + " is not found.");
+            throw new LaaSCoreRuntimeException(file + " is not found.");
         }
     }
 
@@ -39,7 +39,7 @@ public class FileUtil {
         try{
             result = new File(url.toURI());
         }catch(URISyntaxException e){
-            throw new LaaSRuntimeException(file + " is not found.");
+            throw new LaaSCoreRuntimeException(file + " is not found.");
         }
         return result;
     }
@@ -60,7 +60,7 @@ public class FileUtil {
 
             return list;
         } catch (IOException e) {
-            throw new LaaSRuntimeException("Exception is thrown when reading file", e);
+            throw new LaaSCoreRuntimeException("Exception is thrown when reading file", e);
         }
 
     }
