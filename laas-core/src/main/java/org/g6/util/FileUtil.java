@@ -7,10 +7,25 @@ import org.g6.laas.core.exception.LaaSRuntimeException;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class FileUtil {
+
+    public static Map<String, String> getPropertyValues(String file){
+        Properties p = new Properties();
+        Map<String, String> propMap = new HashMap();
+        try {
+            p.load(new FileInputStream(getFile(file)));
+            for (Map.Entry<Object, Object> entry : p.entrySet()) {
+                String key = (String) entry.getKey();
+                String value = (String) entry.getValue();
+                propMap.put(key, value);
+            }
+            return propMap;
+        } catch (IOException e) {
+            throw new LaaSRuntimeException(file + " is not found.");
+        }
+    }
 
     /**
      *
