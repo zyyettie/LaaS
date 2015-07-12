@@ -18,6 +18,7 @@ import java.util.List;
 
 /**
  * Get top N query from SM RTE log file
+ *
  * @author Johnson Jiang
  * @version 1.0
  * @since 1.0
@@ -25,6 +26,23 @@ import java.util.List;
 public class TopNQueryTask extends AbstractAnalysisTask<List<Line>> {
     private int N = 50;
     private List<Line> lines = new ArrayList<>();
+
+    @Override
+    protected List<Line> process() {
+        Collections.sort(lines, new LineComparator());
+
+        List<Line> topNList = new ArrayList<>();
+
+        int counter = 0;
+        for (Line line : lines) {
+            if (counter < N) {
+                topNList.add(line);
+            }
+            counter++;
+        }
+        return topNList;
+    }
+
 
     public TopNQueryTask(int topN, String file) {
         this.N = topN;
@@ -48,21 +66,5 @@ public class TopNQueryTask extends AbstractAnalysisTask<List<Line>> {
         context.getRules().add(rule);
 
         setContext(context);
-    }
-
-    @Override
-    protected List<Line> process() {
-        Collections.sort(lines, new LineComparator());
-
-        List<Line> topNList = new ArrayList<>();
-
-        int counter = 0;
-        for (Line line : lines) {
-            if (counter < N) {
-                topNList.add(line);
-            }
-            counter++;
-        }
-        return topNList;
     }
 }

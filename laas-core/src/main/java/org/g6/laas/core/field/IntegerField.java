@@ -6,6 +6,10 @@ public class IntegerField extends AbstractField<Integer> {
         super(content);
     }
 
+    public IntegerField(String name, String content) {
+        super(name, content);
+    }
+
     public Integer getValue() {
         return Integer.valueOf(this.getContent());
     }

@@ -14,4 +14,9 @@ public abstract class AbstractField<T> implements Field<T> {
     public AbstractField(String content) {
         this.content = content;
     }
+
+    public AbstractField(String name, String content) {
+        this.name = name;
+        this.content = content;
+    }
 }

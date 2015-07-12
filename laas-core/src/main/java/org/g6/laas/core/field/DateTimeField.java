@@ -19,20 +19,20 @@ public class DateTimeField extends AbstractField<Date> {
     private String datePattern = "MM/dd/yyyy HH:mm:ss"; // Default date format in SM - 06/20/2015 17:05:22;
     private Locale locale = Locale.ENGLISH;
 
-    public DateTimeField(String content, String datePattern) {
-        this(content, datePattern, null, null);
+    public DateTimeField(String name, String content, String datePattern) {
+        this(name, content, datePattern, null, null);
     }
 
-    public DateTimeField(String content, String datePattern, Locale locale) {
-        this(content, datePattern, locale, null);
+    public DateTimeField(String name, String content, String datePattern, Locale locale) {
+        this(name,content, datePattern, locale, null);
     }
 
-    public DateTimeField(String content, String datePattern, String timezoneID) {
-        this(content, datePattern, null, timezoneID);
+    public DateTimeField(String name, String content, String datePattern, String timezoneID) {
+        this(name, content, datePattern, null, timezoneID);
     }
 
-    public DateTimeField(String content, String datePattern, Locale locale, String timezoneID) {
-        super(content);
+    public DateTimeField(String name, String content, String datePattern, Locale locale, String timezoneID) {
+        super(name, content);
         if (locale != null)
             this.locale = locale;
         if (null != timezoneID && !timezoneID.equals(""))

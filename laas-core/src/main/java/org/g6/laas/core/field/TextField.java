@@ -5,7 +5,9 @@ public class TextField extends AbstractField<String> {
     public TextField(String content) {
         super(content);
     }
-
+    public TextField(String name, String content) {
+        super(name, content);
+    }
     public String getValue() {
         return this.getContent();
     }
