@@ -10,7 +10,7 @@
         },
         {"key":"REGEX:SCRIPTTRACE","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D SCRIPTTRACE:.+elapsed: (\\d+) ms",
             "fields":[
-                {"name":"process id","type":"Integer","sortable":"false"},
+                {"name":"process_id","type":"Integer","sortable":"false"},
                 {"name":"thread_id","type":"Integer","sortable":"false"},
                 {"name":"datetime","type":"DateTime","sortable":"false"},
                 {"name":"execution_time","type":"Double","sortable":"true"}
@@ -18,7 +18,7 @@
         },
         {"key":"RTE D DBQUERY","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D DBQUERY(?:\\^[^\\^]+){6}\\^(\\d+\\.\\d+)",
             "fields":[
-                {"name":"process id","type":"Integer","sortable":"false"},
+                {"name":"process_id","type":"Integer","sortable":"false"},
                 {"name":"thread_id","type":"Integer","sortable":"false"},
                 {"name":"datetime","type":"DateTime","sortable":"false"},
                 {"name":"execution_time","type":"Double","sortable":"true"}
@@ -26,7 +26,7 @@
         },
         {"key":"RTE D DBFIND","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D DBFIND(?:\\^[^\\^]+){6}\\^(\\d+\\.\\d+)",
             "fields":[
-                {"name":"process id","type":"Integer","sortable":"false"},
+                {"name":"process_id","type":"Integer","sortable":"false"},
                 {"name":"thread_id","type":"Integer","sortable":"false"},
                 {"name":"datetime","type":"DateTime","sortable":"false"},
                 {"name":"execution_time","type":"Double","sortable":"true"}
@@ -34,7 +34,7 @@
         },
         {"key":"REGEX:RTE D Response-Total.+format:sc\\.manage\\.ToDo\\.g application:display","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D Response-Total:\\s+(\\d+\\.\\d+).+RAD:(\\d+\\.\\d+)\\s+JS:(\\d+\\.\\d+)\\s+Log:(\\d+\\.\\d+)\\s+Database:(\\d+\\.\\d+)\\s+\\(CPU\\s+(\\d+\\.\\d+)\\).+format:sc\\.manage\\.ToDo\\.g application:display,fdisp\\.1",
             "fields":[
-                {"name":"process id","type":"Integer","sortable":"false"},
+                {"name":"process_id","type":"Integer","sortable":"false"},
                 {"name":"thread_id","type":"Integer","sortable":"false"},
                 {"name":"datetime","type":"DateTime","sortable":"false"},
                 {"name":"login_time","type":"Double","sortable":"true"},
