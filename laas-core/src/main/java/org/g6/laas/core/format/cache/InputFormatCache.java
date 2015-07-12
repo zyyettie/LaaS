@@ -102,7 +102,7 @@ public class InputFormatCache {
 
     @CacheEvict(value = "inputFormatCache", allEntries = true)
     public void removeAllInputFormats() {
-
+        //do nothing, only remove all the cached data from cache
     }
 
     @Data
