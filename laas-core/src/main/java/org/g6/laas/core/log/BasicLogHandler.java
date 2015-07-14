@@ -35,7 +35,7 @@ public class BasicLogHandler extends LogHandler {
     }
 
   @Override
-  public Iterator<? extends Line> handle(AnalysisContext context) throws IOException {
+  public Iterator<? extends Line> handle() throws IOException {
     Collection<Line> collection = new ArrayList<>();
 
     Collection<ILogFile> logFiles = validateLogFiles(getList());
@@ -54,7 +54,7 @@ public class BasicLogHandler extends LogHandler {
         number++;
         if(getFilter() != null){
           if (!getFilter().isFiltered(str)) {
-            Line line = new LogLine(iLogFile, str, number, context.getInputFormat());
+            Line line = new LogLine(iLogFile, str, number);
             collection.add(line);
           }
         }else{

@@ -1,25 +1,33 @@
 package org.g6.laas.core.log;
 
 import org.apache.commons.lang.StringUtils;
-import org.g6.laas.core.engine.context.AnalysisContext;
-import org.g6.laas.core.engine.context.SimpleAnalysisContext;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.file.LogFile;
 import org.g6.laas.core.filter.DefaultFilter;
 import org.g6.laas.core.filter.IFilter;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class ConcreteLogHandler extends LogHandler {
     private LogFileReader reader = null;
+    private boolean isReading = false;
     private Iterator<ILogFile> it = null;
     private ILogFile iLogFile = null;
     private int lineNumber;
-    private AnalysisContext context;
+    private final int TIME_INTERVAL=600000;
+    private Timer timer = new Timer();
+    private TimerTask tt = new TimerTask() {
+        @Override
+        public void run() {
+            if (ConcreteLogHandler.this.isReading) {
+                ConcreteLogHandler.this.isReading = false;
+                return;
+            }
+            ConcreteLogHandler.this.close();
+            timer.cancel();
+        }
+    };
 
     public ConcreteLogHandler(ILogFile iLogFile, IFilter filter) {
         super(iLogFile, filter);
@@ -43,9 +51,10 @@ public class ConcreteLogHandler extends LogHandler {
 
             String str;
             while ((str = reader.readLine()) != null) {
+                lineNumber++;
+                isReading = true;
                 if(StringUtils.isBlank(str))
                     continue;
-                lineNumber++;
                 if (getFilter() != null && getFilter().isFiltered(str))
                     continue;
 
@@ -77,14 +86,25 @@ public class ConcreteLogHandler extends LogHandler {
         return null;
     }
 
+    public void close() {
+        try {
+            if (reader != null) {
+                reader.close();
+                reader = null;
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     @Override
-    public Iterator<? extends Line> handle(AnalysisContext context) throws IOException {
-        this.context = context;
+    public Iterator<? extends Line> handle() throws IOException {
         return iterator();
     }
 
     public Iterator<Line> iterator() {
-        return new LogLineIterator<Line>();
+        timer.schedule(tt, 0, TIME_INTERVAL);
+        return new LogLineIterator<>();
     }
 
     private class LogLineIterator<T extends Line> implements Iterator<T> {
@@ -131,7 +151,7 @@ public class ConcreteLogHandler extends LogHandler {
         list.add(new LogFile("C:\\bb.txt"));
         LogHandler handler = new ConcreteLogHandler(list, new DefaultFilter());
         try {
-            Iterator<Line> it = (Iterator<Line>)handler.handle(new SimpleAnalysisContext());
+            Iterator<Line> it = (Iterator<Line>)handler.handle();
             while (it.hasNext()) {
                 Line line = it.next();
                 System.out.println("line="+line);
