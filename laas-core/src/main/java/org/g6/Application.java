@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.core.engine.StrategyAnalysisEngine;
 import org.g6.laas.core.engine.ThreadPoolExecutionStrategy;
 import org.g6.laas.core.engine.task.SearchKeyWordsTask;
-import org.g6.laas.core.exception.LaaSRuntimeException;
+import org.g6.laas.core.exception.LaaSCoreRuntimeException;
 import org.g6.laas.core.file.LogFile;
 import org.g6.laas.core.log.BasicLogHandler;
 import org.g6.laas.core.log.Line;
@@ -69,7 +69,7 @@ public class Application {
         } catch (Exception e) {
             String errorMsg = "execute task " + task.toString() + " failed";
             log.error(errorMsg);
-            throw new LaaSRuntimeException(errorMsg, e);
+            throw new LaaSCoreRuntimeException(errorMsg, e);
         }
     }
 }

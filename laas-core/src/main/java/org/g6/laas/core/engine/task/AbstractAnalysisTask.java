@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.core.engine.context.AnalysisContext;
 import org.g6.laas.core.engine.context.SimpleAnalysisContext;
-import org.g6.laas.core.exception.LaaSRuntimeException;
+import org.g6.laas.core.exception.LaaSCoreRuntimeException;
 import org.g6.laas.core.log.Line;
 import org.g6.laas.core.rule.Rule;
 
@@ -34,7 +34,7 @@ public abstract class AbstractAnalysisTask<T> implements AnalysisTask<T> {
         try {
             return context.getHandler().handle(context);
         } catch (IOException e) {
-            throw new LaaSRuntimeException("open log handler failed.");
+            throw new LaaSCoreRuntimeException("open log handler failed.");
         }
     }
 

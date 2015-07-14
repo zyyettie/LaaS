@@ -1,16 +1,31 @@
 package org.g6.util;
 
 import com.google.common.io.Resources;
+import org.g6.laas.core.exception.LaaSCoreRuntimeException;
 import org.g6.laas.core.exception.LaaSExceptionHandler;
-import org.g6.laas.core.exception.LaaSRuntimeException;
 
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class FileUtil {
+
+    public static Map<String, String> getPropertyValues(String file){
+        Properties p = new Properties();
+        Map<String, String> propMap = new HashMap();
+        try {
+            p.load(new FileInputStream(getFile(file)));
+            for (Map.Entry<Object, Object> entry : p.entrySet()) {
+                String key = (String) entry.getKey();
+                String value = (String) entry.getValue();
+                propMap.put(key, value);
+            }
+            return propMap;
+        } catch (IOException e) {
+            throw new LaaSCoreRuntimeException(file + " is not found.");
+        }
+    }
 
     /**
      *
@@ -24,7 +39,7 @@ public class FileUtil {
         try{
             result = new File(url.toURI());
         }catch(URISyntaxException e){
-            throw new LaaSRuntimeException(file + " is not found.");
+            throw new LaaSCoreRuntimeException(file + " is not found.");
         }
         return result;
     }
@@ -45,7 +60,7 @@ public class FileUtil {
 
             return list;
         } catch (IOException e) {
-            throw new LaaSRuntimeException("Exception is thrown when reading file", e);
+            throw new LaaSCoreRuntimeException("Exception is thrown when reading file", e);
         }
 
     }

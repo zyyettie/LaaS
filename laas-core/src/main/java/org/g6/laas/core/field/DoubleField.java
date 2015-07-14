@@ -5,6 +5,10 @@ public class DoubleField extends AbstractField<Double> {
         super(content);
     }
 
+    public DoubleField(String name, String content) {
+        super(name, content);
+    }
+
     @Override
     public Double getValue() {
         return Double.valueOf(getContent());
