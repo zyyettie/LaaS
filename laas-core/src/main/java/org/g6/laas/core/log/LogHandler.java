@@ -40,6 +40,6 @@ public abstract class LogHandler {
     this.filter = filter;
   }
 
-  public abstract Iterator<? extends Line> handle(AnalysisContext context) throws IOException;
+  public abstract Iterator<? extends Line> handle() throws IOException;
 
 }
