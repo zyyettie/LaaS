@@ -8,20 +8,14 @@ import org.g6.util.Constants;
 public class HDFSFile implements ILogFile {
     public static final String SEPARATOR = "/";
     private String url;
-    private String formatKey;
     private FileValidator validator;
 
     public HDFSFile(String url) {
-        this(url, null, null);
+        this(url, null);
     }
 
-    public HDFSFile(String url, String formatKey) {
-        this(url, formatKey, null);
-    }
-
-    public HDFSFile(String url, String formatKey, FileValidator validator) {
+    public HDFSFile(String url, FileValidator validator) {
         this.url = url;
-        this.formatKey = formatKey;
         this.validator = validator;
     }
 

@@ -9,7 +9,6 @@ import java.io.File;
 @Data
 public class LogFile implements ILogFile {
     private String file;
-    private String formatKey;
 
     private FileValidator validator;
 
@@ -17,13 +16,8 @@ public class LogFile implements ILogFile {
         this(file, null);
     }
 
-    public LogFile(String file, String formatKey) {
-        this(file, formatKey, null);
-    }
-
-    public LogFile(String file, String formatKey, FileValidator validator) {
+    public LogFile(String file, FileValidator validator) {
         this.file = file;
-        this.formatKey = formatKey;
         this.validator = validator;
     }
 
