@@ -6,13 +6,13 @@ import org.g6.laas.core.exception.InputFormatNotFoundException;
 import org.g6.laas.core.exception.LaaSCoreRuntimeException;
 import org.g6.laas.core.exception.Regex4LineSplitNotFoundException;
 import org.g6.laas.core.field.*;
-import org.g6.laas.core.file.ILogFile;
-import org.g6.laas.core.format.cache.InputFormatCache;
-import org.g6.laas.core.log.*;
+import org.g6.laas.core.log.line.Line;
+import org.g6.laas.core.log.line.LineAttributes;
+import org.g6.laas.core.log.line.LogLine;
+import org.g6.laas.core.log.result.BasicSplitResult;
+import org.g6.laas.core.log.result.SplitResult;
 import org.g6.util.Constants;
 import org.g6.util.RegexUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;

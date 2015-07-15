@@ -1,10 +1,11 @@
-package org.g6.laas.core.log;
+package org.g6.laas.core.log.handler;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.g6.laas.core.engine.context.AnalysisContext;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.filter.IFilter;
+import org.g6.laas.core.log.line.Line;
 import org.g6.laas.core.rule.Rule;
 
 import java.io.IOException;

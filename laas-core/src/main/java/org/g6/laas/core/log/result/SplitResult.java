@@ -1,4 +1,4 @@
-package org.g6.laas.core.log;
+package org.g6.laas.core.log.result;
 
 import org.g6.laas.core.field.Field;
 

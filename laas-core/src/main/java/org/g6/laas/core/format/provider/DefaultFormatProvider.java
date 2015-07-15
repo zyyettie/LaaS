@@ -5,14 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.core.format.DefaultInputFormat;
 import org.g6.laas.core.format.InputFormat;
 import org.g6.laas.core.format.cache.InputFormatCache;
-import org.g6.laas.core.log.LineAttributes;
+import org.g6.laas.core.log.line.LineAttributes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.util.Map;
 
 @Slf4j
 @Data
+@Component
 public final class DefaultFormatProvider extends FileFormatProvider {
     private String key;
     @Autowired

@@ -1,4 +1,4 @@
-package org.g6.laas.core.log;
+package org.g6.laas.core.log.reader;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;

@@ -1,4 +1,4 @@
-package org.g6.laas.core.log;
+package org.g6.laas.core.log.line;
 
 import lombok.Data;
 import org.g6.laas.core.format.FieldFormat;
