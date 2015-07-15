@@ -5,9 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.core.format.DefaultInputFormat;
 import org.g6.laas.core.format.InputFormat;
 import org.g6.laas.core.format.cache.InputFormatCache;
+import org.g6.laas.core.log.LineAttributes;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
+import java.util.Map;
 
 @Slf4j
 @Data
@@ -22,8 +24,10 @@ public final class DefaultFormatProvider extends FileFormatProvider {
 
     @Override
     protected InputFormat parse() {
-       // DefaultInputFormat result = new DefaultInputFormat();
-
-        return null;
+        //TODO this check will be removed once Spring injection is available
+        if(cache == null)
+            cache = new InputFormatCache();
+        Map<String, LineAttributes> lineAttrMap =cache.getAllInputFormats().get(key);
+        return new DefaultInputFormat(lineAttrMap);
     }
 }

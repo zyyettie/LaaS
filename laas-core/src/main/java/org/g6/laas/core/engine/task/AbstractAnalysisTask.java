@@ -32,7 +32,7 @@ public abstract class AbstractAnalysisTask<T> implements AnalysisTask<T> {
 
     protected Iterator<? extends Line> openReader() {
         try {
-            return context.getHandler().handle();
+            return context.getHandler().handle(context);
         } catch (IOException e) {
             throw new LaaSCoreRuntimeException("open log handler failed.");
         }

@@ -14,13 +14,13 @@ import java.util.List;
 @Slf4j
 public class BasicLogHandler extends LogHandler {
 
-  public BasicLogHandler(ILogFile iLogFile, IFilter filter) {
-    super(iLogFile, filter);
-  }
+    public BasicLogHandler(ILogFile iLogFile, IFilter filter) {
+        super(iLogFile, filter);
+    }
 
-  public BasicLogHandler(List<ILogFile> list, IFilter filter) {
-    super(list, filter);
-  }
+    public BasicLogHandler(List<ILogFile> list, IFilter filter) {
+        super(list, filter);
+    }
 
     private Collection<ILogFile> validateLogFiles(Collection<ILogFile> lofFiles) {
         Collection<ILogFile> list = new ArrayList<>();
@@ -34,36 +34,30 @@ public class BasicLogHandler extends LogHandler {
         return list;
     }
 
-  @Override
-  public Iterator<? extends Line> handle() throws IOException {
-    Collection<Line> collection = new ArrayList<>();
+    @Override
+    public Iterator<? extends Line> handle(AnalysisContext context) throws IOException {
+        Collection<Line> collection = new ArrayList<>();
 
-    Collection<ILogFile> logFiles = validateLogFiles(getList());
-    for (ILogFile iLogFile : logFiles) {
-      //TODO
-      //Here we may need to check which file is the first one.
-      //There are two ways
-      //1. open each file and read the first line and check the timestamp and then compare. after that, start reading one by one
-      //2. open each file and read each line and apply rules. at last order the result according to the timestamp column
-      //The disadvantage of #2 is in some scenarios all files should be opened in order. for example, get RAD calling related data.
-      LogFileReader reader = new LogFileReader(iLogFile);
-      reader.open();
-      String str;
-      int number = 0;
-      while ((str = reader.readLine()) != null) {
-        number++;
-        if(getFilter() != null){
-          if (!getFilter().isFiltered(str)) {
-            Line line = new LogLine(iLogFile, str, number);
-            collection.add(line);
-          }
-        }else{
-          Line line = new LogLine(iLogFile, str, number);
-          collection.add(line);
+        Collection<ILogFile> logFiles = validateLogFiles(getList());
+        for (ILogFile iLogFile : logFiles) {
+            LogFileReader reader = new LogFileReader(iLogFile);
+            reader.open();
+            String str;
+            int number = 0;
+            while ((str = reader.readLine()) != null) {
+                number++;
+                if (getFilter() != null) {
+                    if (!getFilter().isFiltered(str)) {
+                        Line line = new LogLine(iLogFile, str, number);
+                        collection.add(line);
+                    }
+                } else {
+                    Line line = new LogLine(iLogFile, str, number);
+                    collection.add(line);
+                }
+            }
+            reader.close();
         }
-      }
-      reader.close();
+        return collection.iterator();
     }
-    return collection.iterator();
-  }
 }

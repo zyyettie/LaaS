@@ -1,9 +1,8 @@
 package org.g6.laas.core.log;
 
 import org.apache.commons.lang.StringUtils;
+import org.g6.laas.core.engine.context.AnalysisContext;
 import org.g6.laas.core.file.ILogFile;
-import org.g6.laas.core.file.LogFile;
-import org.g6.laas.core.filter.DefaultFilter;
 import org.g6.laas.core.filter.IFilter;
 
 import java.io.IOException;
@@ -14,6 +13,7 @@ public class ConcreteLogHandler extends LogHandler {
     private boolean isReading = false;
     private Iterator<ILogFile> it = null;
     private ILogFile iLogFile = null;
+    private AnalysisContext context;
     private int lineNumber;
     private final int TIME_INTERVAL=600000;
     private Timer timer = new Timer();
@@ -28,11 +28,16 @@ public class ConcreteLogHandler extends LogHandler {
             timer.cancel();
         }
     };
-
+    public ConcreteLogHandler(ILogFile iLogFile) {
+        this(iLogFile, null);
+    }
     public ConcreteLogHandler(ILogFile iLogFile, IFilter filter) {
         super(iLogFile, filter);
     }
 
+    public ConcreteLogHandler(List<ILogFile> list) {
+        this(list, null);
+    }
     public ConcreteLogHandler(List<ILogFile> list, IFilter filter) {
         super(list, filter);
     }
@@ -58,7 +63,7 @@ public class ConcreteLogHandler extends LogHandler {
                 if (getFilter() != null && getFilter().isFiltered(str))
                     continue;
 
-                return new LogLine(iLogFile, str, lineNumber);
+                return new LogLine(iLogFile, str, lineNumber, context.getInputFormat());
             }
             reader.close();
             reader = null;
@@ -98,7 +103,8 @@ public class ConcreteLogHandler extends LogHandler {
     }
 
     @Override
-    public Iterator<? extends Line> handle() throws IOException {
+    public Iterator<? extends Line> handle(AnalysisContext context) throws IOException {
+        setContext(context);
         return iterator();
     }
 
@@ -145,19 +151,7 @@ public class ConcreteLogHandler extends LogHandler {
         }
     }
 
-    public static void main(String[] args) {
-        List<ILogFile> list = new ArrayList<>();
-        list.add(new LogFile("C:\\aa.txt"));
-        list.add(new LogFile("C:\\bb.txt"));
-        LogHandler handler = new ConcreteLogHandler(list, new DefaultFilter());
-        try {
-            Iterator<Line> it = (Iterator<Line>)handler.handle();
-            while (it.hasNext()) {
-                Line line = it.next();
-                System.out.println("line="+line);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private void setContext(AnalysisContext context){
+          this.context = context;
     }
 }

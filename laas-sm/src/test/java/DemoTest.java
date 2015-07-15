@@ -13,6 +13,7 @@ import java.util.concurrent.Future;
 public class DemoTest {
 
     public static void main(String[] args) {
+        runTopNQueryTask();
         runLoginTimeInfoTask();
     }
 

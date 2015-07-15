@@ -31,9 +31,6 @@ public class LogLine extends Line {
     @Override
     public SplitResult split() {
         InputFormat inputFormat = getInputFormat();
-        if (inputFormat == null)
-            inputFormat = new DefaultInputFormat(getFile());
-
         return inputFormat.getSplits(this);
     }
 
