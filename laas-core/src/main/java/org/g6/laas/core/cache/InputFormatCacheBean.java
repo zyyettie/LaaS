@@ -12,6 +12,6 @@ public class InputFormatCacheBean implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        cache.getAllInputFormats();
+        //cache.getAllInputFormats();
     }
 }
