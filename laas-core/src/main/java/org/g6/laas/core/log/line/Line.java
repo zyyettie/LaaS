@@ -8,7 +8,7 @@ import org.g6.laas.core.log.result.SplitResult;
 
 @Data
 @NoArgsConstructor
-public abstract class Line implements Comparable {
+public abstract class Line implements ILine,Comparable {
     private ILogFile file;
     private String content;
     private int lineNumber;

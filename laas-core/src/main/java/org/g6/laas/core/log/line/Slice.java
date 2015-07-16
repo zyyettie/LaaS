@@ -12,17 +12,20 @@ including [start, end) content
 
 @Data
 @NoArgsConstructor
-public abstract class Slice {
-    private String content;
+public abstract class Slice implements ILine {
     private int start;
     private int end;
-    private Collection<Line> lines;
+    private Collection<ILine> lines;
 
-    public Slice(Collection<Line> lines) {
+    public Slice(Collection<ILine> lines) {
         this.lines = lines;
     }
 
-    void addLine(Line line) {
+    public void addLine(ILine line) {
         lines.add(line);
+    }
+
+    public Collection<ILine> getLines() {
+        return lines;
     }
 }
