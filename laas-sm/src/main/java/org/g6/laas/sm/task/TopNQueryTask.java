@@ -4,12 +4,12 @@ import org.g6.laas.core.engine.context.SimpleAnalysisContext;
 import org.g6.laas.core.engine.task.AbstractAnalysisTask;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.file.LogFile;
-import org.g6.laas.core.format.provider.DefaultFormatProvider;
-import org.g6.laas.core.format.provider.FormatProvider;
+import org.g6.laas.core.format.DefaultFormatFactory;
+import org.g6.laas.core.format.InputFormat;
 import org.g6.laas.core.log.handler.ConcreteLogHandler;
+import org.g6.laas.core.log.handler.LogHandler;
 import org.g6.laas.core.log.line.Line;
 import org.g6.laas.core.log.line.LineComparator;
-import org.g6.laas.core.log.handler.LogHandler;
 import org.g6.laas.core.rule.KeywordRule;
 import org.g6.laas.core.rule.Rule;
 import org.g6.laas.core.rule.action.RuleAction;
@@ -50,7 +50,7 @@ public class TopNQueryTask extends AbstractAnalysisTask<List<Line>> {
         this.N = topN;
         ILogFile logFile = new LogFile(file);
         Rule rule = new KeywordRule("RTE D DBQUERY");
-        FormatProvider provider = new DefaultFormatProvider("SMRTE_SM_LOG");
+        InputFormat inputFormat = DefaultFormatFactory.getInputFormat("SMRTE_SM_LOG");
         LogHandler handler = new ConcreteLogHandler(logFile);
         rule.addAction(new RuleAction() {
             @Override
@@ -62,7 +62,7 @@ public class TopNQueryTask extends AbstractAnalysisTask<List<Line>> {
         });
 
         SimpleAnalysisContext context = new SimpleAnalysisContext();
-        context.setInputForm(provider.getInputFormat());
+        context.setInputForm(inputFormat);
         context.setHandler(handler);
         context.getRules().add(rule);
 
