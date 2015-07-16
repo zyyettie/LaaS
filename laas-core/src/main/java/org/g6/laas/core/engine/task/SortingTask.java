@@ -1,6 +1,6 @@
 package org.g6.laas.core.engine.task;
 
-import org.g6.laas.core.log.Line;
+import org.g6.laas.core.log.line.Line;
 import org.g6.laas.core.rule.Rule;
 
 import java.util.ArrayList;

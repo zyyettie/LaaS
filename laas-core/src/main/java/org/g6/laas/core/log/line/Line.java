@@ -1,9 +1,10 @@
-package org.g6.laas.core.log;
+package org.g6.laas.core.log.line;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.format.InputFormat;
+import org.g6.laas.core.log.result.SplitResult;
 
 @Data
 @NoArgsConstructor

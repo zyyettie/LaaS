@@ -6,13 +6,13 @@ import org.g6.laas.core.exception.InputFormatNotFoundException;
 import org.g6.laas.core.exception.LaaSCoreRuntimeException;
 import org.g6.laas.core.exception.Regex4LineSplitNotFoundException;
 import org.g6.laas.core.field.*;
-import org.g6.laas.core.file.ILogFile;
-import org.g6.laas.core.format.cache.InputFormatCache;
-import org.g6.laas.core.log.*;
+import org.g6.laas.core.log.line.Line;
+import org.g6.laas.core.log.line.LineAttributes;
+import org.g6.laas.core.log.line.LogLine;
+import org.g6.laas.core.log.result.BasicSplitResult;
+import org.g6.laas.core.log.result.SplitResult;
 import org.g6.util.Constants;
 import org.g6.util.RegexUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,22 +20,15 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-@Component
 public final class DefaultInputFormat implements InputFormat {
-    @Autowired
-    InputFormatCache cache;
-    private ILogFile file;
+    Map<String, LineAttributes> lineAttrMap;
 
-    public DefaultInputFormat(ILogFile file) {
-        this.file = file;
+    public DefaultInputFormat(Map<String, LineAttributes> lineAttrMap) {
+        this.lineAttrMap = lineAttrMap;
     }
 
     @Override
     public SplitResult getSplits(Line line) {
-        //cache object should be injected by Spring
-        if(cache == null)
-            cache = new InputFormatCache();
-        Map<String, LineAttributes> lineAttrMap =cache.getAllInputFormats().get(file.getFormatKey());
         String lineSplitRegex = null;
         List<FieldFormat> fieldFormatList = null;
         List<String> errorKeyList = new ArrayList<>();

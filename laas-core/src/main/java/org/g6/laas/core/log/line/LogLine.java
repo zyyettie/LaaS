@@ -1,11 +1,11 @@
-package org.g6.laas.core.log;
+package org.g6.laas.core.log.line;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.g6.laas.core.field.Field;
 import org.g6.laas.core.file.ILogFile;
-import org.g6.laas.core.format.DefaultInputFormat;
 import org.g6.laas.core.format.InputFormat;
+import org.g6.laas.core.log.result.SplitResult;
 
 @NoArgsConstructor
 @Data
@@ -31,9 +31,6 @@ public class LogLine extends Line {
     @Override
     public SplitResult split() {
         InputFormat inputFormat = getInputFormat();
-        if (inputFormat == null)
-            inputFormat = new DefaultInputFormat(getFile());
-
         return inputFormat.getSplits(this);
     }
 

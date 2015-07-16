@@ -1,9 +1,8 @@
 import org.g6.laas.core.engine.StrategyAnalysisEngine;
 import org.g6.laas.core.engine.ThreadPoolExecutionStrategy;
-import org.g6.laas.core.log.Line;
+import org.g6.laas.core.log.line.Line;
 import org.g6.laas.sm.task.LoginTimeInfoTask;
 import org.g6.laas.sm.task.TopNQueryTask;
-import org.g6.util.Constants;
 
 import java.util.List;
 import java.util.Map;
@@ -13,6 +12,7 @@ import java.util.concurrent.Future;
 public class DemoTest {
 
     public static void main(String[] args) {
+        runTopNQueryTask();
         runLoginTimeInfoTask();
     }
 

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.core.exception.LaaSCoreRuntimeException;
 import org.g6.laas.core.format.FieldFormat;
-import org.g6.laas.core.log.LineAttributes;
+import org.g6.laas.core.log.line.LineAttributes;
 import org.g6.util.Constants;
 import org.g6.util.FileUtil;
 import org.g6.util.JSONUtil;

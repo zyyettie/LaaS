@@ -2,7 +2,7 @@ package org.g6.laas.core.engine.context;
 
 
 import org.g6.laas.core.format.InputFormat;
-import org.g6.laas.core.log.LogHandler;
+import org.g6.laas.core.log.handler.LogHandler;
 import org.g6.laas.core.rule.Rule;
 
 import java.util.Collection;

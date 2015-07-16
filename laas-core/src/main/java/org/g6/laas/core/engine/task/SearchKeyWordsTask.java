@@ -2,8 +2,8 @@ package org.g6.laas.core.engine.task;
 
 import org.g6.laas.core.engine.context.AnalysisContext;
 import org.g6.laas.core.engine.context.SimpleAnalysisContext;
-import org.g6.laas.core.log.Line;
-import org.g6.laas.core.log.LogHandler;
+import org.g6.laas.core.log.line.Line;
+import org.g6.laas.core.log.handler.LogHandler;
 import org.g6.laas.core.rule.Rule;
 import org.g6.laas.core.rule.action.DefaultRuleAction;
 import org.g6.laas.core.rule.action.RuleAction;

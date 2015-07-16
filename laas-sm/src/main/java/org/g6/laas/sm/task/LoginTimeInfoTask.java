@@ -5,11 +5,12 @@ import org.g6.laas.core.engine.context.SimpleAnalysisContext;
 import org.g6.laas.core.engine.task.AbstractAnalysisTask;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.file.LogFile;
-import org.g6.laas.core.log.ConcreteLogHandler;
-import org.g6.laas.core.log.Line;
-import org.g6.laas.core.log.LogHandler;
-import org.g6.laas.core.log.SplitResult;
-import org.g6.laas.core.rule.KeywordRule;
+import org.g6.laas.core.format.provider.DefaultFormatProvider;
+import org.g6.laas.core.format.provider.FormatProvider;
+import org.g6.laas.core.log.handler.ConcreteLogHandler;
+import org.g6.laas.core.log.line.Line;
+import org.g6.laas.core.log.handler.LogHandler;
+import org.g6.laas.core.log.result.SplitResult;
 import org.g6.laas.core.rule.RegexRule;
 import org.g6.laas.core.rule.Rule;
 import org.g6.laas.core.rule.action.RuleAction;
@@ -50,7 +51,9 @@ public class LoginTimeInfoTask extends AbstractAnalysisTask<Map<String, Double>>
 
     public LoginTimeInfoTask(String file) {
         lines = new ArrayList<>();
-        ILogFile logFile = new LogFile(file, "SMRTE_SM_LOG");
+        ILogFile logFile = new LogFile(file);
+
+        FormatProvider provider = new DefaultFormatProvider("SMRTE_SM_LOG");
 
         Rule rule = new RegexRule("RTE D Response-Total.+format:sc\\.manage\\.ToDo\\.g application:display");
         rule.addAction(new RuleAction() {
@@ -66,6 +69,7 @@ public class LoginTimeInfoTask extends AbstractAnalysisTask<Map<String, Double>>
 
         SimpleAnalysisContext context = new SimpleAnalysisContext();
         context.setHandler(handler);
+        context.setInputForm(provider.getInputFormat());
         context.getRules().add(rule);
         setContext(context);
     }

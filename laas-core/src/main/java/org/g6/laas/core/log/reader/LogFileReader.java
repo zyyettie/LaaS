@@ -1,4 +1,4 @@
-package org.g6.laas.core.log;
+package org.g6.laas.core.log.reader;
 
 import org.g6.laas.core.file.ILogFile;
 
@@ -10,7 +10,7 @@ public class LogFileReader {
     ILogFile file;
     private BufferedReader reader = null;
 
-    LogFileReader(ILogFile file) {
+    public LogFileReader(ILogFile file) {
         this.file = file;
     }
 

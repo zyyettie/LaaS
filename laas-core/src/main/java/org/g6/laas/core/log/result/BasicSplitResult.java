@@ -1,4 +1,4 @@
-package org.g6.laas.core.log;
+package org.g6.laas.core.log.result;
 
 
 import com.google.common.base.Strings;
