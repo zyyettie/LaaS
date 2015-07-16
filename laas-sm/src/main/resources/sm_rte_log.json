@@ -1,6 +1,6 @@
 {"file_name":"sm.log", "date_time_format":"MM/dd/yyyy HH:mm:ss","lines":
     [
-        {"key":"RTE D DBACCESS","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D.+DBACCESS.+(\\d+\\.\\d+)\\s+seconds",
+        {"name":"DBACCESS", "key":"RTE D DBACCESS","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D.+DBACCESS.+(\\d+\\.\\d+)\\s+seconds",
             "fields":[
                 {"name":"process_id","type":"Integer","sortable":"false"},
                 {"name":"thread_id","type":"Integer","sortable":"false"},
@@ -8,7 +8,7 @@
                 {"name":"execution_time","type":"Double","sortable":"true"}
             ]
         },
-        {"key":"REGEX:SCRIPTTRACE","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D SCRIPTTRACE:.+elapsed: (\\d+) ms",
+        {"name":"SCRIPTTRACE","key":"REGEX:SCRIPTTRACE","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D SCRIPTTRACE:.+elapsed: (\\d+) ms",
             "fields":[
                 {"name":"process_id","type":"Integer","sortable":"false"},
                 {"name":"thread_id","type":"Integer","sortable":"false"},
@@ -16,7 +16,7 @@
                 {"name":"execution_time","type":"Double","sortable":"true"}
             ]
         },
-        {"key":"RTE D DBQUERY","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D DBQUERY(?:\\^[^\\^]+){6}\\^(\\d+\\.\\d+)",
+        {"name":"DBQUERY","key":"RTE D DBQUERY","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D DBQUERY(?:\\^[^\\^]+){6}\\^(\\d+\\.\\d+)",
             "fields":[
                 {"name":"process_id","type":"Integer","sortable":"false"},
                 {"name":"thread_id","type":"Integer","sortable":"false"},
@@ -24,7 +24,7 @@
                 {"name":"execution_time","type":"Double","sortable":"true"}
             ]
         },
-        {"key":"RTE D DBFIND","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D DBFIND(?:\\^[^\\^]+){6}\\^(\\d+\\.\\d+)",
+        {"name":"DBFIND","key":"RTE D DBFIND","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D DBFIND(?:\\^[^\\^]+){6}\\^(\\d+\\.\\d+)",
             "fields":[
                 {"name":"process_id","type":"Integer","sortable":"false"},
                 {"name":"thread_id","type":"Integer","sortable":"false"},
@@ -32,7 +32,7 @@
                 {"name":"execution_time","type":"Double","sortable":"true"}
             ]
         },
-        {"key":"REGEX:RTE D Response-Total.+format:sc\\.manage\\.ToDo\\.g application:display","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D Response-Total:\\s+(\\d+\\.\\d+).+RAD:(\\d+\\.\\d+)\\s+JS:(\\d+\\.\\d+)\\s+Log:(\\d+\\.\\d+)\\s+Database:(\\d+\\.\\d+)\\s+\\(CPU\\s+(\\d+\\.\\d+)\\).+format:sc\\.manage\\.ToDo\\.g application:display,fdisp\\.1",
+        {"name":"LOGINTIME","key":"REGEX:RTE D Response-Total.+format:sc\\.manage\\.ToDo\\.g application:display","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D Response-Total:\\s+(\\d+\\.\\d+).+RAD:(\\d+\\.\\d+)\\s+JS:(\\d+\\.\\d+)\\s+Log:(\\d+\\.\\d+)\\s+Database:(\\d+\\.\\d+)\\s+\\(CPU\\s+(\\d+\\.\\d+)\\).+format:sc\\.manage\\.ToDo\\.g application:display,fdisp\\.1",
             "fields":[
                 {"name":"process_id","type":"Integer","sortable":"false"},
                 {"name":"thread_id","type":"Integer","sortable":"false"},
@@ -45,7 +45,7 @@
                 {"name":"cpu_time","type":"Double","sortable":"false"}
             ]
         },
-        {"key":"REGEX:RTE D RADTRACE.+se.external.action\\s+RADReturn","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D RADTRACE\\s+(\\d+).+(se.external.action\\s+RADReturn)",
+        {"name":"INTEGRATION","key":"REGEX:RTE D RADTRACE.+se.external.action\\s+RADReturn","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D RADTRACE\\s+(\\d+).+(se.external.action\\s+RADReturn)",
             "fields":[
                 {"name":"process id","type":"Integer","sortable":"false"},
                 {"name":"thread_id","type":"Integer","sortable":"false"},
