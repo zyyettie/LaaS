@@ -38,11 +38,11 @@
                 {"name":"thread_id","type":"Integer","sortable":"false"},
                 {"name":"datetime","type":"DateTime","sortable":"false"},
                 {"name":"login_time","type":"Double","sortable":"true"},
-                {"name":"rad_time","type":"Double","sortable":"true"},
-                {"name":"js_time","type":"Double","sortable":"true"},
-                {"name":"log_time","type":"Double","sortable":"true"},
-                {"name":"db_time","type":"Double","sortable":"true"},
-                {"name":"cpu_time","type":"Double","sortable":"true"}
+                {"name":"rad_time","type":"Double","sortable":"false"},
+                {"name":"js_time","type":"Double","sortable":"false"},
+                {"name":"log_time","type":"Double","sortable":"false"},
+                {"name":"db_time","type":"Double","sortable":"false"},
+                {"name":"cpu_time","type":"Double","sortable":"false"}
             ]
         },
         {"key":"REGEX:RTE D RADTRACE.+se.external.action\\s+RADReturn","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D RADTRACE\\s+(\\d+).+(se.external.action\\s+RADReturn)",
