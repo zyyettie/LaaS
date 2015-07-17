@@ -18,7 +18,7 @@ public class RTELogFileSorter extends AbstractLogFileSorter{
 
     @Override
     protected Comparator<ILogFile> getComparator() {
-        return null;
+        return new RTELogFileComparator();
     }
 
     public static class RTELogFileComparator implements Comparator<ILogFile>{
