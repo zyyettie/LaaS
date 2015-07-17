@@ -5,7 +5,7 @@ import org.g6.laas.core.exception.LaaSCoreRuntimeException;
 import org.g6.laas.core.field.DateTimeField;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.file.sorter.AbstractLogFileSorter;
-import org.g6.laas.core.format.DefaultFormatFactory;
+import org.g6.laas.core.format.provider.DefaultInputFormatProvider;
 import org.g6.laas.core.log.line.LogLine;
 import org.g6.laas.core.log.reader.LogFileReader;
 import org.g6.laas.core.log.result.SplitResult;
@@ -40,7 +40,7 @@ public class RTELogFileSorter extends AbstractLogFileSorter {
             LogFileReader reader = new LogFileReader(logFile);
             LogLine line1 = new LogLine();
             line1.setContent(reader.readLine());
-            line1.setInputFormat(DefaultFormatFactory.getInputFormat("SMRTE_SM_LOG"));
+            line1.setInputFormat(new DefaultInputFormatProvider("SMRTE_SM_LOG").getInputFormat());
             SplitResult result = line1.split();
             return (DateTimeField) result.get("datetime");
         }
