@@ -8,6 +8,8 @@ import java.util.List;
 
 @Data
 public class LineAttributes implements Serializable {
-    String splitRegex;
-    List<FieldFormat> fieldFormats;
+    private String name;
+    private String key;
+    private String splitRegex;
+    private List<FieldFormat> fieldFormats;
 }

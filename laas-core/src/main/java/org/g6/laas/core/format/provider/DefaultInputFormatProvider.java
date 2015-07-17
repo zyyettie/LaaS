@@ -28,7 +28,7 @@ public class DefaultInputFormatProvider extends FileFormatProvider {
         DefaultInputFormat inputFormat = new DefaultInputFormat();
         if(cache == null)
             cache = new FileFormatCache();
-        inputFormat.setLineAttrMap(cache.getFileFormat(formatKey));
+        inputFormat.setLineAttrList(cache.getFileFormat(formatKey));
 
         return inputFormat;
     }

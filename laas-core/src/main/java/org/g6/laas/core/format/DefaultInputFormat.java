@@ -1,9 +1,5 @@
 package org.g6.laas.core.format;
 
-import com.google.common.io.Files;
-import com.google.gson.annotations.SerializedName;
-import com.google.gson.reflect.TypeToken;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,21 +14,18 @@ import org.g6.laas.core.log.line.LogLine;
 import org.g6.laas.core.log.result.BasicSplitResult;
 import org.g6.laas.core.log.result.SplitResult;
 import org.g6.util.Constants;
-import org.g6.util.JSONUtil;
 import org.g6.util.RegexUtil;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.nio.charset.Charset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Slf4j
 @Data
 @NoArgsConstructor
 public final class DefaultInputFormat implements InputFormat {
 
-    private Map<String, LineAttributes> lineAttrMap;
+    private List<LineAttributes> lineAttrList;
 
     @Override
     public SplitResult getSplits(Line line) {
@@ -41,9 +34,8 @@ public final class DefaultInputFormat implements InputFormat {
         List<String> errorKeyList = new ArrayList<>();
         int counter = 0;
 
-        for (Map.Entry<String, LineAttributes> entry : lineAttrMap.entrySet()) {
-            String lineFormatKey = entry.getKey();
-            LineAttributes lineAttr = entry.getValue();
+        for (LineAttributes lineAttr : lineAttrList) {
+            String lineFormatKey = lineAttr.getKey();
 
             if (lineFormatKey.startsWith(Constants.REGEX_PREFIX)) {// the key is regex
                 String regex = lineFormatKey.substring(Constants.REGEX_PREFIX.length());
@@ -57,7 +49,7 @@ public final class DefaultInputFormat implements InputFormat {
                 }
             } else {
                 if (line.getContent().contains(lineFormatKey)) {
-                    errorKeyList.add(entry.getKey());
+                    errorKeyList.add(lineFormatKey);
                     counter++;
                     fieldFormatList = lineAttr.getFieldFormats();
                     lineSplitRegex = lineAttr.getSplitRegex();
