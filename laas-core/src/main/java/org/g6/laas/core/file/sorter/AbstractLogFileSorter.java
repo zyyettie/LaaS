@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public abstract class AbstractLogFileSorter implements FileSorter<ILogFile> {
+public abstract class AbstractLogFileSorter implements FileSorter {
 
     protected abstract Comparator<ILogFile> getComparator();
 
