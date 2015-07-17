@@ -1,7 +1,6 @@
 package org.g6.laas.sm.file.sorter;
 
 
-import org.g6.laas.core.exception.LaaSCoreRuntimeException;
 import org.g6.laas.core.field.DateTimeField;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.file.sorter.AbstractLogFileSorter;
@@ -9,6 +8,7 @@ import org.g6.laas.core.format.provider.DefaultInputFormatProvider;
 import org.g6.laas.core.log.line.LogLine;
 import org.g6.laas.core.log.reader.LogFileReader;
 import org.g6.laas.core.log.result.SplitResult;
+import org.g6.laas.sm.exception.SMRuntimeException;
 
 import java.io.IOException;
 import java.util.Comparator;
@@ -29,10 +29,10 @@ public class RTELogFileSorter extends AbstractLogFileSorter {
                     DateTimeField dateTime2 = getEntryDateTime(logFile2);
                     return dateTime1.compareTo(dateTime2);
                 } catch (IOException e) {
-                    throw new LaaSCoreRuntimeException("Sort RTE files failed");
+                    throw new SMRuntimeException("Sort RTE files failed");
                 }
             } else
-                throw new LaaSCoreRuntimeException(logFile1.getName() + " or " + logFile2.getName() + " containing wrong format content.");
+                throw new SMRuntimeException(logFile1.getName() + " or " + logFile2.getName() + " containing wrong format content.");
 
         }
 
