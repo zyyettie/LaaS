@@ -5,8 +5,9 @@ import org.g6.laas.core.engine.context.SimpleAnalysisContext;
 import org.g6.laas.core.engine.task.AbstractAnalysisTask;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.file.LogFile;
-import org.g6.laas.core.format.DefaultFormatFactory;
 import org.g6.laas.core.format.InputFormat;
+import org.g6.laas.core.format.provider.DefaultInputFormatProvider;
+import org.g6.laas.core.format.provider.FormatProvider;
 import org.g6.laas.core.log.handler.ConcreteLogHandler;
 import org.g6.laas.core.log.handler.LogHandler;
 import org.g6.laas.core.log.line.Line;
@@ -53,7 +54,8 @@ public class LoginTimeInfoTask extends AbstractAnalysisTask<Map<String, Double>>
         lines = new ArrayList<>();
         ILogFile logFile = new LogFile(file);
 
-        InputFormat inputFormat = DefaultFormatFactory.getInputFormat("SMRTE_SM_LOG");
+        FormatProvider provider = new DefaultInputFormatProvider("SMRTE_SM_LOG");
+        InputFormat inputFormat = provider.getInputFormat();
 
         Rule rule = new RegexRule("RTE D Response-Total.+format:sc\\.manage\\.ToDo\\.g application:display");
         rule.addAction(new RuleAction() {

@@ -1,6 +1,6 @@
 package org.g6.laas.core.cache;
 
-import org.g6.laas.core.format.cache.InputFormatCache;
+import org.g6.laas.core.format.cache.FileFormatCache;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class InputFormatCacheBean implements InitializingBean {
     @Autowired
-    private InputFormatCache cache;
+    private FileFormatCache cache;
 
     @Override
     public void afterPropertiesSet() throws Exception {
