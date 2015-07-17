@@ -1,5 +1,6 @@
 package org.g6.laas.sm.task;
 
+import com.google.common.collect.Ordering;
 import org.g6.laas.core.engine.context.SimpleAnalysisContext;
 import org.g6.laas.core.engine.task.AbstractAnalysisTask;
 import org.g6.laas.core.file.ILogFile;
@@ -16,7 +17,6 @@ import org.g6.laas.core.rule.Rule;
 import org.g6.laas.core.rule.action.RuleAction;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -32,18 +32,8 @@ public class TopNQueryTask extends AbstractAnalysisTask<List<Line>> {
 
     @Override
     protected List<Line> process() {
-        Collections.sort(lines, new LineComparator());
-
-        List<Line> topNList = new ArrayList<>();
-
-        int counter = 0;
-        for (Line line : lines) {
-            if (counter < N) {
-                topNList.add(line);
-            }
-            counter++;
-        }
-        return topNList;
+        Ordering ordering = Ordering.from(new LineComparator());
+        return ordering.greatestOf(lines, N);
     }
 
 
