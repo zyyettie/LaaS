@@ -32,7 +32,8 @@ public class RTELogFileSorter extends AbstractLogFileSorter {
                     throw new LaaSCoreRuntimeException("Sort RTE files failed");
                 }
             } else
-                throw new LaaSCoreRuntimeException("Invalid SM RTE File can NOT be sorted");
+                throw new LaaSCoreRuntimeException(logFile1.getName() + " or " + logFile2.getName() + " containing wrong format content.");
+
         }
 
         private DateTimeField getEntryDateTime(ILogFile logFile) throws IOException {
