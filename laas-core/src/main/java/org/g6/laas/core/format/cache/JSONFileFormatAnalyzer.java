@@ -32,8 +32,8 @@ public class JSONFileFormatAnalyzer {
         this.formatFile = formatFile;
     }
 
-    public Map<String, LineAttributes> getFileFormatDataFromJsonFile(File formatFile) {
-        Map<String, LineAttributes> lineAttrMap = new HashMap<>();
+    public List<LineAttributes> getFileFormatDataFromJsonFile() {
+        List<LineAttributes> lineAttrList = new ArrayList<>();
         List<String> lineList;
         try {
             lineList = Files.readLines(formatFile, Charset.defaultCharset());
@@ -58,10 +58,10 @@ public class JSONFileFormatAnalyzer {
         List<JSONLineFormat> jsonLineFormats = jsonFileFormat.getLines();
 
         for (JSONLineFormat lineFormat : jsonLineFormats) {
-            String key = lineFormat.getKey();
-            String regex = lineFormat.getRegex();
             LineAttributes lineAttr = new LineAttributes();
-            lineAttr.setSplitRegex(regex);
+            lineAttr.setSplitRegex(lineFormat.getKey());
+            lineAttr.setName(lineFormat.getName());
+            lineAttr.setKey(lineFormat.getKey());
 
             List<LogFieldFormat> fields = lineFormat.getFields();
             List<FieldFormat> tempFields = new ArrayList<>();
@@ -78,10 +78,10 @@ public class JSONFileFormatAnalyzer {
                 tempFields.add(field);
             }
             lineAttr.setFieldFormats(tempFields);
-            lineAttrMap.put(key, lineAttr);
+            lineAttrList.add(lineAttr);
         }
 
-        return lineAttrMap;
+        return lineAttrList;
     }
 
     @Data
@@ -98,6 +98,7 @@ public class JSONFileFormatAnalyzer {
     @Data
     private static class JSONLineFormat {
         private String key;
+        private String name;
         @SerializedName("line_split_regex")
         private String regex;
         private List<LogFieldFormat> fields;
