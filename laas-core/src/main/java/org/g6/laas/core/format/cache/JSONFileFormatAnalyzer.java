@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-@Service
 public class JSONFileFormatAnalyzer {
     private File formatFile;
 

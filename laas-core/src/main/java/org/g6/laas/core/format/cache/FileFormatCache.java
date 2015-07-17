@@ -16,14 +16,11 @@ import java.util.Map;
 @Slf4j
 @Data
 public class FileFormatCache {
-    @Autowired
-    JSONFileFormatAnalyzer analyzer;
 
     @Cacheable("inputFormats")
     public List<LineAttributes> getFileFormat(String key) {
         String formatFile = getFormatFile(key);
-        if(analyzer == null)
-            analyzer = new JSONFileFormatAnalyzer(FileUtil.getFile(formatFile));
+        JSONFileFormatAnalyzer analyzer = new JSONFileFormatAnalyzer(FileUtil.getFile(formatFile));
 
         return analyzer.getFileFormatDataFromJsonFile();
     }
