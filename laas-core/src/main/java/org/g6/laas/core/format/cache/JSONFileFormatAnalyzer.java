@@ -59,7 +59,7 @@ public class JSONFileFormatAnalyzer {
 
         for (JSONLineFormat lineFormat : jsonLineFormats) {
             LineAttributes lineAttr = new LineAttributes();
-            lineAttr.setSplitRegex(lineFormat.getKey());
+            lineAttr.setSplitRegex(lineFormat.getRegex());
             lineAttr.setName(lineFormat.getName());
             lineAttr.setKey(lineFormat.getKey());
 
