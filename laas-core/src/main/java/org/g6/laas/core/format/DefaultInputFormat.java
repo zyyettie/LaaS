@@ -33,11 +33,21 @@ public final class DefaultInputFormat implements InputFormat {
         List<FieldFormat> fieldFormatList = null;
         List<String> errorKeyList = new ArrayList<>();
         int counter = 0;
+        boolean isDefault = false;
 
         for (LineAttributes lineAttr : lineAttrList) {
-            String lineFormatKey = lineAttr.getKey();
+            // get the default one if no line format is specified for the current line
+            if (lineAttr.getName().equals("DEFAULT")) {
+                isDefault = true;
+                if(fieldFormatList == null && StringUtils.isBlank(lineSplitRegex)){
+                    fieldFormatList = lineAttr.getFieldFormats();
+                    lineSplitRegex = lineAttr.getSplitRegex();
+                }
+                continue;
+            }
 
-            if (lineFormatKey.startsWith(Constants.REGEX_PREFIX)) {// the key is regex
+            String lineFormatKey = lineAttr.getKey();
+            if (lineFormatKey.startsWith(Constants.REGEX_PREFIX)) { // the key is regex
                 String regex = lineFormatKey.substring(Constants.REGEX_PREFIX.length());
                 String matchedValue = RegexUtil.getValue(line.getContent(), regex);
 
@@ -46,6 +56,7 @@ public final class DefaultInputFormat implements InputFormat {
                     counter++;
                     fieldFormatList = lineAttr.getFieldFormats();
                     lineSplitRegex = lineAttr.getSplitRegex();
+                    isDefault = false;
                 }
             } else {
                 if (line.getContent().contains(lineFormatKey)) {
@@ -53,11 +64,12 @@ public final class DefaultInputFormat implements InputFormat {
                     counter++;
                     fieldFormatList = lineAttr.getFieldFormats();
                     lineSplitRegex = lineAttr.getSplitRegex();
+                    isDefault = false;
                 }
             }
         }
 
-        if (counter != 1) {
+        if (!isDefault && counter != 1) {
             StringBuffer sb = new StringBuffer();
             sb.append("Found more than one formats for the line which number is ")
                     .append(line.getLineNumber())
@@ -78,7 +90,9 @@ public final class DefaultInputFormat implements InputFormat {
             throw new InputFormatNotFoundException("InputFormat not found");
         if (lineSplitRegex == null)
             throw new Regex4LineSplitNotFoundException("Regex not found for " + line.getContent());
-        String test = line.getContent();
+        if(isDefault)
+            log.debug("Default line format is being used");
+
         String[] fieldContents = RegexUtil.getValues(line.getContent(), lineSplitRegex);
         Collection<Field> fieldList = new ArrayList<>();
 

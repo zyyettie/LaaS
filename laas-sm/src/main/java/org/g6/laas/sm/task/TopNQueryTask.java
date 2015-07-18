@@ -52,6 +52,7 @@ public class TopNQueryTask extends SMRTETask<List<Line>> {
                 lines.add(line);
             }
         });
-        super.initContext(file, rule);
+
+        initContext(file, rule);
     }
 }

@@ -7,6 +7,7 @@ import org.g6.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,7 @@ import java.util.Map;
 @Service
 public class FileFormatCacheService {
     @Autowired
-    private FileFormatCache cache;
+    private FileFormatCache cache = new FileFormatCache();
     private String formatKey;
     private boolean regex;
 
@@ -49,5 +50,32 @@ public class FileFormatCacheService {
         }
 
         return null;
+    }
+
+    /**
+     * Get the collection of Line format per line name
+     *
+     * @param names the line names defined in JSON file
+     * @return
+     */
+    public List<LineAttributes> getLineAttrListBy(String[] names) {
+        List<LineAttributes> lineFormats = cache.getFileFormat(formatKey);
+        List<LineAttributes> list = new ArrayList<>();
+
+        for (LineAttributes lineAttr : lineFormats) {
+            String name = lineAttr.getName();
+
+            for(String lineName : names){
+                if(lineName.equals(name)){
+                    list.add(lineAttr);
+                }
+            }
+        }
+
+        return list;
+    }
+
+    public List<LineAttributes> getAllLineAttrList(){
+        return cache.getFileFormat(formatKey);
     }
 }

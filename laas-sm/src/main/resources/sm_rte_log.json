@@ -47,7 +47,16 @@
         },
         {"name":"INTEGRATION","key":"REGEX:RTE D RADTRACE.+se.external.action\\s+RADReturn","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D RADTRACE\\s+(\\d+).+(se.external.action\\s+RADReturn)",
             "fields":[
-                {"name":"process id","type":"Integer","sortable":"false"},
+                {"name":"process_id","type":"Integer","sortable":"false"},
+                {"name":"thread_id","type":"Integer","sortable":"false"},
+                {"name":"datetime","type":"DateTime","sortable":"false"},
+                {"name":"execution_time","type":"Double","sortable":"true"},
+                {"name":"rad_info", "type":"String","sortable":"false"}
+            ]
+        },
+        {"name":"DEFAULT","key":"","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+).+",
+            "fields":[
+                {"name":"process_id","type":"Integer","sortable":"false"},
                 {"name":"thread_id","type":"Integer","sortable":"false"},
                 {"name":"datetime","type":"DateTime","sortable":"false"},
                 {"name":"execution_time","type":"Double","sortable":"true"},

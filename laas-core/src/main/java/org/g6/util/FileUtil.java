@@ -122,7 +122,7 @@ public class FileUtil {
      */
     public static boolean createDir(String dir) {
         File f = new File(dir);
-        return f.mkdir();
+        return f.mkdirs();
     }
 
     /**

@@ -37,7 +37,7 @@ public abstract class SMRTETask<T> extends AbstractAnalysisTask<T> {
 
 
     protected void initContext(String[] files, Rule[] rules){
-        FormatProvider provider = new DefaultInputFormatProvider("SMRTE_SM_LOG");
+        FormatProvider provider = getProvider();
         InputFormat inputFormat = provider.getInputFormat();
 
         List<ILogFile> fileList = new ArrayList<>();
@@ -55,5 +55,9 @@ public abstract class SMRTETask<T> extends AbstractAnalysisTask<T> {
         }
 
         setContext(context);
+    }
+
+    FormatProvider getProvider(){
+        return new DefaultInputFormatProvider("SMRTE_SM_LOG");
     }
 }
