@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Task for SM RTE
+ * Abstract Task for SM RTE
  *
  * @param <T>
  * @author Johnson Jiang
