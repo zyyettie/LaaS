@@ -23,19 +23,23 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * This task is to calculate the SM login related time at RTE side
+ *
  * @author Johnson Jiang
  * @version 1.0
  * @since 1.0
  */
 @Data
-public class LoginTimeInfoTask extends AbstractAnalysisTask<Map<String, Double>> {
+public class LoginTimeInfoTask extends SMRTETask<Map<String, Double>> {
     List<Line> lines;
     SplitResult result;
 
     @Override
     protected Map<String, Double> process() {
         if (lines.size() > 1)
-            throw new SMRuntimeException(new IllegalStateException("must be one record while querying login time info of SM"));
+            throw new SMRuntimeException(
+                    new IllegalStateException("must be one record while querying login time info of SM")
+            );
 
         if (!lines.isEmpty()) {
             Map<String, Double> resultMap = new HashMap<>();
@@ -52,10 +56,6 @@ public class LoginTimeInfoTask extends AbstractAnalysisTask<Map<String, Double>>
 
     public LoginTimeInfoTask(String file) {
         lines = new ArrayList<>();
-        ILogFile logFile = new LogFile(file);
-
-        FormatProvider provider = new DefaultInputFormatProvider("SMRTE_SM_LOG");
-        InputFormat inputFormat = provider.getInputFormat();
 
         Rule rule = new RegexRule("RTE D Response-Total.+format:sc\\.manage\\.ToDo\\.g application:display");
         rule.addAction(new RuleAction() {
@@ -67,12 +67,6 @@ public class LoginTimeInfoTask extends AbstractAnalysisTask<Map<String, Double>>
             }
         });
 
-        LogHandler handler = new ConcreteLogHandler(logFile, null);
-
-        SimpleAnalysisContext context = new SimpleAnalysisContext();
-        context.setHandler(handler);
-        context.setInputForm(inputFormat);
-        context.getRules().add(rule);
-        setContext(context);
+        super.initContext(file, rule);
     }
 }

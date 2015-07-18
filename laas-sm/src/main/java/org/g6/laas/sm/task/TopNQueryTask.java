@@ -17,6 +17,7 @@ import org.g6.laas.core.rule.Rule;
 import org.g6.laas.core.rule.action.RuleAction;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -26,25 +27,23 @@ import java.util.List;
  * @version 1.0
  * @since 1.0
  */
-public class TopNQueryTask extends AbstractAnalysisTask<List<Line>> {
+public class TopNQueryTask extends SMRTETask<List<Line>> {
     private int N = 50;
     private List<Line> lines = new ArrayList<>();
 
     @Override
     protected List<Line> process() {
-        Ordering ordering = Ordering.from(new LineComparator());
+        //Ordering ordering = Ordering.from(new LineComparator());
+       // return ordering.greatestOf(lines, N);
+        Ordering ordering = Ordering.natural();
         return ordering.greatestOf(lines, N);
     }
 
 
     public TopNQueryTask(int topN, String file) {
         this.N = topN;
-        ILogFile logFile = new LogFile(file);
+
         Rule rule = new KeywordRule("RTE D DBQUERY");
-        FormatProvider provider = new DefaultInputFormatProvider("SMRTE_SM_LOG");
-        InputFormat inputFormat = provider.getInputFormat();
-        //InputFormat inputFormat = DefaultFormatFactory.getInputFormat("SMRTE_SM_LOG");
-        LogHandler handler = new ConcreteLogHandler(logFile);
         rule.addAction(new RuleAction() {
             @Override
             public void satisfied(Rule rule, Object content) {
@@ -53,12 +52,6 @@ public class TopNQueryTask extends AbstractAnalysisTask<List<Line>> {
                 lines.add(line);
             }
         });
-
-        SimpleAnalysisContext context = new SimpleAnalysisContext();
-        context.setInputForm(inputFormat);
-        context.setHandler(handler);
-        context.getRules().add(rule);
-
-        setContext(context);
+        super.initContext(file, rule);
     }
 }
