@@ -8,6 +8,7 @@ import org.g6.laas.core.log.result.SplitResult;
 import org.g6.laas.core.rule.Rule;
 import org.g6.laas.core.rule.TrueRule;
 import org.g6.laas.core.rule.action.RuleAction;
+import org.g6.util.CompressionUtil;
 import org.g6.util.FileUtil;
 
 import java.util.ArrayList;
@@ -36,6 +37,8 @@ public class SplitProcessAndThreadTask extends SMRTETask<String> {
     @Override
     protected String process() {
         String tempRootPath = "e:\\SMRTE\\";
+        FileUtil.deleteDir(tempRootPath);
+
         for (Map.Entry<String, ProcessIdHelper> entry : splitMap.entrySet()) {
             String processId = entry.getKey();
             ProcessIdHelper processIdHelper = entry.getValue();
@@ -47,8 +50,10 @@ public class SplitProcessAndThreadTask extends SMRTETask<String> {
             for (ThreadIdHelper threadIdHelper : list) {
                 FileUtil.writeFile(threadIdHelper.getLineContentList(), processPath + threadIdHelper.getThreadId() + ".log");
             }
+
+            CompressionUtil.compress(tempRootPath, "e:\\SMRTESPLIT.zip");
         }
-        return null;
+        return tempRootPath;
     }
 
     FormatProvider getProvider() {
