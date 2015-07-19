@@ -34,8 +34,7 @@ public class DefaultInputFormatProvider extends FileFormatProvider {
 
     @Override
     protected InputFormat parse() {
-        if (cacheService == null)
-            cacheService = new FileFormatCacheService(formatKey);
+        cacheService.setFormatKey(formatKey);
         List<LineAttributes> list = (names != null && names.length > 0) ?
                 cacheService.getLineAttrListBy(names) : cacheService.getAllLineAttrList();
 

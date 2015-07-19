@@ -1,6 +1,7 @@
 package org.g6.laas.core.format;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.g6.laas.core.format.cache.FileFormatCache;
 import org.g6.laas.core.log.line.LineAttributes;
 import org.g6.util.Constants;
@@ -13,15 +14,12 @@ import java.util.Map;
 
 @Data
 @Service
+@NoArgsConstructor
 public class FileFormatCacheService {
     @Autowired
-    private FileFormatCache cache = new FileFormatCache();
+    private FileFormatCache cache;
     private String formatKey;
     private boolean regex;
-
-    public FileFormatCacheService(String formatKey) {
-        this.formatKey = formatKey;
-    }
 
     /**
      * Get the key that is used to identify one line per name.
