@@ -33,10 +33,8 @@ public class TopNQueryTask extends SMRTETask<List<Line>> {
 
     @Override
     protected List<Line> process() {
-        //Ordering ordering = Ordering.from(new LineComparator());
-       // return ordering.greatestOf(lines, N);
-        Ordering ordering = Ordering.natural();
-        return ordering.greatestOf(lines, N);
+        Ordering ordering = Ordering.from(new LineComparator());
+        return ordering.leastOf(lines, N);
     }
 
 
