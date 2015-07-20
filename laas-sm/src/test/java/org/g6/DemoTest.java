@@ -1,4 +1,4 @@
-package org;
+package org.g6;
 
 import org.g6.laas.core.engine.StrategyAnalysisEngine;
 import org.g6.laas.core.engine.ThreadPoolExecutionStrategy;
@@ -18,10 +18,11 @@ import java.util.concurrent.Future;
 public class DemoTest {
 
     public static void main(String[] args) {
-        SpringApplication.run(DemoTest.class, args);
+        //SpringApplication.run(DemoTest.class, args);
         //runSplitProcessAndThreadTask();
-        runTopNQueryTask();
+        //runTopNQueryTask();
         //runLoginTimeInfoTask();
+        //runRadShowTask();
     }
 
     static void runSplitProcessAndThreadTask() {

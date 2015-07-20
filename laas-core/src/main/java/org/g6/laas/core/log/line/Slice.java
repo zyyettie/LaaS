@@ -3,6 +3,7 @@ package org.g6.laas.core.log.line;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /*
@@ -15,7 +16,7 @@ including [start, end) content
 public abstract class Slice implements ILine {
     private int start;
     private int end;
-    private Collection<ILine> lines;
+    private Collection<ILine> lines = new ArrayList<>();
 
     public Slice(Collection<ILine> lines) {
         this.lines = lines;

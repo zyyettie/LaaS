@@ -14,21 +14,23 @@ import org.g6.laas.core.log.line.Slice;
 import org.g6.laas.core.rule.KeywordRule;
 import org.g6.laas.core.rule.Rule;
 import org.g6.laas.core.rule.action.RuleAction;
+import org.g6.laas.sm.log.line.SMRadSlice;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RadShowTask extends AbstractAnalysisTask<Slice> {
-    private List<Line> lines;
+public class RadShowTask extends SMRTETask<Slice> {
+    private List<Line> lines = new ArrayList<>();
 
     @Override
     protected Slice process() {
         String regex = "^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D RADTRACE.+\\]\\s+([^\\s]+)\\s+([^\\s]+)\\s+([^\\s]+)";
         Pattern pattern = Pattern.compile(regex);
         Iterator<Line> it = lines.iterator();
-        Slice slice = new Slice() {};
+        Slice slice = new SMRadSlice();
         slice = constructSlice(slice, it, pattern);
         return slice;  //To change body of implemented methods use File | Settings | File Templates.
     }
@@ -42,9 +44,9 @@ public class RadShowTask extends AbstractAnalysisTask<Slice> {
                 String panelName = matcher.group(5);
                 String panelType = matcher.group(6);
                 if (panelName.equals("start")) {
-                    Slice subSlice = new Slice() {};
+                    SMRadSlice subSlice = new SMRadSlice();
+                    subSlice.setRadName(radName);
                     subSlice.addLine(line);
-                    // add appname
                     slice.addLine(subSlice);
                     constructSlice(subSlice, it, pattern);
                 } else if (panelName.equals("RADReturn") || panelName.equals("RADNullExit")) {
@@ -59,12 +61,7 @@ public class RadShowTask extends AbstractAnalysisTask<Slice> {
     }
 
     public RadShowTask(String file) {
-        ILogFile logFile = new LogFile(file);
-        Rule rule = new KeywordRule("RTE D DBQUERY");
-        FormatProvider provider = new DefaultInputFormatProvider("SMRTE_SM_LOG");
-        InputFormat inputFormat = provider.getInputFormat();
-        //InputFormat inputFormat = DefaultFormatFactory.getInputFormat("SMRTE_SM_LOG");
-        LogHandler handler = new ConcreteLogHandler(logFile);
+        Rule rule = new KeywordRule("RTE D RADTRACE");
         rule.addAction(new RuleAction() {
             @Override
             public void satisfied(Rule rule, Object content) {
@@ -74,11 +71,6 @@ public class RadShowTask extends AbstractAnalysisTask<Slice> {
             }
         });
 
-        SimpleAnalysisContext context = new SimpleAnalysisContext();
-        context.setInputForm(inputFormat);
-        context.setHandler(handler);
-        context.getRules().add(rule);
-
-        setContext(context);
+        initContext(file, rule);
     }
 }
