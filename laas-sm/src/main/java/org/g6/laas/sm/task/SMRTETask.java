@@ -22,26 +22,27 @@ import java.util.List;
  * @version 1.0
  */
 public abstract class SMRTETask<T> extends AbstractAnalysisTask<T> {
+    DefaultInputFormatProvider provider;
 
-    protected void initContext(String file, Rule rule){
-       initContext(file, new Rule[]{rule});
+    protected void initContext(String file, Rule rule) {
+        initContext(file, new Rule[]{rule});
     }
 
-    protected void initContext(String[] files, Rule rule){
-         initContext(files, new Rule[]{rule});
+    protected void initContext(String[] files, Rule rule) {
+        initContext(files, new Rule[]{rule});
     }
 
-    protected void initContext(String file, Rule[] rules){
+    protected void initContext(String file, Rule[] rules) {
         initContext(new String[]{file}, rules);
     }
 
 
-    protected void initContext(String[] files, Rule[] rules){
+    protected void initContext(String[] files, Rule[] rules) {
         FormatProvider provider = getProvider();
         InputFormat inputFormat = provider.getInputFormat();
 
         List<ILogFile> fileList = new ArrayList<>();
-        for(String file : files){
+        for (String file : files) {
             fileList.add(new LogFile(file));
         }
         LogHandler handler = new ConcreteLogHandler(fileList);
@@ -50,14 +51,19 @@ public abstract class SMRTETask<T> extends AbstractAnalysisTask<T> {
         context.setInputForm(inputFormat);
         context.setHandler(handler);
 
-        for(Rule rule : rules){
+        for (Rule rule : rules) {
             context.getRules().add(rule);
         }
 
         setContext(context);
     }
 
-    FormatProvider getProvider(){
-        return new DefaultInputFormatProvider("SMRTE_SM_LOG");
+    FormatProvider getProvider() {
+        if (provider == null) {
+            provider = new DefaultInputFormatProvider("SMRTE_SM_LOG");
+        } else {
+            provider.setFormatKey("SMRTE_SM_LOG");
+        }
+        return provider;
     }
 }
