@@ -9,9 +9,6 @@ import org.g6.laas.sm.task.RadShowTask;
 import org.g6.laas.sm.task.SplitProcessAndThreadTask;
 import org.g6.laas.sm.task.TopNQueryTask;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 import java.util.Map;
@@ -21,10 +18,10 @@ import java.util.concurrent.Future;
 public class DemoTest {
 
     public static void main(String[] args) {
+        SpringApplication.run(DemoTest.class, args);
         //runSplitProcessAndThreadTask();
-        //runTopNQueryTask();
+        runTopNQueryTask();
         //runLoginTimeInfoTask();
-        runRadShowTask();
     }
 
     static void runSplitProcessAndThreadTask() {
