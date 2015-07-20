@@ -4,10 +4,8 @@ import org.g6.laas.core.engine.StrategyAnalysisEngine;
 import org.g6.laas.core.engine.ThreadPoolExecutionStrategy;
 import org.g6.laas.core.log.line.Line;
 import org.g6.laas.core.log.line.Slice;
-import org.g6.laas.sm.task.LoginTimeInfoTask;
-import org.g6.laas.sm.task.RadShowTask;
-import org.g6.laas.sm.task.SplitProcessAndThreadTask;
-import org.g6.laas.sm.task.TopNQueryTask;
+import org.g6.laas.sm.task.*;
+import org.g6.util.FileUtil;
 import org.springframework.boot.SpringApplication;
 
 import java.util.List;
@@ -23,6 +21,7 @@ public class DemoTest {
         //runTopNQueryTask();
         //runLoginTimeInfoTask();
         //runRadShowTask();
+        runSMOMiPerformanceTask();
     }
 
     static void runSplitProcessAndThreadTask() {
@@ -92,6 +91,25 @@ public class DemoTest {
         try {
             Slice slice = future.get();
             System.out.println();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static void runSMOMiPerformanceTask(){
+        SMOMiPerformanceTask task = new SMOMiPerformanceTask("c:\\work\\LaaS\\SMOMi.log");
+        StrategyAnalysisEngine engine = new StrategyAnalysisEngine();
+        engine.setStrategy(new ThreadPoolExecutionStrategy());
+
+        Future<List<String>> future = engine.submit(task);
+        engine.shutdown();
+
+        try {
+            List<String> results = future.get();
+            FileUtil.writeFile(results, "C:\\work\\LaaS\\result.log");
+            System.out.println("......Mission Completed");
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
