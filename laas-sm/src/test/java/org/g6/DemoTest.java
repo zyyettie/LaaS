@@ -1,4 +1,4 @@
-package org;
+package org.g6;
 
 import org.g6.laas.core.engine.StrategyAnalysisEngine;
 import org.g6.laas.core.engine.ThreadPoolExecutionStrategy;
@@ -7,9 +7,6 @@ import org.g6.laas.sm.task.LoginTimeInfoTask;
 import org.g6.laas.sm.task.SplitProcessAndThreadTask;
 import org.g6.laas.sm.task.TopNQueryTask;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 import java.util.Map;
@@ -19,8 +16,9 @@ import java.util.concurrent.Future;
 public class DemoTest {
 
     public static void main(String[] args) {
-        runSplitProcessAndThreadTask();
-        //runTopNQueryTask();
+        SpringApplication.run(DemoTest.class, args);
+        //runSplitProcessAndThreadTask();
+        runTopNQueryTask();
         //runLoginTimeInfoTask();
     }
 
