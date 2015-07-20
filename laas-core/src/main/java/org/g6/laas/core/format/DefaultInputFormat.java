@@ -24,7 +24,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public final class DefaultInputFormat implements InputFormat {
-
     private List<LineAttributes> lineAttrList;
 
     @Override
@@ -39,7 +38,7 @@ public final class DefaultInputFormat implements InputFormat {
             // get the default one if no line format is specified for the current line
             if (lineAttr.getName().equals("DEFAULT")) {
                 isDefault = true;
-                if(fieldFormatList == null && StringUtils.isBlank(lineSplitRegex)){
+                if (fieldFormatList == null && StringUtils.isBlank(lineSplitRegex)) {
                     fieldFormatList = lineAttr.getFieldFormats();
                     lineSplitRegex = lineAttr.getSplitRegex();
                 }
@@ -90,10 +89,16 @@ public final class DefaultInputFormat implements InputFormat {
             throw new InputFormatNotFoundException("InputFormat not found");
         if (lineSplitRegex == null)
             throw new Regex4LineSplitNotFoundException("Regex not found for " + line.getContent());
-        if(isDefault)
+        if (isDefault)
             log.debug("Default line format is being used");
 
         String[] fieldContents = RegexUtil.getValues(line.getContent(), lineSplitRegex);
+        //in this case, the default format is used to split. But the existing format including default one
+        // may not be available for it, for example, if user add some comments in the log file
+        if (fieldContents == null) {
+            log.warn("can not be split the line : " + line.getContent() + " with the split regex : " + lineSplitRegex);
+            return null;
+        }
         Collection<Field> fieldList = new ArrayList<>();
 
         for (int i = 0; i < fieldContents.length; i++) {
