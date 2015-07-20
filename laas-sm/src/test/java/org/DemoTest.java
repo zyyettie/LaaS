@@ -3,7 +3,9 @@ package org;
 import org.g6.laas.core.engine.StrategyAnalysisEngine;
 import org.g6.laas.core.engine.ThreadPoolExecutionStrategy;
 import org.g6.laas.core.log.line.Line;
+import org.g6.laas.core.log.line.Slice;
 import org.g6.laas.sm.task.LoginTimeInfoTask;
+import org.g6.laas.sm.task.RadShowTask;
 import org.g6.laas.sm.task.SplitProcessAndThreadTask;
 import org.g6.laas.sm.task.TopNQueryTask;
 import org.springframework.boot.SpringApplication;
@@ -19,9 +21,10 @@ import java.util.concurrent.Future;
 public class DemoTest {
 
     public static void main(String[] args) {
-        runSplitProcessAndThreadTask();
+        //runSplitProcessAndThreadTask();
         //runTopNQueryTask();
         //runLoginTimeInfoTask();
+        runRadShowTask();
     }
 
     static void runSplitProcessAndThreadTask() {
@@ -71,6 +74,25 @@ public class DemoTest {
 
         try {
             List<Line> lines = future.get();
+            System.out.println();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static void runRadShowTask() {
+        RadShowTask task = new RadShowTask("C:\\sm-rtm3.log");
+
+        StrategyAnalysisEngine engine = new StrategyAnalysisEngine();
+        engine.setStrategy(new ThreadPoolExecutionStrategy());
+
+        Future<Slice> future = engine.submit(task);
+        engine.shutdown();
+
+        try {
+            Slice slice = future.get();
             System.out.println();
         } catch (InterruptedException e) {
             e.printStackTrace();
