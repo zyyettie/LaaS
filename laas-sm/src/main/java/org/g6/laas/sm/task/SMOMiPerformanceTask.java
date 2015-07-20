@@ -42,9 +42,9 @@ public class SMOMiPerformanceTask extends SMRTETask<List<String>> {
         //System.out.println("First request finished date is : " + firstRequestDate.getContent() + ",\nLast request finished date is : " + lastRequestDate.getContent() + "\nTotal :" + localDecimalFormat.format(duration) + " hour");
         //System.out.println("SM throughput is about : " + localDecimalFormat.format(tHour) + "requests/hour, and each request spent : " + localDecimalFormat.format(average) + " seconds average.");
         int totalRequestNumber = splitResultList.size();
-        returnList.add(new String("SM handled total request number is : " + totalRequestNumber));
-        returnList.add(new String("First request finished date is : " + firstRequestDate.getContent() + ",\nLast request finished date is : " + lastRequestDate.getContent() + "\nTotal :" + localDecimalFormat.format(duration) + " hour"));
-        returnList.add(new String("SM throughput is about : " + localDecimalFormat.format(tHour) + " requests/hour, and each request spent : " + localDecimalFormat.format(average) + " seconds average."));
+        returnList.add("SM handled total request number is : " + totalRequestNumber);
+        returnList.add("First request finished date is : " + firstRequestDate.getContent() + ",\nLast request finished date is : " + lastRequestDate.getContent() + "\nTotal :" + localDecimalFormat.format(duration) + " hour");
+        returnList.add("SM throughput is about : " + localDecimalFormat.format(tHour) + " requests/hour, and each request spent : " + localDecimalFormat.format(average) + " seconds average.");
 
         //Sort the SplitResult as per the execution_time ASC order
         Collections.sort(splitResultList, new SplitResultComparator());
@@ -55,8 +55,8 @@ public class SMOMiPerformanceTask extends SMRTETask<List<String>> {
 
         //System.out.println("the slowest request spent: " + slowestExecutionTimeField.getValue() + " ms, in file " + slowestRequestLine.getLine().getFile().getName() + ", with String : " + slowestRequestLine.getLine().getContent());
         //System.out.println("the fastest request spent: " + fastestExecutionTimeField.getValue() + " ms, in file " + fastestRequestLine.getLine().getFile().getName() + ", with String : " + fastestRequestLine.getLine().getContent());
-        returnList.add(new String("the slowest request spent: " + slowestExecutionTimeField.getValue() + " ms, in file " + slowestRequestLine.getLine().getFile().getName() + ", with String : " + slowestRequestLine.getLine().getContent()));
-        returnList.add(new String("the fastest request spent: " + fastestExecutionTimeField.getValue() + " ms, in file " + fastestRequestLine.getLine().getFile().getName() + ", with String : " + fastestRequestLine.getLine().getContent()));
+        returnList.add("the slowest request spent: " + slowestExecutionTimeField.getValue() + " ms, in file " + slowestRequestLine.getLine().getFile().getName() + ", with String : " + slowestRequestLine.getLine().getContent());
+        returnList.add("the fastest request spent: " + fastestExecutionTimeField.getValue() + " ms, in file " + fastestRequestLine.getLine().getFile().getName() + ", with String : " + fastestRequestLine.getLine().getContent());
 
         return returnList;
     }
