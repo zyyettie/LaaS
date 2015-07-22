@@ -1,20 +1,12 @@
 package org.g6.laas.sm.task;
 
-import org.g6.laas.core.engine.context.SimpleAnalysisContext;
-import org.g6.laas.core.engine.task.AbstractAnalysisTask;
-import org.g6.laas.core.file.ILogFile;
-import org.g6.laas.core.file.LogFile;
-import org.g6.laas.core.format.InputFormat;
-import org.g6.laas.core.format.provider.DefaultInputFormatProvider;
-import org.g6.laas.core.format.provider.FormatProvider;
-import org.g6.laas.core.log.handler.ConcreteLogHandler;
-import org.g6.laas.core.log.handler.LogHandler;
 import org.g6.laas.core.log.line.Line;
-import org.g6.laas.core.log.line.Slice;
+import org.g6.laas.core.log.unit.LineSetUnit;
 import org.g6.laas.core.rule.KeywordRule;
 import org.g6.laas.core.rule.Rule;
 import org.g6.laas.core.rule.action.RuleAction;
-import org.g6.laas.sm.log.line.SMRadSlice;
+import org.g6.laas.sm.log.unit.SMRadLineSetUnit;
+import org.g6.laas.sm.log.unit.SMRadLineUnit;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,20 +14,20 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RadShowTask extends SMRTETask<Slice> {
+public class RadShowTask extends SMRTETask<LineSetUnit> {
     private List<Line> lines = new ArrayList<>();
 
     @Override
-    protected Slice process() {
+    protected LineSetUnit process() {
         String regex = "^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D RADTRACE.+\\]\\s+([^\\s]+)\\s+([^\\s]+)\\s+([^\\s]+)";
         Pattern pattern = Pattern.compile(regex);
         Iterator<Line> it = lines.iterator();
-        Slice slice = new SMRadSlice();
-        slice = constructSlice(slice, it, pattern);
-        return slice;  //To change body of implemented methods use File | Settings | File Templates.
+        LineSetUnit set = new SMRadLineSetUnit();
+        set = constructSetUnit(set, it, pattern);
+        return set;
     }
 
-    private Slice constructSlice( Slice slice, Iterator<Line> it, Pattern pattern) {
+    private LineSetUnit constructSetUnit( LineSetUnit set, Iterator<Line> it, Pattern pattern) {
         while(it.hasNext()) {
             Line line = it.next();
             Matcher matcher = pattern.matcher(line.getContent());
@@ -43,21 +35,26 @@ public class RadShowTask extends SMRTETask<Slice> {
                 String radName = matcher.group(4);
                 String panelName = matcher.group(5);
                 String panelType = matcher.group(6);
+                SMRadLineUnit unit = new SMRadLineUnit(line);
+                unit.setRadName(radName);
+                unit.setPanelName(panelName);
+                unit.setPanelType(panelType);
                 if (panelName.equals("start")) {
-                    SMRadSlice subSlice = new SMRadSlice();
-                    subSlice.setRadName(radName);
-                    subSlice.addLine(line);
-                    slice.addLine(subSlice);
-                    constructSlice(subSlice, it, pattern);
+                    SMRadLineSetUnit subSet = new SMRadLineSetUnit();
+                    subSet.setRadName(radName);
+                    subSet.setLevel(set.getLevel()+1);
+                    subSet.addUnit(unit);
+                    set.addUnit(subSet);
+                    constructSetUnit(subSet, it, pattern);
                 } else if (panelName.equals("RADReturn") || panelName.equals("RADNullExit")) {
-                    slice.addLine(line);
-                    return slice;
+                    set.addUnit(unit);
+                    return set;
                 } else {
-                    slice.addLine(line);
+                    set.addUnit(unit);
                 }
             }
         }
-        return slice;
+        return set;
     }
 
     public RadShowTask(String file) {
