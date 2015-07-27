@@ -25,7 +25,7 @@ public class DemoTest {
     }
 
     static void runSplitProcessAndThreadTask() {
-        SplitProcessAndThreadTask task = new SplitProcessAndThreadTask(new String[]{"e:\\SM_UCMDB.log"});
+        SplitProcessAndThreadTask task = new SplitProcessAndThreadTask("e:\\SM_UCMDB.log");
         StrategyAnalysisEngine engine = new StrategyAnalysisEngine();
         engine.setStrategy(new ThreadPoolExecutionStrategy());
 
