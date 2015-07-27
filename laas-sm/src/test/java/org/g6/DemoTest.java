@@ -3,7 +3,7 @@ package org.g6;
 import org.g6.laas.core.engine.StrategyAnalysisEngine;
 import org.g6.laas.core.engine.ThreadPoolExecutionStrategy;
 import org.g6.laas.core.log.line.Line;
-import org.g6.laas.core.log.line.Slice;
+import org.g6.laas.core.log.unit.LineSetUnit;
 import org.g6.laas.sm.task.*;
 import org.g6.util.FileUtil;
 
@@ -20,8 +20,8 @@ public class DemoTest {
         //runSplitProcessAndThreadTask();
         //runTopNQueryTask();
         //runLoginTimeInfoTask();
-        //runRadShowTask();
-        runSMOMiPerformanceTask();
+        runRadShowTask();
+        //runSMOMiPerformanceTask();
     }
 
     static void runSplitProcessAndThreadTask() {
@@ -103,12 +103,12 @@ public class DemoTest {
         StrategyAnalysisEngine engine = new StrategyAnalysisEngine();
         engine.setStrategy(new ThreadPoolExecutionStrategy());
 
-        Future<Slice> future = engine.submit(task);
+        Future<LineSetUnit> future = engine.submit(task);
         engine.shutdown();
 
         try {
-            Slice slice = future.get();
-            System.out.println();
+            LineSetUnit set = future.get();
+            System.out.println(set.getContent());
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
