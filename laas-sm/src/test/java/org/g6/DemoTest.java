@@ -6,8 +6,8 @@ import org.g6.laas.core.log.line.Line;
 import org.g6.laas.core.log.unit.LineSetUnit;
 import org.g6.laas.sm.task.*;
 import org.g6.util.FileUtil;
-import org.springframework.boot.SpringApplication;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -25,7 +25,7 @@ public class DemoTest {
     }
 
     static void runSplitProcessAndThreadTask() {
-        SplitProcessAndThreadTask task = new SplitProcessAndThreadTask("e:\\sm.log");
+        SplitProcessAndThreadTask task = new SplitProcessAndThreadTask(new String[]{"e:\\SM_UCMDB.log"});
         StrategyAnalysisEngine engine = new StrategyAnalysisEngine();
         engine.setStrategy(new ThreadPoolExecutionStrategy());
 
@@ -43,7 +43,9 @@ public class DemoTest {
     }
 
     static void runLoginTimeInfoTask() {
-        LoginTimeInfoTask task = new LoginTimeInfoTask("e:\\sm.log");
+        String inputFile = "e:\\sm.log";
+        String outputFile = "e:\\sm_target.log";
+        LoginTimeInfoTask task = new LoginTimeInfoTask(inputFile);
         StrategyAnalysisEngine engine = new StrategyAnalysisEngine();
         engine.setStrategy(new ThreadPoolExecutionStrategy());
 
@@ -52,6 +54,15 @@ public class DemoTest {
 
         try {
             Map<String, Double> loginMap = future.get();
+            List printList = new ArrayList();
+            printList.add("The total login time: " + loginMap.get("login_time"));
+            printList.add("The RAD time: " + loginMap.get("rad_time"));
+            printList.add("The JS time: " + loginMap.get("js_time"));
+            printList.add("The log time: " + loginMap.get("log_time"));
+            printList.add("The DB time: " + loginMap.get("db_time"));
+            printList.add("The CPU time: " + loginMap.get("cpu_time"));
+            FileUtil.writeFile(printList, outputFile);
+
             System.out.println();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -61,7 +72,9 @@ public class DemoTest {
     }
 
     static void runTopNQueryTask() {
-        TopNQueryTask task = new TopNQueryTask(50, "e:\\sm.log");
+        String inputFile = "e:\\sm.log";
+        String outputFile = "e:\\sm_top50.log";
+        TopNQueryTask task = new TopNQueryTask(50, inputFile);
 
         StrategyAnalysisEngine engine = new StrategyAnalysisEngine();
         engine.setStrategy(new ThreadPoolExecutionStrategy());
@@ -71,6 +84,11 @@ public class DemoTest {
 
         try {
             List<Line> lines = future.get();
+            List<String> printList = new ArrayList<>();
+            for (Line line : lines) {
+                printList.add(line.getContent());
+            }
+            FileUtil.writeFile(printList, outputFile);
             System.out.println();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -98,7 +116,7 @@ public class DemoTest {
         }
     }
 
-    static void runSMOMiPerformanceTask(){
+    static void runSMOMiPerformanceTask() {
         SMOMiPerformanceTask task = new SMOMiPerformanceTask("c:\\work\\LaaS\\SMOMi.log");
         StrategyAnalysisEngine engine = new StrategyAnalysisEngine();
         engine.setStrategy(new ThreadPoolExecutionStrategy());
