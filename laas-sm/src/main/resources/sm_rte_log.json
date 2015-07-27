@@ -50,7 +50,7 @@
                 {"name":"process_id","type":"Integer","sortable":"false"},
                 {"name":"thread_id","type":"Integer","sortable":"false"},
                 {"name":"datetime","type":"DateTime","sortable":"false"},
-                {"name":"execution_time","type":"Double","sortable":"true"},
+                {"name":"execution_time","type":"Integer","sortable":"true"},
                 {"name":"rad_info", "type":"String","sortable":"false"}
             ]
         },
