@@ -2,10 +2,7 @@ package org.g6.laas.core.log.reader;
 
 import org.g6.laas.core.file.ILogFile;
 
-import java.io.BufferedReader;
-import java.io.Closeable;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 public class LogFileReader implements Closeable {
     ILogFile file;
@@ -16,7 +13,8 @@ public class LogFileReader implements Closeable {
     }
 
     public void open() throws IOException {
-        reader = new BufferedReader(new FileReader(file.getPath()));
+        BufferedInputStream bis = new BufferedInputStream(new FileInputStream(new File(file.getPath())));
+        reader = new BufferedReader(new InputStreamReader(bis, "utf-8"), 10 * 1024 * 1024);
     }
 
     public String readLine() throws IOException {
