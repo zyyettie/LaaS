@@ -38,9 +38,11 @@ public class RTELogFileSorter extends AbstractLogFileSorter {
 
         private DateTimeField getEntryDateTime(ILogFile logFile) throws IOException {
             LogFileReader reader = new LogFileReader(logFile);
+            reader.open();
             LogLine line1 = new LogLine();
             line1.setContent(reader.readLine());
-            line1.setInputFormat(new DefaultInputFormatProvider("SMRTE_SM_LOG").getInputFormat());
+            reader.close();
+            line1.setInputFormat(new DefaultInputFormatProvider("SMRTE_SM_LOG", new String[]{"DEFAULT"}).getInputFormat());
             SplitResult result = line1.split();
             return (DateTimeField) result.get("datetime");
         }

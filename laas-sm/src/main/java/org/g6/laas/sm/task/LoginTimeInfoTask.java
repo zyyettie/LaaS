@@ -54,7 +54,7 @@ public class LoginTimeInfoTask extends SMRTETask<Map<String, Double>> {
         return null;
     }
 
-    public LoginTimeInfoTask(String file) {
+    public LoginTimeInfoTask(String[] files) {
         lines = new ArrayList<>();
 
         Rule rule = new RegexRule("RTE D Response-Total.+format:sc\\.manage\\.ToDo\\.g application:display");
@@ -67,6 +67,6 @@ public class LoginTimeInfoTask extends SMRTETask<Map<String, Double>> {
             }
         });
 
-        super.initContext(file, rule);
+        super.initContext(files, rule);
     }
 }

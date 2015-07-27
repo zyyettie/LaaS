@@ -19,8 +19,8 @@ public class DemoTest {
         //SpringApplication.run(DemoTest.class, args);
         //runSplitProcessAndThreadTask();
         //runTopNQueryTask();
-        //runLoginTimeInfoTask();
-        runRadShowTask();
+        runLoginTimeInfoTask();
+        //runRadShowTask();
         //runSMOMiPerformanceTask();
     }
 
@@ -43,9 +43,9 @@ public class DemoTest {
     }
 
     static void runLoginTimeInfoTask() {
-        String inputFile = "e:\\sm.log";
+        String[] inputFiles = new String[]{"e:\\sm.log.1", "e:\\sm.log.2", "e:\\sm.log"};
         String outputFile = "e:\\sm_target.log";
-        LoginTimeInfoTask task = new LoginTimeInfoTask(inputFile);
+        LoginTimeInfoTask task = new LoginTimeInfoTask(inputFiles);
         StrategyAnalysisEngine engine = new StrategyAnalysisEngine();
         engine.setStrategy(new ThreadPoolExecutionStrategy());
 
