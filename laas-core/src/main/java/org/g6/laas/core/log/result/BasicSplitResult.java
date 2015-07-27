@@ -3,6 +3,7 @@ package org.g6.laas.core.log.result;
 
 import com.google.common.base.Strings;
 import org.g6.laas.core.field.Field;
+import org.g6.laas.core.log.line.Line;
 
 import java.util.*;
 
@@ -11,6 +12,8 @@ public class BasicSplitResult implements SplitResult {
     private Map<String, Field> byName = new HashMap<>();
 
     private List<Field> byIndex = new ArrayList<>();
+
+    private Line line = null;
 
     public BasicSplitResult(Collection<Field> fields) {
         byIndex.addAll(fields);
@@ -38,5 +41,19 @@ public class BasicSplitResult implements SplitResult {
     @Override
     public Collection<Field> getAll() {
         return byIndex;
+    }
+
+    @Override
+    public Line getLine(){
+        return this.line;
+    }
+
+    @Override
+    public void setLine(Line line){
+        this.line = line;
+    }
+
+    public int compareTo(Object o){
+        return getLine().compareTo(o);
     }
 }
