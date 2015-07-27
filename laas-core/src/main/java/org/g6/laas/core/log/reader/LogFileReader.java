@@ -3,10 +3,11 @@ package org.g6.laas.core.log.reader;
 import org.g6.laas.core.file.ILogFile;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class LogFileReader {
+public class LogFileReader implements Closeable {
     ILogFile file;
     private BufferedReader reader = null;
 
