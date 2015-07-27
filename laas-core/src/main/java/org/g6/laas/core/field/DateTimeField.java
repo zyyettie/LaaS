@@ -1,13 +1,11 @@
 package org.g6.laas.core.field;
 
 import org.g6.laas.core.exception.LaaSCoreRuntimeException;
+import org.g6.util.DateTimeUtil;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * Note datePattern must be there. That is to say whenever a date string comes the matched date format
@@ -15,32 +13,24 @@ import java.util.TimeZone;
  */
 public class DateTimeField extends AbstractField<Date> {
     private Date date;
-    private String timezoneID = "GMT";
-    private String datePattern = "MM/dd/yyyy HH:mm:ss"; // Default date format in SM - 06/20/2015 17:05:22;
-    private Locale locale = Locale.ENGLISH;
 
     public DateTimeField(String name, String content, String datePattern) {
         this(name, content, datePattern, null, null);
     }
 
-    public DateTimeField(String name, String content, String datePattern, Locale locale) {
-        this(name,content, datePattern, locale, null);
-    }
-
     public DateTimeField(String name, String content, String datePattern, String timezoneID) {
-        this(name, content, datePattern, null, timezoneID);
+        this(name, content, datePattern, timezoneID, null);
     }
 
-    public DateTimeField(String name, String content, String datePattern, Locale locale, String timezoneID) {
+    public DateTimeField(String name, String content, String datePattern, Locale locale) {
+        this(name,content, datePattern, null, locale);
+    }
+
+    public DateTimeField(String name, String content, String datePattern, String timezoneID, Locale locale) {
         super(name, content);
-        if (locale != null)
-            this.locale = locale;
-        if (null != timezoneID && !timezoneID.equals(""))
-            this.timezoneID = timezoneID;
-        this.datePattern = datePattern;
 
         try {
-            parse(content);
+            this.date = DateTimeUtil.parseAsDate(content,datePattern, timezoneID, locale);
         } catch (ParseException e) {
             throw new LaaSCoreRuntimeException("Exception is thrown when parsing "
                     + content
@@ -48,13 +38,6 @@ public class DateTimeField extends AbstractField<Date> {
                     + datePattern, e);
         }
     }
-
-    private void parse(String s) throws ParseException {
-        DateFormat formatter = new SimpleDateFormat(this.datePattern, this.locale);
-        formatter.setTimeZone(TimeZone.getTimeZone(timezoneID));
-        this.date = formatter.parse(s);
-    }
-
 
     public Date getValue() {
         return date;
