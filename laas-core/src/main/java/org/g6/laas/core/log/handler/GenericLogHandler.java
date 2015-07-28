@@ -11,7 +11,7 @@ import org.g6.laas.core.log.line.LogLine;
 import java.io.IOException;
 import java.util.*;
 
-public class ConcreteLogHandler extends LogHandler {
+public class GenericLogHandler extends LogHandler {
     private LogFileReader reader = null;
     private boolean isReading = false;
     private Iterator<ILogFile> it = null;
@@ -23,25 +23,25 @@ public class ConcreteLogHandler extends LogHandler {
     private TimerTask tt = new TimerTask() {
         @Override
         public void run() {
-            if (ConcreteLogHandler.this.isReading) {
-                ConcreteLogHandler.this.isReading = false;
+            if (GenericLogHandler.this.isReading) {
+                GenericLogHandler.this.isReading = false;
                 return;
             }
-            ConcreteLogHandler.this.close();
+            GenericLogHandler.this.close();
             timer.cancel();
         }
     };
-    public ConcreteLogHandler(ILogFile iLogFile) {
+    public GenericLogHandler(ILogFile iLogFile) {
         this(iLogFile, null);
     }
-    public ConcreteLogHandler(ILogFile iLogFile, IFilter filter) {
+    public GenericLogHandler(ILogFile iLogFile, IFilter filter) {
         super(iLogFile, filter);
     }
 
-    public ConcreteLogHandler(List<ILogFile> list) {
+    public GenericLogHandler(List<ILogFile> list) {
         this(list, null);
     }
-    public ConcreteLogHandler(List<ILogFile> list, IFilter filter) {
+    public GenericLogHandler(List<ILogFile> list, IFilter filter) {
         super(list, filter);
     }
 
@@ -88,8 +88,11 @@ public class ConcreteLogHandler extends LogHandler {
         if (it == null)
             it = getList().iterator();
 
-        if (it.hasNext())
-            return it.next();
+        while (it.hasNext()) {
+            ILogFile file = it.next();
+            if (file.isValid())
+                return file;
+        }
 
         return null;
     }
@@ -108,16 +111,17 @@ public class ConcreteLogHandler extends LogHandler {
     @Override
     public Iterator<? extends Line> handle(AnalysisContext context) throws IOException {
         setContext(context);
+        preHandle();
         return iterator();
     }
 
     public Iterator<Line> iterator() {
-        timer.schedule(tt, 0, TIME_INTERVAL);
+        //timer.schedule(tt, 0, TIME_INTERVAL);
         return new LogLineIterator<>();
     }
 
     private class LogLineIterator<T extends Line> implements Iterator<T> {
-        private ConcreteLogHandler handler = ConcreteLogHandler.this;
+        private GenericLogHandler handler = GenericLogHandler.this;
         private LinkedList<T> buffer = new LinkedList<>();
         private int BUFFER_SIZE = 1024;
 

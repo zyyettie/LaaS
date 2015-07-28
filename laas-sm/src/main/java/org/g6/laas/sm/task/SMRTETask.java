@@ -8,7 +8,7 @@ import org.g6.laas.core.file.sorter.FileSorter;
 import org.g6.laas.core.format.InputFormat;
 import org.g6.laas.core.format.provider.DefaultInputFormatProvider;
 import org.g6.laas.core.format.provider.FormatProvider;
-import org.g6.laas.core.log.handler.ConcreteLogHandler;
+import org.g6.laas.core.log.handler.GenericLogHandler;
 import org.g6.laas.core.log.handler.LogHandler;
 import org.g6.laas.core.rule.Rule;
 import org.g6.laas.sm.file.sorter.RTELogFileSorter;
@@ -51,7 +51,7 @@ public abstract class SMRTETask<T> extends AbstractAnalysisTask<T> {
         FileSorter sorter = new RTELogFileSorter();
         sorter.sort(fileList);
 
-        LogHandler handler = new ConcreteLogHandler(fileList);
+        LogHandler handler = new GenericLogHandler(fileList);
 
         SimpleAnalysisContext context = new SimpleAnalysisContext();
         context.setInputForm(inputFormat);

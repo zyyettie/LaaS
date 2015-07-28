@@ -1,15 +1,6 @@
 package org.g6.laas.sm.task;
 
 import com.google.common.collect.Ordering;
-import org.g6.laas.core.engine.context.SimpleAnalysisContext;
-import org.g6.laas.core.engine.task.AbstractAnalysisTask;
-import org.g6.laas.core.file.ILogFile;
-import org.g6.laas.core.file.LogFile;
-import org.g6.laas.core.format.InputFormat;
-import org.g6.laas.core.format.provider.DefaultInputFormatProvider;
-import org.g6.laas.core.format.provider.FormatProvider;
-import org.g6.laas.core.log.handler.ConcreteLogHandler;
-import org.g6.laas.core.log.handler.LogHandler;
 import org.g6.laas.core.log.line.Line;
 import org.g6.laas.core.log.line.LineComparator;
 import org.g6.laas.core.rule.KeywordRule;
@@ -17,7 +8,6 @@ import org.g6.laas.core.rule.Rule;
 import org.g6.laas.core.rule.action.RuleAction;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
