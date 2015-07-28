@@ -49,13 +49,12 @@ public abstract class SMRTETask<T> extends AbstractAnalysisTask<T> {
         }
 
         FileSorter sorter = new RTELogFileSorter();
-        sorter.sort(fileList);
-
         LogHandler handler = new GenericLogHandler(fileList);
 
         SimpleAnalysisContext context = new SimpleAnalysisContext();
         context.setInputForm(inputFormat);
         context.setHandler(handler);
+        context.setSorter(sorter);
 
         for (Rule rule : rules) {
             context.getRules().add(rule);

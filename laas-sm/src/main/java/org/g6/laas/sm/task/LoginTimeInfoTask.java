@@ -27,10 +27,10 @@ public class LoginTimeInfoTask extends SMRTETask<Map<String, Double>> {
 
     @Override
     protected Map<String, Double> process() {
-        if (lines.size() > 1)
+       /* if (lines.size() > 1)
             throw new SMRuntimeException(
                     new IllegalStateException("must be one record while querying login time info of SM")
-            );
+            );*/
 
         if (!lines.isEmpty()) {
             Map<String, Double> resultMap = new HashMap<>();

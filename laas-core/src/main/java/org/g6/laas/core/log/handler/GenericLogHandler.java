@@ -3,6 +3,7 @@ package org.g6.laas.core.log.handler;
 import org.apache.commons.lang.StringUtils;
 import org.g6.laas.core.engine.context.AnalysisContext;
 import org.g6.laas.core.file.ILogFile;
+import org.g6.laas.core.file.sorter.FileSorter;
 import org.g6.laas.core.filter.IFilter;
 import org.g6.laas.core.log.reader.LogFileReader;
 import org.g6.laas.core.log.line.Line;
@@ -18,7 +19,7 @@ public class GenericLogHandler extends LogHandler {
     private ILogFile iLogFile = null;
     private AnalysisContext context;
     private int lineNumber;
-    private final int TIME_INTERVAL=600000;
+    private final int TIME_INTERVAL = 600000;
     private Timer timer = new Timer();
     private TimerTask tt = new TimerTask() {
         @Override
@@ -31,9 +32,11 @@ public class GenericLogHandler extends LogHandler {
             timer.cancel();
         }
     };
+
     public GenericLogHandler(ILogFile iLogFile) {
         this(iLogFile, null);
     }
+
     public GenericLogHandler(ILogFile iLogFile, IFilter filter) {
         super(iLogFile, filter);
     }
@@ -41,6 +44,7 @@ public class GenericLogHandler extends LogHandler {
     public GenericLogHandler(List<ILogFile> list) {
         this(list, null);
     }
+
     public GenericLogHandler(List<ILogFile> list, IFilter filter) {
         super(list, filter);
     }
@@ -61,7 +65,7 @@ public class GenericLogHandler extends LogHandler {
             while ((str = reader.readLine()) != null) {
                 lineNumber++;
                 isReading = true;
-                if(StringUtils.isBlank(str))
+                if (StringUtils.isBlank(str))
                     continue;
                 if (getFilter() != null && getFilter().isFiltered(str))
                     continue;
@@ -86,7 +90,7 @@ public class GenericLogHandler extends LogHandler {
 
     private ILogFile getNextFile() {
         if (it == null)
-            it = getList().iterator();
+            it = getFileList().iterator();
 
         while (it.hasNext()) {
             ILogFile file = it.next();
@@ -105,6 +109,13 @@ public class GenericLogHandler extends LogHandler {
             }
         } catch (IOException ex) {
             ex.printStackTrace();
+        }
+    }
+
+    protected void preHandle() {
+        FileSorter sorter = context.getSorter();
+        if (sorter != null && !getFileList().isEmpty() && getFileList().size() > 1) {
+            sorter.sort(getFileList());
         }
     }
 
@@ -131,7 +142,7 @@ public class GenericLogHandler extends LogHandler {
                 return true;
 
             fillBuffer();
-            return buffer.size()>0;
+            return buffer.size() > 0;
         }
 
         @Override
@@ -144,11 +155,11 @@ public class GenericLogHandler extends LogHandler {
             if (buffer.size() > 0)
                 return;
 
-            for (int i=0; i<BUFFER_SIZE; i++) {
+            for (int i = 0; i < BUFFER_SIZE; i++) {
                 Line line = handler.getNextLine();
                 if (line == null)
                     break;
-                buffer.add((T)line);
+                buffer.add((T) line);
             }
         }
 
@@ -158,7 +169,7 @@ public class GenericLogHandler extends LogHandler {
         }
     }
 
-    private void setContext(AnalysisContext context){
-          this.context = context;
+    private void setContext(AnalysisContext context) {
+        this.context = context;
     }
 }

@@ -16,35 +16,34 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public abstract class LogHandler {
-    private List<ILogFile> list;
+    private List<ILogFile> fileList;
     private Rule rule;
     private IFilter filter;
 
 
-  public LogHandler(ILogFile file, IFilter filter) {
+    public LogHandler(ILogFile file, IFilter filter) {
 
-    list = new ArrayList<>();
-    list.add(file);
-    this.filter = filter;
-  }
+        fileList = new ArrayList<>();
+        fileList.add(file);
+        this.filter = filter;
+    }
 
-  public LogHandler(List<ILogFile> list, IFilter filter) {
-    this.list = list;
-    this.filter = filter;
-  }
+    public LogHandler(List<ILogFile> list, IFilter filter) {
+        this.fileList = list;
+        this.filter = filter;
+    }
 
-  public void addFile(ILogFile file) {
-    list.add(file);
-  }
+    public void addFile(ILogFile file) {
+        fileList.add(file);
+    }
 
-  public void setFilter(IFilter filter) {
-    this.filter = filter;
-  }
+    public void setFilter(IFilter filter) {
+        this.filter = filter;
+    }
 
-  protected void preHandle() {
+    protected void preHandle() {
+    }
 
-  }
-
-  public abstract Iterator<? extends Line> handle(AnalysisContext context) throws IOException;
+    public abstract Iterator<? extends Line> handle(AnalysisContext context) throws IOException;
 
 }
