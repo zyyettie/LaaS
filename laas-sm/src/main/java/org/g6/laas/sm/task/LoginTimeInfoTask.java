@@ -1,15 +1,6 @@
 package org.g6.laas.sm.task;
 
 import lombok.Data;
-import org.g6.laas.core.engine.context.SimpleAnalysisContext;
-import org.g6.laas.core.engine.task.AbstractAnalysisTask;
-import org.g6.laas.core.file.ILogFile;
-import org.g6.laas.core.file.LogFile;
-import org.g6.laas.core.format.InputFormat;
-import org.g6.laas.core.format.provider.DefaultInputFormatProvider;
-import org.g6.laas.core.format.provider.FormatProvider;
-import org.g6.laas.core.log.handler.ConcreteLogHandler;
-import org.g6.laas.core.log.handler.LogHandler;
 import org.g6.laas.core.log.line.Line;
 import org.g6.laas.core.log.result.SplitResult;
 import org.g6.laas.core.rule.RegexRule;
@@ -36,10 +27,10 @@ public class LoginTimeInfoTask extends SMRTETask<Map<String, Double>> {
 
     @Override
     protected Map<String, Double> process() {
-        if (lines.size() > 1)
+       /* if (lines.size() > 1)
             throw new SMRuntimeException(
                     new IllegalStateException("must be one record while querying login time info of SM")
-            );
+            );*/
 
         if (!lines.isEmpty()) {
             Map<String, Double> resultMap = new HashMap<>();
@@ -54,7 +45,7 @@ public class LoginTimeInfoTask extends SMRTETask<Map<String, Double>> {
         return null;
     }
 
-    public LoginTimeInfoTask(String file) {
+    public LoginTimeInfoTask(String[] files) {
         lines = new ArrayList<>();
 
         Rule rule = new RegexRule("RTE D Response-Total.+format:sc\\.manage\\.ToDo\\.g application:display");
@@ -67,6 +58,6 @@ public class LoginTimeInfoTask extends SMRTETask<Map<String, Double>> {
             }
         });
 
-        super.initContext(file, rule);
+        super.initContext(files, rule);
     }
 }

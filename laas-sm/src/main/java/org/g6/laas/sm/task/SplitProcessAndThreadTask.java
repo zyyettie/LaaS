@@ -56,8 +56,10 @@ public class SplitProcessAndThreadTask extends SMRTETask<String> {
         return tempRootPath;
     }
 
-    FormatProvider getProvider() {
-        return new DefaultInputFormatProvider("SMRTE_SM_LOG", new String[]{"DEFAULT"});
+    DefaultInputFormatProvider getProvider() {
+        DefaultInputFormatProvider provider = getProvider();
+        provider.setNames(new String[]{"DEFAULT"});
+        return provider;
     }
 
     public SplitProcessAndThreadTask(String file) {

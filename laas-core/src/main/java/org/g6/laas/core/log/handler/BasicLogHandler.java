@@ -41,7 +41,7 @@ public class BasicLogHandler extends LogHandler {
     public Iterator<? extends Line> handle(AnalysisContext context) throws IOException {
         Collection<Line> collection = new ArrayList<>();
 
-        Collection<ILogFile> logFiles = validateLogFiles(getList());
+        Collection<ILogFile> logFiles = validateLogFiles(getFileList());
         for (ILogFile iLogFile : logFiles) {
             LogFileReader reader = new LogFileReader(iLogFile);
             reader.open();

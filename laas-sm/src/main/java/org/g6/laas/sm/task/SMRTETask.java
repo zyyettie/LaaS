@@ -4,12 +4,14 @@ import org.g6.laas.core.engine.context.SimpleAnalysisContext;
 import org.g6.laas.core.engine.task.AbstractAnalysisTask;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.file.LogFile;
+import org.g6.laas.core.file.sorter.FileSorter;
 import org.g6.laas.core.format.InputFormat;
 import org.g6.laas.core.format.provider.DefaultInputFormatProvider;
 import org.g6.laas.core.format.provider.FormatProvider;
-import org.g6.laas.core.log.handler.ConcreteLogHandler;
+import org.g6.laas.core.log.handler.GenericLogHandler;
 import org.g6.laas.core.log.handler.LogHandler;
 import org.g6.laas.core.rule.Rule;
+import org.g6.laas.sm.file.sorter.RTELogFileSorter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,11 +47,14 @@ public abstract class SMRTETask<T> extends AbstractAnalysisTask<T> {
         for (String file : files) {
             fileList.add(new LogFile(file));
         }
-        LogHandler handler = new ConcreteLogHandler(fileList);
+
+        FileSorter sorter = new RTELogFileSorter();
+        LogHandler handler = new GenericLogHandler(fileList);
 
         SimpleAnalysisContext context = new SimpleAnalysisContext();
         context.setInputForm(inputFormat);
         context.setHandler(handler);
+        context.setSorter(sorter);
 
         for (Rule rule : rules) {
             context.getRules().add(rule);
@@ -58,7 +63,7 @@ public abstract class SMRTETask<T> extends AbstractAnalysisTask<T> {
         setContext(context);
     }
 
-    FormatProvider getProvider() {
+    DefaultInputFormatProvider getProvider() {
         if (provider == null) {
             provider = new DefaultInputFormatProvider("SMRTE_SM_LOG");
         } else {

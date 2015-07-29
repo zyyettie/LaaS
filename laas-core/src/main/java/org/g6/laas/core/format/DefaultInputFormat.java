@@ -90,10 +90,17 @@ public final class DefaultInputFormat implements InputFormat {
             throw new InputFormatNotFoundException("InputFormat not found");
         if (lineSplitRegex == null)
             throw new Regex4LineSplitNotFoundException("Regex not found for " + line.getContent());
-        if(isDefault)
+
+        if (isDefault)
             log.debug("Default line format is being used");
 
         String[] fieldContents = RegexUtil.getValues(line.getContent(), lineSplitRegex);
+        //in this case, the default format is used to split. But the existing format including default one
+        // may not be available for it, for example, if user add some comments in the log file
+        if (fieldContents == null) {
+            log.warn("can not split the line : " + line.getContent() + " with the split regex : " + lineSplitRegex);
+            return null;
+        }
         Collection<Field> fieldList = new ArrayList<>();
 
         for (int i = 0; i < fieldContents.length; i++) {

@@ -1,6 +1,7 @@
 package org.g6.laas.sm.file.sorter;
 
 
+import org.apache.commons.lang.StringUtils;
 import org.g6.laas.core.field.DateTimeField;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.file.sorter.AbstractLogFileSorter;
@@ -38,9 +39,18 @@ public class RTELogFileSorter extends AbstractLogFileSorter {
 
         private DateTimeField getEntryDateTime(ILogFile logFile) throws IOException {
             LogFileReader reader = new LogFileReader(logFile);
+            reader.open();
             LogLine line1 = new LogLine();
-            line1.setContent(reader.readLine());
-            line1.setInputFormat(new DefaultInputFormatProvider("SMRTE_SM_LOG").getInputFormat());
+            String str;
+            while((str = reader.readLine()) != null){
+                  if(!StringUtils.isBlank(str)){
+                      break;
+                  }
+            }
+
+            line1.setContent(str);
+            reader.close();
+            line1.setInputFormat(new DefaultInputFormatProvider("SMRTE_SM_LOG", new String[]{"DEFAULT"}).getInputFormat());
             SplitResult result = line1.split();
             return (DateTimeField) result.get("datetime");
         }

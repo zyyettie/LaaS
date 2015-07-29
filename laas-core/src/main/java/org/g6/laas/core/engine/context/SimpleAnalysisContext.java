@@ -2,6 +2,7 @@ package org.g6.laas.core.engine.context;
 
 
 import lombok.Data;
+import org.g6.laas.core.file.sorter.FileSorter;
 import org.g6.laas.core.format.InputFormat;
 import org.g6.laas.core.log.handler.LogHandler;
 import org.g6.laas.core.rule.Rule;
@@ -21,6 +22,8 @@ public class SimpleAnalysisContext implements AnalysisContext {
     private Map<Object, Object> holder = new HashMap<>();
 
     private InputFormat inputForm;
+
+    private FileSorter sorter;
 
 
     @Override

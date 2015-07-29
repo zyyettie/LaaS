@@ -3,6 +3,7 @@ package org.g6.laas.core.log.handler;
 import org.apache.commons.lang.StringUtils;
 import org.g6.laas.core.engine.context.AnalysisContext;
 import org.g6.laas.core.file.ILogFile;
+import org.g6.laas.core.file.sorter.FileSorter;
 import org.g6.laas.core.filter.IFilter;
 import org.g6.laas.core.log.reader.LogFileReader;
 import org.g6.laas.core.log.line.Line;
@@ -11,37 +12,40 @@ import org.g6.laas.core.log.line.LogLine;
 import java.io.IOException;
 import java.util.*;
 
-public class ConcreteLogHandler extends LogHandler {
+public class GenericLogHandler extends LogHandler {
     private LogFileReader reader = null;
     private boolean isReading = false;
     private Iterator<ILogFile> it = null;
     private ILogFile iLogFile = null;
     private AnalysisContext context;
     private int lineNumber;
-    private final int TIME_INTERVAL=600000;
+    private final int TIME_INTERVAL = 600000;
     private Timer timer = new Timer();
     private TimerTask tt = new TimerTask() {
         @Override
         public void run() {
-            if (ConcreteLogHandler.this.isReading) {
-                ConcreteLogHandler.this.isReading = false;
+            if (GenericLogHandler.this.isReading) {
+                GenericLogHandler.this.isReading = false;
                 return;
             }
-            ConcreteLogHandler.this.close();
+            GenericLogHandler.this.close();
             timer.cancel();
         }
     };
-    public ConcreteLogHandler(ILogFile iLogFile) {
+
+    public GenericLogHandler(ILogFile iLogFile) {
         this(iLogFile, null);
     }
-    public ConcreteLogHandler(ILogFile iLogFile, IFilter filter) {
+
+    public GenericLogHandler(ILogFile iLogFile, IFilter filter) {
         super(iLogFile, filter);
     }
 
-    public ConcreteLogHandler(List<ILogFile> list) {
+    public GenericLogHandler(List<ILogFile> list) {
         this(list, null);
     }
-    public ConcreteLogHandler(List<ILogFile> list, IFilter filter) {
+
+    public GenericLogHandler(List<ILogFile> list, IFilter filter) {
         super(list, filter);
     }
 
@@ -61,7 +65,7 @@ public class ConcreteLogHandler extends LogHandler {
             while ((str = reader.readLine()) != null) {
                 lineNumber++;
                 isReading = true;
-                if(StringUtils.isBlank(str))
+                if (StringUtils.isBlank(str))
                     continue;
                 if (getFilter() != null && getFilter().isFiltered(str))
                     continue;
@@ -86,10 +90,13 @@ public class ConcreteLogHandler extends LogHandler {
 
     private ILogFile getNextFile() {
         if (it == null)
-            it = getList().iterator();
+            it = getFileList().iterator();
 
-        if (it.hasNext())
-            return it.next();
+        while (it.hasNext()) {
+            ILogFile file = it.next();
+            if (file.isValid())
+                return file;
+        }
 
         return null;
     }
@@ -105,19 +112,27 @@ public class ConcreteLogHandler extends LogHandler {
         }
     }
 
+    protected void preHandle() {
+        FileSorter sorter = context.getSorter();
+        if (sorter != null && !getFileList().isEmpty() && getFileList().size() > 1) {
+            sorter.sort(getFileList());
+        }
+    }
+
     @Override
     public Iterator<? extends Line> handle(AnalysisContext context) throws IOException {
         setContext(context);
+        preHandle();
         return iterator();
     }
 
     public Iterator<Line> iterator() {
-        timer.schedule(tt, 0, TIME_INTERVAL);
+        //timer.schedule(tt, 0, TIME_INTERVAL);
         return new LogLineIterator<>();
     }
 
     private class LogLineIterator<T extends Line> implements Iterator<T> {
-        private ConcreteLogHandler handler = ConcreteLogHandler.this;
+        private GenericLogHandler handler = GenericLogHandler.this;
         private LinkedList<T> buffer = new LinkedList<>();
         private int BUFFER_SIZE = 1024;
 
@@ -127,7 +142,7 @@ public class ConcreteLogHandler extends LogHandler {
                 return true;
 
             fillBuffer();
-            return buffer.size()>0;
+            return buffer.size() > 0;
         }
 
         @Override
@@ -140,11 +155,11 @@ public class ConcreteLogHandler extends LogHandler {
             if (buffer.size() > 0)
                 return;
 
-            for (int i=0; i<BUFFER_SIZE; i++) {
+            for (int i = 0; i < BUFFER_SIZE; i++) {
                 Line line = handler.getNextLine();
                 if (line == null)
                     break;
-                buffer.add((T)line);
+                buffer.add((T) line);
             }
         }
 
@@ -154,7 +169,7 @@ public class ConcreteLogHandler extends LogHandler {
         }
     }
 
-    private void setContext(AnalysisContext context){
-          this.context = context;
+    private void setContext(AnalysisContext context) {
+        this.context = context;
     }
 }
