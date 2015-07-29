@@ -7,6 +7,8 @@ import java.util.Collection;
 
 public class SMRadLineSetUnit extends LineSetUnit {
     private String radName;
+    private int processId = -1;
+    private int threadId = -1;
 
     public SMRadLineSetUnit() {
         super();
@@ -28,19 +30,35 @@ public class SMRadLineSetUnit extends LineSetUnit {
         this.radName = radName;
     }
 
+    public int getProcessId() {
+        return processId;
+    }
+
+    public void setProcessId(int processId) {
+        this.processId = processId;
+    }
+
+    public int getThreadId() {
+        return threadId;
+    }
+
+    public void setThreadId(int threadId) {
+        this.threadId = threadId;
+    }
+
     @Override
     public String getContent() {
-        String content = "";
+        StringBuilder content = new StringBuilder();
         if (radName !=null && radName.length()>0) {
-            content += "Calling "+radName+"\n";
+            content.append("calling ").append(radName).append("\n");
         }
         for (IUnit unit : set) {
             for (int i=0; i<level; i++) {
-                content += "  ";
+                content.append("  ");
             }
-            content += unit.getContent();
+            content.append(unit.getContent());
         }
 
-        return content;
+        return content.toString();
     }
 }
