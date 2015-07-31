@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<!DOCTYPE digester-rules PUBLIC
+        "-//Apache Commons //DTD digester-rules XML V1.0//EN"
+        "digester-rules.dtd">
+<digester-rules>
+    <pattern value="workflow-tasks">
+        <object-create-rule classname="org.g6.laas.core.engine.task.workflow.WorkFlowTasks"/>
+        <set-properties-rule>
+            <alias attr-name="name" prop-name="name"/>
+        </set-properties-rule>
+
+        <pattern value="start">
+            <object-create-rule classname="org.g6.laas.core.engine.task.workflow.Start"/>
+            <set-property-rule pattern="to" name="to"/>
+            <set-next-rule methodname="setStart"/>
+        </pattern>
+
+        <pattern value="task">
+            <object-create-rule classname="org.g6.laas.core.engine.task.workflow.Task"/>
+            <set-properties-rule>
+                <alias attr-name="name" prop-name="name"/>
+                <alias attr-name="classname" prop-name="className"/>
+            </set-properties-rule>
+
+            <bean-property-setter-rule pattern="description" propertyname="description"/>
+
+            <pattern value="task-input-rule">
+                <object-create-rule classname="org.g6.laas.core.engine.task.workflow.TaskInputRule"/>
+                <set-properties-rule>
+                    <alias attr-name="name" prop-name="name"/>
+                </set-properties-rule>
+
+                <pattern value="call-method-rule">
+                    <object-create-rule classname="org.g6.laas.core.engine.task.workflow.CallMethodRule"/>
+                    <set-properties-rule>
+                        <alias attr-name="method-name" prop-name="methodName"/>
+                        <alias attr-name="paramcount" prop-name="paramCount"/>
+                    </set-properties-rule>
+
+                    <pattern value="param-create-rule">
+                        <object-create-rule classname="org.g6.laas.core.engine.task.workflow.ParamCreateRule"/>
+                        <set-properties-rule>
+                            <alias attr-name="classname" prop-name="className"/>
+                            <alias attr-name="index" prop-name="index"/>
+                        </set-properties-rule>
+                        <set-next-rule methodname="addParams"/>
+                    </pattern>
+
+                    <set-next-rule methodname="setCallMethodRule"/>
+                </pattern>
+
+                <set-next-rule methodname="setTaskInputRule"/>
+            </pattern>
+
+            <pattern value="task-output-rule">
+                <object-create-rule classname="org.g6.laas.core.engine.task.workflow.TaskOutputRule"/>
+                <set-properties-rule>
+                    <alias attr-name="classname" prop-name="className"/>
+                    <alias attr-name="name" prop-name="name"/>
+                </set-properties-rule>
+                <pattern value="call-method-rule">
+                    <set-properties-rule>
+                        <alias attr-name="method-name" prop-name="methodName"/>
+                        <alias attr-name="key" prop-name="key"/>
+                        <alias attr-name="index" prop-name="index"/>
+                    </set-properties-rule>
+                    <set-next-rule methodname="addCallMethodRule"/>
+                </pattern>
+                <set-next-rule methodname="setTaskOutputRule"/>
+            </pattern>
+
+            <pattern value="set-next-task">
+                <object-create-rule classname="org.g6.laas.core.engine.task.workflow.NextTask"/>
+                <set-properties-rule>
+                    <alias attr-name="name" prop-name="name"/>
+                </set-properties-rule>
+                <set-next-rule methodname="setNextTask"/>
+            </pattern>
+            <set-next-rule methodname="addTask"/>
+        </pattern>
+
+        <pattern value="end">
+            <object-create-rule classname="org.g6.laas.core.engine.task.workflow.End"/>
+            <set-property-rule pattern="name" name="name"/>
+            <set-next-rule methodname="setEnd"/>
+        </pattern>
+
+    </pattern>
+</digester-rules>

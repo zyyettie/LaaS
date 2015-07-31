@@ -60,5 +60,6 @@
         <module>laas-core</module>
         <module>laas-sm</module>
         <module>lass-apache</module>
+        <module>laas-server</module>
     </modules>
 </project>
