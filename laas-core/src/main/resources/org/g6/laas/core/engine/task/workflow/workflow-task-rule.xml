@@ -42,23 +42,22 @@
 
                 <set-next-rule methodname="setTaskInputRule"/>
             </pattern>
+
+            <pattern value="set-next-task">
+                <object-create-rule classname="org.g6.laas.core.engine.task.workflow.NextTask"/>
+                <set-properties-rule>
+                    <alias attr-name="name" prop-name="name"/>
+                </set-properties-rule>
+                <set-next-rule methodname="setNextTask"/>
+            </pattern>
+            <set-next-rule methodname="addTask"/>
         </pattern>
 
-        <pattern value="set-next-task">
-            <object-create-rule classname="org.g6.laas.core.engine.task.workflow.NextTask"/>
-            <set-properties-rule>
-                <alias attr-name="name" prop-name="name"/>
-            </set-properties-rule>
-            <set-next-rule methodname="setNextTask"/>
+        <pattern value="end">
+            <object-create-rule classname="org.g6.laas.core.engine.task.workflow.End"/>
+            <set-properties-rule/>
+            <set-next-rule methodname="setEnd"/>
         </pattern>
-        <set-next-rule methodname="addTask"/>
-    </pattern>
 
-    <pattern value="end">
-        <object-create-rule classname="org.g6.laas.core.engine.task.workflow.End"/>
-        <set-properties-rule/>
-        <set-next-rule methodname="setEnd"/>
     </pattern>
-
-</pattern>
-        </digester-rules>
+</digester-rules>
