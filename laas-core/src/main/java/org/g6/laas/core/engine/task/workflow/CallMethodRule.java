@@ -9,14 +9,14 @@ import java.util.List;
 public class CallMethodRule {
     private String methodName;
     private String paramCount;
-    private List<ParamCreateRule> paramList;
+    private List<ParamCreateRule> params;
 
     private int index;
     private String key;
 
     public void addParams(ParamCreateRule param){
-        if(paramList == null)
-            paramList = new ArrayList<>();
-        paramList.add(param);
+        if(params == null)
+            params = new ArrayList<>();
+        params.add(param);
     }
 }
