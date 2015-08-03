@@ -3,14 +3,14 @@ package org.g6.laas.server;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
-import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.data.repository.query.spi.EvaluationContextExtension;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableJpaAuditing
 @SpringBootApplication
+@EnableScheduling
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class WebApplication extends SpringBootServletInitializer {
 
