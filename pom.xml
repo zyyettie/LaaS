@@ -16,12 +16,14 @@
         <java.version>1.7</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
+        <tomcat.version>7.0.59</tomcat.version>
+        <spring-security.version>4.0.0.RELEASE</spring-security.version>
     </properties>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.2.2.RELEASE</version>
+        <version>1.2.4.RELEASE</version>
     </parent>
 
     <dependencies>
@@ -60,6 +62,7 @@
         <module>laas-core</module>
         <module>laas-sm</module>
         <module>lass-apache</module>
-        <module>laas-server</module>
+        <module>laas-web</module>
+        <module>laas-server</module>       
     </modules>
 </project>
