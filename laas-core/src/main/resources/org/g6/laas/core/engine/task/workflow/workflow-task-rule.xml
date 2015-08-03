@@ -45,9 +45,7 @@
 
             <pattern value="set-next-task">
                 <object-create-rule classname="org.g6.laas.core.engine.task.workflow.NextTask"/>
-                <set-properties-rule>
-                    <alias attr-name="name" prop-name="name"/>
-                </set-properties-rule>
+                <set-properties-rule/>
                 <set-next-rule methodname="setNextTask"/>
             </pattern>
             <set-next-rule methodname="addTask"/>
