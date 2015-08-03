@@ -16,8 +16,6 @@
         <java.version>1.7</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <tomcat.version>7.0.59</tomcat.version>
-        <spring-security.version>4.0.0.RELEASE</spring-security.version>
     </properties>
 
     <parent>
