@@ -2,15 +2,9 @@ package org.g6.laas.core.engine.task.workflow;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.g6.laas.core.engine.context.AnalysisContext;
-import org.g6.laas.core.engine.context.SimpleAnalysisContext;
 import org.g6.laas.core.engine.task.ChainTask;
-import org.g6.laas.core.exception.LaaSCoreRuntimeException;
-import org.g6.laas.core.log.line.Line;
-import org.g6.laas.core.rule.Rule;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.LinkedList;
 
 @Slf4j
 @Data

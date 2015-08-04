@@ -2,7 +2,6 @@ package org.g6.laas.sm.task;
 
 import lombok.Data;
 import org.g6.laas.core.format.provider.DefaultInputFormatProvider;
-import org.g6.laas.core.format.provider.FormatProvider;
 import org.g6.laas.core.log.line.Line;
 import org.g6.laas.core.log.result.SplitResult;
 import org.g6.laas.core.rule.Rule;

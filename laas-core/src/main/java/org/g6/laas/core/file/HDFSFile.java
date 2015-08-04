@@ -2,7 +2,6 @@ package org.g6.laas.core.file;
 
 import lombok.Data;
 import org.g6.laas.core.file.validator.FileValidator;
-import org.g6.util.Constants;
 
 @Data
 public class HDFSFile implements ILogFile {
