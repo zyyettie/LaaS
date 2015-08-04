@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Date;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
+@Table(name="users",uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
 @Data
 public class User extends LaaSPersistable {
 
@@ -34,12 +34,15 @@ public class User extends LaaSPersistable {
     @JoinColumn(name="ROLE_ID")
     private Role role;
 
-    @OneToMany(mappedBy="user")
+    @OneToOne
+    private Inbox inbox;
+
+    @OneToMany(mappedBy="createdBy")
     private Collection<FileLocation> files = new ArrayList<>();
 
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy="createdBy")
     private Collection<Task> tasks = new ArrayList<>();
 
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy="createdBy")
     private Collection<TaskHistory> taskHistory = new ArrayList<>();
 }
