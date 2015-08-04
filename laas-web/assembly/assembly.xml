@@ -1,0 +1,13 @@
+<assembly>
+	<id>assets</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>yo/dist</directory>
+			<outputDirectory></outputDirectory>
+		</fileSet>
+	</fileSets>
+</assembly>

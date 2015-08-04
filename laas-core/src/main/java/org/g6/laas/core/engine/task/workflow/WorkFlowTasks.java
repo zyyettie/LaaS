@@ -9,10 +9,10 @@ import java.util.List;
 public class WorkFlowTasks {
     private String name;
     private Start start;
-    private List<Task> taskList = new ArrayList<>();
+    private List<Task> tasks = new ArrayList<>();
     private End end;
 
     public void addTask(Task task){
-        taskList.add(task);
+        tasks.add(task);
     }
 }
