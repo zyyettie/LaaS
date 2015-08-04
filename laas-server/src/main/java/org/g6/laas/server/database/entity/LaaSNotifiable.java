@@ -4,6 +4,7 @@ package org.g6.laas.server.database.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.g6.laas.server.database.entity.user.User;
 import org.g6.laas.server.database.event.Notifiable;
 import org.g6.laas.server.database.event.NotificationListener;
 

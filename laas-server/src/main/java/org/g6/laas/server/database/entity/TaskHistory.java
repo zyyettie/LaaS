@@ -1,6 +1,7 @@
 package org.g6.laas.server.database.entity;
 
 import lombok.Data;
+import org.g6.laas.server.database.entity.user.User;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;

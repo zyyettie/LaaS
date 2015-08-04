@@ -1,7 +1,7 @@
 package org.g6.laas.server.database.entity;
 
 
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.g6.laas.server.database.entity.user.User;
 
 import javax.persistence.*;
 

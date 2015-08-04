@@ -2,6 +2,7 @@ package org.g6.laas.server.database.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.g6.laas.server.database.entity.user.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;
