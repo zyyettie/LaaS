@@ -1,14 +1,13 @@
-package org.g6.laas.database.service;
+package org.g6.laas.server.database.service;
 
-import org.g6.laas.database.entity.User;
-import org.g6.laas.database.repository.IUserRepository;
+import org.g6.laas.server.database.entity.User;
+import org.g6.laas.server.database.repository.IUserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
 
 @Service
 public class UserService {
-    @Resource
+    @Autowired
     private IUserRepository userRepo;
 
     public void saveUser(User user) {
