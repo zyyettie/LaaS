@@ -31,13 +31,20 @@
                 <object-create-rule classname="org.g6.laas.core.engine.task.workflow.TaskInputRule"/>
                 <set-properties-rule/>
 
-                <pattern value="call-method-rule">
-                    <object-create-rule classname="org.g6.laas.core.engine.task.workflow.CallMethodRule"/>
+                <pattern value="input-map-rule">
+                    <object-create-rule classname="org.g6.laas.core.engine.task.workflow.InputMapRule"/>
                     <set-properties-rule>
-                        <alias attr-name="method-name" prop-name="methodName"/>
+                        <alias attr-name="paramcount" prop-name="paramCount"/>
                     </set-properties-rule>
-
-                    <set-next-rule methodname="setCallMethodRule"/>
+                    <pattern value="param-create-rule">
+                        <object-create-rule classname="org.g6.laas.core.engine.task.workflow.ParamCreateRule"/>
+                        <set-properties-rule>
+                            <alias attr-name="key" prop-name="key"/>
+                            <alias attr-name="value-type" prop-name="valueType"/>
+                        </set-properties-rule>
+                        <set-next-rule methodname="addParamCreateRule"/>
+                    </pattern>
+                    <set-next-rule methodname="setInputMapRule"/>
                 </pattern>
 
                 <set-next-rule methodname="setTaskInputRule"/>
