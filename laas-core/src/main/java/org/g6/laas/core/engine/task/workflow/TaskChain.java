@@ -9,21 +9,21 @@ import java.util.LinkedList;
 @Slf4j
 @Data
 public class TaskChain{
-    LinkedList<ChainTask> linkedList = new LinkedList<>();
+    LinkedList<Task> linkedList = new LinkedList<>();
 
-    public void addFirst(ChainTask task){
+    public void addFirst(Task task){
           linkedList.addFirst(task);
     }
 
-    public void addLast(ChainTask task){
+    public void addLast(Task task){
          linkedList.addLast(task);
     }
 
-    public void add(int index, ChainTask task){
+    public void add(int index, Task task){
           linkedList.add(index, task);
     }
 
-    public void add(ChainTask task){
+    public void add(Task task){
         linkedList.add(task);
     }
 

@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class ParamCreateRule {
-    private String className;
-    private int index;
+    private String key;
+    private String valueType;
 
 }
