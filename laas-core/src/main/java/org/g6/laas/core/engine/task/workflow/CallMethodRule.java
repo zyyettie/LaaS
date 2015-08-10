@@ -16,7 +16,7 @@ public class CallMethodRule {
 
     public void addParams(ParamCreateRule param){
         if(params == null)
-            params = new ArrayList<>();
+            params = new ArrayList<ParamCreateRule>();
         params.add(param);
     }
 }
