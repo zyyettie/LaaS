@@ -18,6 +18,7 @@ html
     title Log Analysis As Service
   body.laas
     #header
+    #navigator
     #main
     r#footer
     #login-dialog
@@ -28,6 +29,7 @@ html
   // build:js({app,.tmp}) /scripts/app.js
   script(src="/handlebars/precompiled.handlebars.home.js")
   script(src="/scripts/app.js")
+  script(src="/scripts/modules/rule.js")
   script(src="/scripts/modules/home.js")
   // endbuild
   script
