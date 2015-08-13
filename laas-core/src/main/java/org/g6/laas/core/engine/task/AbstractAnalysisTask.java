@@ -18,9 +18,15 @@ import java.util.Iterator;
 @NoArgsConstructor
 public abstract class AbstractAnalysisTask<T> implements AnalysisTask<T> {
 
+    private String name = null;
     private AnalysisContext context = new SimpleAnalysisContext();
 
     public AbstractAnalysisTask(AnalysisContext context) {
+        this(null, context);
+    }
+
+    public AbstractAnalysisTask(String name, AnalysisContext context) {
+        this.name = name;
         this.context = context;
     }
 
@@ -61,5 +67,12 @@ public abstract class AbstractAnalysisTask<T> implements AnalysisTask<T> {
         T result = process();
         finished();
         return result;
+    }
+
+    public String toString() {
+        if (this.name == null)
+            return "Unknown";
+        else
+            return this.name;
     }
 }
