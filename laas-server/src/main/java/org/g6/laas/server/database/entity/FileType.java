@@ -9,7 +9,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"TYPE"}))
+@Table(name="FILE_TYPE", uniqueConstraints = @UniqueConstraint(columnNames = {"TYPE"}))
 @Data
 @NoArgsConstructor
 public class FileType extends LaaSPersistable{
