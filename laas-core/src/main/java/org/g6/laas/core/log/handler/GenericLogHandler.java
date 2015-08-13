@@ -5,9 +5,9 @@ import org.g6.laas.core.engine.context.AnalysisContext;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.file.sorter.FileSorter;
 import org.g6.laas.core.filter.IFilter;
-import org.g6.laas.core.log.reader.LogFileReader;
 import org.g6.laas.core.log.line.Line;
 import org.g6.laas.core.log.line.LogLine;
+import org.g6.laas.core.log.reader.LogFileReader;
 
 import java.io.IOException;
 import java.util.*;

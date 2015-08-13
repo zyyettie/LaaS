@@ -1,0 +1,29 @@
+<workflow-tasks name='process_thread_split'>
+    <start to="loginInfoTask"/>
+
+    <task name="loginInfoTask" classname="org.g6.laas.sm.task.ProcessIdAndThreadIdTask">
+        <!--A task needs input depends on whether the below is defined
+            once the framework finds task-no-input is defined, the input will be ignored
+            no matter whether the task-input-rule is specified or not.
+        -->
+        <task-no-input/>
+        <!--Output is not required to define. by default the return result is the input of the next task-->
+        <set-next-task name="dataHandlerTask"/>
+    </task>
+
+    <task name="dataHandlerTask" classname="org.g6.laas.sm.task.DataHandlerTask">
+        <description>this is used to handle data</description>
+        <!--if task-input-rule id not defined, be default use the output of the previous task as the input of this task
+            unless no input is required, so need to use the below configuration
+            <task-no-input/>
+        -->
+        <task-input-rule name="">
+            <!--here the name is attribute name, there should be setter and getter methods in class accordingly-->
+            <call-method-rule method-name="setProcessAndThreadBean"/>
+        </task-input-rule>
+
+        <set-next-task name="end"/>
+    </task>
+
+    <end name="end"/>
+</workflow-tasks>

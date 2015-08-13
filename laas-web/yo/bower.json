@@ -11,7 +11,8 @@
     "fontawesome": "~4.3.0",
     "toastr": "~2.1.1",
     "marionette.backbone.syphon": "~0.6.0",
-    "twbs-pagination": "~1.2.5"
+    "twbs-pagination": "~1.2.5",
+    "blueimp-file-upload": "~9.10.6"
   },
   "resolutions": {
     "underscore": ">=1.7.0",

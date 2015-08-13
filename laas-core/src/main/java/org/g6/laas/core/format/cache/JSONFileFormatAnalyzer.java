@@ -12,16 +12,13 @@ import org.g6.laas.core.format.FieldFormat;
 import org.g6.laas.core.log.line.LineAttributes;
 import org.g6.util.Constants;
 import org.g6.util.JSONUtil;
-import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 public class JSONFileFormatAnalyzer {

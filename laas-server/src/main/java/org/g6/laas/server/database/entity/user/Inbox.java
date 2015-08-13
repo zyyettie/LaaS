@@ -1,0 +1,31 @@
+package org.g6.laas.server.database.entity.user;
+
+import lombok.*;
+import org.g6.laas.server.database.entity.LaaSPersistable;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
+
+@Data
+@RequiredArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@Entity
+@Table(name = "inbox")
+public class Inbox extends LaaSPersistable {
+
+    private static final long serialVersionUID = 8365840187902479233L;
+
+    @NonNull
+    @OneToOne(mappedBy = "inbox")
+    private User user;
+
+    @OneToMany(mappedBy = "inbox", cascade = CascadeType.ALL)
+    private Collection<Notification> notifications = new ArrayList<>();
+
+    public void addNotification(Notification notification) {
+        this.notifications.add(notification);
+    }
+
+}

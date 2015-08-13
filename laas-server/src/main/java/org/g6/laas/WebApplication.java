@@ -1,4 +1,4 @@
-package org.g6.laas.server;
+package org.g6.laas;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;

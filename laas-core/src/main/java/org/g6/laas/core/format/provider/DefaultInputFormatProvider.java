@@ -6,12 +6,10 @@ import lombok.NoArgsConstructor;
 import org.g6.laas.core.format.DefaultInputFormat;
 import org.g6.laas.core.format.FileFormatCacheService;
 import org.g6.laas.core.format.InputFormat;
-import org.g6.laas.core.format.cache.FileFormatCache;
 import org.g6.laas.core.log.line.LineAttributes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.util.List;
 
 @NoArgsConstructor

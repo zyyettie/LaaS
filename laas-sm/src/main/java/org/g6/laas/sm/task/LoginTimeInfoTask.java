@@ -6,7 +6,6 @@ import org.g6.laas.core.log.result.SplitResult;
 import org.g6.laas.core.rule.RegexRule;
 import org.g6.laas.core.rule.Rule;
 import org.g6.laas.core.rule.action.RuleAction;
-import org.g6.laas.sm.exception.SMRuntimeException;
 
 import java.util.ArrayList;
 import java.util.HashMap;

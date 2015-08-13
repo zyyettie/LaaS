@@ -1,4 +1,4 @@
-package org.g6;
+package org.g6.laas;
 
 import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.core.engine.StrategyAnalysisEngine;
@@ -7,23 +7,19 @@ import org.g6.laas.core.engine.task.SearchKeyWordsTask;
 import org.g6.laas.core.exception.LaaSCoreRuntimeException;
 import org.g6.laas.core.file.LogFile;
 import org.g6.laas.core.log.handler.BasicLogHandler;
-import org.g6.laas.core.log.line.Line;
 import org.g6.laas.core.log.handler.LogHandler;
+import org.g6.laas.core.log.line.Line;
 import org.g6.laas.core.rule.KeywordRule;
 import org.g6.laas.core.rule.Rule;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.Future;
 
-@Configuration
-@EnableAutoConfiguration
-@ComponentScan
+@SpringBootApplication
 @Slf4j
 public class Application {
 

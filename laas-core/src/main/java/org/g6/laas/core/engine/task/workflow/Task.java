@@ -8,7 +8,7 @@ public class Task {
     private String className;
     private String description;
 
+    private TaskNoInput taskNoInput;
     private TaskInputRule taskInputRule;
-    private TaskOutputRule taskOutputRule;
     private NextTask nextTask;
 }
