@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Date;
 
 @Entity
-@Table(name="users",uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
+@Table(name="USER",uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
 @Data
 public class User extends LaaSPersistable {
 
@@ -38,7 +38,7 @@ public class User extends LaaSPersistable {
     private Inbox inbox;
 
     @OneToMany(mappedBy="createdBy")
-    private Collection<FileLocation> files = new ArrayList<>();
+    private Collection<File> files = new ArrayList<>();
 
     @OneToMany(mappedBy="createdBy")
     private Collection<Task> tasks = new ArrayList<>();

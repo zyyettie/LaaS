@@ -24,6 +24,10 @@ public class Task extends LaaSAuditable<User> {
     @JoinColumn(name = "USER_ID")
     @CreatedBy
     private User user;
+
+    @ManyToMany(cascade = CascadeType.REFRESH, mappedBy = "tasks")
+    private Collection<Workflow> workflows = new ArrayList<>();
+
     @OneToMany(mappedBy = "task")
     private Collection<TaskHistory> taskHistory = new ArrayList<>();
 }
