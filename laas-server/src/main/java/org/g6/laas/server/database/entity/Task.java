@@ -19,6 +19,7 @@ public class Task extends LaaSAuditable<User> {
 
     @Column(name = "NAME")
     private String name;
+    @Column(name = "CLASSNAME")
     private String className;
     @ManyToOne
     @JoinColumn(name = "USER_ID")
