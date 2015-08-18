@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
+@Table(name="ROLE",uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
 @Data
 @NoArgsConstructor
 public class Role extends LaaSPersistable {

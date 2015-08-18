@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "notification")
+@Table(name = "NOTIFICATION")
 public class Notification extends LaaSAuditable<User> {
 
     private static final long serialVersionUID = -7457760948182175014L;

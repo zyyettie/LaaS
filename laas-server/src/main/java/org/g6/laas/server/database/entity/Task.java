@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
+@Table(name = "TASK",uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
 @Data
 @NoArgsConstructor
 public class Task extends LaaSAuditable<User> {

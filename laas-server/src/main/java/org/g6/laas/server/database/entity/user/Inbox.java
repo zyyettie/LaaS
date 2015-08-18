@@ -12,7 +12,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "inbox")
+@Table(name = "INBOX")
 public class Inbox extends LaaSPersistable {
 
     private static final long serialVersionUID = 8365840187902479233L;
