@@ -21,7 +21,7 @@ public class Inbox extends LaaSPersistable {
     @OneToOne(mappedBy = "inbox")
     private User user;
 
-    @OneToMany(mappedBy = "inbox", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "inbox")
     private Collection<Notification> notifications = new ArrayList<>();
 
     public void addNotification(Notification notification) {
