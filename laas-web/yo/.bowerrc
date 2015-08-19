@@ -1,3 +1,5 @@
 {
-  "directory": "bower_components"
+  "directory": "bower_components",
+  "https-proxy": "http://web-proxy.houston.hp.com:8080",
+  "http-proxy": "http://web-proxy.houston.hp.com:8080"
 }
