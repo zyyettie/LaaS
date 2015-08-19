@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
 @Data
 @NoArgsConstructor
+@Table(name = "CATEGORY",uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
 public class Category extends LaaSPersistable {
     private static final long serialVersionUID = -2951477269901540567L;
 

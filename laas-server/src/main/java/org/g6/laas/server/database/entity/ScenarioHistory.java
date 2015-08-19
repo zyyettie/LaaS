@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 
 @Entity
 @Data
+@Table(name = "SCENARIO_HISTORY")
 public class ScenarioHistory extends LaaSAuditable<User> {
     private static final long serialVersionUID = 3863174063361308807L;
 

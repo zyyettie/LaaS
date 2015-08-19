@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
+@Table(name = "WORKFLOW",uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
 @Data
 @NoArgsConstructor
 public class Workflow extends LaaSAuditable<User> {
