@@ -10,9 +10,8 @@ html
     // build:css({.,.tmp}) /styles/main.css
     link(rel="stylesheet", href="/bower_components/fontawesome/css/font-awesome.css")
     link(rel="stylesheet", href="/bower_components/toastr/toastr.css")
-    link(rel="stylesheet", href="/styles/semantic.css")
+    link(rel="stylesheet", href="/bower_components/semantic/dist/semantic.min.css")
     link(rel="stylesheet", href="/styles/main.css")
-    link(rel="stylesheet", href="/styles/pagination.css")
     // endbuild
 
     title Log Analysis As Service
@@ -29,6 +28,7 @@ html
   script(src="/handlebars/precompiled.handlebars.home.js")
   script(src="/scripts/app.js")
   script(src="/scripts/modules/home.js")
+  script(src="/scripts/modules/login.js")
   // endbuild
   script
     | LaaS.start();
