@@ -1,7 +1,8 @@
-package org.g6.laas.server.database.entity;
+package org.g6.laas.server.database.entity.task;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.g6.laas.server.database.entity.LaaSAuditable;
 import org.g6.laas.server.database.entity.user.User;
 import org.springframework.data.annotation.CreatedBy;
 

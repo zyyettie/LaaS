@@ -1,0 +1,9 @@
+.ui.centered.two.column.grid(style="margin-top:10%;height:100%")
+    .column
+        .ui.segment
+            .ui.divided.items
+                |{{#each tasks}}
+                .item
+                    .content
+                        a.header(href="/tasks/{{id}}")  {{name}}
+                |{{/each}}

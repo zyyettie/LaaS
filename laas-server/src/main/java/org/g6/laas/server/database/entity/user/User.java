@@ -2,6 +2,8 @@ package org.g6.laas.server.database.entity.user;
 
 import lombok.Data;
 import org.g6.laas.server.database.entity.*;
+import org.g6.laas.server.database.entity.task.Task;
+import org.g6.laas.server.database.entity.task.TaskHistory;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
