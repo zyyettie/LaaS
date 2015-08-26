@@ -1,6 +1,9 @@
 package org.g6.laas;
 
 import org.g6.laas.server.database.entity.*;
+import org.g6.laas.server.database.entity.task.Task;
+import org.g6.laas.server.database.entity.task.TaskHistory;
+import org.g6.laas.server.database.entity.task.Workflow;
 import org.g6.laas.server.database.entity.user.Notification;
 import org.g6.laas.server.database.entity.user.Role;
 import org.g6.laas.server.database.entity.user.User;
