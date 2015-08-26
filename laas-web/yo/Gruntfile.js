@@ -62,7 +62,7 @@ module.exports = function (grunt) {
       },
       jade: {
         files: [
-          '<%= config.app %>/lib/{,*/}*.jade'
+          '<%= config.app %>/lib/{,*/}*.jade','<%= config.app %>/index.jade'
         ],
         tasks: ['jade:compile']
       },
