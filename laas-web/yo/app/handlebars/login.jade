@@ -1,0 +1,23 @@
+#login.ui.middle.aligned.center.aligned.grid
+  .column
+    #logoContainer.ui.basic.segmen
+      h2.ui.teal.image.header
+        img.image(src="images/logo.png")
+        .content
+          |Log as a Service
+    form.ui.large.form
+      .ui.stacked.segment
+        .field
+          .ui.left.icon.input
+            i.user.icon
+            input(type="text",name="name",placeholder="User Name")
+        .field
+          .ui.left.icon.input
+            i.lock.icon
+            input(type="password",name="password",placeholder="Password")
+        .ui.fluid.large.teal.button Login
+      .ui.error.message
+    .ui.message New to Us?
+      a#signUp(href="#")
+        |Sign Up Now
+

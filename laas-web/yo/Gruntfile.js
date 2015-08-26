@@ -28,11 +28,10 @@ module.exports = function (grunt) {
   var singlePage = function(req, res, next) {
     var url = req.url;
     console.log("url is ************* " + url);
-    if (/.*\.js/.test(url) || /.*\.css/.test(url) || /.*fonts\/icons\./.test(url) || (/.*\/public\//.test(url))) {
+    if (/.*\.js/.test(url) || /.*\.css/.test(url) || /.*fonts\/icons\./.test(url) || (/.*\/images\//.test(url))) {
       return next();
     }
-    if (/^\/.*/.test(url)
-      ) {
+    if (/^\/tasks/.test(url) || /^\/login/.test(url)) {
       req.url = '/index.html';
     }
     return next();
@@ -68,7 +67,7 @@ module.exports = function (grunt) {
         tasks: ['jade:compile']
       },
       jade_handlebars : {
-        files: ['<%= config.templates %>/*.jade'],
+        files: ['<%= config.templates %>/**/*.jade'],
         tasks: ['jade_handlebars']
       },
       gruntfile: {
@@ -240,7 +239,7 @@ module.exports = function (grunt) {
     jade_handlebars: {
       all : {
         files : {
-          '.tmp/handlebars/precompiled.handlebars.home.js': ['app/handlebars/*.jade']
+          '.tmp/handlebars/precompiled.handlebars.home.js': ['app/handlebars/**/*.jade']
         }
       }
     },

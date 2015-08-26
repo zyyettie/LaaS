@@ -6,7 +6,7 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"FILE_NAME", "PATH"}))
+@Table(name = "FILE",uniqueConstraints = @UniqueConstraint(columnNames = {"FILE_NAME", "PATH"}))
 @Data
 public class File extends LaaSAuditable<User> {
 

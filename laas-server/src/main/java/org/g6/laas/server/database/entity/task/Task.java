@@ -1,7 +1,8 @@
-package org.g6.laas.server.database.entity;
+package org.g6.laas.server.database.entity.task;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.g6.laas.server.database.entity.LaaSAuditable;
 import org.g6.laas.server.database.entity.user.User;
 import org.springframework.data.annotation.CreatedBy;
 
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
+@Table(name = "TASK",uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
 @Data
 @NoArgsConstructor
 public class Task extends LaaSAuditable<User> {
