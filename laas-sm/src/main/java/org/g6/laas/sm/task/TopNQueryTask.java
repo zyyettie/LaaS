@@ -27,7 +27,6 @@ public class TopNQueryTask extends SMRTETask<List<Line>> {
         return ordering.leastOf(lines, N);
     }
 
-
     public TopNQueryTask(int topN, String file) {
         this.N = topN;
 

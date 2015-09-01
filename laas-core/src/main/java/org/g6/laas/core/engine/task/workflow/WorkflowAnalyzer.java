@@ -79,7 +79,6 @@ public class WorkflowAnalyzer {
     }
 
     private boolean doOutputCheck(){
-
         return true;
     }
 
