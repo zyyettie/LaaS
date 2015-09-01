@@ -2,7 +2,17 @@ LaaS.module('Task', function(Task, LaaS, Backbone, Marionette) {
     'use strict';
 
     var TaskView = Marionette.ItemView.extend({
-
+        initialize : function(options){
+            this.task = options.attributes;
+        },
+        template : function(data){
+            var template = JST['app/handlebars/task/detail'];
+            var html = template(data.task);
+            return html;
+        },
+        serializeData:function(){
+            return {task:this.task};
+        }
     });
 
     var TaskListView = Marionette.ItemView.extend({
@@ -26,8 +36,14 @@ LaaS.module('Task', function(Task, LaaS, Backbone, Marionette) {
                LaaS.mainRegion.show(view);
             });
         },
-        showTask: function(){
-
+        showTask: function(id){
+//            var task = LaaS.request("task:entity", id);
+//            var taskView;
+//            LaaS.mainRegion.show(view);
+            $.when(LaaS.request('task:entity', {'id':id})).done(function(data){
+               var view = new TaskView(data);
+                LaaS.mainRegion.show(view);
+            });
         }
     });
 
