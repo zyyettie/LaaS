@@ -1,0 +1,16 @@
+.ui.centered.two.column.grid(style="margin-top:5%;")
+    .column
+        .ui.segment(style="padding-left:30px;padding-right:30px;")
+            .ui.secondary.pointing.menu(style="margin-bottom:30px;")
+                a.active.item(style="padding-left:0px;")
+                    h2
+                        |Workflows
+                a.item(style="padding-left:20px;")
+                    h2
+                        |Scenario
+            .ui.divided.items
+                |{{#each workflows}}
+                .item
+                    .content
+                        a.header(href="/workflows/{{id}}")  {{name}}
+                |{{/each}}
