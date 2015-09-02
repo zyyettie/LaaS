@@ -1,6 +1,9 @@
-package org.g6.laas.server.database.entity;
+package org.g6.laas.server.database.entity.task;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.g6.laas.server.database.entity.File;
+import org.g6.laas.server.database.entity.LaaSAuditable;
 import org.g6.laas.server.database.entity.user.User;
 
 import javax.persistence.*;
@@ -10,6 +13,7 @@ import org.joda.time.DateTime;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Table(name = "SCENARIO_HISTORY")
 public class ScenarioHistory extends LaaSAuditable<User> {
     private static final long serialVersionUID = 3863174063361308807L;
