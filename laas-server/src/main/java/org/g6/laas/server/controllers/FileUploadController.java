@@ -56,10 +56,10 @@ public class FileUploadController {
                 fileEntity.setFileName(generatedName);
                 fileEntity.setPath(uploaded.getCanonicalPath());
                 fileEntity.setSize(size);
-                fileRepository.save(fileEntity);
-                results.add(new UploadResult(fileName, size, "succeed"));
+                org.g6.laas.server.database.entity.File saved = fileRepository.save(fileEntity);
+                results.add(new UploadResult(saved.getId(),fileName, size, "succeed"));
             } catch (IOException e) {
-                results.add(new UploadResult(fileName, -1L, "failed"));
+                results.add(new UploadResult(-1L,fileName, -1L, "failed"));
             }
 
         }

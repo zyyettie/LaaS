@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UploadResult {
+    Long id;
     String fileName;
     Long size;
     String status;
