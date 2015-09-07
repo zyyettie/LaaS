@@ -1,16 +1,17 @@
 LaaS = new Marionette.Application();
 
 LaaS.addRegions({
-  mainNavRegion: '#header',
-  //subNavRegion: '#submenu',
+  headerRegion: '#header',
+  mainNavRegion: '#nav',
   mainRegion: '#main',
+  sidebarRegion: '#aside',
   footerRegion: '#footer',
   dialogRegion: '#login-dialog',
   registerRegion: '#register-dialog'
 });
 
-LaaS.navigate = function(route,options) { 
-  options || (options = {}); 
+LaaS.navigate = function(route,options) {
+  options || (options = {});
   Backbone.history.navigate(route, options);
 };
 

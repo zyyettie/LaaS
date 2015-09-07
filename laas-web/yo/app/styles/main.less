@@ -5,3 +5,32 @@
 body {
     background-color: #DADADA;
 }
+.container{
+    display: flex;
+    flex-flow: row wrap;
+    #header {
+        flex: 1 100%;
+        min-height:75px;
+    }
+    #footer {
+        flex: 1 100%;
+        min-height:200px;
+    }
+    #main {
+        flex: 2 0px;
+        order:2;
+        margin-left:20px;
+    }
+    #nav { order: 1; }
+    #aside { order: 3;}
+    #footer  { order: 4; }
+}
+
+
+#navigator.menu {
+    min-height:1900px;
+    min-width:250px;
+    font-size: larger;
+    padding-top: 15px;
+    padding-left:5px;
+}
