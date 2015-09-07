@@ -47,7 +47,7 @@ LaaS.module('Login', function(Login, LaaS, Backbone, Marionette) {
                    url: "/controllers/login",
                    data: JSON.stringify(user),
                    success: function(data){
-                       LaaS.navigate('/',true);
+                       LaaS.navigate('/home',true);
                    },
                    dataType: "json",
                    contentType: "application/json"
@@ -66,6 +66,7 @@ LaaS.module('Login', function(Login, LaaS, Backbone, Marionette) {
     LaaS.addInitializer(function() {
         new Marionette.AppRouter({
             appRoutes : {
+                '(/)': 'login',
                 'login(/)': 'login'
             },
             controller: new HomeController()
