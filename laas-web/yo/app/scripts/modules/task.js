@@ -37,9 +37,6 @@ LaaS.module('Task', function(Task, LaaS, Backbone, Marionette) {
             });
         },
         showTask: function(id){
-//            var task = LaaS.request("task:entity", id);
-//            var taskView;
-//            LaaS.mainRegion.show(view);
             $.when(LaaS.request('task:entity', {'id':id})).done(function(data){
                var view = new TaskView(data);
                 LaaS.mainRegion.show(view);
