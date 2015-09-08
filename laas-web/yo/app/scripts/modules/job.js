@@ -13,7 +13,11 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         },
         saveJob: function () {
             var json = Backbone.Syphon.serialize(this);
-            myJob.save(json);
+            if(json.name == '' || json.scenario == ''){
+                toastr.error('Please input name and select scenario');
+                return;
+            }
+            this.model.save(json);
         },
         runJob: function () {
             console.log("run the job");
