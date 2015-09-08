@@ -42,7 +42,7 @@ LaaS.module('Home', function(Home, LaaS, Backbone, Marionette) {
         LaaS.headerRegion.show(new HeaderView());
         LaaS.mainNavRegion.show(new NavView());
         LaaS.mainRegion.show(new MainView());
-        LaaS.sidebarRegion.show(new SideBarView());
+        //LaaS.sidebarRegion.show(new SideBarView());
         LaaS.footerRegion.show(new FooterView());
       }
   });

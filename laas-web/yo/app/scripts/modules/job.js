@@ -1,39 +1,19 @@
 LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
     'use strict';
 
-    var Job = Backbone.Model.extend({
-        urlRoot: "/api/v1/jobs",
-        defaults: {
-            name: '',
-            description: ''
-        },
-        setName: function (name) {
-            this.set({name: name});
-        }
-    });
-
-    var myJob = new Job();
-
     var JobView = Marionette.ItemView.extend({
-        initialize: function () {
-            this.render();
-        },
-        render: function () {
-            $('.ui.dropdown').dropdown();
-            this.$el.html(this.template(this.model.attributes));
-            return this;
+        onRender: function () {
+            this.$('select').dropdown();
         },
         template: JST['app/handlebars/job/add'],
-        model: myJob,
-
         events: {
             'click #job_save': 'saveJob',
-            'click #job_run': 'runJob',
-            'click .dropdown': 'switchscenario'
+            'click #job_run': 'runJob'
+            //'click .dropdown': 'switchscenario'
         },
         saveJob: function () {
-            console.log('save job data!');
-            myJob.save();
+            var json = Backbone.Syphon.serialize(this);
+            myJob.save(json);
         },
         runJob: function () {
             console.log("run the job");
@@ -57,7 +37,10 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
 
     var JobController = Marionette.Controller.extend({
         jobnew: function () {
-            LaaS.mainRegion.show(new JobView());
+            $.when(LaaS.request('job:new')).done(function(job){
+                LaaS.mainRegion.show(new JobView({model:job}));
+            });
+
         }
     });
 

@@ -4,7 +4,7 @@ LaaS.addRegions({
   headerRegion: '#header',
   mainNavRegion: '#nav',
   mainRegion: '#main',
-  sidebarRegion: '#aside',
+  //sidebarRegion: '#aside',
   footerRegion: '#footer',
   dialogRegion: '#login-dialog',
   registerRegion: '#register-dialog'
