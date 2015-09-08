@@ -13,8 +13,10 @@ LaaS.module('Home', function(Home, LaaS, Backbone, Marionette) {
       template : JST['app/handlebars/navigator'],
       onRender: function(){
           this.$('a.item').on('click',function(event){
+              event.preventDefault();
               $('a.item').removeClass('active');
               $(event.target).addClass('active');
+              LaaS.navigate($(this).attr('href'),true);
           });
       }
   });

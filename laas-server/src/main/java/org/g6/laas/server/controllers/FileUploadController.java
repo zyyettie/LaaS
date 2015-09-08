@@ -1,13 +1,12 @@
 package org.g6.laas.server.controllers;
 
-import com.google.common.io.ByteStreams;
-import com.google.common.io.Files;
 import org.g6.laas.server.database.repository.IFileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,25 +40,20 @@ public class FileUploadController {
             String todayFolder = dateFormatter.format(Calendar.getInstance());
             String fileName = file.getOriginalFilename();
             try {
-                InputStream inputSteam = file.getInputStream();
                 String generatedName = UUID.randomUUID().toString();
                 String path = uploadedPath + "/" + todayFolder + "/" + generatedName;
                 File uploaded = new File(path);
-                Files.createParentDirs(uploaded);
-                OutputStream outputStream = new FileOutputStream(uploaded);
-                long size = ByteStreams.copy(inputSteam, outputStream);
-                outputStream.flush();
-                outputStream.close();
-                inputSteam.close();
+                long size = file.getSize();
+                file.transferTo(uploaded);
                 org.g6.laas.server.database.entity.File fileEntity = new org.g6.laas.server.database.entity.File();
                 fileEntity.setOrigialName(fileName);
                 fileEntity.setFileName(generatedName);
                 fileEntity.setPath(uploaded.getCanonicalPath());
                 fileEntity.setSize(size);
                 org.g6.laas.server.database.entity.File saved = fileRepository.save(fileEntity);
-                results.add(new UploadResult(saved.getId(),fileName, size, "succeed"));
+                results.add(new UploadResult(saved.getId(), fileName, size, "succeed"));
             } catch (IOException e) {
-                results.add(new UploadResult(-1L,fileName, -1L, "failed"));
+                results.add(new UploadResult(-1L, fileName, -1L, "failed"));
             }
 
         }
