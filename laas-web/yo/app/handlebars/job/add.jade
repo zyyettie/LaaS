@@ -1,0 +1,15 @@
+.ui.centered.one.column.grid(style="margin-top:5%;")
+    .ui.input#name
+        input(type="text",placeholder="name")
+    .ui.input#desc
+        input(type="text",placeholder="description")
+    select.ui.dropdown
+        option(value="") Select Scenario
+        option(value="TopN") TopN
+        option(value="RADShow") RADShow
+    p
+    .newArea
+    button.ui.primary.button#job_save
+        |Save
+    button.ui.primary.button#job_run
+        |Run
