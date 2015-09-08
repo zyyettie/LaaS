@@ -10,7 +10,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>lass-server</artifactId>
+    <artifactId>laas-server</artifactId>
     <packaging>war</packaging>
     <name>LaaS Web Application</name>
 
