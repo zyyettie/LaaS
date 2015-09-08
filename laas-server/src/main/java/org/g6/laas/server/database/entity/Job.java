@@ -35,6 +35,6 @@ public class Job extends LaaSAuditable<User> {
     @OneToMany(mappedBy = "job")
     private Collection<JobRunning> jobRunnings = new ArrayList<>();
 
-    @OneToMany
+    @ManyToMany
     private Collection<File> files = new ArrayList<>();
 }

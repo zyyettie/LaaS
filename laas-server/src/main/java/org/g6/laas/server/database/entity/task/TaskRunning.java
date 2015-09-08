@@ -8,8 +8,6 @@ import org.g6.laas.server.database.entity.result.TaskResult;
 import org.g6.laas.server.database.entity.user.User;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
 
 @Entity
 @Data
@@ -27,8 +25,8 @@ public class TaskRunning extends LaaSAuditable<User> {
 
     private String status;
 
-    @OneToMany
-    private Collection<TaskResult> results = new ArrayList<>();
+    @OneToOne
+    private TaskResult result;
 
     //million second
     private Long duration;
