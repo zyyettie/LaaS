@@ -21,7 +21,7 @@ public class RestfulConfiguration extends RepositoryRestMvcConfiguration {
     @Override
     protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
         config.exposeIdsFor(User.class,Role.class, Notification.class,Inbox.class, Category.class, File.class, FileType.class,
-                            Product.class, Scenario.class,ScenarioHistory.class,Task.class, TaskHistory.class, Workflow.class);
+                            Product.class, Scenario.class,Task.class, TaskRunning.class, Job.class, JobRunning.class);
         try {
             config.setReturnBodyOnCreate(true);
             config.setReturnBodyOnUpdate(true);

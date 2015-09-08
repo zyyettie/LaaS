@@ -9,7 +9,6 @@ import org.g6.laas.server.database.entity.Category;
 import org.g6.laas.server.database.entity.LaaSAuditable;
 import org.g6.laas.server.database.entity.Product;
 import org.g6.laas.server.database.entity.user.User;
-import org.springframework.data.annotation.CreatedBy;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,26 +27,14 @@ public class Scenario extends LaaSAuditable<User> {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "PRODUCT_ID")
     private Product product;
 
-    @ManyToMany(cascade = CascadeType.REFRESH)
-    @JoinTable(name = "SCENARIO_CATEGORY",
-            inverseJoinColumns = @JoinColumn(name = "CATEGORY_ID"),
-            joinColumns = @JoinColumn(name = "SCENARIO_ID"))
+    @ManyToMany
     private Collection<Category> categories = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "USER_ID")
-    @CreatedBy
-    private User user;
-
-    @ManyToMany(cascade = CascadeType.REFRESH)
-    @JoinTable(name = "SCENARIO_WORKFLOW",
-            inverseJoinColumns = @JoinColumn(name = "WORKFLOW_ID"),
+    @ManyToMany
+    @JoinTable(name = "SCENARIO_TASK",
+            inverseJoinColumns = @JoinColumn(name = "TASK_ID"),
             joinColumns = @JoinColumn(name = "SCENARIO_ID"))
-    private Collection<Workflow> workflows = new ArrayList<>();
-
-    @OneToMany(mappedBy = "scenario")
-    private java.util.Collection<ScenarioHistory> scenarioHistory = new ArrayList<>();
+    private Collection<Task> tasks = new ArrayList<>();
 }

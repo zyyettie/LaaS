@@ -3,7 +3,7 @@ package org.g6.laas.server.database.entity.user;
 import lombok.Data;
 import org.g6.laas.server.database.entity.*;
 import org.g6.laas.server.database.entity.task.Task;
-import org.g6.laas.server.database.entity.task.TaskHistory;
+import org.g6.laas.server.database.entity.task.TaskRunning;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -46,5 +46,5 @@ public class User extends LaaSPersistable {
     private Collection<Task> tasks = new ArrayList<>();
 
     @OneToMany(mappedBy="createdBy")
-    private Collection<TaskHistory> taskHistory = new ArrayList<>();
+    private Collection<TaskRunning> taskRunning = new ArrayList<>();
 }

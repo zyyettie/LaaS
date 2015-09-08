@@ -3,9 +3,8 @@ package org.g6.laas.server.database.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.g6.laas.server.database.entity.task.Workflow;
+import org.g6.laas.server.database.entity.task.Scenario;
 import org.g6.laas.server.database.entity.user.User;
-import org.springframework.data.annotation.CreatedBy;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -25,23 +24,17 @@ public class Job extends LaaSAuditable<User> {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "PRODUCT_ID")
     private Product product;
 
-    @ManyToOne
-    @JoinColumn(name = "USER_ID")
-    @CreatedBy
-    private User user;
+    @ManyToMany
+    private Collection<Category> categories = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.REFRESH)
-    @JoinTable(name = "JOB_SCENARIO",
-            inverseJoinColumns = @JoinColumn(name = "SCENARIO_ID"),
-            joinColumns = @JoinColumn(name = "JOB_ID"))
-    private Collection<Workflow> scenarios = new ArrayList<>();
+    @ManyToMany
+    private Collection<Scenario> scenarios = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.REFRESH)
+    @OneToMany(mappedBy = "job")
+    private Collection<JobRunning> jobRunnings = new ArrayList<>();
+
+    @OneToMany
     private Collection<File> files = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.REFRESH)
-    private Collection<JobResult> results = new ArrayList<>();
 }

@@ -7,8 +7,6 @@ import org.g6.laas.server.database.entity.LaaSAuditable;
 import org.g6.laas.server.database.entity.user.User;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
 
 @Entity
 @Table(name = "WORKFLOW",uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
@@ -22,13 +20,4 @@ public class Workflow extends LaaSAuditable<User> {
     private String name;
 
     private String description;
-
-    @ManyToMany(cascade = CascadeType.REFRESH, mappedBy = "workflows")
-    private Collection<Scenario> scenarios = new ArrayList<>();
-
-    @ManyToMany(cascade = CascadeType.REFRESH)
-    @JoinTable(name = "WORKFLOW_TASK",
-            inverseJoinColumns = @JoinColumn(name = "TASK_ID"),
-            joinColumns = @JoinColumn(name = "WORKFLOW_ID"))
-    private Collection<Task> tasks = new ArrayList<>();
 }
