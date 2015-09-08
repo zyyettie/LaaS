@@ -23,4 +23,8 @@ public class File extends LaaSAuditable<User> {
     private String path;
 
     private String description;
+
+    private String origialName;
+
+    private Long size;
 }
