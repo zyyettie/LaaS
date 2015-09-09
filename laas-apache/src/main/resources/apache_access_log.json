@@ -1,0 +1,36 @@
+{"file_name":"access.log", "date_time_format":"MM/dd/yyyy HH:mm:ss","lines":
+    [
+        {"key":"RTE D DBACCESS","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D.+DBACCESS.+(\\d+\\.\\d+)\\s+seconds.*",
+            "fields":[
+                {"name":"process_id","type":"Integer","sortable":"false"},
+                {"name":"thread_id","type":"Integer","sortable":"false"},
+                {"name":"datetime","type":"DateTime","sortable":"false"},
+                {"name":"execution_time","type":"Double","sortable":"true"}
+            ]
+        },
+        {"key":"REGEX:SCRIPTTRACE","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D SCRIPTTRACE:.+elapsed: (\\d+) ms",
+            "fields":[
+                {"name":"process id","type":"Integer","sortable":"false"},
+                {"name":"thread_id","type":"Integer","sortable":"false"},
+                {"name":"datetime","type":"DateTime","sortable":"false"},
+                {"name":"execution_time","type":"Double","sortable":"true"}
+            ]
+        },
+        {"key":"REGEX:RTE D DBQUERY","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D DBQUERY(?:\\^[^\\^]+){6}\\^(\\d+\\.\\d+).*",
+            "fields":[
+                {"name":"process id","type":"Integer","sortable":"false"},
+                {"name":"thread_id","type":"Integer","sortable":"false"},
+                {"name":"datetime","type":"DateTime","sortable":"false"},
+                {"name":"execution_time","type":"Double","sortable":"true"}
+            ]
+        },
+        {"key":"REGEX:RTE D DBFIND","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D DBFIND(?:\\^[^\\^]+){6}\\^(\\d+\\.\\d+).*",
+            "fields":[
+                {"name":"process id","type":"Integer","sortable":"false"},
+                {"name":"thread_id","type":"Integer","sortable":"false"},
+                {"name":"datetime","type":"DateTime","sortable":"false"},
+                {"name":"execution_time","type":"Double","sortable":"true"}
+            ]
+        }
+    ]
+}
