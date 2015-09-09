@@ -19,4 +19,5 @@ toastr.options.positionClass = 'toast-top-center';
 
 LaaS.on('start', function() {
   Backbone.history.start({ pushState: true });
+  Backbone.Intercept.start();
 });
