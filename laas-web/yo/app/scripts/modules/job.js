@@ -17,7 +17,11 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 toastr.error('Please input name and select scenario');
                 return;
             }
-            this.model.save(json);
+            this.model.save(json,{patch:true,success:function(){
+                toastr.info('Save Job successfully.');
+            },error:function(){
+                toastr.error('Save Job failed.');
+            }});
         },
         runJob: function () {
             console.log("run the job");
