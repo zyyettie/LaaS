@@ -19,7 +19,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             }
             this.model.save(json,{patch:true,success:function(){
                 toastr.info('Save Job successfully.');
-                $('h2').text('Editing Job');
+                $('#title').text('Editing Job');
 
             },error:function(){
                 toastr.error('Save Job failed.');
