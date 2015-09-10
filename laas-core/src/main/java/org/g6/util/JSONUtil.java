@@ -1,8 +1,10 @@
 package org.g6.util;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.Map;
 
 public class JSONUtil {
     /**
@@ -40,5 +42,13 @@ public class JSONUtil {
     public static <T> T fromJson(String str, Class<T> type) {
         Gson gson = new Gson();
         return gson.fromJson(str, type);
+    }
+
+    public static Map<String, String> fromJson(String jsonStr) {
+        Map<String, String> map = fromJson(
+                jsonStr, new TypeToken<Map<String, String>>() {
+        }.getType());
+
+        return map;
     }
 }
