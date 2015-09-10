@@ -1,23 +1,27 @@
 package org.g6.laas.server.controllers;
 
+import com.google.common.io.ByteStreams;
+import com.google.common.io.Files;
 import org.g6.laas.server.database.repository.IFileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1")
 public class FileUploadController {
 
-    private static final String uploadedPath = "/uploaded";
+    @Autowired
+    private ServletContext context;
 
     @Autowired
     private IFileRepository fileRepository;
@@ -33,18 +37,24 @@ public class FileUploadController {
     public
     @ResponseBody
     Collection<UploadResult> handleFileUpload(
-            @RequestParam("files") MultipartFile[] files) {
+            @RequestParam("files[]") MultipartFile[] files, HttpServletRequest request) {
+        String uploadedPath = context.getRealPath("/upload");
         Collection<UploadResult> results = new ArrayList<>();
         for (MultipartFile file : files) {
             SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-            String todayFolder = dateFormatter.format(Calendar.getInstance());
+            String todayFolder = dateFormatter.format(new Date());
             String fileName = file.getOriginalFilename();
             try {
                 String generatedName = UUID.randomUUID().toString();
                 String path = uploadedPath + "/" + todayFolder + "/" + generatedName;
                 File uploaded = new File(path);
+                Files.createParentDirs(uploaded);
                 long size = file.getSize();
-                file.transferTo(uploaded);
+                InputStream inputStream = file.getInputStream();
+                OutputStream outputStream = new FileOutputStream(path);
+                ByteStreams.copy(inputStream, outputStream);
+                inputStream.close();
+                outputStream.close();
                 org.g6.laas.server.database.entity.File fileEntity = new org.g6.laas.server.database.entity.File();
                 fileEntity.setOrigialName(fileName);
                 fileEntity.setFileName(generatedName);

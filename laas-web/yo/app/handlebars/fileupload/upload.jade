@@ -1,0 +1,20 @@
+.ui.grid
+    .row
+        .two.wide.column
+            .ui.teal.fluid.left.labeled.icon.button#attaching Attaching Logs   ....
+                i.plus.icon
+        .two.wide.column
+            .ui.teal.fluid.left.labeled.icon.button#upload Upload
+                i.cloud.upload.icon
+    .row
+        .eight.wide.column
+            form(action="/upload",method="post",enctype="multipart/form-data")
+    .row
+        .eight.wide.column
+            .ui.divided.list
+    .row
+        .eight.wide.column
+            #progress.ui.teal.progress(style="margin-top:20px;",data-percent="0")
+                .bar
+                .label Uploading Logs
+
