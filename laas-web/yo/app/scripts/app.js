@@ -15,6 +15,9 @@ LaaS.navigate = function(route,options) {
   Backbone.history.navigate(route, options);
 };
 
+toastr.options.positionClass = 'toast-top-center';
+
 LaaS.on('start', function() {
   Backbone.history.start({ pushState: true });
+  Backbone.Intercept.start();
 });

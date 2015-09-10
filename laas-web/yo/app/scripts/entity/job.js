@@ -5,7 +5,7 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
 
     var JobModel = Backbone.Model.extend({
         url: function(){
-            var url = this.id ? baseUrl+"/" + this.id : baseUrl;
+            return this.id ? baseUrl+"/" + this.id : baseUrl;
         },
         isNew: function () {
             return this.id == null || this.id == undefined;
