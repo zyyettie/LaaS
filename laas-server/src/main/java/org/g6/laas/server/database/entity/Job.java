@@ -23,6 +23,8 @@ public class Job extends LaaSAuditable<User> {
 
     private String description;
 
+    private String parameters;
+
     @ManyToOne
     private Product product;
 
