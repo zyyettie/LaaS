@@ -12,6 +12,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             //'click .dropdown': 'switchscenario'
         },
         saveJob: function () {
+            var that = this;
             var json = Backbone.Syphon.serialize(this);
             if(json.name == '' || json.scenario == ''){
                 toastr.error('Please input name and select scenario.');
@@ -19,6 +20,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             }
             this.model.save(json,{patch:true,success:function(){
                 toastr.info('Save Job successfully.');
+                LaaS.navigate('/jobs/' + that.model.id + '/edit');
                 $('#title').text('Editing Job');
 
             },error:function(){
@@ -50,7 +52,6 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             $.when(LaaS.request('job:new')).done(function(job){
                 LaaS.mainRegion.show(new JobView({model:job}));
             });
-
         }
     });
 
