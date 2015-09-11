@@ -11,8 +11,9 @@
                         label Job Scenario
                         select.ui.dropdown(name="xxxx")
                             option(value="") Select Scenario
-                            option(value="TopN") TopN
-                            option(value="RADShow") RADShow
+                            |{{#each scenarios}}
+                            option(value="{{id}}") {{name}}
+                            |{{/each}}
                 .field
                     label Job Description
                     textarea(type="text",rows="3",name="description",placeholder="description")
