@@ -19,6 +19,8 @@ import java.util.List;
  */
 public class TopNQueryTask extends SMRTETask<List<Line>> {
     private int N = 50;
+    private List<String> files;
+    private String order = "desc";
     private List<Line> lines = new ArrayList<>();
 
     @Override
@@ -27,9 +29,7 @@ public class TopNQueryTask extends SMRTETask<List<Line>> {
         return ordering.leastOf(lines, N);
     }
 
-    public TopNQueryTask(int topN, String file) {
-        this.N = topN;
-
+    public TopNQueryTask() {
         Rule rule = new KeywordRule("RTE D DBQUERY");
         rule.addAction(new RuleAction() {
             @Override
@@ -39,7 +39,11 @@ public class TopNQueryTask extends SMRTETask<List<Line>> {
                 lines.add(line);
             }
         });
+        addRule(rule);
+    }
 
-        initContext(file, rule);
+    @Override
+    List<String> getFiles() {
+         return files;
     }
 }

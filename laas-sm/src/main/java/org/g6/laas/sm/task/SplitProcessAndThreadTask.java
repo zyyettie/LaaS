@@ -55,6 +55,11 @@ public class SplitProcessAndThreadTask extends SMRTETask<String> {
         return tempRootPath;
     }
 
+    @Override
+    List<String> getFiles() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     DefaultInputFormatProvider getProvider() {
         DefaultInputFormatProvider provider = getProvider();
         provider.setNames(new String[]{"DEFAULT"});
@@ -73,7 +78,7 @@ public class SplitProcessAndThreadTask extends SMRTETask<String> {
             }
         });
 
-        initContext(file, rule);
+        //TODO
     }
 
     private void handleLine(Map<String, ProcessIdHelper> splitMap, SplitResult result, Line line) {

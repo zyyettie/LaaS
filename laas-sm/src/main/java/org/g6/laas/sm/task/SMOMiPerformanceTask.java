@@ -73,6 +73,12 @@ public class SMOMiPerformanceTask extends SMRTETask<List<String>> {
                 splitResultList.add(result);
             }
         });
-        initContext(file, rule);
+        //initContext(file, rule);
+        //TODO
+    }
+
+    @Override
+    List<String> getFiles() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

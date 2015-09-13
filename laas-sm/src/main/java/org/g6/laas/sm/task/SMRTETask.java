@@ -25,26 +25,20 @@ import java.util.List;
  */
 public abstract class SMRTETask<T> extends AbstractAnalysisTask<T> {
     DefaultInputFormatProvider provider;
+    private List<Rule> rules = new ArrayList<>();
 
-    protected void initContext(String file, Rule rule) {
-        initContext(file, new Rule[]{rule});
+    @Override
+    protected void started() {
+        super.started();
+        initContext();
     }
 
-    protected void initContext(String[] files, Rule rule) {
-        initContext(files, new Rule[]{rule});
-    }
-
-    protected void initContext(String file, Rule[] rules) {
-        initContext(new String[]{file}, rules);
-    }
-
-
-    protected void initContext(String[] files, Rule[] rules) {
+    private void initContext() {
         FormatProvider provider = getProvider();
         InputFormat inputFormat = provider.getInputFormat();
 
         List<ILogFile> fileList = new ArrayList<>();
-        for (String file : files) {
+        for (String file : getFiles()) {
             fileList.add(new LogFile(file));
         }
 
@@ -62,6 +56,12 @@ public abstract class SMRTETask<T> extends AbstractAnalysisTask<T> {
 
         setContext(context);
     }
+
+    void addRule(Rule rule){
+         rules.add(rule);
+    }
+
+    abstract List<String> getFiles();
 
     DefaultInputFormatProvider getProvider() {
         if (provider == null) {

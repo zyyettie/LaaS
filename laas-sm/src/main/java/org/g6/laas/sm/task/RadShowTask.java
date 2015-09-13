@@ -100,6 +100,12 @@ public class RadShowTask extends SMRTETask<LineSetUnit> {
             }
         });
 
-        initContext(file, rule);
+        //initContext(file, rule);
+        //TODO
+    }
+
+    @Override
+    List<String> getFiles() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }
