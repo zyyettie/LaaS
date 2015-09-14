@@ -2,11 +2,13 @@ package org.g6;
 
 import org.g6.laas.core.engine.StrategyAnalysisEngine;
 import org.g6.laas.core.engine.ThreadPoolExecutionStrategy;
+import org.g6.laas.core.engine.task.AnalysisTask;
 import org.g6.laas.core.log.line.Line;
 import org.g6.laas.core.log.unit.LineSetUnit;
 import org.g6.laas.sm.task.*;
 import org.g6.util.FileUtil;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +20,8 @@ public class DemoTest {
     public static void main(String[] args) {
         //SpringApplication.run(DemoTest.class, args);
         //runSplitProcessAndThreadTask();
-        //runTopNQueryTask();
-        runLoginTimeInfoTask();
+        runTopNQueryTask();
+        //runLoginTimeInfoTask();
         //runRadShowTask();
         //runSMOMiPerformanceTask();
     }
@@ -74,12 +76,24 @@ public class DemoTest {
     static void runTopNQueryTask() {
         String inputFile = "e:\\sm.log";
         String outputFile = "e:\\sm_top50.log";
-        TopNQueryTask task = new TopNQueryTask(50, inputFile);
+        //here remove the arguments from constructor, need to add if you want to run this task from here.
+        //TopNQueryTask task = new TopNQueryTask();
+
+        Class taskClass;
+        Object taskObj = null;
+        try {
+            taskClass = Class.forName("org.g6.laas.sm.task.TopNQueryTask");
+            Constructor constructor = taskClass.getConstructor();
+            taskObj = constructor.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
 
         StrategyAnalysisEngine engine = new StrategyAnalysisEngine();
         engine.setStrategy(new ThreadPoolExecutionStrategy());
 
-        Future<List<Line>> future = engine.submit(task);
+        Future<List<Line>> future = engine.submit((AnalysisTask)taskObj);
+        //Future<List<Line>> future = engine.submit(task);
         engine.shutdown();
 
         try {
