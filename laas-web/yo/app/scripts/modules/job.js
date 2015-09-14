@@ -6,18 +6,19 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             this.job = options.model.attributes;
             this.scenarioList = options.scenarioList;
             this.fileList = options.fileList;
+            this.selected = options.selected;
         },
         serializeData:function(){
-            return {job: this.job, scenarioList:this.scenarioList, fileList:this.fileList}
+            return {job: this.job, scenarioList:this.scenarioList, fileList:this.fileList, selected:this.selected};
         },
-        onRender: function () {
-            this.$('select').dropdown(//{
+        //onRender: function () {
+        //    this.$('select').dropdown(//{
                 /*action: 'select',
                 onChange: function(value, text, $selectedItem) {
                     //this.showParameters(value);
                 //}
-            }*/);
-        },
+            });
+        },*/
         template: function (data) {
             var template;
             var html;
@@ -26,6 +27,11 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 html = template(data);
             } else {
                 template = JST['app/handlebars/job/detail'];
+                var json = JSON.parse(data.job.parameters);
+                data.job.N = json["N"];
+                data.job.scenarioList = data.scenarioList;
+                data.job.selectedid = data.selected[0].id;
+                data.job.selectedname = data.selected[0].name;
                 html = template(data.job);
             }
             return html;
@@ -99,8 +105,17 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         showJob: function (id) {
             $.when(LaaS.request('job:entity', {'id':id}), LaaS.request('scenario:entities'), LaaS.request('file:entities'))
                 .done(function(job, scenario, file){
-                var view = new JobView({model:job, scenarioList:scenario.scenarios, fileList:file.files});
-                LaaS.mainRegion.show(view);
+                var scenarioModel = new LaaS.ScenarioModel();
+                scenarioModel.url = job.attributes._links.scenarios.href;
+                scenarioModel.fetch({
+                    success: function(model, response) {
+                        var view = new JobView({model:job, scenarioList:scenario.scenarios, fileList:file.files, selected:response._embedded.scenarios});
+                        LaaS.mainRegion.show(view);
+                    },
+                    error: function(err) {
+                        console.log(err);
+                    }
+                })
             });
         },
         showJobs: function() {

@@ -3,7 +3,7 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
 
     var baseUrl = '/api/v1/scenarios';
 
-    var ScenarioModel = Backbone.Model.extend({
+    LaaS.ScenarioModel = Backbone.Model.extend({
         url: function(){
             var url = this.id ? baseUrl+"/" + this.id : baseUrl;
             return url + "?projection=" + this.projection;
