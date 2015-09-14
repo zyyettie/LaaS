@@ -56,7 +56,7 @@ public class FileUploadController {
                 inputStream.close();
                 outputStream.close();
                 org.g6.laas.server.database.entity.File fileEntity = new org.g6.laas.server.database.entity.File();
-                fileEntity.setOrigialName(fileName);
+                fileEntity.setOriginalName(fileName);
                 fileEntity.setFileName(generatedName);
                 fileEntity.setPath(uploaded.getCanonicalPath());
                 fileEntity.setSize(size);

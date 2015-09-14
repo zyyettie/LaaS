@@ -7,6 +7,7 @@ insert into CATEGORY(ID, NAME) values(2, 'Debug')
 
 insert into FILE_TYPE(ID, TYPE) values(1, 'RTE Log')
 insert into FILE_TYPE(ID, TYPE) values(2, 'SM Config')
+insert into FILE_TYPE(ID, TYPE) values(3, 'Result')
 
 insert into TASK(ID, NAME, CLASSNAME) values(1, 'Task - Top N', 'org.g6.laas.sm.task.TopNQueryTask')
 insert into TASK(ID, NAME, CLASSNAME) values(2, 'Task - RAD Show', 'org.g6.laas.sm.task.RadShowTask')
@@ -29,5 +30,9 @@ insert into SCENARIO_TASK(SCENARIO_ID, TASK_ID) values(4, 4)
 insert into SCENARIO_TASK(SCENARIO_ID, TASK_ID) values(5, 5)
 insert into SCENARIO_TASK(SCENARIO_ID, TASK_ID) values(6, 6)
 
-
+insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(1, 'Test1.log', 'Test Path', '1', 'ORIGINAL Test1.log')
+insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(2, 'Test2.log', 'Test Path', '1', 'ORIGINAL Test2.log')
+insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(3, 'Test3.log', 'Test Path', '1', 'ORIGINAL Test3.log')
+insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(4, 'Test4.log', 'Test Path', '1', 'ORIGINAL Test4.log')
+insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(5, 'Test5.log', 'Test Path', '1', 'ORIGINAL Test5.log')
 

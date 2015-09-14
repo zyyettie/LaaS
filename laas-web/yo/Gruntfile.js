@@ -31,7 +31,8 @@ module.exports = function (grunt) {
     if (/.*\.js/.test(url) || /.*\.css/.test(url) || /.*fonts\/icons\./.test(url) || (/.*\/images\//.test(url))) {
       return next();
     }
-    if (/^\/tasks/.test(url) || /^\/login/.test(url) || /^\/user/.test(url) || /^\/scenarios/.test(url)|| /^\/home/.test(url) || /^\/job/.test(url) || /^\/upload/.test(url)) {
+    if (/^\/tasks/.test(url) || /^\/login/.test(url) || /^\/user/.test(url) || /^\/scenarios/.test(url)
+        || /^\/files/.test(url) || /^\/home/.test(url) || /^\/job/.test(url) || /^\/upload/.test(url)) {
       req.url = '/index.html';
     }
     return next();

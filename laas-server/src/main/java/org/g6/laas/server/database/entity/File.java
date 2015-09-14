@@ -1,6 +1,7 @@
 package org.g6.laas.server.database.entity;
 
 
+import lombok.EqualsAndHashCode;
 import org.g6.laas.server.database.entity.user.User;
 import lombok.Data;
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "FILE",uniqueConstraints = @UniqueConstraint(columnNames = {"FILE_NAME", "PATH"}))
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class File extends LaaSAuditable<User> {
 
     private static final long serialVersionUID = -8503475553208415619L;
@@ -24,7 +26,7 @@ public class File extends LaaSAuditable<User> {
 
     private String description;
 
-    private String origialName;
+    private String originalName;
 
     private Long size;
 }

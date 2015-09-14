@@ -3,13 +3,19 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
 
     var JobView = Marionette.ItemView.extend({
         initialize: function (options) {
-            this.scenarioList = options.scenarios;
+            this.scenarioList = options.scenarioList;
+            this.fileList = options.fileList;
         },
         serializeData:function(){
-            return {scenarioList:this.scenarioList};
+            return {scenarioList:this.scenarioList, fileList:this.fileList};
         },
         onRender: function () {
-            this.$('select').dropdown();
+            this.$('select').dropdown({
+                action: 'select',
+                onChange: function(value, text, $selectedItem) {
+                    //this.showParameters(value);
+                }
+            });
         },
         template: function (data) {
             var template = JST['app/handlebars/job/add'];
@@ -62,8 +68,9 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
 
     var JobController = Marionette.Controller.extend({
         jobnew: function () {
-            $.when(LaaS.request('job:new'), LaaS.request('scenario:entities')).done(function(job, data){
-                LaaS.mainRegion.show(new JobView({model:job, scenarios:data.scenarios}));
+            $.when(LaaS.request('job:new'), LaaS.request('scenario:entities'), LaaS.request('file:entities'))
+                .done(function(job, scenario, file){
+                LaaS.mainRegion.show(new JobView({model:job, scenarioList:scenario.scenarios, fileList:file.files}));
             });
         }
     });
