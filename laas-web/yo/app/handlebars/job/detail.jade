@@ -1,0 +1,28 @@
+.ui.centered.grid
+    .twelve.wide.column
+        .ui.segment(style="margin-top:5px;padding:20px 40px;")
+            h2#title Job Detail
+            form.ui.form
+                .two.fields
+                    .field
+                        label Job Name
+                        input(type="text",name="name",placeholder="name")
+                    .field
+                        label Job Scenario
+                        select.ui.dropdown(name="selectedScenario")
+                            option(value="") Select Scenario
+                            |{{#each scenarioList}}
+                            option(value="{{id}}") {{name}}
+                            |{{/each}}
+                .field
+                    label Job Description
+                    textarea(type="text",rows="3",name="description",placeholder="description")
+                .two.fields
+                    .field
+                        label N
+                        input(type="text",name="N",placeholder="50")
+                .two.fields(style="margin-top:100px;margin-bottom:70px;")
+                    .field(style="padding-right:50px;")
+                         .ui.teal.large.fluid.button#job_save Save
+                    .field(style="padding-left:50px;")
+                         .ui.teal.large.fluid.button#job_run Save & Run

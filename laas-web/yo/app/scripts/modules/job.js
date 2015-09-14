@@ -3,23 +3,31 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
 
     var JobView = Marionette.ItemView.extend({
         initialize: function (options) {
+            this.job = options.model.attributes;
             this.scenarioList = options.scenarioList;
             this.fileList = options.fileList;
         },
         serializeData:function(){
-            return {scenarioList:this.scenarioList, fileList:this.fileList};
+            return {job: this.job, scenarioList:this.scenarioList, fileList:this.fileList}
         },
         onRender: function () {
-            this.$('select').dropdown({
-                action: 'select',
+            this.$('select').dropdown(//{
+                /*action: 'select',
                 onChange: function(value, text, $selectedItem) {
                     //this.showParameters(value);
-                }
-            });
+                //}
+            }*/);
         },
         template: function (data) {
-            var template = JST['app/handlebars/job/add'];
-            var html = template(data);
+            var template;
+            var html;
+            if (data.job.id == undefined) {
+                template = JST['app/handlebars/job/add'];
+                html = template(data);
+            } else {
+                template = JST['app/handlebars/job/detail'];
+                html = template(data.job);
+            }
             return html;
         },
         events: {
@@ -34,9 +42,10 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 toastr.error('Please input name and select scenario.');
                 return;
             }
+            json.parameters = JSON.stringify({N:json['N']});
             json.scenarios = [];
             json.scenarios.push("/api/v1/scenarios/"+json.selectedScenario);
-            //json.scenarios = "/api/v1/scenarios/"+json.selectedScenario;
+
             this.model.save(json,{patch:true,success:function(){
                 toastr.info('Save Job successfully.');
                 LaaS.navigate('/jobs/' + that.model.id + '/edit');
@@ -66,11 +75,38 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         }
     });
 
+    var JobListView = Marionette.ItemView.extend({
+        initialize : function(options){
+            this.jobs = options.jobs;
+        },
+        template : function(data){
+            var template = JST['app/handlebars/job/list'];
+            var html = template(data);
+            return html;
+        },
+        serializeData:function(){
+            return {jobs:this.jobs};
+        }
+    });
+
     var JobController = Marionette.Controller.extend({
         jobnew: function () {
             $.when(LaaS.request('job:new'), LaaS.request('scenario:entities'), LaaS.request('file:entities'))
                 .done(function(job, scenario, file){
                 LaaS.mainRegion.show(new JobView({model:job, scenarioList:scenario.scenarios, fileList:file.files}));
+            });
+        },
+        showJob: function (id) {
+            $.when(LaaS.request('job:entity', {'id':id}), LaaS.request('scenario:entities'), LaaS.request('file:entities'))
+                .done(function(job, scenario, file){
+                var view = new JobView({model:job, scenarioList:scenario.scenarios, fileList:file.files});
+                LaaS.mainRegion.show(view);
+            });
+        },
+        showJobs: function() {
+            $.when(LaaS.request('job:entities')).done(function(data){
+                var view = new JobListView(data);
+                LaaS.mainRegion.show(view);
             });
         }
     });
@@ -79,7 +115,9 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
     LaaS.addInitializer(function () {
         new Marionette.AppRouter({
             appRoutes: {
-                'jobnew(/)': 'jobnew'
+                'jobnew(/)': 'jobnew',
+                'jobs(/)': 'showJobs',
+                'jobs/:id(/)': 'showJob'
             },
             controller: new JobController()
         });
