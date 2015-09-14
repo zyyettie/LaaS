@@ -44,7 +44,7 @@ public class JobController {
 
     @RequestMapping(value = "/controllers/jobs/{jobId}")
     ResponseEntity<String> runJob(@PathVariable Long jobId) {
-        prepareTestDate();
+        prepareTestData();
 
         Job job = jobRepo.findOne(jobId);
         JobRunning jobRunning = genRunningRecords4JobAndTask(job);
@@ -57,7 +57,7 @@ public class JobController {
         return new ResponseEntity("{\"id\":" + job.getId() + "}", HttpStatus.OK);
     }
 
-    private void prepareTestDate() {
+    private void prepareTestData() {
         Job myJob = new Job();
         myJob.setName("Job" + Math.random());
         myJob.setParameters("{\"N\":\"60\", \"order\":\"desc\"}");
