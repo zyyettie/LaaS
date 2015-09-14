@@ -9,9 +9,9 @@
                         input(type="text",name="name",placeholder="name")
                     .field
                         label Job Scenario
-                        select.ui.dropdown(name="xxxx")
+                        select.ui.dropdown(name="selectedScenario")
                             option(value="") Select Scenario
-                            |{{#each scenarios}}
+                            |{{#each scenarioList}}
                             option(value="{{id}}") {{name}}
                             |{{/each}}
                 .field

@@ -3,10 +3,10 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
 
     var JobView = Marionette.ItemView.extend({
         initialize: function (options) {
-            this.scenarios = options.scenarios;
+            this.scenarioList = options.scenarios;
         },
         serializeData:function(){
-            return {scenarios:this.scenarios};
+            return {scenarioList:this.scenarioList};
         },
         onRender: function () {
             this.$('select').dropdown();
@@ -28,6 +28,9 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 toastr.error('Please input name and select scenario.');
                 return;
             }
+            json.scenarios = [];
+            json.scenarios.push("/api/v1/scenarios/"+json.selectedScenario);
+            //json.scenarios = "/api/v1/scenarios/"+json.selectedScenario;
             this.model.save(json,{patch:true,success:function(){
                 toastr.info('Save Job successfully.');
                 LaaS.navigate('/jobs/' + that.model.id + '/edit');
