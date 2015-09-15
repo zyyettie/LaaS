@@ -11,14 +11,14 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         serializeData:function(){
             return {job: this.job, scenarioList:this.scenarioList, fileList:this.fileList, selected:this.selected};
         },
-        //onRender: function () {
-        //    this.$('select').dropdown(//{
-                /*action: 'select',
+        onRender: function () {
+            this.$('select').dropdown(/*{
+                action: 'select',
                 onChange: function(value, text, $selectedItem) {
                     //this.showParameters(value);
                 //}
-            });
-        },*/
+            }*/);
+        },
         template: function (data) {
             var template;
             var html;
