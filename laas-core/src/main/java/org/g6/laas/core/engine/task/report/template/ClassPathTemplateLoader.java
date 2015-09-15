@@ -1,4 +1,4 @@
-package org.g6.laas.core.engine.task.report;
+package org.g6.laas.core.engine.task.report.template;
 
 import org.g6.laas.core.engine.task.report.template.TemplateLoader;
 

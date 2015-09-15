@@ -8,6 +8,7 @@ import java.util.Map;
 
 @NoArgsConstructor
 public class ReportModel {
+    
     private Map<String, Object> attributes = new HashMap<>();
 
     public ReportModel(Map<String, Object> attributes) {
