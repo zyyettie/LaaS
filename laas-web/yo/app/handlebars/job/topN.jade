@@ -1,0 +1,9 @@
+.two.fields
+    .field
+        label N
+        input(type="text",name="N",placeholder="50",value="{{N}}")
+    .field
+        label Order
+        select.ui.dropdown(name="order")
+            option(value="desc", , selected="{{desc}}") DESC
+            option(value="asc", selected="{{asc}}") ASC

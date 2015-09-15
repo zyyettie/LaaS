@@ -11,14 +11,18 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         serializeData:function(){
             return {job: this.job, scenarioList:this.scenarioList, fileList:this.fileList, selected:this.selected};
         },
-        //onRender: function () {
-        //    this.$('select').dropdown(//{
-                /*action: 'select',
-                onChange: function(value, text, $selectedItem) {
-                    //this.showParameters(value);
-                //}
+        onRender: function () {
+            this.$('select').dropdown();
+            this.$('[name="selectedScenario"]').on('change',function(){
+                if(this.options[this.selectedIndex].innerHTML == 'Scenario - Top N'){
+                    var render = JST['app/handlebars/job/topN'];
+                    $('#parameters').append(render({N:50,order:'desc'}));
+                }else{
+                    $('#parameters').empty();
+                }
+
             });
-        },*/
+        },
         template: function (data) {
             var template;
             var html;

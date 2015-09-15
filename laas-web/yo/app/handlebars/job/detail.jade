@@ -17,15 +17,7 @@
                 .field
                     label Job Description
                     textarea(type="text",rows="3",name="description",placeholder="description", value="{{description}}")
-                .two.fields
-                    .field
-                        label N
-                        input(type="text",name="N",placeholder="50",value="{{N}}")
-                    .field
-                        label Order
-                        select.ui.dropdown(name="order")
-                            option(value="desc", , selected="{{desc}}") DESC
-                            option(value="asc", selected="{{asc}}") ASC
+                #parameters
                 .two.fields(style="margin-top:100px;margin-bottom:70px;")
                     .field(style="padding-right:50px;")
                          .ui.teal.large.fluid.button#job_save Save
