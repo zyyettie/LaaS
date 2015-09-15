@@ -10,7 +10,7 @@ import java.util.Map;
 public class ReportModel {
     private Map<String, Object> attributes = new HashMap<>();
 
-    ReportModel(Map<String, Object> attributes) {
+    public ReportModel(Map<String, Object> attributes) {
         attributes.putAll(attributes);
     }
 
@@ -18,11 +18,12 @@ public class ReportModel {
         attributes.put(name, value);
     }
 
-    public Object getAttribute(String name, Object value) {
+    public Object getAttribute(String name) {
         return attributes.get(name);
     }
 
     public Map<String, Object> asMap() {
         return attributes;
     }
+
 }
