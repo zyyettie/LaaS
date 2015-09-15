@@ -29,7 +29,15 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 template = JST['app/handlebars/job/detail'];
                 var json = JSON.parse(data.job.parameters);
                 data.job.N = json["N"];
+                data.job.order = json["order"];
+                data.job.desc = json["order"] == "desc" ? "selected" : "";
+                data.job.asc = json["order"] == "asc" ? "selected" : "";
                 data.job.scenarioList = data.scenarioList;
+                for (var i=0; i<data.scenarioList.length; i++) {
+                    if (data.scenarioList[i].id == data.selected[0].id) {
+                        data.job.scenarioList[i].selected = "selected";
+                    }
+                }
                 data.job.selectedid = data.selected[0].id;
                 data.job.selectedname = data.selected[0].name;
                 html = template(data.job);
@@ -48,7 +56,8 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 toastr.error('Please input name and select scenario.');
                 return;
             }
-            json.parameters = JSON.stringify({N:json['N']});
+            json.parameters = JSON.stringify({N:json['N'], order:json['order']});
+            //json.parameters = "{N:"+json['N']+", order:"+json['order']+"}";
             json.scenarios = [];
             json.scenarios.push("/api/v1/scenarios/"+json.selectedScenario);
 
