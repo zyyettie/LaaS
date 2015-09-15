@@ -20,7 +20,6 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 }else{
                     $('#parameters').empty();
                 }
-
             });
         },
         template: function (data) {
