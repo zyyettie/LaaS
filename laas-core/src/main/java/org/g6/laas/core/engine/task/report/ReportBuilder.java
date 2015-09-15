@@ -16,7 +16,6 @@ public class ReportBuilder {
         Object renderResult =  view.render(model);
         if(renderResult instanceof String)
             return (String) renderResult;
-        return "Empty Report";
+        return "";
     }
-
 }
