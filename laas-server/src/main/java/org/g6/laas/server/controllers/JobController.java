@@ -128,6 +128,7 @@ public class JobController {
         Collection<TaskRunning> taskRunnings = jobRunning.getTaskRunnings();
         QueueJob queueJob = new QueueJob();
         int failedTasks = 0;
+        int asynCount = 0;
         boolean isSyn = true;
         for (Iterator<TaskRunning> ite = taskRunnings.iterator(); ite.hasNext(); ) {
             TaskRunning taskRunning = ite.next();
@@ -138,15 +139,15 @@ public class JobController {
                 taskRunningResult = runTask(taskObj, task);
                 //TODO generate report here
             } catch (Exception e) {
-                failedTasks ++;
+                failedTasks++;
                 jobHelper.saveTaskRunningStatus(taskRunning, "FAILED");
                 log.error("Exception is thrown while running task" + task.getName(), e);
             }
             if (taskRunningResult != null) {
                 if (!taskRunningResult.isTimeout) {
-                    //If the task runs successfully, its status should be set to "SUCCESS"
                     jobHelper.saveTaskRunningStatus(taskRunning, "SUCCESS");
                 } else {
+                    asynCount++;
                     queueJob.addQueueTask(task, new QueueTask(taskRunningResult.getFuture()));
                     queueJob.setJobRunning(jobRunning);
                     queue.addJob(queueJob);
@@ -155,11 +156,13 @@ public class JobController {
             }
         }
 
-        if(failedTasks == 0){
+        if (isSyn && failedTasks == 0) {
             //The status of JobRunning should be set to "SUCCESS" after all tasked are run successfully
             jobHelper.saveJobRunningStatus(jobRunning, "SUCCESS");
-        }else if(failedTasks == taskRunnings.size()){
+        } else if (failedTasks == taskRunnings.size()) {
             jobHelper.saveJobRunningStatus(jobRunning, "FAILED");
+        } else if(failedTasks + asynCount == taskRunnings.size() || asynCount == taskRunnings.size()){
+            //do nothing, keep running status, because need to wait for the running result of asynchronous task
         }else{
             jobHelper.saveJobRunningStatus(jobRunning, "PARTIALLY SUCCESS");
         }
