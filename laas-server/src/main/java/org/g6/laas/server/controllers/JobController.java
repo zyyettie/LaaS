@@ -127,34 +127,43 @@ public class JobController {
 
         Collection<TaskRunning> taskRunnings = jobRunning.getTaskRunnings();
         QueueJob queueJob = new QueueJob();
+        int failedTasks = 0;
+        boolean isSyn = true;
         for (Iterator<TaskRunning> ite = taskRunnings.iterator(); ite.hasNext(); ) {
             TaskRunning taskRunning = ite.next();
             Task task = taskRunning.getTask();
-            TaskRunningResult taskRunningResult;
+            TaskRunningResult taskRunningResult = null;
             try {
                 Object taskObj = getTaskObj(task, paramMap, strFiles);
                 taskRunningResult = runTask(taskObj, task);
                 //TODO generate report here
             } catch (Exception e) {
+                failedTasks ++;
                 jobHelper.saveTaskRunningStatus(taskRunning, "FAILED");
-                jobHelper.saveJobRunningStatus(jobRunning, "FAILED");
-                throw new LaaSRuntimeException("Exception is thrown while running task" + task.getName(), e);
+                log.error("Exception is thrown while running task" + task.getName(), e);
             }
-
-            if (!taskRunningResult.isTimeout) {
-                //If the task runs successfully, its status should be set to "SUCCESS"
-                jobHelper.saveTaskRunningStatus(taskRunning, "SUCCESS");
-            } else {
-                queueJob.addQueueTask(task, new QueueTask(taskRunningResult.getFuture()));
-                queueJob.setJobRunning(jobRunning);
-                queue.addJob(queueJob);
-                return 1;
+            if (taskRunningResult != null) {
+                if (!taskRunningResult.isTimeout) {
+                    //If the task runs successfully, its status should be set to "SUCCESS"
+                    jobHelper.saveTaskRunningStatus(taskRunning, "SUCCESS");
+                } else {
+                    queueJob.addQueueTask(task, new QueueTask(taskRunningResult.getFuture()));
+                    queueJob.setJobRunning(jobRunning);
+                    queue.addJob(queueJob);
+                    isSyn = false;
+                }
             }
         }
 
-        //The status of JobRunning should be set to "SUCCESS" after all tasked are run successfully
-        jobHelper.saveJobRunningStatus(jobRunning, "SUCCESS");
-        return 0;
+        if(failedTasks == 0){
+            //The status of JobRunning should be set to "SUCCESS" after all tasked are run successfully
+            jobHelper.saveJobRunningStatus(jobRunning, "SUCCESS");
+        }else if(failedTasks == taskRunnings.size()){
+            jobHelper.saveJobRunningStatus(jobRunning, "FAILED");
+        }else{
+            jobHelper.saveJobRunningStatus(jobRunning, "PARTIALLY SUCCESS");
+        }
+        return isSyn ? 0 : 1;
     }
 
 
