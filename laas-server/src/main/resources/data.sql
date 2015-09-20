@@ -36,3 +36,12 @@ insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(3, 'Te
 insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(4, 'Test4.log', 'Test Path', '1', 'ORIGINAL Test4.log')
 insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(5, 'Test5.log', 'Test Path', '1', 'ORIGINAL Test5.log')
 
+insert into JOB(ID, NAME, PARAMETERS) values(1, 'Test', '{"N":"60", "order":"asc"}')
+
+insert into JOB_SCENARIOS(JOB_ID, SCENARIOS_ID) values (1, 1)
+
+insert into JOB_FILES(JOB_ID, FILES_ID) values(1, 1)
+insert into JOB_FILES(JOB_ID, FILES_ID) values(1, 2)
+insert into JOB_FILES(JOB_ID, FILES_ID) values(1, 3)
+insert into JOB_FILES(JOB_ID, FILES_ID) values(1, 4)
+insert into JOB_FILES(JOB_ID, FILES_ID) values(1, 5)
