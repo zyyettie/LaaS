@@ -1,5 +1,7 @@
 package org.g6.laas.server.controllers;
 
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.core.engine.AnalysisEngine;
 import org.g6.laas.core.engine.task.AnalysisTask;
 import org.g6.laas.core.exception.LaaSRuntimeException;
@@ -10,9 +12,11 @@ import org.g6.laas.server.database.entity.task.Scenario;
 import org.g6.laas.server.database.entity.task.Task;
 import org.g6.laas.server.database.entity.task.TaskRunning;
 import org.g6.laas.server.database.repository.IJobRepository;
-import org.g6.laas.server.database.repository.IJobRunningRepository;
 import org.g6.laas.server.database.repository.IScenarioRepository;
-import org.g6.laas.server.database.repository.ITaskRunningRepository;
+import org.g6.laas.server.queue.JobHelper;
+import org.g6.laas.server.queue.JobQueue;
+import org.g6.laas.server.queue.QueueJob;
+import org.g6.laas.server.queue.QueueTask;
 import org.g6.util.JSONUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,21 +29,22 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 @RestController
+@Slf4j
 public class JobController {
-
     @Autowired
     private IJobRepository jobRepo;
     @Autowired
-    private IJobRunningRepository jobRunningRepo;
-    @Autowired
-    private ITaskRunningRepository taskRunningRepo;
-    @Autowired
     private IScenarioRepository scenarioRepo;
-
+    @Autowired
+    private JobHelper jobHelper;
     @Autowired
     private AnalysisEngine analysisEngine;
+    @Autowired
+    JobQueue queue;
 
 
     @RequestMapping(value = "/controllers/jobs/{jobId}")
@@ -49,7 +54,7 @@ public class JobController {
         Job job = jobRepo.findOne(jobId);
         JobRunning jobRunning = genRunningRecords4JobAndTask(job);
 
-        runTasks(jobRunning);
+        int runningMode = runTasks(jobRunning);
 
         //TODO
         String json = genRetJSON(job);
@@ -101,12 +106,18 @@ public class JobController {
         }
 
         jobRunning.setTaskRunnings(taskRunnings);
-        JobRunning retJobRunning = jobRunningRepo.save(jobRunning);
+        JobRunning retJobRunning = jobHelper.saveJobRunning(jobRunning);
 
         return retJobRunning;
     }
 
-    private void runTasks(JobRunning jobRunning) {
+    /**
+     * Run all tasks
+     *
+     * @param jobRunning
+     * @return 0: Synchronous 1: asynchronous
+     */
+    private int runTasks(JobRunning jobRunning) {
         Job job = jobRunning.getJob();
         List<String> strFiles = getLogFilesFromJob(job);
         Map<String, String> paramMap = JSONUtil.fromJson(job.getParameters());
@@ -115,46 +126,48 @@ public class JobController {
         strFiles.add("e:\\sm.log");
 
         Collection<TaskRunning> taskRunnings = jobRunning.getTaskRunnings();
+        QueueJob queueJob = new QueueJob();
         for (Iterator<TaskRunning> ite = taskRunnings.iterator(); ite.hasNext(); ) {
             TaskRunning taskRunning = ite.next();
             Task task = taskRunning.getTask();
-
+            TaskRunningResult taskRunningResult;
             try {
                 Object taskObj = getTaskObj(task, paramMap, strFiles);
-                Object result = runTask(taskObj);
-
+                taskRunningResult = runTask(taskObj, task);
+                //TODO generate report here
             } catch (Exception e) {
-                saveTaskRunningStatus(taskRunning, "FAILED");
-                saveJobRunningStatus(jobRunning, "FAILED");
+                jobHelper.saveTaskRunningStatus(taskRunning, "FAILED");
+                jobHelper.saveJobRunningStatus(jobRunning, "FAILED");
                 throw new LaaSRuntimeException("Exception is thrown while running task" + task.getName(), e);
             }
-            //If the task runs successfully, its status should be set to "SUCCESS"
-            saveTaskRunningStatus(taskRunning, "SUCCESS");
+
+            if (!taskRunningResult.isTimeout) {
+                //If the task runs successfully, its status should be set to "SUCCESS"
+                jobHelper.saveTaskRunningStatus(taskRunning, "SUCCESS");
+            } else {
+                queueJob.addQueueTask(task, new QueueTask(taskRunningResult.getFuture()));
+                queueJob.setJobRunning(jobRunning);
+                queue.addJob(queueJob);
+                return 1;
+            }
         }
 
         //The status of JobRunning should be set to "SUCCESS" after all tasked are run successfully
-        saveJobRunningStatus(jobRunning, "SUCCESS");
+        jobHelper.saveJobRunningStatus(jobRunning, "SUCCESS");
+        return 0;
     }
 
-    private void saveTaskRunningStatus(TaskRunning taskRunning, String status){
-        taskRunning.setStatus(status);
-        taskRunningRepo.save(taskRunning);
-    }
-
-    private void saveJobRunningStatus(JobRunning jobRunning, String status){
-        jobRunning.setStatus(status);
-        jobRunningRepo.save(jobRunning);
-    }
 
     /**
      * To run task, need to use reflection mechanism to get the task object according to the class name in Task entity
+     *
      * @param task
      * @param paramMap
      * @param strFiles
      * @return
      * @throws Exception
      */
-    private Object getTaskObj(Task task, Map<String, String> paramMap, List<String> strFiles) throws Exception{
+    private Object getTaskObj(Task task, Map<String, String> paramMap, List<String> strFiles) throws Exception {
         Class taskClass = Class.forName(task.getClassName());
         Object taskObj = taskClass.newInstance();
         Field[] fields = taskClass.getDeclaredFields();
@@ -181,15 +194,24 @@ public class JobController {
         return taskObj;
     }
 
-    private Object runTask(Object taskObj) throws ExecutionException, InterruptedException {
+    private TaskRunningResult runTask(Object taskObj, Task task) throws ExecutionException, InterruptedException {
         Future future = analysisEngine.submit((AnalysisTask) taskObj);
-        Object obj = future.get();
-        analysisEngine.shutdown();
+        TaskRunningResult result = new TaskRunningResult();
 
-        return obj;
+        Object obj;
+        try {
+            obj = future.get(2000, TimeUnit.MILLISECONDS);
+            result.setResult(obj);
+        } catch (TimeoutException te) {
+            result.setFuture(future);
+            result.setTimeout(true);
+            log.warn("Timeout while running task " + task.getName() + ", move to asynchronous mode");
+        }
+
+        return result;
     }
 
-    private List<String> getLogFilesFromJob(Job job){
+    private List<String> getLogFilesFromJob(Job job) {
         List<String> strFiles = new ArrayList<>();
         for (Iterator<File> ite = job.getFiles().iterator(); ite.hasNext(); ) {
             File f = ite.next();
@@ -200,7 +222,7 @@ public class JobController {
     }
 
     //TODO
-    private String genRetJSON(Job job){
+    private String genRetJSON(Job job) {
 
         return null;
     }
@@ -216,6 +238,13 @@ public class JobController {
         } else {
             field.set(obj, value);
         }
+    }
+
+    @Data
+    class TaskRunningResult {
+        Future future;
+        boolean isTimeout = false;
+        Object result;
     }
 
 }
