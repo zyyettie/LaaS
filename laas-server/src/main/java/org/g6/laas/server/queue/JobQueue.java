@@ -4,21 +4,24 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class JobQueue {
-    List<QueueJob> queue = new ArrayList();
+    BlockingQueue<QueueJob> queue = new LinkedBlockingDeque<>();
 
     public void addJob(QueueJob job){
         queue.add(job);
     }
 
-    public QueueJob get(){
-       return queue.get(0);
+    public QueueJob get() throws InterruptedException {
+       return queue.poll(10000, TimeUnit.MILLISECONDS);
     }
 
     public void remove(){
-        queue.remove(0);
+        queue.remove();
     }
 
     public boolean isEmpty(){

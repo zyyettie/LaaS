@@ -3,6 +3,7 @@ package org.g6.laas.server.queue;
 import lombok.Data;
 import org.g6.laas.server.database.entity.JobRunning;
 import org.g6.laas.server.database.entity.task.Task;
+import org.g6.laas.server.database.entity.task.TaskRunning;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,10 +11,10 @@ import java.util.Map;
 @Data
 public class QueueJob {
     JobRunning jobRunning;
-    Map<Task, QueueTask> queueTasks = new HashMap();
+    Map<TaskRunning, QueueTask> queueTasks = new HashMap();
 
-    public void addQueueTask(Task task, QueueTask queueTask) {
-        queueTasks.put(task, queueTask);
+    public void addQueueTask(TaskRunning taskRunning, QueueTask queueTask) {
+        queueTasks.put(taskRunning, queueTask);
     }
 
     public boolean isDone() {
