@@ -15,6 +15,7 @@ import org.g6.laas.server.database.entity.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -106,5 +107,8 @@ public class QueueHandler {
     private void updateJobRunningStatus(JobRunning jobRunning, TaskRunning taskRunning) {
         Collection<TaskRunning> taskRunnings = jobRunning.getTaskRunnings();
 
+        for(Iterator<TaskRunning> ite = taskRunnings.iterator(); ite.hasNext();){
+
+        }
     }
 }
