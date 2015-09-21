@@ -58,7 +58,6 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             'click #job_save': 'saveJob',
             'click #job_run': 'runJob',
             'click #add_file': 'addFile'
-            //'click .dropdown': 'switchscenario'
         },
         saveJob: function () {
             var that = this;
@@ -90,20 +89,6 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         },
         addFile: function () {
             LaaS.navigate('/fileselect/'+this.job.id, {trigger:true});
-        },
-        switchscenario: function () {
-            $('.dropdown')
-                .dropdown({
-                    action: 'activate'
-                });
-//            console.log("click switchscenario");
-            var tt = $('select').dropdown('get text');
-//            console.log(tt);
-//            var topNInput = $( '<input type="text"/>' );
-//            $('select').append(topNInput);
-            var myNewElement = $( "<p>New element</p>" );
-            $('.newArea').toggle(myNewElement);
-
         }
     });
 
