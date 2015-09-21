@@ -18,14 +18,30 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
     var FileListView = Marionette.ItemView.extend({
         initialize : function(options){
             this.files = options.files;
+            this.jobid = options.jobid;
         },
         template : function(data){
-            var template = JST['app/handlebars/file/list'];
+            var template;
+            if (data.jobid == undefined) {
+                 template = JST['app/handlebars/file/list'];
+            } else {
+                 template = JST['app/handlebars/file/select'];
+            }
             var html = template(data);
             return html;
         },
         serializeData:function(){
-            return {files:this.files};
+            return {jobid:this.jobid, files:this.files};
+        },
+        events: {
+            'click #select_file':'selectFile',
+            'click #select_file_cancel':'cancelSelect'
+        },
+        selectFile: function() {
+
+        },
+        cancelSelect: function() {
+
         }
     });
 
@@ -41,6 +57,34 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
                 var view = new FileView(data);
                 LaaS.mainRegion.show(view);
             });
+        },
+        selectFiles: function(jobid) {
+            $.when(LaaS.request('file:entities'), LaaS.request('job:entity', {'id':jobid})).done(function(data, job) {
+                var fileModel = new LaaS.FileModel();
+                fileModel.url = job.attributes._links.files.href;
+                fileModel.fetch({
+                    success: function(model, reponse) {
+                        var selectFiles = reponse._embedded.files;
+                        for (var i=0; i<data.files.length; i++) {
+                            for (var j=0; j<selectFiles.length; j++) {
+                                data.files[i].selected = false;
+                                data.files[i].checked = "";
+                                if (data.files[i].id == selectFiles[j].id) {
+                                    data.files[i].selected = true;
+                                    data.files[i].checked = "checked";
+                                    break;
+                                }
+                            }
+                        }
+
+                        var view = new FileListView({jobid:jobid, files:data.files});
+                        LaaS.mainRegion.show(view);
+                    },
+                    error: function(err) {
+                        console.log(err);
+                    }
+                });
+            });
         }
     });
 
@@ -49,7 +93,8 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
         new Marionette.AppRouter({
             appRoutes : {
                 'files(/)': 'showFiles',
-                'files/:id(/)' : 'showFile'
+                'files/:id(/)' : 'showFile',
+                'fileselect/:jobid(/)' : 'selectFiles'
             },
             controller: new FileController()
         });
