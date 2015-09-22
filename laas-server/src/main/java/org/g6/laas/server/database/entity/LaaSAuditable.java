@@ -12,7 +12,6 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 public abstract class LaaSAuditable<U> extends LaaSPersistable implements Auditable<U, Long> {
