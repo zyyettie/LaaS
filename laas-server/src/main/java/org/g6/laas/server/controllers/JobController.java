@@ -148,7 +148,7 @@ public class JobController {
                     jobHelper.saveTaskRunningStatus(taskRunning, "SUCCESS");
                 } else {
                     asynCount++;
-                    queueJob.addQueueTask(task, new QueueTask(taskRunningResult.getFuture()));
+                    queueJob.addQueueTask(taskRunning, new QueueTask(taskRunningResult.getFuture()));
                     queueJob.setJobRunning(jobRunning);
                     queue.addJob(queueJob);
                     isSyn = false;

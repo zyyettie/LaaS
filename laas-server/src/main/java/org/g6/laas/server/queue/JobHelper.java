@@ -27,4 +27,8 @@ public class JobHelper {
     public JobRunning saveJobRunning(JobRunning jobRunning){
         return jobRunningRepo.save(jobRunning);
     }
+
+    public TaskRunning saveTaskRunning(TaskRunning taskRunning){
+        return taskRunningRepo.save(taskRunning);
+    }
 }
