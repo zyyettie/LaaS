@@ -3,7 +3,7 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
 
     var baseUrl = '/api/v1/files';
 
-    LaaS.FileModel = Backbone.Model.extend({
+    Entities.FileModel = Backbone.Model.extend({
         url: function(){
             var url = this.id ? baseUrl+"/" + this.id : baseUrl/* + "?projection=" + this.projection*/;
             return url;
