@@ -14,8 +14,8 @@
                                             .ui.grid
                                                 .ui.two.column.row(style="margin-top:10px;margin-bottom:10px;")
                                                     .column
-                                                        .ui.checked.checkbox
-                                                            input(id="file_checkbox_{{id}}",type="checkbox", checked="{{checked}}")
+                                                        .ui.checkbox
+                                                            <input id="file_checkbox_{{id}}" type="checkbox" {{checked}}/>
                                                             label {{originalName}}
                                                     .right.aligned.column
                                                         a {{size}}

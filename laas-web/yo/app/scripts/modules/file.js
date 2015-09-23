@@ -15,6 +15,57 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
         }
     });
 
+    File.FileSelectView = Marionette.ItemView.extend({
+        initialize: function(options) {
+            this.files = options.files;
+            this.job = options.job;
+            this.jobmodel = options.jobmodel;
+        },
+        template : function(data) {
+            var template = JST['app/handlebars/file/select'];
+            var html = template(data);
+            return html;
+        },
+        serializeData : function() {
+            for (var i=0; i<this.files.length; i++) {
+                this.files[i].selected = false;
+                this.files[i].checked = "";
+                for (var j=0; j<this.job.files.length; j++) {
+                    if (this.files[i].id == this.job.files.id) {
+                        this.files[i].selected = true;
+                        this.files[i].checked = 'checked=""';
+                        break;
+                    }
+                }
+            }
+            return {files:this.files};
+        },
+        events: {
+            'click #select_file':'selectFile',
+            'click #select_file_cancel':'cancelSelect'
+        },
+        selectFile: function() {
+            var selectFiles = [];
+            for (var i=0; i<this.files.length; i++) {
+                var fileid = this.files[i].id;
+                if ($("#file_checkbox_"+fileid).prop("checked")) {
+                    selectFiles.push(this.files[i]);
+                }
+            }
+
+            var jobView = new LaaS.Job.JobView({model:this.jobmodel, job:this.job, scenarioList:this.job.scenarioList,
+                selectedScenarios:this.job.selectedScenarios, files:selectFiles});
+            LaaS.mainRegion.show(jobView);
+            LaaS.navigate('/jobs/'+this.job.id);
+        },
+        cancelSelect: function() {
+            var jobView = new LaaS.Job.JobView({model:this.jobmodel, job:this.job, scenarioList:this.job.scenarioList,
+                selectedScenarios:this.job.selectedScenarios, files:this.job.files});
+            LaaS.mainRegion.show(jobView);
+            LaaS.navigate('/jobs/'+this.job.id);
+        }
+    });
+
     var FileListView = Marionette.ItemView.extend({
         initialize : function(options){
             this.files = options.files;
@@ -93,8 +144,8 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
         new Marionette.AppRouter({
             appRoutes : {
                 'files(/)': 'showFiles',
-                'files/:id(/)' : 'showFile',
-                'fileselect/:jobid(/)' : 'selectFiles'
+                'files/:id(/)' : 'showFile'
+                //'fileselect/:jobid(/)' : 'selectFiles'
             },
             controller: new FileController()
         });
