@@ -1,6 +1,6 @@
 LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
     'use strict';
-
+    var appContext = LaaS.Util.Constants.APPCONTEXT;
     Job.JobView = Marionette.ItemView.extend({
         initialize: function (options) {
             if (options.model != undefined) {
@@ -73,7 +73,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             json.parameters = JSON.stringify({N: json['N'], order: json['order']});
             //json.parameters = "{N:"+json['N']+", order:"+json['order']+"}";
             json.scenarios = [];
-            json.scenarios.push("/api/v1/scenarios/" + json.selectedScenario);
+            json.scenarios.push(appContext+"/api/v1/scenarios/" + json.selectedScenario);
 
             //this.model.url='/jobs/'+json.id;
             this.model.save(json, {patch: true, success: function () {
@@ -95,7 +95,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             }
             json.parameters = JSON.stringify({N: json['N'], order: json['order']});
             json.scenarios = [];
-            json.scenarios.push("/api/v1/scenarios/" + json.selectedScenario);
+            json.scenarios.push(appContext+"/api/v1/scenarios/" + json.selectedScenario);
             this.model.save(json, {patch: true, success: function (response) {
                 $.getJSON("/controllers/jobs/" + response.id).done(function (json) {
                         toastr.info('Save and Run Job successfully.');
