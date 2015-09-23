@@ -18,6 +18,6 @@ LaaS.navigate = function(route,options) {
 toastr.options.positionClass = 'toast-top-center';
 
 LaaS.on('start', function() {
-  Backbone.history.start({ pushState: true });
+  Backbone.history.start({ pushState: true,root:'/laas-server/'});
   Backbone.Intercept.start();
 });

@@ -1,7 +1,7 @@
 LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
     'use strict';
 
-    var baseUrl = '/api/v1/workflows';
+    var baseUrl = LaaS.Util.Constants.URLPREFIX+'/api/v1/workflows';
 
     var WorkflowModel = Backbone.Model.extend({
         url: function(){

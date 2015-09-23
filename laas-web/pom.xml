@@ -59,12 +59,12 @@
                         <fileset>
                             <directory>yo/.tmp</directory>
                         </fileset>
-                        <fileset>
+                        <!-- <fileset>
                             <directory>yo/bower_components</directory>
                         </fileset>
                         <fileset>
                             <directory>yo/node_modules</directory>
-                        </fileset>
+                        </fileset> -->
                     </filesets>
                 </configuration>
             </plugin>
