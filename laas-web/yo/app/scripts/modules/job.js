@@ -106,8 +106,14 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             json.parameters = JSON.stringify({N: json['N'], order: json['order']});
             json.scenarios = [];
             json.scenarios.push(appContext+"/api/v1/scenarios/" + json.selectedScenario);
+
+            json.files = [];
+            for (var i=0; i<this.job.files.length; i++) {
+                json.files.push(appContext+"/api/v1/files/"+this.job.files[i].id);
+            }
+
             this.model.save(json, {patch: true, success: function (response) {
-                $.getJSON("/controllers/jobs/" + response.id).done(function (json) {
+                $.getJSON(appContext+"/controllers/jobs/" + response.id).done(function (json) {
                         toastr.info('Save and Run Job successfully.');
                         LaaS.navigate('/jobs/' + json.id + '/edit');
                     }).fail(function(json){
