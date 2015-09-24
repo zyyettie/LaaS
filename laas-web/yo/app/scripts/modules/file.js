@@ -27,11 +27,14 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
             return html;
         },
         serializeData : function() {
+            if (this.job.files == undefined) {
+                return {files:this.files};
+            }
             for (var i=0; i<this.files.length; i++) {
                 this.files[i].selected = false;
                 this.files[i].checked = "";
                 for (var j=0; j<this.job.files.length; j++) {
-                    if (this.files[i].id == this.job.files.id) {
+                    if (this.files[i].id == this.job.files[j].id) {
                         this.files[i].selected = true;
                         this.files[i].checked = 'checked=""';
                         break;
@@ -56,7 +59,11 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
             var jobView = new LaaS.Job.JobView({model:this.jobmodel, job:this.job, scenarioList:this.job.scenarioList,
                 selectedScenarios:this.job.selectedScenarios, files:selectFiles});
             LaaS.mainRegion.show(jobView);
-            LaaS.navigate('/jobs/'+this.job.id);
+            if (this.job.id == undefined) {
+                LaaS.navigate('/jobnew');
+            } else {
+                LaaS.navigate('/jobs/'+this.job.id);
+            }
         },
         cancelSelect: function() {
             var jobView = new LaaS.Job.JobView({model:this.jobmodel, job:this.job, scenarioList:this.job.scenarioList,
