@@ -95,7 +95,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             this.model.save(json, {patch: true, success: function (response) {
                 $.getJSON("/controllers/jobs/" + response.id).done(function (json) {
                         toastr.info('Save and Run Job successfully.');
-                        LaaS.navigate('/jobs/' + json.id + '/edit');
+                        LaaS.navigate('/showJobs');
                     }).fail(function(json){
                         toastr.info('Failed due to '+json);
                     });

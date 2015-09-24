@@ -1,0 +1,12 @@
+table.ui.striped.table
+    thead
+        tr
+            th Job ID
+            th Job Name
+            th Job Description
+    tbody
+        |{{#each jobs}}
+        tr
+            td {{id}}
+            td {{name}}
+        |{{/each}}

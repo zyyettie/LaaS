@@ -7,4 +7,5 @@ import org.springframework.data.rest.core.config.Projection;
 public interface JobSummary {
     Long getId();
     String getName();
+    String getDescription();
 }

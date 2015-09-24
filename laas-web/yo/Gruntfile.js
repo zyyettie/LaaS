@@ -32,7 +32,7 @@ module.exports = function (grunt) {
       return next();
     }
     if (/^\/tasks/.test(url) || /^\/login/.test(url) || /^\/user/.test(url) || /^\/scenarios/.test(url)
-        || /^\/files/.test(url) || /^\/home/.test(url) || /^\/job/.test(url) || /^\/upload/.test(url)) {
+        || /^\/files/.test(url) || /^\/home/.test(url) || /^\/job/.test(url) || /^\/upload/.test(url) || /^\/showJobs/.test(url)) {
       req.url = '/index.html';
     }
     return next();

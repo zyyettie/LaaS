@@ -49,7 +49,7 @@ public class JobController {
 
     @RequestMapping(value = "/controllers/jobs/{jobId}")
     ResponseEntity<String> runJob(@PathVariable Long jobId) {
-        prepareTestData();
+//        prepareTestData();
 
         Job job = jobRepo.findOne(jobId);
         JobRunning jobRunning = genRunningRecords4JobAndTask(job);
