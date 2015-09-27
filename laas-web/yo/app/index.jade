@@ -7,14 +7,14 @@ html
     meta(http-equiv="X-UA-Compatible", content="IE=edge;")
     link(rel="shortcut icon", href="/favicon.ico")
 
-    // build:css({.,.tmp}) /styles/main.css
+    // build:css({.,.tmp}) styles/main.css
     link(rel="stylesheet", href="/bower_components/fontawesome/css/font-awesome.css")
     link(rel="stylesheet", href="/bower_components/toastr/toastr.css")
     link(rel="stylesheet", href="/bower_components/semantic/dist/semantic.min.css")
     link(rel="stylesheet", href="/styles/main.css")
     // endbuild
 
-    title Log Analysis As Service
+    title Log as a Service
   body.laas
     .container
       #header
@@ -27,9 +27,10 @@ html
 
   include ./lib/_library
 
-  // build:js({app,.tmp}) /scripts/app.js
+  // build:js({app,.tmp}) scripts/app.js
   script(src="/handlebars/precompiled.handlebars.home.js")
   script(src="/scripts/app.js")
+  script(src="/scripts/modules/utils.js")
   script(src="/scripts/entity/task.js")
   script(src="/scripts/entity/job.js")
   script(src="/scripts/entity/scenario.js")
@@ -44,5 +45,5 @@ html
   script(src="/scripts/modules/job.js")
   // endbuild
   script
-    | LaaS.start();
+    |LaaS.start();
 

@@ -1,4 +1,6 @@
-insert into USER(id,name) values(1,'admin')
+insert into ROLE(ID, NAME) values (1, 'ROLE_ADMIN')
+
+insert into USER(ID,NAME,password,ROLE_ID) values(1,'admin','password',1)
 
 insert into PRODUCT(ID, NAME) values(1, 'Service Manager')
 

@@ -1,7 +1,7 @@
 LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
     'use strict';
 
-    var baseUrl = '/api/v1/tasks';
+    var baseUrl = LaaS.Util.Constants.APPCONTEXT+'/api/v1/tasks';
 
     var TaskModel = Backbone.Model.extend({
         url: function(){

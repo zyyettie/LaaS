@@ -13,7 +13,6 @@ import java.util.Collection;
 @Entity
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
 @Table(name = "JOB",uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
 public class Job extends LaaSAuditable<User> {
     private static final long serialVersionUID = 4446780211212032935L;

@@ -8,7 +8,7 @@ LaaS.module('User', function (User, LaaS, Backbone, Marionette) {
     'use strict';
 
     var User = Backbone.Model.extend({
-        urlRoot:"/controllers/users"
+        urlRoot:LaaS.Util.Constants.APPCONTEXT+"/controllers/users"
     });
 
     var myUser = new User();
