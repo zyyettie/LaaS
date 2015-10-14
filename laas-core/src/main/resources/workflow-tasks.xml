@@ -1,7 +1,7 @@
 <workflow-tasks name='process_thread_split'>
-    <start to="loginInfoTask"/>
+    <start to="topNTask"/>
 
-    <task name="loginInfoTask" classname="org.g6.laas.sm.task.ProcessIdAndThreadIdTask">
+    <task name="topNTask" classname="org.g6.laas.sm.task.TopNQueryTask">
         <!--A task needs input depends on whether the below is defined
             once the framework finds task-no-input is defined, the input will be ignored
             no matter whether the task-input-rule is specified or not.
@@ -17,9 +17,13 @@
             unless no input is required, so need to use the below configuration
             <task-no-input/>
         -->
-        <task-input-rule name="">
+        <task-input-rule>
             <!--here the name is attribute name, there should be setter and getter methods in class accordingly-->
-            <call-method-rule method-name="setProcessAndThreadBean"/>
+            <input-map-rule paramcount="3">
+                <param-create-rule key="1" value-type="java.lang.string"/>
+                <param-create-rule key="2" value-type="java.lang.string"/>
+                <param-create-rule key="3" value-type="java.util.List"/>
+            </input-map-rule>
         </task-input-rule>
 
         <set-next-task name="end"/>
