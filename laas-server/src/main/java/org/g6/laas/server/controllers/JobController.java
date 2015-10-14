@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -49,7 +50,7 @@ public class JobController {
 
     @RequestMapping(value = "/controllers/jobs/{jobId}")
     ResponseEntity<String> runJob(@PathVariable Long jobId) {
-        prepareTestData();
+        //prepareTestData();
 
         Job job = jobRepo.findOne(jobId);
         JobRunning jobRunning = genRunningRecords4JobAndTask(job);
@@ -65,9 +66,9 @@ public class JobController {
     private void prepareTestData() {
         Job myJob = new Job();
         myJob.setName("Job" + Math.random());
-        myJob.setParameters("{\"N\":\"60\", \"order\":\"desc\"}");
+        //myJob.setParameters("{\"N\":\"60\", \"order\":\"desc\"}");
 
-        Scenario _scenario = scenarioRepo.getOne(1l);
+        Scenario _scenario = scenarioRepo.getOne(4l);
         Collection<Scenario> _scenarios = new ArrayList();
         _scenarios.add(_scenario);
         myJob.setScenarios(_scenarios);
@@ -123,6 +124,7 @@ public class JobController {
         Map<String, String> paramMap = JSONUtil.fromJson(job.getParameters());
 
         //TODO for testing hardcoded some data for log file
+        strFiles.clear();
         strFiles.add("e:\\sm.log");
 
         Collection<TaskRunning> taskRunnings = jobRunning.getTaskRunnings();
@@ -136,6 +138,8 @@ public class JobController {
             TaskRunningResult taskRunningResult = null;
             try {
                 Object taskObj = getTaskObj(task, paramMap, strFiles);
+                //taskObj is the instance of different Task class which is used to run
+                //task is the entity which contains different data loaded from database.
                 taskRunningResult = runTask(taskObj, task);
                 //TODO generate report here
             } catch (Exception e) {
@@ -186,6 +190,9 @@ public class JobController {
         Object taskObj = taskClass.newInstance();
         Field[] fields = taskClass.getDeclaredFields();
 
+        Method m1 = taskObj.getClass().getSuperclass().getDeclaredMethod("setFiles", List.class);
+        m1.invoke(taskObj,strFiles);
+
         for (Map.Entry<String, String> entry : paramMap.entrySet()) {
             for (int i = 0; i < fields.length; i++) {
                 boolean isAccessible = true;
@@ -194,9 +201,7 @@ public class JobController {
                     fields[i].setAccessible(true);
                 }
 
-                if (fields[i].getName().equals("files")) {
-                    fields[i].set(taskObj, strFiles);
-                } else if (fields[i].getName().equals(entry.getKey())) {
+                if (fields[i].getName().equals(entry.getKey())) {
                     set(fields[i], taskObj, entry.getValue());
                 }
                 if (!isAccessible) {

@@ -26,6 +26,7 @@ import java.util.List;
 public abstract class SMRTETask<T> extends AbstractAnalysisTask<T> {
     DefaultInputFormatProvider provider;
     private List<Rule> rules = new ArrayList<>();
+    private List<String> files;
 
     @Override
     protected void started() {
@@ -57,13 +58,23 @@ public abstract class SMRTETask<T> extends AbstractAnalysisTask<T> {
         setContext(context);
     }
 
-    void addRule(Rule rule){
-         rules.add(rule);
+    void addRule(Rule rule) {
+        rules.add(rule);
     }
 
-    abstract List<String> getFiles();
+    public List<String> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<String> files) {
+        this.files = files;
+    }
 
     DefaultInputFormatProvider getProvider() {
+        return getDefaultProvider();
+    }
+
+    DefaultInputFormatProvider getDefaultProvider() {
         if (provider == null) {
             provider = new DefaultInputFormatProvider("SMRTE_SM_LOG");
         } else {

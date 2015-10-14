@@ -55,18 +55,13 @@ public class SplitProcessAndThreadTask extends SMRTETask<String> {
         return tempRootPath;
     }
 
-    @Override
-    List<String> getFiles() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
     DefaultInputFormatProvider getProvider() {
-        DefaultInputFormatProvider provider = getProvider();
+        DefaultInputFormatProvider provider = getDefaultProvider();
         provider.setNames(new String[]{"DEFAULT"});
         return provider;
     }
 
-    public SplitProcessAndThreadTask(String file) {
+    public SplitProcessAndThreadTask() {
         splitMap = new HashMap<>();
         Rule rule = new TrueRule();
         rule.addAction(new RuleAction() {
@@ -77,11 +72,12 @@ public class SplitProcessAndThreadTask extends SMRTETask<String> {
                 handleLine(splitMap, result, line);
             }
         });
-
-        //TODO
+        addRule(rule);
     }
 
     private void handleLine(Map<String, ProcessIdHelper> splitMap, SplitResult result, Line line) {
+        //NOTE: mostly this happens while no matching regex can be used to split a line
+        if(result == null) return;
         String processId = String.valueOf((Integer) result.get("process_id").getValue());
         String threadId = String.valueOf((Integer) result.get("thread_id").getValue());
 
