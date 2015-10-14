@@ -1,5 +1,6 @@
 package org.g6.laas.server.database.entity.user;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.g6.laas.server.database.entity.File;
@@ -23,6 +24,7 @@ public class User extends LaaSPersistable {
 
     private static final long serialVersionUID = -8503475553208415613L;
 
+    @JsonView(UserDTO.class)
     @Column(name = "NAME")
     private String name;
 
@@ -37,6 +39,7 @@ public class User extends LaaSPersistable {
     @Column(name = "LAST_LOGIN_TIME")
     private Date lastLoginTime;
 
+    @JsonView(UserDTO.class)
     @ManyToOne
     @JoinColumn(name = "ROLE_ID")
     private Role role;
@@ -60,11 +63,27 @@ public class User extends LaaSPersistable {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         Role role = getRole();
-
         if (role != null) {
             SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.getName());
             authorities.add(authority);
         }
         return authorities;
+    }
+
+    @Override
+    public String toString() {
+        //satisfy UsernamepasswordAuthentionToken requirement.
+        return this.name;
+    }
+
+    public interface UserDTO {
+    }
+
+    ;
+
+    @JsonView(UserDTO.class)
+    @Override
+    public Long getId() {
+        return super.getId();
     }
 }

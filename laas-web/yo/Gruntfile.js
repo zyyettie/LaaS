@@ -24,15 +24,14 @@ module.exports = function (grunt) {
   };
 
   var proxySnippet = require('grunt-connect-proxy/lib/utils').proxyRequest ;
-
   var singlePage = function(req, res, next) {
     var url = req.url;
     console.log("url is ************* " + url);
     if (/.*\.js/.test(url) || /.*\.css/.test(url) || /.*fonts\/icons\./.test(url) || (/.*\/images\//.test(url))) {
       return next();
     }
-    if (/^\/tasks/.test(url) || /^\/login/.test(url) || /^\/user/.test(url) || /^\/scenarios/.test(url)
-        || /^\/files/.test(url) || /^\/home/.test(url) || /^\/job/.test(url) || /^\/upload/.test(url) || /^\/showJobs/.test(url)) {
+    if (/^\/laas-server/.test(url)||/^\/laas-server\/tasks/.test(url) || /^\/laas-server\/login/.test(url) || /^\/laas-server\/user/.test(url) || /^\/laas-server\/scenarios/.test(url)
+        || /^\/laas-server\/files/.test(url) || /^\/laas-server\/home/.test(url) || /^\/laas-server\/job/.test(url) || /^\/laas-server\/upload/.test(url)) {
       req.url = '/index.html';
     }
     return next();
@@ -103,13 +102,15 @@ module.exports = function (grunt) {
     connect: {
       options: {
         port: 9000,
-        open: true,
+        open: {
+            target: 'http://localhost:9000/laas-server' // target url to open
+        },
         livereload: 35729,
         // Change this to '0.0.0.0' to access the server from outside
         hostname: 'localhost'
       },
       proxies: [{
-        context: ['/api/v1','/controllers'],
+        context: ['/laas-server/api/v1','/laas-server/controllers'],
         host: 'localhost',
         port: 8080,
         https: false,
@@ -279,7 +280,7 @@ module.exports = function (grunt) {
           src: [
             '<%= config.dist %>/scripts/{,*/}*.js',
             '<%= config.dist %>/styles/{,*/}*.css',
-            '<%= config.dist %>/images/{,*/}*.*',
+            //'<%= config.dist %>/images/{,*/}*.*',
             '<%= config.dist %>/fonts/{,*/}*.*',
             '<%= config.dist %>/*.{ico,png}'
           ]
@@ -375,13 +376,19 @@ module.exports = function (grunt) {
           dest: '<%= config.dist %>',
           src: [
             '*.{ico,png,txt}',
-            'images/{,*/}*.webp',
-            '{,*/}*.html',
+            'images/{,*/}*.*',
+            'index.html',
             'styles/fonts/{,*/}*.*',
-            'themes/default/assets/{,*/}*.*',
+
             'public/{,*/}*.*'
           ]
         }, {
+            expand:true,
+            dot: true,
+            cwd: '<%= config.app %>',
+            src:'themes/default/assets/{,*/}*.*',
+            dest:'<%= config.dist %>/styles'
+        },{
           src: 'node_modules/apache-server-configs/dist/.htaccess',
           dest: '<%= config.dist %>/.htaccess'
         }, {

@@ -9,7 +9,8 @@ public class HomeController {
 
     @RequestMapping(
             value = {
-                    "/"
+                    "/",
+                    "/jobs"
             },
             method = RequestMethod.GET)
     public String index() {
