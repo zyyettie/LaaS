@@ -127,9 +127,9 @@ public class JobController {
 
         Collection<TaskRunning> taskRunnings = jobRunning.getTaskRunnings();
         QueueJob queueJob = new QueueJob();
-        int failedTasks = 0;
-        int asynCount = 0;
+        int failedTasks = 0, asynCount = 0;
         boolean isSyn = true;
+
         for (Iterator<TaskRunning> ite = taskRunnings.iterator(); ite.hasNext(); ) {
             TaskRunning taskRunning = ite.next();
             Task task = taskRunning.getTask();
@@ -156,16 +156,18 @@ public class JobController {
             }
         }
 
-        if (isSyn && failedTasks == 0) {
-            //The status of JobRunning should be set to "SUCCESS" after all tasked are run successfully
-            jobHelper.saveJobRunningStatus(jobRunning, "SUCCESS");
-        } else if (failedTasks == taskRunnings.size()) {
-            jobHelper.saveJobRunningStatus(jobRunning, "FAILED");
-        } else if(failedTasks + asynCount == taskRunnings.size() || asynCount == taskRunnings.size()){
-            //do nothing, keep running status, because need to wait for the running result of asynchronous task
-        }else{
-            jobHelper.saveJobRunningStatus(jobRunning, "PARTIALLY SUCCESS");
+        //Note the status of JobRunning is not required to changed while moving to asynchronous mode
+        if (isSyn) {
+            if (failedTasks == 0) {
+                //The status of JobRunning should be set to "SUCCESS" after all tasked are run successfully
+                jobHelper.saveJobRunningStatus(jobRunning, "SUCCESS");
+            } else if (failedTasks == taskRunnings.size()) {
+                jobHelper.saveJobRunningStatus(jobRunning, "FAILED");
+            } else {
+                jobHelper.saveJobRunningStatus(jobRunning, "PARTIALLY SUCCESS");
+            }
         }
+
         return isSyn ? 0 : 1;
     }
 

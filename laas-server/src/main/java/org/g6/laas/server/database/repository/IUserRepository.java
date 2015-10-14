@@ -10,6 +10,5 @@ import java.util.Collection;
 
 @Repository
 public interface IUserRepository extends JpaRepository<User, Long> {
-    @Query("SELECT u FROM User u WHERE LOWER(u.name)=LOWER(:name)")
-    Collection<User> find(@Param("name")String name);
+    User findByName(@Param("name")String name);
 }
