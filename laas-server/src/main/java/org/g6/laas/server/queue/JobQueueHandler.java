@@ -2,16 +2,11 @@ package org.g6.laas.server.queue;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.g6.laas.server.database.entity.File;
 import org.g6.laas.server.database.entity.JobRunning;
 import org.g6.laas.server.database.entity.result.TaskResult;
-import org.g6.laas.server.database.entity.task.Task;
 import org.g6.laas.server.database.entity.task.TaskRunning;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.Scheduled;
-
-import org.g6.laas.server.database.entity.File;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -24,7 +19,7 @@ import java.util.concurrent.ExecutionException;
 
 @Service
 @Slf4j
-public class QueueHandler {
+public class JobQueueHandler {
     @Autowired
     private JobQueue queue;
     @Autowired
@@ -48,11 +43,13 @@ public class QueueHandler {
                     log.error("error while getting job from queue", e);
                 }
 
-                if (queueJob.isDone()) {
-                    handleQueueTasks(queueJob);
-                } else {
-                    //if the current job is still running, need to append it in queue again
-                    queue.addJob(queueJob);
+                if (queueJob != null) {
+                    if (queueJob.isDone()) {
+                        handleQueueTasks(queueJob);
+                    } else {
+                        //if the current job is still running, need to append it in queue again
+                        queue.addJob(queueJob);
+                    }
                 }
             }
         }

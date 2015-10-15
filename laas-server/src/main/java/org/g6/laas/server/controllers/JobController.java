@@ -4,6 +4,9 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.core.engine.AnalysisEngine;
 import org.g6.laas.core.engine.task.AnalysisTask;
+import org.g6.laas.core.engine.task.report.ReportModel;
+import org.g6.laas.core.engine.task.report.StringReportView;
+import org.g6.laas.core.engine.task.report.template.handlebars.HandlebarsReportView;
 import org.g6.laas.core.exception.LaaSRuntimeException;
 import org.g6.laas.server.database.entity.File;
 import org.g6.laas.server.database.entity.Job;
@@ -17,6 +20,7 @@ import org.g6.laas.server.queue.JobHelper;
 import org.g6.laas.server.queue.JobQueue;
 import org.g6.laas.server.queue.QueueJob;
 import org.g6.laas.server.queue.QueueTask;
+import org.g6.util.FileUtil;
 import org.g6.util.JSONUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -138,10 +142,9 @@ public class JobController {
             TaskRunningResult taskRunningResult = null;
             try {
                 Object taskObj = getTaskObj(task, paramMap, strFiles);
-                //taskObj is the instance of different Task class which is used to run
+                //taskObj is the instance of Task class which is used to run
                 //task is the entity which contains different data loaded from database.
                 taskRunningResult = runTask(taskObj, task);
-                //TODO generate report here
             } catch (Exception e) {
                 failedTasks++;
                 jobHelper.saveTaskRunningStatus(taskRunning, "FAILED");
@@ -150,6 +153,7 @@ public class JobController {
             if (taskRunningResult != null) {
                 if (!taskRunningResult.isTimeout) {
                     jobHelper.saveTaskRunningStatus(taskRunning, "SUCCESS");
+                    String report = genReport(taskRunningResult, task);
                 } else {
                     asynCount++;
                     queueJob.addQueueTask(taskRunning, new QueueTask(taskRunningResult.getFuture()));
@@ -175,6 +179,17 @@ public class JobController {
         return isSyn ? 0 : 1;
     }
 
+    private String genReport(TaskRunningResult taskRunningResult, Task task) {
+        java.io.File handlebarsTemplate = FileUtil.getFile("report/template/" + task.getClassName() + ".hbs");
+
+        ReportModel model = new ReportModel();
+        model.setAttribute("zipFile", taskRunningResult.getResult());
+        StringReportView reportView = new HandlebarsReportView(handlebarsTemplate);
+
+        String reportContent = reportView.render(model);
+
+        return reportContent;
+    }
 
     /**
      * To run task, need to use reflection mechanism to get the task object according to the class name in Task entity
@@ -191,7 +206,7 @@ public class JobController {
         Field[] fields = taskClass.getDeclaredFields();
 
         Method m1 = taskObj.getClass().getSuperclass().getDeclaredMethod("setFiles", List.class);
-        m1.invoke(taskObj,strFiles);
+        m1.invoke(taskObj, strFiles);
 
         for (Map.Entry<String, String> entry : paramMap.entrySet()) {
             for (int i = 0; i < fields.length; i++) {
@@ -221,6 +236,8 @@ public class JobController {
         try {
             obj = future.get(2000, TimeUnit.MILLISECONDS);
             result.setResult(obj);
+            //TODO
+            //throw new TimeoutException("Just for testing and remove this line later!");
         } catch (TimeoutException te) {
             result.setFuture(future);
             result.setTimeout(true);

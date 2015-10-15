@@ -36,6 +36,7 @@ public class SplitProcessAndThreadTask extends SMRTETask<String> {
     @Override
     protected String process() {
         String tempRootPath = "e:\\SMRTE\\";
+        String zipFile = "e:\\SMRTESPLIT.zip";
         FileUtil.deleteDir(tempRootPath);
 
         for (Map.Entry<String, ProcessIdHelper> entry : splitMap.entrySet()) {
@@ -49,16 +50,10 @@ public class SplitProcessAndThreadTask extends SMRTETask<String> {
             for (ThreadIdHelper threadIdHelper : list) {
                 FileUtil.writeFile(threadIdHelper.getLineContentList(), processPath + threadIdHelper.getThreadId() + ".log");
             }
-
-            CompressionUtil.compress(tempRootPath, "e:\\SMRTESPLIT.zip");
         }
-        return tempRootPath;
-    }
 
-    DefaultInputFormatProvider getProvider() {
-        DefaultInputFormatProvider provider = getDefaultProvider();
-        provider.setNames(new String[]{"DEFAULT"});
-        return provider;
+        CompressionUtil.compress(tempRootPath, zipFile);
+        return zipFile;
     }
 
     public SplitProcessAndThreadTask() {
@@ -140,4 +135,11 @@ public class SplitProcessAndThreadTask extends SMRTETask<String> {
             lineContentList.add(line.getContent());
         }
     }
+
+    DefaultInputFormatProvider getProvider() {
+        DefaultInputFormatProvider provider = getDefaultProvider();
+        provider.setNames(new String[]{"DEFAULT"});
+        return provider;
+    }
+
 }
