@@ -18,6 +18,20 @@
                     label Job Description
                     textarea(type="text",rows="3",name="description",placeholder="description")
                 #parameters
+                    |@parameters@
+                .field
+                .two.fields
+                    .field
+                        label Files
+                    .field
+                        .ui.teal.large.fluid.button#add_file Add Files
+                .field
+                    .ui.divided.list
+                        |{{#each files}}
+                        .item
+                            .content
+                                {{originalName}}
+                        |{{/each}}
                 .two.fields(style="margin-top:100px;margin-bottom:70px;")
                     .field(style="padding-right:50px;")
                          .ui.teal.large.fluid.button#job_save Save

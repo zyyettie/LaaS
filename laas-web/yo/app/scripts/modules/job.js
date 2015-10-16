@@ -43,6 +43,13 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                     $('#parameters').empty();
                 }
             });
+            this.$("button").on("click", function(){
+                console.log("click detail...");
+                this.$.attr("data-id", function(arr){
+                    console.log(arr);
+                });
+            });
+
         },
         template: function (data) {
             var template;
@@ -61,7 +68,8 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         events: {
             'click #job_save': 'saveJob',
             'click #job_run': 'runJob',
-            'click #add_file': 'addFile'
+            'click #add_file': 'addFile',
+            'click #job_show': 'showJob'
         },
         saveJob: function () {
             var that = this;
@@ -86,7 +94,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             }});
         },
         runJob: function () {
-            console.log("run the job");
+            console.log("save & run the job");
             var that = this;
             var json = Backbone.Syphon.serialize(this);
             if (json.name == '' || json.scenario == '') {
@@ -97,9 +105,10 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             json.scenarios = [];
             json.scenarios.push(appContext+"/api/v1/scenarios/" + json.selectedScenario);
             this.model.save(json, {patch: true, success: function (response) {
-                $.getJSON("/controllers/jobs/" + response.id).done(function (json) {
+                $.getJSON(appContext+"/controllers/jobs/" + response.id).done(function (json) {
                         toastr.info('Save and Run Job successfully.');
-                        LaaS.navigate('/showJobs');
+                        //LaaS.navigate('/showJobs');
+                    LaaS.navigate('/jobs/' + json.id + '/edit');
                     }).fail(function(json){
                         toastr.info('Failed due to '+json);
                     });

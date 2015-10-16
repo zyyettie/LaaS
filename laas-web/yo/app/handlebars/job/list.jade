@@ -4,9 +4,13 @@ table.ui.striped.table
             th Job ID
             th Job Name
             th Job Description
+            th Action
     tbody
         |{{#each jobs}}
         tr
             td {{id}}
             td {{name}}
+            td {{description}}
+            td
+                button.ui.button#job_show(data-id="{{id}}") Detail
         |{{/each}}
