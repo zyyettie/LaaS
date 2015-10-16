@@ -4,6 +4,9 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.core.engine.AnalysisEngine;
 import org.g6.laas.core.engine.task.AnalysisTask;
+import org.g6.laas.core.engine.task.report.ReportModel;
+import org.g6.laas.core.engine.task.report.StringReportView;
+import org.g6.laas.core.engine.task.report.template.handlebars.HandlebarsReportView;
 import org.g6.laas.core.exception.LaaSRuntimeException;
 import org.g6.laas.server.database.entity.File;
 import org.g6.laas.server.database.entity.Job;
@@ -17,6 +20,7 @@ import org.g6.laas.server.queue.JobHelper;
 import org.g6.laas.server.queue.JobQueue;
 import org.g6.laas.server.queue.QueueJob;
 import org.g6.laas.server.queue.QueueTask;
+import org.g6.util.FileUtil;
 import org.g6.util.JSONUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -49,7 +54,7 @@ public class JobController {
 
     @RequestMapping(value = "/controllers/jobs/{jobId}")
     ResponseEntity<String> runJob(@PathVariable Long jobId) {
-//        prepareTestData();
+        //prepareTestData();
 
         Job job = jobRepo.findOne(jobId);
         JobRunning jobRunning = genRunningRecords4JobAndTask(job);
@@ -65,9 +70,9 @@ public class JobController {
     private void prepareTestData() {
         Job myJob = new Job();
         myJob.setName("Job" + Math.random());
-        myJob.setParameters("{\"N\":\"60\", \"order\":\"desc\"}");
+        //myJob.setParameters("{\"N\":\"60\", \"order\":\"desc\"}");
 
-        Scenario _scenario = scenarioRepo.getOne(1l);
+        Scenario _scenario = scenarioRepo.getOne(4l);
         Collection<Scenario> _scenarios = new ArrayList();
         _scenarios.add(_scenario);
         myJob.setScenarios(_scenarios);
@@ -123,21 +128,23 @@ public class JobController {
         Map<String, String> paramMap = JSONUtil.fromJson(job.getParameters());
 
         //TODO for testing hardcoded some data for log file
+        strFiles.clear();
         strFiles.add("e:\\sm.log");
 
         Collection<TaskRunning> taskRunnings = jobRunning.getTaskRunnings();
         QueueJob queueJob = new QueueJob();
-        int failedTasks = 0;
-        int asynCount = 0;
+        int failedTasks = 0, asynCount = 0;
         boolean isSyn = true;
+
         for (Iterator<TaskRunning> ite = taskRunnings.iterator(); ite.hasNext(); ) {
             TaskRunning taskRunning = ite.next();
             Task task = taskRunning.getTask();
             TaskRunningResult taskRunningResult = null;
             try {
                 Object taskObj = getTaskObj(task, paramMap, strFiles);
+                //taskObj is the instance of Task class which is used to run
+                //task is the entity which contains different data loaded from database.
                 taskRunningResult = runTask(taskObj, task);
-                //TODO generate report here
             } catch (Exception e) {
                 failedTasks++;
                 jobHelper.saveTaskRunningStatus(taskRunning, "FAILED");
@@ -146,6 +153,7 @@ public class JobController {
             if (taskRunningResult != null) {
                 if (!taskRunningResult.isTimeout) {
                     jobHelper.saveTaskRunningStatus(taskRunning, "SUCCESS");
+                    String report = genReport(taskRunningResult, task);
                 } else {
                     asynCount++;
                     queueJob.addQueueTask(taskRunning, new QueueTask(taskRunningResult.getFuture()));
@@ -156,19 +164,32 @@ public class JobController {
             }
         }
 
-        if (isSyn && failedTasks == 0) {
-            //The status of JobRunning should be set to "SUCCESS" after all tasked are run successfully
-            jobHelper.saveJobRunningStatus(jobRunning, "SUCCESS");
-        } else if (failedTasks == taskRunnings.size()) {
-            jobHelper.saveJobRunningStatus(jobRunning, "FAILED");
-        } else if(failedTasks + asynCount == taskRunnings.size() || asynCount == taskRunnings.size()){
-            //do nothing, keep running status, because need to wait for the running result of asynchronous task
-        }else{
-            jobHelper.saveJobRunningStatus(jobRunning, "PARTIALLY SUCCESS");
+        //Note the status of JobRunning is not required to changed while moving to asynchronous mode
+        if (isSyn) {
+            if (failedTasks == 0) {
+                //The status of JobRunning should be set to "SUCCESS" after all tasked are run successfully
+                jobHelper.saveJobRunningStatus(jobRunning, "SUCCESS");
+            } else if (failedTasks == taskRunnings.size()) {
+                jobHelper.saveJobRunningStatus(jobRunning, "FAILED");
+            } else {
+                jobHelper.saveJobRunningStatus(jobRunning, "PARTIALLY SUCCESS");
+            }
         }
+
         return isSyn ? 0 : 1;
     }
 
+    private String genReport(TaskRunningResult taskRunningResult, Task task) {
+        java.io.File handlebarsTemplate = FileUtil.getFile("report/template/" + task.getClassName() + ".hbs");
+
+        ReportModel model = new ReportModel();
+        model.setAttribute("zipFile", taskRunningResult.getResult());
+        StringReportView reportView = new HandlebarsReportView(handlebarsTemplate);
+
+        String reportContent = reportView.render(model);
+
+        return reportContent;
+    }
 
     /**
      * To run task, need to use reflection mechanism to get the task object according to the class name in Task entity
@@ -184,6 +205,9 @@ public class JobController {
         Object taskObj = taskClass.newInstance();
         Field[] fields = taskClass.getDeclaredFields();
 
+        Method m1 = taskObj.getClass().getSuperclass().getDeclaredMethod("setFiles", List.class);
+        m1.invoke(taskObj, strFiles);
+
         for (Map.Entry<String, String> entry : paramMap.entrySet()) {
             for (int i = 0; i < fields.length; i++) {
                 boolean isAccessible = true;
@@ -192,9 +216,7 @@ public class JobController {
                     fields[i].setAccessible(true);
                 }
 
-                if (fields[i].getName().equals("files")) {
-                    fields[i].set(taskObj, strFiles);
-                } else if (fields[i].getName().equals(entry.getKey())) {
+                if (fields[i].getName().equals(entry.getKey())) {
                     set(fields[i], taskObj, entry.getValue());
                 }
                 if (!isAccessible) {
@@ -214,6 +236,8 @@ public class JobController {
         try {
             obj = future.get(2000, TimeUnit.MILLISECONDS);
             result.setResult(obj);
+            //TODO
+            //throw new TimeoutException("Just for testing and remove this line later!");
         } catch (TimeoutException te) {
             result.setFuture(future);
             result.setTimeout(true);

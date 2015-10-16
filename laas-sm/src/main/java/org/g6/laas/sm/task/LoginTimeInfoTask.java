@@ -60,9 +60,4 @@ public class LoginTimeInfoTask extends SMRTETask<Map<String, Double>> {
         //initContext(files, rule);
         //TODO
     }
-
-    @Override
-    List<String> getFiles() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
 }

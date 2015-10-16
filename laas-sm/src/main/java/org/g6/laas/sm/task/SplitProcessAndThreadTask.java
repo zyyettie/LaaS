@@ -36,6 +36,7 @@ public class SplitProcessAndThreadTask extends SMRTETask<String> {
     @Override
     protected String process() {
         String tempRootPath = "e:\\SMRTE\\";
+        String zipFile = "e:\\SMRTESPLIT.zip";
         FileUtil.deleteDir(tempRootPath);
 
         for (Map.Entry<String, ProcessIdHelper> entry : splitMap.entrySet()) {
@@ -49,24 +50,13 @@ public class SplitProcessAndThreadTask extends SMRTETask<String> {
             for (ThreadIdHelper threadIdHelper : list) {
                 FileUtil.writeFile(threadIdHelper.getLineContentList(), processPath + threadIdHelper.getThreadId() + ".log");
             }
-
-            CompressionUtil.compress(tempRootPath, "e:\\SMRTESPLIT.zip");
         }
-        return tempRootPath;
+
+        CompressionUtil.compress(tempRootPath, zipFile);
+        return zipFile;
     }
 
-    @Override
-    List<String> getFiles() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    DefaultInputFormatProvider getProvider() {
-        DefaultInputFormatProvider provider = getProvider();
-        provider.setNames(new String[]{"DEFAULT"});
-        return provider;
-    }
-
-    public SplitProcessAndThreadTask(String file) {
+    public SplitProcessAndThreadTask() {
         splitMap = new HashMap<>();
         Rule rule = new TrueRule();
         rule.addAction(new RuleAction() {
@@ -77,11 +67,12 @@ public class SplitProcessAndThreadTask extends SMRTETask<String> {
                 handleLine(splitMap, result, line);
             }
         });
-
-        //TODO
+        addRule(rule);
     }
 
     private void handleLine(Map<String, ProcessIdHelper> splitMap, SplitResult result, Line line) {
+        //NOTE: mostly this happens while no matching regex can be used to split a line
+        if(result == null) return;
         String processId = String.valueOf((Integer) result.get("process_id").getValue());
         String threadId = String.valueOf((Integer) result.get("thread_id").getValue());
 
@@ -144,4 +135,11 @@ public class SplitProcessAndThreadTask extends SMRTETask<String> {
             lineContentList.add(line.getContent());
         }
     }
+
+    DefaultInputFormatProvider getProvider() {
+        DefaultInputFormatProvider provider = getDefaultProvider();
+        provider.setNames(new String[]{"DEFAULT"});
+        return provider;
+    }
+
 }

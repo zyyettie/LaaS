@@ -20,14 +20,18 @@ public class DemoTest {
     public static void main(String[] args) {
         //SpringApplication.run(DemoTest.class, args);
         //runSplitProcessAndThreadTask();
-        runTopNQueryTask();
+        runSplitProcessAndThreadTask();
         //runLoginTimeInfoTask();
         //runRadShowTask();
         //runSMOMiPerformanceTask();
     }
 
     static void runSplitProcessAndThreadTask() {
-        SplitProcessAndThreadTask task = new SplitProcessAndThreadTask("e:\\SM_UCMDB.log");
+        SplitProcessAndThreadTask task = new SplitProcessAndThreadTask();
+        List<String> strFiles = new ArrayList<String>();
+        strFiles.add("e:\\sm.log");
+
+        task.setFiles(strFiles);
         StrategyAnalysisEngine engine = new StrategyAnalysisEngine();
         engine.setStrategy(new ThreadPoolExecutionStrategy());
 

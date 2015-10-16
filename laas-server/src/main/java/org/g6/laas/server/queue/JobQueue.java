@@ -17,7 +17,8 @@ public class JobQueue {
     }
 
     public QueueJob get() throws InterruptedException {
-       return queue.poll(10000, TimeUnit.MILLISECONDS);
+       //return queue.poll(10000, TimeUnit.MICROSECONDS);
+        return queue.take();
     }
 
     public void remove(){

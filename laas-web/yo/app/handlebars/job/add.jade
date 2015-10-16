@@ -16,15 +16,14 @@
                             |{{/each}}
                 .field
                     label Job Description
-                    textarea(type="text",rows="3",name="description",placeholder="description")
+                    textarea(type="text",rows="3",name="description",placeholder="description") {{description}}
                 #parameters
-                    |@parameters@
                 .field
                 .two.fields
                     .field
                         label Files
                     .field
-                        .ui.teal.large.fluid.button#add_file Add Files
+                        .ui.teal.large.fluid.button#add_file Add
                 .field
                     .ui.divided.list
                         |{{#each files}}

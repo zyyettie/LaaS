@@ -19,7 +19,6 @@ import java.util.List;
  */
 public class TopNQueryTask extends SMRTETask<List<Line>> {
     private int N = 50;
-    private List<String> files;
     private String order = "desc";
     private List<Line> lines = new ArrayList<>();
 
@@ -40,10 +39,5 @@ public class TopNQueryTask extends SMRTETask<List<Line>> {
             }
         });
         addRule(rule);
-    }
-
-    @Override
-    List<String> getFiles() {
-         return files;
     }
 }

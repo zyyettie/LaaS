@@ -76,9 +76,4 @@ public class SMOMiPerformanceTask extends SMRTETask<List<String>> {
         //initContext(file, rule);
         //TODO
     }
-
-    @Override
-    List<String> getFiles() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
 }

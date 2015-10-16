@@ -98,7 +98,7 @@ public final class DefaultInputFormat implements InputFormat {
         //in this case, the default format is used to split. But the existing format including default one
         // may not be available for it, for example, if user add some comments in the log file
         if (fieldContents == null) {
-            log.warn("can not split the line : " + line.getContent() + " with the split regex : " + lineSplitRegex);
+            log.warn(line.getLineNumber() + ": can not split the line : " + line.getContent() + " with the split regex : " + lineSplitRegex);
             return null;
         }
         Collection<Field> fieldList = new ArrayList<>();

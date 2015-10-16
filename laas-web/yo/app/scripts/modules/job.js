@@ -3,10 +3,15 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
     var appContext = LaaS.Util.Constants.APPCONTEXT;
     Job.JobView = Marionette.ItemView.extend({
         initialize: function (options) {
-            if (options.model != undefined) {
+            if (this.model == undefined) {
                 this.model = options.model;
             }
-            this.job = jQuery.extend({}, options.job);
+
+            if (options.job == undefined) {
+                this.job = {};
+            } else {
+                this.job = jQuery.extend({}, options.job);
+            }
             this.scenarioList = options.scenarioList;
             this.fileList = options.fileList;
             this.selectedScenarios = options.selectedScenarios;
@@ -14,13 +19,14 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         },
         serializeData: function () {
             var data = {job: this.job, scenarioList: this.scenarioList, fileList: this.fileList, selectedScenarios: this.selectedScenarios, files: this.files};
+            data.job.scenarioList = data.scenarioList;
+            data.job.files = data.files;
             if (this.job.id != undefined) {
                 var json = JSON.parse(data.job.parameters);
                 data.job.N = json["N"];
                 data.job.order = json["order"];
                 data.job.desc = json["order"] == "desc" ? "selected" : "";
                 data.job.asc = json["order"] == "asc" ? "selected" : "";
-                data.job.scenarioList = data.scenarioList;
                 for (var i = 0; i < data.scenarioList.length; i++) {
                     if (data.scenarioList[i].id == data.selectedScenarios[0].id) {
                         data.job.scenarioList[i].selected = "selected";
@@ -28,7 +34,6 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 }
                 data.job.selectedid = data.selectedScenarios[0].id;
                 data.job.selectedname = data.selectedScenarios[0].name;
-                data.job.files = data.files;
                 data.job.selectedScenarios = data.selectedScenarios;
             }
             return data;
@@ -83,6 +88,11 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             json.scenarios = [];
             json.scenarios.push(appContext+"/api/v1/scenarios/" + json.selectedScenario);
 
+            json.files = [];
+            for (var i=0; i<this.job.files.length; i++) {
+                json.files.push(appContext+"/api/v1/files/"+this.job.files[i].id);
+            }
+
             //this.model.url='/jobs/'+json.id;
             this.model.save(json, {patch: true, success: function () {
                 toastr.info('Save Job successfully.');
@@ -104,6 +114,12 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             json.parameters = JSON.stringify({N: json['N'], order: json['order']});
             json.scenarios = [];
             json.scenarios.push(appContext+"/api/v1/scenarios/" + json.selectedScenario);
+
+            json.files = [];
+            for (var i=0; i<this.job.files.length; i++) {
+                json.files.push(appContext+"/api/v1/files/"+this.job.files[i].id);
+            }
+
             this.model.save(json, {patch: true, success: function (response) {
                 $.getJSON(appContext+"/controllers/jobs/" + response.id).done(function (json) {
                         toastr.info('Save and Run Job successfully.');
@@ -120,10 +136,16 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         addFile: function () {
             var thisjob = this.job;
             var that = this;
+            var json = Backbone.Syphon.serialize(this);
+            thisjob = $.extend({}, thisjob, json);
             $.when(LaaS.request('file:entities')).done(function(data) {
                 var fileSelectView = new LaaS.File.FileSelectView({job:thisjob, files:data.files, jobmodel:that.model});
                 LaaS.mainRegion.show(fileSelectView);
-                LaaS.navigate('/jobs/'+thisjob.id+'/fileselect');
+                if (thisjob.id == undefined) {
+                    LaaS.navigate('/jobnew/fileselect');
+                } else {
+                    LaaS.navigate('/jobs/'+thisjob.id+'/fileselect');
+                }
             }).fail(function() {
                 toastr.error('Cannot load files.');
             });
