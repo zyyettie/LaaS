@@ -4,8 +4,10 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.core.engine.AnalysisEngine;
 import org.g6.laas.core.engine.task.AnalysisTask;
+import org.g6.laas.core.engine.task.report.ReportBuilder;
 import org.g6.laas.core.engine.task.report.ReportModel;
 import org.g6.laas.core.engine.task.report.StringReportView;
+import org.g6.laas.core.engine.task.report.template.TemplateViewResolver;
 import org.g6.laas.core.engine.task.report.template.handlebars.HandlebarsReportView;
 import org.g6.laas.core.exception.LaaSRuntimeException;
 import org.g6.laas.server.database.entity.File;
@@ -180,15 +182,22 @@ public class JobController {
     }
 
     private String genReport(TaskRunningResult taskRunningResult, Task task) {
-        java.io.File handlebarsTemplate = FileUtil.getFile("report/template/" + task.getClassName() + ".hbs");
+        //java.io.File handlebarsTemplate = FileUtil.getFile("report/template/" + task.getClassName());
 
         ReportModel model = new ReportModel();
-        model.setAttribute("zipFile", taskRunningResult.getResult());
-        StringReportView reportView = new HandlebarsReportView(handlebarsTemplate);
+        model.setAttribute("task_running_result", taskRunningResult.getResult());
 
-        String reportContent = reportView.render(model);
 
-        return reportContent;
+        TemplateViewResolver resolver = new TemplateViewResolver();
+        ReportBuilder builder = new ReportBuilder(resolver);
+        String report = builder.build(model, "/report/template/" + task.getClassName());
+
+        return report;
+    }
+
+    private String writeReportToFile(String report){
+
+        return null;
     }
 
     /**
@@ -234,7 +243,7 @@ public class JobController {
 
         Object obj;
         try {
-            obj = future.get(2000, TimeUnit.MILLISECONDS);
+            obj = future.get(20000, TimeUnit.MILLISECONDS);
             result.setResult(obj);
             //TODO
             //throw new TimeoutException("Just for testing and remove this line later!");

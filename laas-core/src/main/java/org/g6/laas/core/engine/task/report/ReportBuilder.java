@@ -11,7 +11,7 @@ public class ReportBuilder {
 
     private ViewResolver viewResolver;
 
-    String build(ReportModel model,String logicView){
+    public String build(ReportModel model,String logicView){
         ReportView view = viewResolver.resolve(logicView);
         Object renderResult =  view.render(model);
         if(renderResult instanceof String)
