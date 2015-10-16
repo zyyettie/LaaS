@@ -12,15 +12,12 @@ import java.io.File;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TemplateViewResolver implements ViewResolver {
-
-    private TemplateLoader loader = new ClassPathTemplateLoader(".hbs");
     private TemplateSystem system = TemplateSystem.HANDLEBARS;
 
     @Override
     public ReportView resolve(String name) {
-        File template = loader.loadTemplate(name);
         if (system.equals(TemplateSystem.HANDLEBARS))
-            return new HandlebarsReportView(template);
+            return new HandlebarsReportView(name);
         throw new ViewResolveException("Not support template engine " + system.name());
     }
 }

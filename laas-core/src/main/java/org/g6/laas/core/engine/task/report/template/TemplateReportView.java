@@ -10,9 +10,9 @@ import java.io.File;
 @Data
 public abstract class TemplateReportView implements StringReportView {
 
-    private File template;
+    private String template;
 
-    public TemplateReportView(File template) {
+    public TemplateReportView(String template) {
         this.template = template;
     }
 
