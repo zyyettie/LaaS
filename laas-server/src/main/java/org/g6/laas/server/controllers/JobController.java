@@ -1,18 +1,17 @@
 package org.g6.laas.server.controllers;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.core.engine.AnalysisEngine;
 import org.g6.laas.core.engine.task.AnalysisTask;
 import org.g6.laas.core.engine.task.report.ReportBuilder;
 import org.g6.laas.core.engine.task.report.ReportModel;
-import org.g6.laas.core.engine.task.report.StringReportView;
 import org.g6.laas.core.engine.task.report.template.TemplateViewResolver;
-import org.g6.laas.core.engine.task.report.template.handlebars.HandlebarsReportView;
-import org.g6.laas.core.exception.LaaSRuntimeException;
 import org.g6.laas.server.database.entity.File;
 import org.g6.laas.server.database.entity.Job;
 import org.g6.laas.server.database.entity.JobRunning;
+import org.g6.laas.server.database.entity.result.TaskResult;
 import org.g6.laas.server.database.entity.task.Scenario;
 import org.g6.laas.server.database.entity.task.Task;
 import org.g6.laas.server.database.entity.task.TaskRunning;
@@ -59,29 +58,16 @@ public class JobController {
         //prepareTestData();
 
         Job job = jobRepo.findOne(jobId);
-        JobRunning jobRunning = genRunningRecords4JobAndTask(job);
+        JobRunning jobRunning = createRunningRecords4JobAndTask(job);
 
-        int runningMode = runTasks(jobRunning);
+        boolean isSyn = runTasks(jobRunning);
 
-        //TODO
-        String json = genRetJSON(job);
-        //returning JSON should contains jobID, Job running id, job status, task ids and corresponding status.
-        return new ResponseEntity("{\"id\":" + job.getId() + "}", HttpStatus.OK);
-    }
+        Map<String, String> jsonMap = new HashMap();
+        jsonMap.put("job_id", String.valueOf(job.getId()));
+        jsonMap.put("job_running_id", String.valueOf(jobRunning.getId()));
+        jsonMap.put("is_syn", isSyn ? "true" : "false");
 
-    private void prepareTestData() {
-        Job myJob = new Job();
-        myJob.setName("Job" + Math.random());
-        //myJob.setParameters("{\"N\":\"60\", \"order\":\"desc\"}");
-
-        Scenario _scenario = scenarioRepo.getOne(4l);
-        Collection<Scenario> _scenarios = new ArrayList();
-        _scenarios.add(_scenario);
-        myJob.setScenarios(_scenarios);
-
-        Job myRetJob = jobRepo.save(myJob);
-        System.out.println(myRetJob.getId());
-
+        return new ResponseEntity(JSONUtil.toJson(jsonMap), HttpStatus.OK);
     }
 
     /**
@@ -91,7 +77,7 @@ public class JobController {
      * @param job
      * @return JobRunning object for JobRunning
      */
-    private JobRunning genRunningRecords4JobAndTask(Job job) {
+    private JobRunning createRunningRecords4JobAndTask(Job job) {
         JobRunning jobRunning = new JobRunning();
         jobRunning.setJob(job);
         jobRunning.setStatus("RUNNING");
@@ -124,14 +110,10 @@ public class JobController {
      * @param jobRunning
      * @return 0: Synchronous 1: asynchronous
      */
-    private int runTasks(JobRunning jobRunning) {
+    private boolean runTasks(JobRunning jobRunning) {
         Job job = jobRunning.getJob();
         List<String> strFiles = getLogFilesFromJob(job);
         Map<String, String> paramMap = JSONUtil.fromJson(job.getParameters());
-
-        //TODO for testing hardcoded some data for log file
-        strFiles.clear();
-        strFiles.add("e:\\sm.log");
 
         Collection<TaskRunning> taskRunnings = jobRunning.getTaskRunnings();
         QueueJob queueJob = new QueueJob();
@@ -154,8 +136,22 @@ public class JobController {
             }
             if (taskRunningResult != null) {
                 if (!taskRunningResult.isTimeout) {
-                    jobHelper.saveTaskRunningStatus(taskRunning, "SUCCESS");
                     String report = genReport(taskRunningResult, task);
+                    FileInfo resultFile = writeReportToFile(report);
+                    File f = new File();
+                    f.setPath(resultFile.getPath());
+                    f.setFileName(resultFile.getName());
+                    f.setOriginalName(resultFile.getName());
+
+                    TaskResult taskResult = new TaskResult();
+                    Collection<File> files = new ArrayList();
+                    files.add(f);
+                    taskResult.setFiles(files);
+                    taskRunning.setResult(taskResult);
+
+                    jobHelper.saveTaskRunningStatus(taskRunning, "SUCCESS");
+
+
                 } else {
                     asynCount++;
                     queueJob.addQueueTask(taskRunning, new QueueTask(taskRunningResult.getFuture()));
@@ -178,7 +174,7 @@ public class JobController {
             }
         }
 
-        return isSyn ? 0 : 1;
+        return isSyn ? true : false;
     }
 
     private String genReport(TaskRunningResult taskRunningResult, Task task) {
@@ -195,9 +191,13 @@ public class JobController {
         return report;
     }
 
-    private String writeReportToFile(String report){
+    private FileInfo writeReportToFile(String report) {
+        String path = FileUtil.getvalue("result_file_full_path", "sm.properties");
+        //TODO NOTE to avoid concurrent operation, should add login name in the path.
+        String fileName = System.currentTimeMillis() + ".log";
+        FileUtil.writeFile(report, path + fileName);
 
-        return null;
+        return new FileInfo(path, fileName);
     }
 
     /**
@@ -266,12 +266,6 @@ public class JobController {
         return strFiles;
     }
 
-    //TODO
-    private String genRetJSON(Job job) {
-
-        return null;
-    }
-
     //TODO move the method to ReflectUtil class
     private void set(Field field, Object obj, String value) throws IllegalAccessException {
         if (field.getType().getName().equals("int")) {
@@ -290,6 +284,13 @@ public class JobController {
         Future future;
         boolean isTimeout = false;
         Object result;
+    }
+
+    @Data
+    @AllArgsConstructor
+    class FileInfo {
+        String path;
+        String name;
     }
 
 }

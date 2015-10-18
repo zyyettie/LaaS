@@ -11,7 +11,7 @@ import java.util.*;
 
 public class FileUtil {
 
-    public static Map<String, String> getPropertyValues(String file){
+    public static Map<String, String> getPropertyValues(String file) {
         Properties p = new Properties();
         Map<String, String> propMap = new HashMap();
         try {
@@ -27,8 +27,22 @@ public class FileUtil {
         }
     }
 
+    public static String getvalue(String key, String file) {
+        Properties p = new Properties();
+        try {
+            p.load(new FileInputStream(getFile(file)));
+            for (Map.Entry<Object, Object> entry : p.entrySet()) {
+                if (key.equals(entry.getKey())) {
+                    return (String) entry.getValue();
+                }
+            }
+        } catch (IOException e) {
+            throw new LaaSCoreRuntimeException(file + " is not found.");
+        }
+        return null;
+    }
+
     /**
-     *
      * @param file the format of this parameter should be package/file e.g. org/g6/laas/sm/sm_rte_log.json
      * @return
      * @throws URISyntaxException
@@ -36,9 +50,9 @@ public class FileUtil {
     public static File getFile(String file) {
         URL url = Resources.getResource(file);
         File result = null;
-        try{
+        try {
             result = new File(url.toURI());
-        }catch(URISyntaxException e){
+        } catch (URISyntaxException e) {
             throw new LaaSCoreRuntimeException(file + " is not found.");
         }
         return result;
@@ -63,6 +77,12 @@ public class FileUtil {
             throw new LaaSCoreRuntimeException("Exception is thrown when reading file", e);
         }
 
+    }
+
+    public static boolean writeFile(String str, String outFile) {
+        List<String> list = new ArrayList();
+        list.add(str);
+        return writeFile(list, outFile);
     }
 
     public static boolean writeFile(List<String> lineList, String outFile) {

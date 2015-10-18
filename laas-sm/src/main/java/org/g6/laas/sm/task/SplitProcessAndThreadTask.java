@@ -10,6 +10,7 @@ import org.g6.laas.core.rule.action.RuleAction;
 import org.g6.util.CompressionUtil;
 import org.g6.util.FileUtil;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,15 +36,15 @@ public class SplitProcessAndThreadTask extends SMRTETask<String> {
      */
     @Override
     protected String process() {
-        String tempRootPath = "e:\\SMRTE\\";
-        String zipFile = "e:\\SMRTESPLIT.zip";
+        String tempRootPath = FileUtil.getvalue("zip_file_temp_path","sm.properties");
+        String zipFile = FileUtil.getvalue("result_file_full_path", "sm.properties") + System.currentTimeMillis() + ".zip";
         FileUtil.deleteDir(tempRootPath);
 
         for (Map.Entry<String, ProcessIdHelper> entry : splitMap.entrySet()) {
             String processId = entry.getKey();
             ProcessIdHelper processIdHelper = entry.getValue();
 
-            String processPath = tempRootPath + processId + "\\";
+            String processPath = tempRootPath + processId + File.separator;
             boolean flag = FileUtil.createDir(processPath);
 
             List<ThreadIdHelper> list = processIdHelper.getThreadIdHelperList();
