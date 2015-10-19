@@ -184,9 +184,12 @@ public class JobController {
         model.setAttribute("task_running_result", taskRunningResult.getResult());
 
 
-        TemplateViewResolver resolver = new TemplateViewResolver();
-        ReportBuilder builder = new ReportBuilder(resolver);
-        String report = builder.build(model, "/report/template/" + task.getClassName());
+        //Wang Peng!!! No need to specify resolver. default will use TemplateViewResolver
+        //Just only need put template file at package /template/report/handlebars.
+        //TemplateViewResolver resolver = new TemplateViewResolver();
+
+        ReportBuilder builder = new ReportBuilder();
+        String report = builder.build(model, task.getClassName());
 
         return report;
     }
