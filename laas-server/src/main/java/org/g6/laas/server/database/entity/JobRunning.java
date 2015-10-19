@@ -6,10 +6,7 @@ import lombok.NoArgsConstructor;
 import org.g6.laas.server.database.entity.task.TaskRunning;
 import org.g6.laas.server.database.entity.user.User;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -19,7 +16,9 @@ import java.util.Collection;
 @EqualsAndHashCode(callSuper = false)
 public class JobRunning extends LaaSNotifiable<User> {
     private static final long serialVersionUID = -5742125355431226460L;
-    private Collection<User> users;
+    @Transient
+    private Collection<User> users = new ArrayList();
+    @Transient
     private String summary;
 
     @ManyToOne
