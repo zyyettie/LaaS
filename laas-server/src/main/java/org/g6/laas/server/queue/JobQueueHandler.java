@@ -3,6 +3,7 @@ package org.g6.laas.server.queue;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.g6.laas.server.database.entity.File;
+import org.g6.laas.server.database.entity.Job;
 import org.g6.laas.server.database.entity.JobRunning;
 import org.g6.laas.server.database.entity.result.TaskResult;
 import org.g6.laas.server.database.entity.task.TaskRunning;
@@ -74,7 +75,6 @@ public class JobQueueHandler {
                 taskRunning.setStatus("SUCCESS");
 
                 jobHelper.saveTaskRunning(taskRunning);
-
             } catch (ExecutionException e) {
                 //TODO
             } catch (InterruptedException e) {
@@ -121,8 +121,12 @@ public class JobQueueHandler {
         }
     }
 
-    private void genNotification(JobRunning jobRunning){
-
+    private void makeJobRunningNotifiable(JobRunning jobRunning) {
+        // Need to discuss if the login user will be saved in createdBy field
+        jobRunning.getUsers().add(jobRunning.getCreatedBy());
+        Job job = jobRunning.getJob();
+        String summary = job.getId() + " " + job.getName() + " <a href=\"http://localhost:9000/laas-server/jobs/1/jobRunnings/2\">Running Result</a>";
+        jobRunning.setSummary(summary);
     }
 
     public void shutDown() {
