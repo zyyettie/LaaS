@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.g6.laas.core.engine.task.report.ReportBuilder;
 import org.g6.laas.core.engine.task.report.ReportModel;
+import org.g6.laas.server.database.entity.File;
 import org.g6.laas.server.database.entity.JobRunning;
+import org.g6.laas.server.database.entity.result.TaskResult;
 import org.g6.laas.server.database.entity.task.Task;
 import org.g6.laas.server.database.entity.task.TaskRunning;
 import org.g6.laas.server.database.repository.IJobRunningRepository;
@@ -15,6 +17,8 @@ import org.g6.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.Future;
 
 @Service
@@ -61,5 +65,17 @@ public class JobHelper {
         return new FileInfo(path, fileName);
     }
 
+    public void handleResultFile(TaskRunning taskRunning, FileInfo info) {
+        File f = new File();
+        f.setPath(info.getPath());
+        f.setFileName(info.getName());
+        f.setOriginalName(info.getName());
+
+        TaskResult taskResult = new TaskResult();
+        Collection<File> files = new ArrayList();
+        files.add(f);
+        taskResult.setFiles(files);
+        taskRunning.setResult(taskResult);
+    }
 
 }

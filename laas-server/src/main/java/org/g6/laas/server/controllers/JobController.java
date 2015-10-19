@@ -140,16 +140,7 @@ public class JobController {
                 if (!taskRunningResult.isTimeout()) {
                     String report = jobHelper.genReport(taskRunningResult, task);
                     FileInfo resultFile = jobHelper.writeReportToFile(report);
-                    File f = new File();
-                    f.setPath(resultFile.getPath());
-                    f.setFileName(resultFile.getName());
-                    f.setOriginalName(resultFile.getName());
-
-                    TaskResult taskResult = new TaskResult();
-                    Collection<File> files = new ArrayList();
-                    files.add(f);
-                    taskResult.setFiles(files);
-                    taskRunning.setResult(taskResult);
+                    jobHelper.handleResultFile(taskRunning, resultFile);
 
                     jobHelper.saveTaskRunningStatus(taskRunning, "SUCCESS");
                 } else {

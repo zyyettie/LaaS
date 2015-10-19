@@ -6,6 +6,8 @@ import org.g6.laas.server.database.entity.File;
 import org.g6.laas.server.database.entity.JobRunning;
 import org.g6.laas.server.database.entity.result.TaskResult;
 import org.g6.laas.server.database.entity.task.TaskRunning;
+import org.g6.laas.server.vo.FileInfo;
+import org.g6.laas.server.vo.TaskRunningResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +47,7 @@ public class JobQueueHandler {
 
                 if (queueJob != null) {
                     if (queueJob.isDone()) {
-                        handleQueueTasks(queueJob);
+                        handleTasksInQueue(queueJob);
                     } else {
                         //if the current job is still running, need to append it in queue again
                         queue.addJob(queueJob);
@@ -55,7 +57,7 @@ public class JobQueueHandler {
         }
     }
 
-    private void handleQueueTasks(QueueJob queueJob) {
+    private void handleTasksInQueue(QueueJob queueJob) {
         Map<TaskRunning, QueueTask> queueTasks = queueJob.getQueueTasks();
 
         for (Map.Entry<TaskRunning, QueueTask> entry : queueTasks.entrySet()) {
@@ -63,47 +65,24 @@ public class JobQueueHandler {
             QueueTask queueTask = entry.getValue();
             try {
                 Object object = queueTask.getRunningResult();
-                String report = getReport(object);
-                //TODO need to discuss where the file should be placed
-                String path = "";
-                String fileName = "";
+                TaskRunningResult result = new TaskRunningResult();
+                result.setResult(object);
+                String report = jobHelper.genReport(result, taskRunning.getTask());
+                FileInfo resultFile = jobHelper.writeReportToFile(report);
 
-                File file = writeReportToFile(path, fileName, report);
-                TaskResult taskResult = new TaskResult();
-                Collection<File> files = new ArrayList<>();
-                files.add(file);
-                taskResult.setFiles(files);
-
-                taskRunning.setResult(taskResult);
+                jobHelper.handleResultFile(taskRunning, resultFile);
                 taskRunning.setStatus("SUCCESS");
+
                 jobHelper.saveTaskRunning(taskRunning);
 
             } catch (ExecutionException e) {
                 //TODO
             } catch (InterruptedException e) {
                 //TODO
-            } catch (IOException ioe) {
-                //TODO
             }
         }
 
         updateJobRunningStatus(queueJob.getJobRunning());
-    }
-
-    private String getReport(Object object) {
-        //TODO
-        return null;
-    }
-
-    private File writeReportToFile(String path, String fileName, String report) throws IOException {
-        FileUtils.writeStringToFile(new java.io.File(path + fileName), report);
-
-        File f = new File();
-        f.setPath(path);
-        f.setFileName(fileName);
-        f.setOriginalName(fileName);
-
-        return f;
     }
 
     /**
@@ -140,6 +119,10 @@ public class JobQueueHandler {
             jobRunning.setStatus("PARTIALLY SUCCESS");
             jobHelper.saveJobRunning(jobRunning);
         }
+    }
+
+    private void genNotification(JobRunning jobRunning){
+
     }
 
     public void shutDown() {
