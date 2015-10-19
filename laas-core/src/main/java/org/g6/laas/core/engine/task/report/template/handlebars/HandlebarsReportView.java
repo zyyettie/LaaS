@@ -15,27 +15,15 @@ import java.net.URL;
 
 public class HandlebarsReportView extends TemplateReportView {
 
-    private URL templateResource;
-
     public HandlebarsReportView(String template) {
         super(template);
-    }
-
-    public HandlebarsReportView(URL resource) {
-        super(resource.getPath());
-        this.templateResource = resource;
     }
 
     @Override
     public String render(ReportModel model) {
         Handlebars handlebars = new Handlebars();
         try {
-
-            if (templateResource == null) {
-                templateResource = new URL(getTemplate());
-            }
-
-            TemplateSource templateSource = new URLTemplateSource(getTemplate(), templateResource);
+            TemplateSource templateSource = new URLTemplateSource(getTemplate(), new URL(getTemplate()));
             Template template = handlebars.compile(templateSource);
             Context context = Context
                     .newBuilder(model.asMap())

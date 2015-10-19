@@ -25,7 +25,7 @@ public class TemplateViewResolver implements ViewResolver {
     public ReportView resolve(String name) {
         if (system.equals(TemplateSystem.HANDLEBARS)) {
             URL templateResource = getClass().getResource(prefix + name + suffix);
-            return new HandlebarsReportView(templateResource);
+            return new HandlebarsReportView(templateResource.getPath());
         }
         throw new ViewResolveException("Not support template engine " + system.name());
     }
