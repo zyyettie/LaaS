@@ -32,18 +32,8 @@ insert into SCENARIO_TASK(SCENARIO_ID, TASK_ID) values(4, 4)
 insert into SCENARIO_TASK(SCENARIO_ID, TASK_ID) values(5, 5)
 insert into SCENARIO_TASK(SCENARIO_ID, TASK_ID) values(6, 6)
 
-insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(1, 'Test1.log', 'Test Path', '1', 'ORIGINAL Test1.log')
-insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(2, 'Test2.log', 'Test Path', '1', 'ORIGINAL Test2.log')
-insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(3, 'Test3.log', 'Test Path', '1', 'ORIGINAL Test3.log')
+insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(1, 'sm.log', 'e:/', '1', 'sm.log')
+insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(2, 'sm.log.1', 'e:/', '1', 'sm.log.1')
+insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(3, 'sm.log.2', 'e:/', '1', 'sm.log.2')
 insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(4, 'Test4.log', 'Test Path', '1', 'ORIGINAL Test4.log')
 insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(5, 'Test5.log', 'Test Path', '1', 'ORIGINAL Test5.log')
-
-insert into JOB(ID, NAME, PARAMETERS) values(1, 'I want to get split process and thread', '{"N":"60", "order":"asc"}')
-
-insert into JOB_SCENARIOS(JOB_ID, SCENARIOS_ID) values (1, 4)
-
-insert into JOB_FILES(JOB_ID, FILES_ID) values(1, 1)
-insert into JOB_FILES(JOB_ID, FILES_ID) values(1, 2)
-insert into JOB_FILES(JOB_ID, FILES_ID) values(1, 3)
-insert into JOB_FILES(JOB_ID, FILES_ID) values(1, 4)
-insert into JOB_FILES(JOB_ID, FILES_ID) values(1, 5)

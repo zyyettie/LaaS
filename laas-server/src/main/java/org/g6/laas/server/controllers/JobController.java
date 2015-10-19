@@ -178,16 +178,8 @@ public class JobController {
     }
 
     private String genReport(TaskRunningResult taskRunningResult, Task task) {
-        //java.io.File handlebarsTemplate = FileUtil.getFile("report/template/" + task.getClassName());
-
         ReportModel model = new ReportModel();
         model.setAttribute("task_running_result", taskRunningResult.getResult());
-
-
-        //Wang Peng!!! No need to specify resolver. default will use TemplateViewResolver
-        //Just only need put template file at package /template/report/handlebars.
-        //TemplateViewResolver resolver = new TemplateViewResolver();
-
         ReportBuilder builder = new ReportBuilder();
         String report = builder.build(model, task.getClassName());
 
