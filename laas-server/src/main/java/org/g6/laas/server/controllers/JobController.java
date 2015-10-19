@@ -21,6 +21,8 @@ import org.g6.laas.server.queue.JobHelper;
 import org.g6.laas.server.queue.JobQueue;
 import org.g6.laas.server.queue.QueueJob;
 import org.g6.laas.server.queue.QueueTask;
+import org.g6.laas.server.vo.FileInfo;
+import org.g6.laas.server.vo.TaskRunningResult;
 import org.g6.util.FileUtil;
 import org.g6.util.JSONUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,9 +137,9 @@ public class JobController {
                 log.error("Exception is thrown while running task" + task.getName(), e);
             }
             if (taskRunningResult != null) {
-                if (!taskRunningResult.isTimeout) {
-                    String report = genReport(taskRunningResult, task);
-                    FileInfo resultFile = writeReportToFile(report);
+                if (!taskRunningResult.isTimeout()) {
+                    String report = jobHelper.genReport(taskRunningResult, task);
+                    FileInfo resultFile = jobHelper.writeReportToFile(report);
                     File f = new File();
                     f.setPath(resultFile.getPath());
                     f.setFileName(resultFile.getName());
@@ -150,8 +152,6 @@ public class JobController {
                     taskRunning.setResult(taskResult);
 
                     jobHelper.saveTaskRunningStatus(taskRunning, "SUCCESS");
-
-
                 } else {
                     asynCount++;
                     queueJob.addQueueTask(taskRunning, new QueueTask(taskRunningResult.getFuture()));
@@ -162,10 +162,10 @@ public class JobController {
             }
         }
 
-        //Note the status of JobRunning is not required to changed while moving to asynchronous mode
+        //Note the status of JobRunning is not required to change while moving to asynchronous mode
         if (isSyn) {
             if (failedTasks == 0) {
-                //The status of JobRunning should be set to "SUCCESS" after all tasked are run successfully
+                //The status of JobRunning should be set to "SUCCESS" after all tasks are run successfully
                 jobHelper.saveJobRunningStatus(jobRunning, "SUCCESS");
             } else if (failedTasks == taskRunnings.size()) {
                 jobHelper.saveJobRunningStatus(jobRunning, "FAILED");
@@ -175,24 +175,6 @@ public class JobController {
         }
 
         return isSyn ? true : false;
-    }
-
-    private String genReport(TaskRunningResult taskRunningResult, Task task) {
-        ReportModel model = new ReportModel();
-        model.setAttribute("task_running_result", taskRunningResult.getResult());
-        ReportBuilder builder = new ReportBuilder();
-        String report = builder.build(model, task.getClassName());
-
-        return report;
-    }
-
-    private FileInfo writeReportToFile(String report) {
-        String path = FileUtil.getvalue("result_file_full_path", "sm.properties");
-        //TODO NOTE to avoid concurrent operation, should add login name in the path.
-        String fileName = System.currentTimeMillis() + ".log";
-        FileUtil.writeFile(report, path + fileName);
-
-        return new FileInfo(path, fileName);
     }
 
     /**
@@ -274,18 +256,5 @@ public class JobController {
         }
     }
 
-    @Data
-    class TaskRunningResult {
-        Future future;
-        boolean isTimeout = false;
-        Object result;
-    }
-
-    @Data
-    @AllArgsConstructor
-    class FileInfo {
-        String path;
-        String name;
-    }
 
 }
