@@ -1,6 +1,7 @@
 package org.g6.laas;
 
 import org.g6.laas.server.database.entity.*;
+import org.g6.laas.server.database.entity.result.TaskResult;
 import org.g6.laas.server.database.entity.task.*;
 import org.g6.laas.server.database.entity.user.Notification;
 import org.g6.laas.server.database.entity.user.Role;
@@ -21,7 +22,7 @@ public class RestfulConfiguration extends RepositoryRestMvcConfiguration {
     @Override
     protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
         config.exposeIdsFor(User.class,Role.class, Notification.class,Inbox.class, Category.class, File.class, FileType.class,
-                            Product.class, Scenario.class,Task.class, TaskRunning.class, Job.class, JobRunning.class);
+                            Product.class, Scenario.class,Task.class, TaskRunning.class, Job.class, JobRunning.class, TaskResult.class);
         try {
             config.setReturnBodyOnCreate(true);
             config.setReturnBodyOnUpdate(true);
