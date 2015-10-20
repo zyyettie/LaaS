@@ -9,7 +9,9 @@ import org.g6.laas.server.database.entity.result.TaskResult;
 import org.g6.laas.server.database.entity.task.TaskRunning;
 import org.g6.laas.server.vo.FileInfo;
 import org.g6.laas.server.vo.TaskRunningResult;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -22,7 +24,7 @@ import java.util.concurrent.ExecutionException;
 
 @Service
 @Slf4j
-public class JobQueueHandler {
+public class JobQueueHandler implements InitializingBean {
     @Autowired
     private JobQueue queue;
     @Autowired
@@ -33,7 +35,14 @@ public class JobQueueHandler {
     @PostConstruct
     public void handle() {
         System.out.println("Start handling all pending tasks in queue");
+
         new Executor().start();
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+         //load all JobRunning records which is asyn and status is RUNNING from database and put them in queue.
+        //mostly this should be caused by server down
     }
 
     class Executor extends Thread {

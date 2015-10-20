@@ -148,6 +148,10 @@ public class JobController {
                     jobHelper.saveTaskRunningStatus(taskRunning, "SUCCESS");
                 } else {
                     asynCount++;
+                    if(!"N".equals(jobRunning.getSyn())){
+                        jobRunning.setSyn("N");
+                        jobHelper.saveJobRunning(jobRunning);
+                    }
                     queueJob.addQueueTask(taskRunning, new QueueTask(taskRunningResult.getFuture()));
                     queueJob.setJobRunning(jobRunning);
                     queue.addJob(queueJob);
@@ -159,6 +163,7 @@ public class JobController {
         JobRunningResult jobRunningResult = new JobRunningResult();
         //Note the status of JobRunning is not required to change while moving to asynchronous mode
         if (isSyn) {
+            jobRunning.setSyn("Y");
             if (failedTasks == 0) {
                 //The status of JobRunning should be set to "SUCCESS" after all tasks are run successfully
                 jobHelper.saveJobRunningStatus(jobRunning, "SUCCESS");

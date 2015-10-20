@@ -26,6 +26,8 @@ public class JobRunning extends LaaSNotifiable<User> {
 
     private String status;
 
+    private String syn;//Y and N
+
     @OneToMany(cascade={CascadeType.PERSIST}, mappedBy = "jobRunning")
     private Collection<TaskRunning> taskRunnings = new ArrayList<>();
 
