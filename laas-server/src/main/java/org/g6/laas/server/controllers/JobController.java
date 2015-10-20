@@ -25,6 +25,7 @@ import org.g6.laas.server.vo.FileInfo;
 import org.g6.laas.server.vo.TaskRunningResult;
 import org.g6.util.FileUtil;
 import org.g6.util.JSONUtil;
+import org.g6.util.ReflectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,7 +74,7 @@ public class JobController {
     }
 
     /**
-     * Generate JobRunning and TaskRunning records.
+     * Insert JobRunning and TaskRunning records into database.
      * The status of JobRunning is set to "running" before all tasks are completed
      *
      * @param job
@@ -130,7 +131,9 @@ public class JobController {
                 Object taskObj = getTaskObj(task, paramMap, strFiles);
                 //taskObj is the instance of Task class which is used to run
                 //task is the entity which contains different data loaded from database.
+                log.debug("Start running task named " + task.getName());
                 taskRunningResult = runTask(taskObj, task);
+                log.debug("Finish running task named " + task.getName());
             } catch (Exception e) {
                 failedTasks++;
                 jobHelper.saveTaskRunningStatus(taskRunning, "FAILED");
@@ -194,7 +197,7 @@ public class JobController {
                 }
 
                 if (fields[i].getName().equals(entry.getKey())) {
-                    set(fields[i], taskObj, entry.getValue());
+                    ReflectUtil.set(fields[i], taskObj, entry.getValue());
                 }
                 if (!isAccessible) {
                     fields[i].setAccessible(false);
@@ -216,6 +219,7 @@ public class JobController {
             //TODO
             //throw new TimeoutException("Just for testing and remove this line later!");
         } catch (TimeoutException te) {
+            log.info("The task named " + task.getName() + "is going in asynchronous running mode");
             result.setFuture(future);
             result.setTimeout(true);
             log.warn("Timeout while running task " + task.getName() + ", move to asynchronous mode");
@@ -225,27 +229,13 @@ public class JobController {
     }
 
     private List<String> getLogFilesFromJob(Job job) {
-        List<String> strFiles = new ArrayList<>();
+        List<String> files = new ArrayList<>();
         for (Iterator<File> ite = job.getFiles().iterator(); ite.hasNext(); ) {
             File f = ite.next();
-            strFiles.add(f.getPath() + f.getFileName());
+            files.add(f.getPath() + f.getFileName());
         }
 
-        return strFiles;
+        return files;
     }
-
-    //TODO move the method to ReflectUtil class
-    private void set(Field field, Object obj, String value) throws IllegalAccessException {
-        if (field.getType().getName().equals("int")) {
-            field.setInt(obj, Integer.valueOf(value));
-        } else if (field.getType().getName().equals("long")) {
-            field.setLong(obj, Long.valueOf(value));
-        } else if (field.getType().getName().equals("double")) {
-            field.setDouble(obj, Double.valueOf(value));
-        } else {
-            field.set(obj, value);
-        }
-    }
-
 
 }
