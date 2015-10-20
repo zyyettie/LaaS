@@ -58,17 +58,15 @@ public class JobController {
 
     @RequestMapping(value = "/controllers/jobs/{jobId}")
     ResponseEntity<String> runJob(@PathVariable Long jobId) {
-        //prepareTestData();
-
         Job job = jobRepo.findOne(jobId);
         JobRunning jobRunning = createRunningRecords4JobAndTask(job);
 
-        boolean isSyn = runTasks(jobRunning);
+        JobRunningResult runningResult = runTasks(jobRunning);
 
         Map<String, String> jsonMap = new HashMap();
         jsonMap.put("job_id", String.valueOf(job.getId()));
         jsonMap.put("job_running_id", String.valueOf(jobRunning.getId()));
-        jsonMap.put("is_syn", isSyn ? "true" : "false");
+        jsonMap.put("is_syn", runningResult.isSyn() ? "true" : "false");
 
         return new ResponseEntity(JSONUtil.toJson(jsonMap), HttpStatus.OK);
     }
@@ -113,7 +111,7 @@ public class JobController {
      * @param jobRunning
      * @return 0: Synchronous 1: asynchronous
      */
-    private boolean runTasks(JobRunning jobRunning) {
+    private JobRunningResult runTasks(JobRunning jobRunning) {
         Job job = jobRunning.getJob();
         List<String> strFiles = getLogFilesFromJob(job);
         Map<String, String> paramMap = JSONUtil.fromJson(job.getParameters());
@@ -132,8 +130,10 @@ public class JobController {
                 //taskObj is the instance of Task class which is used to run
                 //task is the entity which contains different data loaded from database.
                 log.debug("Start running task named " + task.getName());
+                long timeStart = System.currentTimeMillis();
                 taskRunningResult = runTask(taskObj, task);
-                log.debug("Finish running task named " + task.getName());
+                long duration = System.currentTimeMillis() - timeStart;
+                log.debug("Finish running task named " + task.getName() + ". The duration is " + duration / 1000 + "s");
             } catch (Exception e) {
                 failedTasks++;
                 jobHelper.saveTaskRunningStatus(taskRunning, "FAILED");
@@ -156,19 +156,24 @@ public class JobController {
             }
         }
 
+        JobRunningResult jobRunningResult = new JobRunningResult();
         //Note the status of JobRunning is not required to change while moving to asynchronous mode
         if (isSyn) {
             if (failedTasks == 0) {
                 //The status of JobRunning should be set to "SUCCESS" after all tasks are run successfully
                 jobHelper.saveJobRunningStatus(jobRunning, "SUCCESS");
+                jobRunningResult.setSuccess(true);
             } else if (failedTasks == taskRunnings.size()) {
                 jobHelper.saveJobRunningStatus(jobRunning, "FAILED");
+                jobRunningResult.setSuccess(false);
             } else {
                 jobHelper.saveJobRunningStatus(jobRunning, "PARTIALLY SUCCESS");
+                jobRunningResult.setSuccess(false);
             }
         }
+        jobRunningResult.setSuccess(isSyn);
 
-        return isSyn ? true : false;
+        return jobRunningResult;
     }
 
     /**
@@ -217,7 +222,7 @@ public class JobController {
             obj = future.get(20000, TimeUnit.MILLISECONDS);
             result.setResult(obj);
             //TODO
-            throw new TimeoutException("Just for testing and remove this line later!");
+            //throw new TimeoutException("Just for testing and remove this line later!");
         } catch (TimeoutException te) {
             log.info("The task named " + task.getName() + "is going in asynchronous running mode");
             result.setFuture(future);
@@ -236,6 +241,12 @@ public class JobController {
         }
 
         return files;
+    }
+
+    @Data
+    class JobRunningResult {
+        boolean syn;
+        boolean success;
     }
 
 }

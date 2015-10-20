@@ -111,14 +111,16 @@ public class JobQueueHandler {
 
         if (runningCount > 0) {
             //do nothing, need to wait for other tasks
-        } else if (failCount == taskSize) {
-            jobRunning.setStatus("FAILED");
-            jobHelper.saveJobRunning(jobRunning);
-        } else if (successCount == taskSize) {
-            jobRunning.setStatus("SUCCESS");
-            jobHelper.saveJobRunning(jobRunning);
-        } else if (failCount > 0 && successCount > 0) {
-            jobRunning.setStatus("PARTIALLY SUCCESS");
+        } else {
+            if (failCount == taskSize) {
+                jobRunning.setStatus("FAILED");
+            } else if (successCount == taskSize) {
+                jobRunning.setStatus("SUCCESS");
+            } else if (failCount > 0 && successCount > 0) {
+                jobRunning.setStatus("PARTIALLY SUCCESS");
+            }
+
+            makeJobRunningNotifiable(jobRunning);
             jobHelper.saveJobRunning(jobRunning);
         }
     }
