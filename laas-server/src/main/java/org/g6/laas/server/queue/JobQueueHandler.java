@@ -73,13 +73,15 @@ public class JobQueueHandler {
 
                 jobHelper.handleResultFile(taskRunning, resultFile);
                 taskRunning.setStatus("SUCCESS");
-
-                jobHelper.saveTaskRunning(taskRunning);
             } catch (ExecutionException e) {
-                //TODO
+                taskRunning.setStatus("FAILED");
+                taskRunning.setRootCause(e.getMessage());
             } catch (InterruptedException e) {
-                //TODO
+                taskRunning.setStatus("FAILED");
+                taskRunning.setRootCause(e.getMessage());
             }
+
+            jobHelper.saveTaskRunning(taskRunning);
         }
 
         updateJobRunningStatus(queueJob.getJobRunning());

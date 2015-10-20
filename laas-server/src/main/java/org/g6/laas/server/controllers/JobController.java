@@ -217,7 +217,7 @@ public class JobController {
             obj = future.get(20000, TimeUnit.MILLISECONDS);
             result.setResult(obj);
             //TODO
-            //throw new TimeoutException("Just for testing and remove this line later!");
+            throw new TimeoutException("Just for testing and remove this line later!");
         } catch (TimeoutException te) {
             log.info("The task named " + task.getName() + "is going in asynchronous running mode");
             result.setFuture(future);

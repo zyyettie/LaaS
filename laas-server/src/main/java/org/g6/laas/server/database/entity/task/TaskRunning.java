@@ -25,7 +25,10 @@ public class TaskRunning extends LaaSAuditable<User> {
 
     private String status;
 
-    @OneToOne
+    //For task failure
+    private String rootCause;
+
+    @OneToOne(cascade={CascadeType.PERSIST})
     private TaskResult result;
 
     //million second
