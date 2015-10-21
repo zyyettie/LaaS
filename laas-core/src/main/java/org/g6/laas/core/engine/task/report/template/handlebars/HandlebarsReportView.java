@@ -6,9 +6,11 @@ import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.context.MapValueResolver;
 import com.github.jknack.handlebars.io.TemplateSource;
 import com.github.jknack.handlebars.io.URLTemplateSource;
+import com.google.gson.Gson;
 import org.g6.laas.core.engine.task.report.ReportModel;
 import org.g6.laas.core.engine.task.report.template.TemplateReportView;
 import org.g6.laas.core.exception.ViewRenderException;
+import org.g6.util.JSONUtil;
 
 import java.io.IOException;
 import java.net.URL;
@@ -23,8 +25,11 @@ public class HandlebarsReportView extends TemplateReportView {
     public String render(ReportModel model) {
         Handlebars handlebars = new Handlebars();
         try {
-            TemplateSource templateSource = new URLTemplateSource(getTemplate(), new URL(getTemplate()));
+            String json = JSONUtil.toJson(model.asMap());
+            URL uuu =    new URL(getTemplate());
+            TemplateSource templateSource = new URLTemplateSource(getTemplate(), uuu);
             Template template = handlebars.compile(templateSource);
+
             Context context = Context
                     .newBuilder(model.asMap())
                     .resolver(MapValueResolver.INSTANCE)

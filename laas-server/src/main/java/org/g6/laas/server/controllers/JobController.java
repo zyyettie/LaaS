@@ -170,7 +170,7 @@ public class JobController {
                 jobRunningResult.setSuccess(false);
             }
         }
-        jobRunningResult.setSuccess(isSyn);
+        jobRunningResult.setSyn(isSyn);
 
         return jobRunningResult;
     }
