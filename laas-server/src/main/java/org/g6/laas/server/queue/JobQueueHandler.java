@@ -1,24 +1,20 @@
 package org.g6.laas.server.queue;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
-import org.g6.laas.server.database.entity.File;
 import org.g6.laas.server.database.entity.Job;
 import org.g6.laas.server.database.entity.JobRunning;
-import org.g6.laas.server.database.entity.result.TaskResult;
 import org.g6.laas.server.database.entity.task.TaskRunning;
+import org.g6.laas.server.database.repository.IJobRunningRepository;
 import org.g6.laas.server.vo.FileInfo;
 import org.g6.laas.server.vo.TaskRunningResult;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -29,6 +25,9 @@ public class JobQueueHandler implements InitializingBean {
     private JobQueue queue;
     @Autowired
     private JobHelper jobHelper;
+    @Autowired
+    private IJobRunningRepository jobRunningRep;
+
 
     public boolean shutdown;
 
@@ -41,6 +40,8 @@ public class JobQueueHandler implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        List<JobRunning> jobRunnings = jobRunningRep.findUnFinishedJobInQueue("N", "RUNNING");
+        System.out.println();
          //load all JobRunning records which is asyn and status is RUNNING from database and put them in queue.
         //mostly this should be caused by server down
     }

@@ -1,17 +1,12 @@
 package org.g6.laas.server.controllers;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.core.engine.AnalysisEngine;
 import org.g6.laas.core.engine.task.AnalysisTask;
-import org.g6.laas.core.engine.task.report.ReportBuilder;
-import org.g6.laas.core.engine.task.report.ReportModel;
-import org.g6.laas.core.engine.task.report.template.TemplateViewResolver;
 import org.g6.laas.server.database.entity.File;
 import org.g6.laas.server.database.entity.Job;
 import org.g6.laas.server.database.entity.JobRunning;
-import org.g6.laas.server.database.entity.result.TaskResult;
 import org.g6.laas.server.database.entity.task.Scenario;
 import org.g6.laas.server.database.entity.task.Task;
 import org.g6.laas.server.database.entity.task.TaskRunning;
@@ -23,7 +18,6 @@ import org.g6.laas.server.queue.QueueJob;
 import org.g6.laas.server.queue.QueueTask;
 import org.g6.laas.server.vo.FileInfo;
 import org.g6.laas.server.vo.TaskRunningResult;
-import org.g6.util.FileUtil;
 import org.g6.util.JSONUtil;
 import org.g6.util.ReflectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
