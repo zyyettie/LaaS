@@ -21,8 +21,11 @@ import org.g6.laas.server.queue.JobHelper;
 import org.g6.laas.server.queue.JobQueue;
 import org.g6.laas.server.queue.QueueJob;
 import org.g6.laas.server.queue.QueueTask;
+import org.g6.laas.server.vo.FileInfo;
+import org.g6.laas.server.vo.TaskRunningResult;
 import org.g6.util.FileUtil;
 import org.g6.util.JSONUtil;
+import org.g6.util.ReflectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,23 +58,21 @@ public class JobController {
 
     @RequestMapping(value = "/controllers/jobs/{jobId}")
     ResponseEntity<String> runJob(@PathVariable Long jobId) {
-        //prepareTestData();
-
         Job job = jobRepo.findOne(jobId);
         JobRunning jobRunning = createRunningRecords4JobAndTask(job);
 
-        boolean isSyn = runTasks(jobRunning);
+        JobRunningResult runningResult = runTasks(jobRunning);
 
         Map<String, String> jsonMap = new HashMap();
         jsonMap.put("job_id", String.valueOf(job.getId()));
         jsonMap.put("job_running_id", String.valueOf(jobRunning.getId()));
-        jsonMap.put("is_syn", isSyn ? "true" : "false");
+        jsonMap.put("is_syn", runningResult.isSyn() ? "true" : "false");
 
         return new ResponseEntity(JSONUtil.toJson(jsonMap), HttpStatus.OK);
     }
 
     /**
-     * Generate JobRunning and TaskRunning records.
+     * Insert JobRunning and TaskRunning records into database.
      * The status of JobRunning is set to "running" before all tasks are completed
      *
      * @param job
@@ -110,7 +111,7 @@ public class JobController {
      * @param jobRunning
      * @return 0: Synchronous 1: asynchronous
      */
-    private boolean runTasks(JobRunning jobRunning) {
+    private JobRunningResult runTasks(JobRunning jobRunning) {
         Job job = jobRunning.getJob();
         List<String> strFiles = getLogFilesFromJob(job);
         Map<String, String> paramMap = JSONUtil.fromJson(job.getParameters());
@@ -128,32 +129,29 @@ public class JobController {
                 Object taskObj = getTaskObj(task, paramMap, strFiles);
                 //taskObj is the instance of Task class which is used to run
                 //task is the entity which contains different data loaded from database.
+                log.debug("Start running task named " + task.getName());
+                long timeStart = System.currentTimeMillis();
                 taskRunningResult = runTask(taskObj, task);
+                long duration = System.currentTimeMillis() - timeStart;
+                log.debug("Finish running task named " + task.getName() + ". The duration is " + duration / 1000 + "s");
             } catch (Exception e) {
                 failedTasks++;
                 jobHelper.saveTaskRunningStatus(taskRunning, "FAILED");
                 log.error("Exception is thrown while running task" + task.getName(), e);
             }
             if (taskRunningResult != null) {
-                if (!taskRunningResult.isTimeout) {
-                    String report = genReport(taskRunningResult, task);
-                    FileInfo resultFile = writeReportToFile(report);
-                    File f = new File();
-                    f.setPath(resultFile.getPath());
-                    f.setFileName(resultFile.getName());
-                    f.setOriginalName(resultFile.getName());
-
-                    TaskResult taskResult = new TaskResult();
-                    Collection<File> files = new ArrayList();
-                    files.add(f);
-                    taskResult.setFiles(files);
-                    taskRunning.setResult(taskResult);
+                if (!taskRunningResult.isTimeout()) {
+                    String report = jobHelper.genReport(taskRunningResult, task);
+                    FileInfo resultFile = jobHelper.writeReportToFile(report);
+                    jobHelper.handleResultFile(taskRunning, resultFile);
 
                     jobHelper.saveTaskRunningStatus(taskRunning, "SUCCESS");
-
-
                 } else {
                     asynCount++;
+                    if(!"N".equals(jobRunning.getSyn())){
+                        jobRunning.setSyn("N");
+                        jobHelper.saveJobRunning(jobRunning);
+                    }
                     queueJob.addQueueTask(taskRunning, new QueueTask(taskRunningResult.getFuture()));
                     queueJob.setJobRunning(jobRunning);
                     queue.addJob(queueJob);
@@ -162,42 +160,25 @@ public class JobController {
             }
         }
 
-        //Note the status of JobRunning is not required to changed while moving to asynchronous mode
+        JobRunningResult jobRunningResult = new JobRunningResult();
+        //Note the status of JobRunning is not required to change while moving to asynchronous mode
         if (isSyn) {
+            jobRunning.setSyn("Y");
             if (failedTasks == 0) {
-                //The status of JobRunning should be set to "SUCCESS" after all tasked are run successfully
+                //The status of JobRunning should be set to "SUCCESS" after all tasks are run successfully
                 jobHelper.saveJobRunningStatus(jobRunning, "SUCCESS");
+                jobRunningResult.setSuccess(true);
             } else if (failedTasks == taskRunnings.size()) {
                 jobHelper.saveJobRunningStatus(jobRunning, "FAILED");
+                jobRunningResult.setSuccess(false);
             } else {
                 jobHelper.saveJobRunningStatus(jobRunning, "PARTIALLY SUCCESS");
+                jobRunningResult.setSuccess(false);
             }
         }
+        jobRunningResult.setSuccess(isSyn);
 
-        return isSyn ? true : false;
-    }
-
-    private String genReport(TaskRunningResult taskRunningResult, Task task) {
-        //java.io.File handlebarsTemplate = FileUtil.getFile("report/template/" + task.getClassName());
-
-        ReportModel model = new ReportModel();
-        model.setAttribute("task_running_result", taskRunningResult.getResult());
-
-
-        TemplateViewResolver resolver = new TemplateViewResolver();
-        ReportBuilder builder = new ReportBuilder(resolver);
-        String report = builder.build(model, "/report/template/" + task.getClassName());
-
-        return report;
-    }
-
-    private FileInfo writeReportToFile(String report) {
-        String path = FileUtil.getvalue("result_file_full_path", "sm.properties");
-        //TODO NOTE to avoid concurrent operation, should add login name in the path.
-        String fileName = System.currentTimeMillis() + ".log";
-        FileUtil.writeFile(report, path + fileName);
-
-        return new FileInfo(path, fileName);
+        return jobRunningResult;
     }
 
     /**
@@ -226,7 +207,7 @@ public class JobController {
                 }
 
                 if (fields[i].getName().equals(entry.getKey())) {
-                    set(fields[i], taskObj, entry.getValue());
+                    ReflectUtil.set(fields[i], taskObj, entry.getValue());
                 }
                 if (!isAccessible) {
                     fields[i].setAccessible(false);
@@ -248,6 +229,7 @@ public class JobController {
             //TODO
             //throw new TimeoutException("Just for testing and remove this line later!");
         } catch (TimeoutException te) {
+            log.info("The task named " + task.getName() + "is going in asynchronous running mode");
             result.setFuture(future);
             result.setTimeout(true);
             log.warn("Timeout while running task " + task.getName() + ", move to asynchronous mode");
@@ -257,40 +239,19 @@ public class JobController {
     }
 
     private List<String> getLogFilesFromJob(Job job) {
-        List<String> strFiles = new ArrayList<>();
+        List<String> files = new ArrayList<>();
         for (Iterator<File> ite = job.getFiles().iterator(); ite.hasNext(); ) {
             File f = ite.next();
-            strFiles.add(f.getPath() + f.getFileName());
+            files.add(f.getPath() + f.getFileName());
         }
 
-        return strFiles;
-    }
-
-    //TODO move the method to ReflectUtil class
-    private void set(Field field, Object obj, String value) throws IllegalAccessException {
-        if (field.getType().getName().equals("int")) {
-            field.setInt(obj, Integer.valueOf(value));
-        } else if (field.getType().getName().equals("long")) {
-            field.setLong(obj, Long.valueOf(value));
-        } else if (field.getType().getName().equals("double")) {
-            field.setDouble(obj, Double.valueOf(value));
-        } else {
-            field.set(obj, value);
-        }
+        return files;
     }
 
     @Data
-    class TaskRunningResult {
-        Future future;
-        boolean isTimeout = false;
-        Object result;
-    }
-
-    @Data
-    @AllArgsConstructor
-    class FileInfo {
-        String path;
-        String name;
+    class JobRunningResult {
+        boolean syn;
+        boolean success;
     }
 
 }

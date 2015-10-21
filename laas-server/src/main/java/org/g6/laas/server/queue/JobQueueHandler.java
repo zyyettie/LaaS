@@ -3,10 +3,15 @@ package org.g6.laas.server.queue;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.g6.laas.server.database.entity.File;
+import org.g6.laas.server.database.entity.Job;
 import org.g6.laas.server.database.entity.JobRunning;
 import org.g6.laas.server.database.entity.result.TaskResult;
 import org.g6.laas.server.database.entity.task.TaskRunning;
+import org.g6.laas.server.vo.FileInfo;
+import org.g6.laas.server.vo.TaskRunningResult;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -19,7 +24,7 @@ import java.util.concurrent.ExecutionException;
 
 @Service
 @Slf4j
-public class JobQueueHandler {
+public class JobQueueHandler implements InitializingBean {
     @Autowired
     private JobQueue queue;
     @Autowired
@@ -30,7 +35,14 @@ public class JobQueueHandler {
     @PostConstruct
     public void handle() {
         System.out.println("Start handling all pending tasks in queue");
+
         new Executor().start();
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+         //load all JobRunning records which is asyn and status is RUNNING from database and put them in queue.
+        //mostly this should be caused by server down
     }
 
     class Executor extends Thread {
@@ -45,7 +57,7 @@ public class JobQueueHandler {
 
                 if (queueJob != null) {
                     if (queueJob.isDone()) {
-                        handleQueueTasks(queueJob);
+                        handleTasksInQueue(queueJob);
                     } else {
                         //if the current job is still running, need to append it in queue again
                         queue.addJob(queueJob);
@@ -55,7 +67,7 @@ public class JobQueueHandler {
         }
     }
 
-    private void handleQueueTasks(QueueJob queueJob) {
+    private void handleTasksInQueue(QueueJob queueJob) {
         Map<TaskRunning, QueueTask> queueTasks = queueJob.getQueueTasks();
 
         for (Map.Entry<TaskRunning, QueueTask> entry : queueTasks.entrySet()) {
@@ -63,47 +75,25 @@ public class JobQueueHandler {
             QueueTask queueTask = entry.getValue();
             try {
                 Object object = queueTask.getRunningResult();
-                String report = getReport(object);
-                //TODO need to discuss where the file should be placed
-                String path = "";
-                String fileName = "";
+                TaskRunningResult result = new TaskRunningResult();
+                result.setResult(object);
+                String report = jobHelper.genReport(result, taskRunning.getTask());
+                FileInfo resultFile = jobHelper.writeReportToFile(report);
 
-                File file = writeReportToFile(path, fileName, report);
-                TaskResult taskResult = new TaskResult();
-                Collection<File> files = new ArrayList<>();
-                files.add(file);
-                taskResult.setFiles(files);
-
-                taskRunning.setResult(taskResult);
+                jobHelper.handleResultFile(taskRunning, resultFile);
                 taskRunning.setStatus("SUCCESS");
-                jobHelper.saveTaskRunning(taskRunning);
-
             } catch (ExecutionException e) {
-                //TODO
+                taskRunning.setStatus("FAILED");
+                taskRunning.setRootCause(e.getMessage());
             } catch (InterruptedException e) {
-                //TODO
-            } catch (IOException ioe) {
-                //TODO
+                taskRunning.setStatus("FAILED");
+                taskRunning.setRootCause(e.getMessage());
             }
+
+            jobHelper.saveTaskRunning(taskRunning);
         }
 
         updateJobRunningStatus(queueJob.getJobRunning());
-    }
-
-    private String getReport(Object object) {
-        //TODO
-        return null;
-    }
-
-    private File writeReportToFile(String path, String fileName, String report) throws IOException {
-        FileUtils.writeStringToFile(new java.io.File(path + fileName), report);
-
-        File f = new File();
-        f.setPath(path);
-        f.setFileName(fileName);
-        f.setOriginalName(fileName);
-
-        return f;
     }
 
     /**
@@ -130,16 +120,26 @@ public class JobQueueHandler {
 
         if (runningCount > 0) {
             //do nothing, need to wait for other tasks
-        } else if (failCount == taskSize) {
-            jobRunning.setStatus("FAILED");
-            jobHelper.saveJobRunning(jobRunning);
-        } else if (successCount == taskSize) {
-            jobRunning.setStatus("SUCCESS");
-            jobHelper.saveJobRunning(jobRunning);
-        } else if (failCount > 0 && successCount > 0) {
-            jobRunning.setStatus("PARTIALLY SUCCESS");
+        } else {
+            if (failCount == taskSize) {
+                jobRunning.setStatus("FAILED");
+            } else if (successCount == taskSize) {
+                jobRunning.setStatus("SUCCESS");
+            } else if (failCount > 0 && successCount > 0) {
+                jobRunning.setStatus("PARTIALLY SUCCESS");
+            }
+
+            makeJobRunningNotifiable(jobRunning);
             jobHelper.saveJobRunning(jobRunning);
         }
+    }
+
+    private void makeJobRunningNotifiable(JobRunning jobRunning) {
+        // Need to discuss if the login user will be saved in createdBy field
+        jobRunning.getUsers().add(jobRunning.getCreatedBy());
+        Job job = jobRunning.getJob();
+        String summary = job.getId() + " " + job.getName() + " <a href=\"http://localhost:9000/laas-server/jobs/1/jobRunnings/2\">Running Result</a>";
+        jobRunning.setSummary(summary);
     }
 
     public void shutDown() {

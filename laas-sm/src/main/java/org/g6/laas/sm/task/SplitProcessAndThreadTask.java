@@ -39,6 +39,7 @@ public class SplitProcessAndThreadTask extends SMRTETask<String> {
         String tempRootPath = FileUtil.getvalue("zip_file_temp_path","sm.properties");
         String zipFile = FileUtil.getvalue("result_file_full_path", "sm.properties") + System.currentTimeMillis() + ".zip";
         FileUtil.deleteDir(tempRootPath);
+        FileUtil.createDir(tempRootPath);
 
         for (Map.Entry<String, ProcessIdHelper> entry : splitMap.entrySet()) {
             String processId = entry.getKey();
