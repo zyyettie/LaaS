@@ -1,11 +1,14 @@
 package org.g6.laas.core.engine.task.report.template.handlebars;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.jknack.handlebars.Context;
 import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.JsonNodeValueResolver;
 import com.github.jknack.handlebars.Template;
-import com.github.jknack.handlebars.context.MapValueResolver;
 import com.github.jknack.handlebars.io.TemplateSource;
 import com.github.jknack.handlebars.io.URLTemplateSource;
+import com.google.gson.Gson;
 import org.g6.laas.core.engine.task.report.ReportModel;
 import org.g6.laas.core.engine.task.report.template.TemplateReportView;
 import org.g6.laas.core.exception.ViewRenderException;
@@ -25,9 +28,13 @@ public class HandlebarsReportView extends TemplateReportView {
         try {
             TemplateSource templateSource = new URLTemplateSource(getTemplate(), new URL(getTemplate()));
             Template template = handlebars.compile(templateSource);
+            Gson gson = new Gson();
+            String json = gson.toJson(model.asMap());
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode node = objectMapper.readTree(json);
             Context context = Context
-                    .newBuilder(model.asMap())
-                    .resolver(MapValueResolver.INSTANCE)
+                    .newBuilder(node)
+                    .resolver(JsonNodeValueResolver.INSTANCE)
                     .build();
             return template.apply(context);
         } catch (IOException ioe) {
