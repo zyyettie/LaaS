@@ -25,7 +25,7 @@ public class TopNQueryTask extends SMRTETask<List<Line>> {
     @Override
     protected List<Line> process() {
         Ordering ordering = Ordering.from(new LineComparator());
-        return ordering.leastOf(lines, N);
+        return order.equalsIgnoreCase("desc") ? ordering.leastOf(lines, N) : ordering.greatestOf(lines, N);
     }
 
     public TopNQueryTask() {
