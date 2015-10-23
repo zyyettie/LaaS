@@ -26,9 +26,6 @@ public class JobQueueHandler implements InitializingBean {
     private JobQueue queue;
     @Autowired
     private JobService jobService;
-    @Autowired
-    private IJobRunningRepository jobRunningRep;
-
 
     public boolean shutdown;
 
@@ -40,7 +37,7 @@ public class JobQueueHandler implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        List<JobRunning> jobRunnings = jobRunningRep.findUnFinishedJobInQueue("N", "RUNNING");
+        List<JobRunning> jobRunnings = jobService.findUnFinishedJobInQueue("N", "RUNNING");
         for(JobRunning jobRunning : jobRunnings){
             jobService.runTasks(jobRunning);
         }

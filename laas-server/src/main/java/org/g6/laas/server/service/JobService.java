@@ -45,7 +45,8 @@ public class JobService {
     private IJobRunningRepository jobRunningRepo;
     @Autowired
     private ITaskRunningRepository taskRunningRepo;
-
+    @Autowired
+    private IJobRunningRepository jobRunningRep;
     @Autowired
     JobQueue queue;
 
@@ -71,6 +72,9 @@ public class JobService {
         return taskRunningRepo.save(taskRunning);
     }
 
+    public List<JobRunning> findUnFinishedJobInQueue(String syn, String status){
+        return jobRunningRep.findUnFinishedJobInQueue(syn, status);
+    }
 
     public String genReport(TaskRunningResult taskRunningResult, Task task) {
         ReportModel model = new ReportModel();
