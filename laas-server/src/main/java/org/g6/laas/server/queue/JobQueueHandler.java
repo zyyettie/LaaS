@@ -34,17 +34,16 @@ public class JobQueueHandler implements InitializingBean {
 
     @PostConstruct
     public void handle() {
-        System.out.println("Start handling all pending tasks in queue");
-
+        log.debug("Start handling all pending tasks in queue");
         new Executor().start();
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
         List<JobRunning> jobRunnings = jobRunningRep.findUnFinishedJobInQueue("N", "RUNNING");
-        System.out.println();
-         //load all JobRunning records which is asyn and status is RUNNING from database and put them in queue.
-        //mostly this should be caused by server down
+        for(JobRunning jobRunning : jobRunnings){
+            jobService.runTasks(jobRunning);
+        }
     }
 
     class Executor extends Thread {
