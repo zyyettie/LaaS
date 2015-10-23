@@ -5,6 +5,7 @@ import org.g6.laas.server.database.entity.Job;
 import org.g6.laas.server.database.entity.JobRunning;
 import org.g6.laas.server.database.entity.task.TaskRunning;
 import org.g6.laas.server.database.repository.IJobRunningRepository;
+import org.g6.laas.server.service.JobService;
 import org.g6.laas.server.vo.FileInfo;
 import org.g6.laas.server.vo.TaskRunningResult;
 import org.springframework.beans.factory.InitializingBean;
@@ -24,7 +25,7 @@ public class JobQueueHandler implements InitializingBean {
     @Autowired
     private JobQueue queue;
     @Autowired
-    private JobHelper jobHelper;
+    private JobService jobService;
     @Autowired
     private IJobRunningRepository jobRunningRep;
 
@@ -78,10 +79,10 @@ public class JobQueueHandler implements InitializingBean {
                 Object object = queueTask.getRunningResult();
                 TaskRunningResult result = new TaskRunningResult();
                 result.setResult(object);
-                String report = jobHelper.genReport(result, taskRunning.getTask());
-                FileInfo resultFile = jobHelper.writeReportToFile(report);
+                String report = jobService.genReport(result, taskRunning.getTask());
+                FileInfo resultFile = jobService.writeReportToFile(report);
 
-                jobHelper.handleResultFile(taskRunning, resultFile);
+                jobService.handleResultFile(taskRunning, resultFile);
                 taskRunning.setStatus("SUCCESS");
             } catch (ExecutionException e) {
                 taskRunning.setStatus("FAILED");
@@ -91,7 +92,7 @@ public class JobQueueHandler implements InitializingBean {
                 taskRunning.setRootCause(e.getMessage());
             }
 
-            jobHelper.saveTaskRunning(taskRunning);
+            jobService.saveTaskRunning(taskRunning);
         }
 
         updateJobRunningStatus(queueJob.getJobRunning());
@@ -131,7 +132,7 @@ public class JobQueueHandler implements InitializingBean {
             }
 
             makeJobRunningNotifiable(jobRunning);
-            jobHelper.saveJobRunning(jobRunning);
+            jobService.saveJobRunning(jobRunning);
         }
     }
 

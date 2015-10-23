@@ -36,4 +36,4 @@ insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(1, 'sm
 insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(3, 'sm.log.1', 'e:/', '1', 'sm.log.1')
 insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(4, 'sm.log.2', 'e:/', '1', 'sm.log.2')
 insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(2, 'sm_dbquery.log', 'e:/', '1', 'sm_dbquery.log')
-insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(5, 'Test5.log', 'Test Path', '1', 'ORIGINAL Test5.log')
+insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(5, 'sm_dbquery.log.1', 'e:/', '1', 'sm_dbquery.log.1')
