@@ -19,23 +19,29 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         },
         serializeData: function () {
             var data = {job: this.job, scenarioList: this.scenarioList, fileList: this.fileList, selectedScenarios: this.selectedScenarios, files: this.files};
+            if (data.job.selectedname == undefined) {
+                data.job.selectedname = "Select Scenario";
+            }
             data.job.scenarioList = data.scenarioList;
-            data.job.files = data.files;
-            if (this.job.id != undefined) {
-                var json = JSON.parse(data.job.parameters);
-                data.job.N = json["N"];
-                data.job.order = json["order"];
-                data.job.desc = json["order"] == "desc" ? "selected" : "";
-                data.job.asc = json["order"] == "asc" ? "selected" : "";
+            data.job.files = data.files == undefined ? [] : data.files;
+
+            var json = data.job.parameters == undefined ? {} : JSON.parse(data.job.parameters);
+            data.job.N = json["N"];
+            data.job.order = json["order"];
+            data.job.desc = json["order"] == "desc" ? "selected='selected'" : "";
+            data.job.asc = json["order"] == "asc" ? "selected='selected'" : "";
+            if (data.selectedScenarios != undefined && data.selectedScenarios.length > 0 && data.selectedScenarios.length > 0) {
                 for (var i = 0; i < data.scenarioList.length; i++) {
                     if (data.scenarioList[i].id == data.selectedScenarios[0].id) {
                         data.job.scenarioList[i].selected = "selected";
+                        break;
                     }
                 }
                 data.job.selectedid = data.selectedScenarios[0].id;
                 data.job.selectedname = data.selectedScenarios[0].name;
                 data.job.selectedScenarios = data.selectedScenarios;
             }
+           // }
             return data;
         },
         onRender: function () {
@@ -43,7 +49,9 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             this.$('[name="selectedScenario"]').on('change', function () {
                 if (this.options[this.selectedIndex].innerHTML == 'Scenario - Top N') {
                     var render = JST['app/handlebars/job/topN'];
-                    $('#parameters').append(render({N: 50, order: 'desc', desc: 'selected', asc: ''}));
+                    var subhtml = render({N: 50, order: 'desc', desc: 'selected', asc: ''});
+                    subhtml = subhtml.replace("selected=\"desc\"", "selected='selected'").replace("selected=\"asc\"", "");
+                    $('#parameters').append(subhtml);
                 } else {
                     $('#parameters').empty();
                 }
@@ -61,13 +69,17 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             var html;
             if (data.job.id == undefined) {
                 template = JST['app/handlebars/job/add'];
-                html = template(data);
             } else {
                 template = JST['app/handlebars/job/detail'];
-                html = template(data.job);
-                var render = JST['app/handlebars/job/topN'];
-                html = html.replace("@parameters@", render(data.job));
             }
+                html = template(data.job);
+                if (data.job.selectedname == 'Scenario - Top N')  {
+                    var render = JST['app/handlebars/job/topN'];
+                    var subhtml = render(data.job);
+                    subhtml = subhtml.replace("selected=\"desc\"", data.job.desc).replace("selected=\"asc\"", data.job.asc);
+                    html = html.replace("<div id=\"parameters\"><\/div>", "<div id=\"parameters\">"+subhtml+"<\/div>");
+                }
+
             return html;
         },
         events: {
@@ -96,6 +108,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             //this.model.url='/jobs/'+json.id;
             this.model.save(json, {patch: true, success: function () {
                 toastr.info('Save Job successfully.');
+                that.job.id = that.model.id;
                 LaaS.navigate('/jobs/' + that.model.id + '/edit');
                 $('#title').text('Editing Job');
 
@@ -137,7 +150,15 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             var thisjob = this.job;
             var that = this;
             var json = Backbone.Syphon.serialize(this);
+            json.parameters = JSON.stringify({N: json['N'], order: json['order']});
             thisjob = $.extend({}, thisjob, json);
+            if (thisjob.selectedScenario != undefined && thisjob.selectedScenario.length > 0
+                && (thisjob.selectedScenarios == undefined || thisjob.selectedScenarios.length<=0 || thisjob.scenarioList[thisjob.selectedScenario].id != thisjob.selectedScenarios[0].id)) {
+                thisjob.selectedScenarios = [];
+                thisjob.selectedScenarios.push(thisjob.scenarioList[thisjob.selectedScenario - 1]);
+                thisjob.selectedid = thisjob.selectedScenarios[0].id;
+                thisjob.selectedname = thisjob.selectedScenarios[0].name;
+            }
             $.when(LaaS.request('file:entities')).done(function(data) {
                 var fileSelectView = new LaaS.File.FileSelectView({job:thisjob, files:data.files, jobmodel:that.model});
                 LaaS.mainRegion.show(fileSelectView);
