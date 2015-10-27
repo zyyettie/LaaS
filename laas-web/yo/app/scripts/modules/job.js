@@ -191,7 +191,8 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         jobnew: function () {
             $.when(LaaS.request('job:new'), LaaS.request('scenario:entities'), LaaS.request('file:entities'))
                 .done(function (job, scenario, file) {
-                    LaaS.mainRegion.show(new LaaS.Job.JobView({model: job, scenarioList: scenario.scenarios, fileList: file.files}));
+                    //LaaS.mainRegion.show(new LaaS.Job.JobView({model: job, scenarioList: scenario.scenarios, fileList: file.files}));
+                    LaaS.Home.showViewFrame(new LaaS.Job.JobView({model: job, scenarioList: scenario.scenarios, fileList: file.files}));
                 });
         },
         showJob: function (id) {
@@ -212,7 +213,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                                 }
                                 var view = new LaaS.Job.JobView({model:jobModel, job:jobModel.attributes, scenarioList:scenarioList.scenarios,
                                     fileList:fileList.files, selectedScenarios:selectedScenarios, files:selectedFiles});
-                                LaaS.mainRegion.show(view);
+                                LaaS.Home.showViewFrame(view);
                             },
                             error: function(err) {
                                 console.log(err);
@@ -228,7 +229,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         showJobs: function () {
             $.when(LaaS.request('job:entities')).done(function (data) {
                 var view = new JobListView(data);
-                LaaS.mainRegion.show(view);
+                LaaS.Home.showViewFrame(view);
             });
         }
     });

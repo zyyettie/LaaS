@@ -33,13 +33,13 @@ LaaS.module('Task', function(Task, LaaS, Backbone, Marionette) {
         showTasks: function() {
             $.when(LaaS.request('task:entities')).done(function(data){
                var view = new TaskListView(data);
-               LaaS.mainRegion.show(view);
+                LaaS.Home.showViewFrame(view);
             });
         },
         showTask: function(id){
             $.when(LaaS.request('task:entity', {'id':id})).done(function(data){
                var view = new TaskView(data);
-                LaaS.mainRegion.show(view);
+                LaaS.Home.showViewFrame(view);
             });
         }
     });

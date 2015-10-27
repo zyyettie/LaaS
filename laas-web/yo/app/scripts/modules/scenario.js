@@ -33,13 +33,13 @@ LaaS.module('Scenario', function(Scenario, LaaS, Backbone, Marionette) {
         showScenarios: function() {
             $.when(LaaS.request('scenario:entities')).done(function(data){
                var view = new ScenarioListView(data);
-               LaaS.mainRegion.show(view);
+                LaaS.Home.showViewFrame(view);
             });
         },
         showScenario: function(id){
             $.when(LaaS.request('scenario:entity', {'id':id})).done(function(data){
                var view = new ScenarioView(data);
-                LaaS.mainRegion.show(view);
+                LaaS.Home.showViewFrame(view);
             });
         }
     });

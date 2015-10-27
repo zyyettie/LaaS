@@ -25,7 +25,7 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
     });
 
     LaaS.reqres.setHandler('file:entity', function (options) {
-        var file = new FileModel(options);
+        var file = new LaaS.Entities.FileModel(options);
         var defer = $.Deferred();
         file.fetch().then(function () {
             defer.resolve(file);
