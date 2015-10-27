@@ -44,4 +44,15 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
         });
         return files.promise();
     });
+
+    LaaS.reqres.setHandler('myFiles:entities', function (options) {
+        var options = options || {page:0,size:10};
+        var page = options.page || 0;
+        var size = options.size || 10;
+        var files = $.Deferred();
+        $.getJSON(baseUrl+"/search/findFilesOwnedBy?userName=admin" ).done(function(data){
+            files.resolve({files:data._embedded.files});
+        });
+        return files.promise();
+    });
 });
