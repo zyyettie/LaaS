@@ -6,11 +6,11 @@
                 .two.fields
                     .field
                         label Job Name
-                        input(type="text",name="name",placeholder="name")
+                        input(type="text",name="name",placeholder="name", value="{{name}}")
                     .field
                         label Job Scenario
                         select.ui.dropdown(name="selectedScenario")
-                            option(value="") Select Scenario
+                            option(value="{{selectedid}}") {{selectedname}}
                             |{{#each scenarioList}}
                             option(value="{{id}}") {{name}}
                             |{{/each}}

@@ -36,13 +36,22 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
         }
     });
 
+    Home.showViewFrame = function(mainView) {
+        LaaS.headerRegion.show(new HeaderView());
+        LaaS.mainNavRegion.show(new NavView());
+        LaaS.mainRegion.show(mainView);
+        //LaaS.sidebarRegion.show(new SideBarView());
+        LaaS.footerRegion.show(new FooterView());
+    };
+
     var HomeController = Marionette.Controller.extend({
         showHome: function () {
-            LaaS.headerRegion.show(new HeaderView());
-            LaaS.mainNavRegion.show(new NavView());
-            LaaS.mainRegion.show(new MainView());
+            LaaS.Home.showViewFrame(new MainView());
+            //LaaS.headerRegion.show(new HeaderView());
+            //LaaS.mainNavRegion.show(new NavView());
+            //LaaS.mainRegion.show(new MainView());
             //LaaS.sidebarRegion.show(new SideBarView());
-            LaaS.footerRegion.show(new FooterView());
+            //LaaS.footerRegion.show(new FooterView());
         },
         uploadLogs: function () {
             LaaS.mainRegion.show(new LaaS.Views.FileUploader());

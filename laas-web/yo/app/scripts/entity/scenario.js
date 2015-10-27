@@ -24,7 +24,7 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
     });
 
     LaaS.reqres.setHandler('scenario:entity', function (options) {
-        var scenario = new ScenarioModel(options);
+        var scenario = new LaaS.Entities.ScenarioModel(options);
         var defer = $.Deferred();
         scenario.fetch().then(function () {
             defer.resolve(scenario);
