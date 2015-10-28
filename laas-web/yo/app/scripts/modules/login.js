@@ -1,7 +1,7 @@
 LaaS.module('Login', function(Login, LaaS, Backbone, Marionette) {
     'use strict';
-
-    var LoginView = Marionette.ItemView.extend({
+    var appContext = LaaS.Util.Constants.APPCONTEXT;
+    var LoginView = Login.LoginView = Marionette.ItemView.extend({
         template : JST['app/handlebars/login'],
         onRender:function(){
             this.$('.ui.form').form({
@@ -44,9 +44,12 @@ LaaS.module('Login', function(Login, LaaS, Backbone, Marionette) {
                var user = $('.ui.form').form('get values');
                $.ajax({
                    type: "POST",
-                   url: "/controllers/login",
+                   url: appContext+"/controllers/login",
                    data: JSON.stringify(user),
                    success: function(data){
+                       sessionStorage.setItem("uid",data.id);
+                       sessionStorage.setItem("username",data.name);
+                       sessionStorage.setItem("role",data.role.name);
                        LaaS.navigate('/home',true);
                    },
                    dataType: "json",
@@ -58,7 +61,16 @@ LaaS.module('Login', function(Login, LaaS, Backbone, Marionette) {
 
     var HomeController = Marionette.Controller.extend({
         login: function() {
-            LaaS.mainRegion.show(new LoginView());
+            var uid = sessionStorage.getItem('uid')
+            if(uid == null || uid == undefined){
+                LaaS.headerRegion.empty();
+                LaaS.mainNavRegion.empty();
+                LaaS.mainRegion.empty();
+                LaaS.footerRegion.empty();
+                LaaS.mainRegion.show(new LoginView());
+            }else{
+                LaaS.navigate('/home',true);
+            }
         }
     });
 
@@ -66,7 +78,7 @@ LaaS.module('Login', function(Login, LaaS, Backbone, Marionette) {
     LaaS.addInitializer(function() {
         new Marionette.AppRouter({
             appRoutes : {
-                '(/)': 'login',
+                '(/)':'login',
                 'login(/)': 'login'
             },
             controller: new HomeController()

@@ -10,7 +10,10 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpSession;
 
 
 @RestController
@@ -30,5 +33,11 @@ public class LoginController {
         SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(auth);
         return loginingUser;
+    }
+
+    @RequestMapping(value = "/controllers/logout", method = RequestMethod.GET)
+    public void logout(HttpSession session) {
+        if (session != null)
+            session.invalidate();
     }
 }
