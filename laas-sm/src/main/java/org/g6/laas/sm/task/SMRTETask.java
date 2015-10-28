@@ -2,9 +2,11 @@ package org.g6.laas.sm.task;
 
 import org.g6.laas.core.engine.context.SimpleAnalysisContext;
 import org.g6.laas.core.engine.task.AbstractAnalysisTask;
+import org.g6.laas.core.exception.LaaSValidationException;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.file.LogFile;
 import org.g6.laas.core.file.sorter.FileSorter;
+import org.g6.laas.core.file.validator.FileValidator;
 import org.g6.laas.core.format.InputFormat;
 import org.g6.laas.core.format.provider.DefaultInputFormatProvider;
 import org.g6.laas.core.format.provider.FormatProvider;
@@ -12,6 +14,7 @@ import org.g6.laas.core.log.handler.GenericLogHandler;
 import org.g6.laas.core.log.handler.LogHandler;
 import org.g6.laas.core.rule.Rule;
 import org.g6.laas.sm.file.sorter.RTELogFileSorter;
+import org.g6.laas.sm.validator.RTELogValidator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +43,12 @@ public abstract class SMRTETask<T> extends AbstractAnalysisTask<T> {
 
         List<ILogFile> fileList = new ArrayList<>();
         for (String file : getFiles()) {
+            FileValidator validator = new RTELogValidator();
+
+            LogFile logFile = new LogFile(file, validator);
+            if(!logFile.isValid())
+                throw new LaaSValidationException(logFile.getName() + " is an invalid SM RTE log file");
+
             fileList.add(new LogFile(file));
         }
 

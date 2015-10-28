@@ -24,8 +24,6 @@ public class JobController {
     @Autowired
     private JobService jobService;
 
-
-
     @RequestMapping(value = "/controllers/jobs/{jobId}")
     ResponseEntity<String> runJob(@PathVariable Long jobId) {
         Job job = jobService.findJobBy(jobId);
@@ -33,11 +31,13 @@ public class JobController {
 
         JobService.JobRunningResult runningResult = jobService.runTasks(jobRunning);
 
-        Map<String, String> jsonMap = new HashMap();
+        Map<String, Object> jsonMap = new HashMap();
         jsonMap.put("job_id", String.valueOf(job.getId()));
         jsonMap.put("job_running_id", String.valueOf(jobRunning.getId()));
-        jsonMap.put("is_syn", runningResult.isSyn() ? "true" : "false");
-
+        jsonMap.put("is_syn", runningResult.isSyn());
+        jsonMap.put("success", runningResult.isSuccess());
+        jsonMap.put("rootcauses", runningResult.getRootCauses());
+        String json =  JSONUtil.toJson(jsonMap);
         return new ResponseEntity(JSONUtil.toJson(jsonMap), HttpStatus.OK);
     }
 
@@ -85,6 +85,4 @@ public class JobController {
         }
         return fileList;
     }
-
-
 }

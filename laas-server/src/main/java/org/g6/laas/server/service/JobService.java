@@ -20,6 +20,7 @@ import org.g6.laas.server.queue.QueueJob;
 import org.g6.laas.server.queue.QueueTask;
 import org.g6.laas.server.vo.FileInfo;
 import org.g6.laas.server.vo.TaskRunningResult;
+import org.g6.util.ExceptionUtils;
 import org.g6.util.FileUtil;
 import org.g6.util.JSONUtil;
 import org.g6.util.ReflectUtil;
@@ -88,7 +89,7 @@ public class JobService {
     public FileInfo writeReportToFile(String report) {
         String path = FileUtil.getvalue("result_file_full_path", "sm.properties");
         //TODO NOTE to avoid concurrent operation, should add login name in the path.
-        String fileName = System.currentTimeMillis() + ".log";
+        String fileName = System.currentTimeMillis() + ".laas";
         FileUtil.writeFile(report, path + fileName);
 
         return new FileInfo(path, fileName);
@@ -122,6 +123,7 @@ public class JobService {
         QueueJob queueJob = new QueueJob();
         int failedTasks = 0, asynCount = 0;
         boolean isSyn = true;
+        JobRunningResult jobRunningResult = new JobRunningResult();
 
         for (Iterator<TaskRunning> ite = taskRunnings.iterator(); ite.hasNext(); ) {
             TaskRunning taskRunning = ite.next();
@@ -139,6 +141,8 @@ public class JobService {
             } catch (Exception e) {
                 failedTasks++;
                 saveTaskRunningStatus(taskRunning, "FAILED");
+                String rootCause = ExceptionUtils.getRootCauseMessage(e);
+                jobRunningResult.rootCauses.add(rootCause);
                 log.error("Exception is thrown while running task" + task.getName(), e);
             }
             if (taskRunningResult != null) {
@@ -162,7 +166,11 @@ public class JobService {
             }
         }
 
-        JobRunningResult jobRunningResult = new JobRunningResult();
+        if(!jobRunningResult.getRootCauses().isEmpty()){
+            jobRunningResult.setSuccess(false);
+            return jobRunningResult;
+        }
+
         //Note the status of JobRunning is not required to change while moving to asynchronous mode
         if (isSyn) {
             jobRunning.setSyn("Y");
@@ -255,6 +263,7 @@ public class JobService {
     public class JobRunningResult {
         boolean syn;
         boolean success;
+        List<String> rootCauses = new ArrayList<>();
     }
 
 }
