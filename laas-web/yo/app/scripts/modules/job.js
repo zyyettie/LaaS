@@ -135,9 +135,14 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
 
             this.model.save(json, {patch: true, success: function (response) {
                 $.getJSON(appContext+"/controllers/jobs/" + response.id).done(function (json) {
-                        toastr.info('Save and Run Job successfully.');
-                        //LaaS.navigate('/showJobs');
-                    LaaS.navigate('/jobs/' + json.id + '/edit');
+                        toastr.info('Save and Run Job successfully.');var job_running_id = json.job_running_id;
+                    $.when(LaaS.request('jobRunning:entity',job_running_id))
+                        .done(function (jobRunning) {
+                            var jobResultView = new JobResultView(jobRunning);
+                            LaaS.mainRegion.show(jobResultView);
+                        });
+
+                    LaaS.navigate('/jobs/showResult');
                     }).fail(function(json){
                         toastr.info('Failed due to '+json);
                     });
@@ -184,6 +189,20 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         },
         serializeData: function () {
             return {jobs: this.jobs};
+        }
+    });
+
+    var JobResultView = Marionette.ItemView.extend({
+        initialize: function (options) {
+            this.jobRunning = options.attributes;
+        },
+        template: function (data) {
+            var template = JST['app/handlebars/job/result'];
+            var html = template(data.jobRunning);
+            return html;
+        },
+        serializeData: function () {
+            return {jobRunning: this.jobRunning};
         }
     });
 

@@ -1,6 +1,7 @@
 package org.g6.laas.server.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.g6.laas.server.database.entity.File;
 import org.g6.laas.server.database.entity.Job;
 import org.g6.laas.server.database.entity.JobRunning;
 import org.g6.laas.server.database.entity.task.Scenario;
@@ -50,6 +51,8 @@ public class JobController {
     private JobRunning createRunningRecords4JobAndTask(Job job) {
         JobRunning jobRunning = new JobRunning();
         jobRunning.setJob(job);
+        jobRunning.setParameters(job.getParameters());
+        jobRunning.setFiles(getFiles(job.getFiles()));
         jobRunning.setStatus("RUNNING");
 
         Collection<Scenario> scenarios = job.getScenarios();
@@ -74,7 +77,14 @@ public class JobController {
         return retJobRunning;
     }
 
-
+    private Collection<File> getFiles(Collection<File> files){
+        Collection<File> fileList = new ArrayList<>();
+        for(Iterator<File> ite = files.iterator();ite.hasNext();){
+            File file = ite.next();
+            fileList.add(file);
+        }
+        return fileList;
+    }
 
 
 }

@@ -115,7 +115,7 @@ public class JobService {
      */
     public JobRunningResult runTasks(JobRunning jobRunning) {
         Job job = jobRunning.getJob();
-        List<String> strFiles = getLogFilesFromJob(job);
+        List<String> strFiles = getLogFilesFromJob(jobRunning);
         Map<String, String> paramMap = JSONUtil.fromJson(job.getParameters());
 
         Collection<TaskRunning> taskRunnings = jobRunning.getTaskRunnings();
@@ -241,9 +241,9 @@ public class JobService {
         return result;
     }
 
-    private List<String> getLogFilesFromJob(Job job) {
+    private List<String> getLogFilesFromJob(JobRunning jobRunning) {
         List<String> files = new ArrayList<>();
-        for (Iterator<File> ite = job.getFiles().iterator(); ite.hasNext(); ) {
+        for (Iterator<File> ite = jobRunning.getFiles().iterator(); ite.hasNext(); ) {
             File f = ite.next();
             files.add(f.getPath() + f.getFileName());
         }
