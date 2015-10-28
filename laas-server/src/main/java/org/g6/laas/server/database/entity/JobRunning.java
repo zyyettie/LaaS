@@ -17,7 +17,7 @@ import java.util.Collection;
 public class JobRunning extends LaaSNotifiable<User> {
     private static final long serialVersionUID = -5742125355431226460L;
     @Transient
-    private Collection<User> users = new ArrayList();
+    private Collection<User> users = new ArrayList<>();
     @Transient
     private String summary;
 
@@ -30,6 +30,11 @@ public class JobRunning extends LaaSNotifiable<User> {
 
     @OneToMany(cascade={CascadeType.PERSIST}, mappedBy = "jobRunning")
     private Collection<TaskRunning> taskRunnings = new ArrayList<>();
+
+    private String parameters;
+
+    @ManyToMany
+    private Collection<File> files = new ArrayList<>();
 
     @Override
     public Collection<User> sendTo() {
