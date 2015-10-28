@@ -14,10 +14,10 @@ import java.util.Collection;
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class JobRunning extends LaaSNotifiable<User> {
+public class JobRunning extends JobSubEntity {
     private static final long serialVersionUID = -5742125355431226460L;
     @Transient
-    private Collection<User> users = new ArrayList();
+    private Collection<User> users = new ArrayList<>();
     @Transient
     private String summary;
 
