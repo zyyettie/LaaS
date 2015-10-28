@@ -103,6 +103,20 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
         }
     });
 
+    var MyFileView = Marionette.ItemView.extend({
+        initialize : function(options){
+            this.files = options.files;
+        },
+        template : function(data){
+            var template = JST['app/handlebars/file/mylist'];
+            var html = template(data);
+            return html;
+        },
+        serializeData:function(){
+            return {files:this.files};
+        }
+    });
+
     var FileController = Marionette.Controller.extend({
         showFiles: function() {
             $.when(LaaS.request('file:entities')).done(function(data){
@@ -143,6 +157,12 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
                     }
                 });
             });
+        },
+        showMyFiles: function(){
+            $.when(LaaS.request('myFiles:entities')).done(function(data){
+                var view = new MyFileView({files:data.files});
+                LaaS.mainRegion.show(view);
+            });
         }
     });
 
@@ -151,7 +171,8 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
         new Marionette.AppRouter({
             appRoutes : {
                 'files(/)': 'showFiles',
-                'files/:id(/)' : 'showFile'
+                'files/:id(/)' : 'showFile',
+                'myfiles(/)':'showMyFiles'
                 //'fileselect/:jobid(/)' : 'selectFiles'
             },
             controller: new FileController()

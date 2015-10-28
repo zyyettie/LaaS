@@ -50,6 +50,8 @@ public class JobController {
     private JobRunning createRunningRecords4JobAndTask(Job job) {
         JobRunning jobRunning = new JobRunning();
         jobRunning.setJob(job);
+        jobRunning.setParameters(job.getParameters());
+        jobRunning.setFiles(job.getFiles());
         jobRunning.setStatus("RUNNING");
 
         Collection<Scenario> scenarios = job.getScenarios();
