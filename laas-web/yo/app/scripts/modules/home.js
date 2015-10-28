@@ -1,6 +1,11 @@
 LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
     'use strict';
 
+    var cleanSessionStorage = function(){
+        sessionStorage.removeItem('uid');
+        sessionStorage.removeItem('username');
+        sessionStorage.removeItem('role');
+    };
 
     var HeaderView = Marionette.ItemView.extend({
         template: function () {
@@ -9,9 +14,7 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
         onRender : function(){
             this.$('#logout').on('click',function(e){
                 $.get('/laas-server/controllers/logout',function(){
-                    sessionStorage.removeItem('uid');
-                    sessionStorage.removeItem('username');
-                    sessionStorage.removeItem('role');
+                    cleanSessionStorage();
                     LaaS.navigate('login',true);
                 });
             });
@@ -55,11 +58,11 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
 
     var HomeController = Marionette.Controller.extend({
         showHome: function () {
-            var uid = sessionStorage.getItem('uid')
-            if(uid == null || uid == undefined){
-                LaaS.navigate('login',true);
-            }else{
+            var uid = sessionStorage.getItem('uid');
+            if(uid){
                 LaaS.Home.showViewFrame(new MainView());
+            }else{
+                LaaS.navigate('login',true);
             }
         },
         uploadLogs: function () {
