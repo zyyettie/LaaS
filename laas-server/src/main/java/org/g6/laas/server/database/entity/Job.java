@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.g6.laas.server.database.entity.task.Scenario;
-import org.g6.laas.server.database.entity.user.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -12,17 +11,16 @@ import java.util.Collection;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @Table(name = "JOB",uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
-public class Job extends LaaSAuditable<User> {
+public class Job extends JobSubEntity {
     private static final long serialVersionUID = 4446780211212032935L;
 
     @Column(name="NAME")
     private String name;
 
     private String description;
-
-    private String parameters;
 
     @ManyToOne
     private Product product;
@@ -35,7 +33,4 @@ public class Job extends LaaSAuditable<User> {
 
     @OneToMany(mappedBy = "job")
     private Collection<JobRunning> jobRunnings = new ArrayList<>();
-
-    @ManyToMany
-    private Collection<File> files = new ArrayList<>();
 }
