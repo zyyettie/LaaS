@@ -52,15 +52,17 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
     Home.showViewFrame = function(mainView) {
         LaaS.headerRegion.show(new HeaderView());
         LaaS.mainNavRegion.show(new NavView());
-        LaaS.mainRegion.show(mainView);
+        if(mainView){
+            LaaS.mainRegion.show(mainView);
+        }
         LaaS.footerRegion.show(new FooterView());
     };
 
     var HomeController = Marionette.Controller.extend({
         showHome: function () {
             var uid = sessionStorage.getItem('uid');
-            if(uid){
-                LaaS.Home.showViewFrame(new MainView());
+            if(uid != null && uid != undefined){
+                LaaS.Home.showViewFrame();
             }else{
                 LaaS.navigate('login',true);
             }

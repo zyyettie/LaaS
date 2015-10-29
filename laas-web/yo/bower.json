@@ -12,7 +12,8 @@
     "marionette.backbone.syphon": "~0.6.0",
     "twbs-pagination": "~1.2.5",
     "blueimp-file-upload": "~9.10.6",
-    "semantic": "~2.0.8"
+    "semantic": "~2.0.8",
+    "routefilter": "~0.2.1"
   },
   "resolutions": {
     "underscore": ">=1.7.0",

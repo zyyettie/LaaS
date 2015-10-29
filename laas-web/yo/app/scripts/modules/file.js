@@ -121,13 +121,13 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
         showFiles: function() {
             $.when(LaaS.request('file:entities')).done(function(data){
                 var view = new FileListView(data);
-                LaaS.Home.showViewFrame(view);
+                LaaS.mainRegion.show(view);
             });
         },
         showFile: function(id){
             $.when(LaaS.request('file:entity', {'id':id})).done(function(data){
                 var view = new FileView(data);
-                LaaS.Home.showViewFrame(view);
+                LaaS.mainRegion.show(view);
             });
         },
         selectFiles: function(jobid) {

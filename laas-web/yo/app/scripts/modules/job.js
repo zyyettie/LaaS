@@ -45,6 +45,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             return data;
         },
         onRender: function () {
+            var that = this;
             this.$('select').dropdown();
             this.$('[name="selectedScenario"]').on('change', function () {
                 if (this.options[this.selectedIndex].innerHTML == 'Scenario - Top N') {
@@ -62,6 +63,11 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                     console.log(arr);
                 });
             });
+            this.$("#remove_file").on("click", function() {
+                var id = this.attributes["value"]["value"];
+                that.removeFile(id);
+                $('#fileitem_'+id).empty();
+            })
 
         },
         template: function (data) {
@@ -175,6 +181,14 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             }).fail(function() {
                 toastr.error('Cannot load files.');
             });
+        },
+        removeFile : function(id) {
+            for (var i=0; i<this.files.length; i++) {
+                if (this.files[i]["id"] == id) {
+                    this.files.splice(i, 1);
+                    break;
+                }
+            }
         }
     });
 
@@ -210,8 +224,8 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         jobnew: function () {
             $.when(LaaS.request('job:new'), LaaS.request('scenario:entities'), LaaS.request('file:entities'))
                 .done(function (job, scenario, file) {
-                    //LaaS.mainRegion.show(new LaaS.Job.JobView({model: job, scenarioList: scenario.scenarios, fileList: file.files}));
-                    LaaS.Home.showViewFrame(new LaaS.Job.JobView({model: job, scenarioList: scenario.scenarios, fileList: file.files}));
+                    LaaS.mainRegion.show(new LaaS.Job.JobView({model: job, scenarioList: scenario.scenarios, fileList: file.files}));
+                    //LaaS.Home.showViewFrame(new LaaS.Job.JobView({model: job, scenarioList: scenario.scenarios, fileList: file.files}));
                 });
         },
         showJob: function (id) {
@@ -232,7 +246,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                                 }
                                 var view = new LaaS.Job.JobView({model:jobModel, job:jobModel.attributes, scenarioList:scenarioList.scenarios,
                                     fileList:fileList.files, selectedScenarios:selectedScenarios, files:selectedFiles});
-                                LaaS.Home.showViewFrame(view);
+                                LaaS.mainRegion.show(view);
                             },
                             error: function(err) {
                                 console.log(err);
@@ -248,7 +262,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         showJobs: function () {
             $.when(LaaS.request('job:entities')).done(function (data) {
                 var view = new JobListView(data);
-                LaaS.Home.showViewFrame(view);
+                LaaS.mainRegion.show(view);
             });
         }
     });
