@@ -30,6 +30,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             data.job.order = json["order"];
             data.job.desc = json["order"] == "desc" ? "selected='selected'" : "";
             data.job.asc = json["order"] == "asc" ? "selected='selected'" : "";
+            data.job.category = json["category"];
             if (data.selectedScenarios != undefined && data.selectedScenarios.length > 0 && data.selectedScenarios.length > 0) {
                 for (var i = 0; i < data.scenarioList.length; i++) {
                     if (data.scenarioList[i].id == data.selectedScenarios[0].id) {
@@ -52,6 +53,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                     var render = JST['app/handlebars/job/topN'];
                     var subhtml = render({N: 50, order: 'desc', desc: 'selected', asc: ''});
                     subhtml = subhtml.replace("selected=\"desc\"", "selected='selected'").replace("selected=\"asc\"", "");
+                    subhtml = subhtml.replace("selected=\"DBQUERY\"", "selected='selected'").replace("selected=\"SCRIPTTRACE\"", "");
                     $('#parameters').append(subhtml);
                 } else {
                     $('#parameters').empty();
@@ -83,6 +85,9 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                     var render = JST['app/handlebars/job/topN'];
                     var subhtml = render(data.job);
                     subhtml = subhtml.replace("selected=\"desc\"", data.job.desc).replace("selected=\"asc\"", data.job.asc);
+                    var dbquery = LaaS.Util.getComboboxSelected(data.job.category, "DBQUERY");
+                    var scripttrace = LaaS.Util.getComboboxSelected(data.job.category, "SCRIPTTRACE");
+                    subhtml = subhtml.replace("selected=\"DBQUERY\"",dbquery).replace("selected=\"SCRIPTTRACE\"", scripttrace);
                     html = html.replace("<div id=\"parameters\"><\/div>", "<div id=\"parameters\">"+subhtml+"<\/div>");
                 }
 
@@ -94,6 +99,9 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             'click #add_file': 'addFile',
             'click #job_show': 'showJob'
         },
+        getParameter: function (json) {
+            return JSON.stringify({N: json['N'], order: json['order'], category: json['category']});
+        },
         saveJob: function () {
             var that = this;
             var json = Backbone.Syphon.serialize(this);
@@ -101,7 +109,8 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 toastr.error('Please input name and select scenario.');
                 return;
             }
-            json.parameters = JSON.stringify({N: json['N'], order: json['order']});
+            //json.parameters = JSON.stringify({N: json['N'], order: json['order']});
+            json.parameters = this.getParameter(json);
             //json.parameters = "{N:"+json['N']+", order:"+json['order']+"}";
             json.scenarios = [];
             json.scenarios.push(appContext+"/api/v1/scenarios/" + json.selectedScenario);
@@ -130,7 +139,8 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 toastr.error('Please input name and select scenario.');
                 return;
             }
-            json.parameters = JSON.stringify({N: json['N'], order: json['order']});
+            //json.parameters = JSON.stringify({N: json['N'], order: json['order'], category: json['category']});
+            json.parameters = this.getParameter(json);
             json.scenarios = [];
             json.scenarios.push(appContext+"/api/v1/scenarios/" + json.selectedScenario);
 
@@ -161,7 +171,8 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             var thisjob = this.job;
             var that = this;
             var json = Backbone.Syphon.serialize(this);
-            json.parameters = JSON.stringify({N: json['N'], order: json['order']});
+            //json.parameters = JSON.stringify({N: json['N'], order: json['order']});
+            json.parameters = this.getParameter(json);
             thisjob = $.extend({}, thisjob, json);
             if (thisjob.selectedScenario != undefined && thisjob.selectedScenario.length > 0
                 && (thisjob.selectedScenarios == undefined || thisjob.selectedScenarios.length<=0 || thisjob.scenarioList[thisjob.selectedScenario].id != thisjob.selectedScenarios[0].id)) {

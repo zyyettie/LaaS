@@ -69,7 +69,11 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
             var jobView = new LaaS.Job.JobView({model:this.jobmodel, job:this.job, scenarioList:this.job.scenarioList,
                 selectedScenarios:this.job.selectedScenarios, files:this.job.files});
             LaaS.mainRegion.show(jobView);
-            LaaS.navigate('/jobs/'+this.job.id);
+            if (this.job.id == undefined) {
+                LaaS.navigate('/jobnew');
+            } else {
+                LaaS.navigate('/jobs/'+this.job.id);
+            }
         }
     });
 
