@@ -4,7 +4,6 @@ LaaS.addRegions({
   headerRegion: '#header',
   mainNavRegion: '#nav',
   mainRegion: '#main',
-  //sidebarRegion: '#aside',
   footerRegion: '#footer',
   dialogRegion: '#login-dialog',
   registerRegion: '#register-dialog'
@@ -21,6 +20,22 @@ LaaS.on('start', function() {
   Backbone.history.start({ pushState: true,root:'/laas-server/'});
   Backbone.Intercept.start();
 });
+
+var isRefreshingPage=function(){
+  var oldState = sessionStorage.getItem('refresh');
+  sessionStorage.setItem('refresh',false);
+  return oldState == 'true';
+};
+
+_.extend(Marionette.AppRouter.prototype,{before:function(route,args){
+  if(isRefreshingPage()){
+    LaaS.Home.showViewFrame();
+  }
+}});
+
+window.onbeforeunload = function(){
+  sessionStorage.setItem('refresh',true);
+};
 
 $(document).ajaxError(function (event, xhr, options,thrownError) {
   var statusCode = xhr.status;
