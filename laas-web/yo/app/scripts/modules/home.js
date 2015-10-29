@@ -62,7 +62,7 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
         showHome: function () {
             var uid = sessionStorage.getItem('uid');
             if(uid != null && uid != undefined){
-                LaaS.Home.showViewFrame();
+                LaaS.Home.showViewFrame(new MainView());
             }else{
                 LaaS.navigate('login',true);
             }
