@@ -1,32 +1,32 @@
 package org.g6.laas.sm.validator;
 
-import org.g6.laas.core.exception.LaaSExceptionHandler;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.file.validator.FileValidator;
-import org.g6.laas.core.log.reader.LogFileReader;
-import org.g6.laas.sm.exception.SMRuntimeException;
 import org.g6.util.FileUtil;
 import org.g6.util.RegexUtil;
 
-import java.io.IOException;
+import java.io.File;
+import java.util.List;
 
 public class RTELogValidator implements FileValidator {
     @Override
     public boolean validate(ILogFile file) {
         boolean isFile = FileUtil.isFile(file.getPath());
 
-        boolean isRTE = false;
-        try (LogFileReader reader = new LogFileReader(file)) {
-            reader.open();
-            String content = reader.readLine();
-            if (RegexUtil.isMatched(content, "RTE D")) {
-                isRTE = true;
-            }
-        } catch (IOException e) {
-            LaaSExceptionHandler.handleException("Exception happened while validating file: "
-                    + file.getPath(), new SMRuntimeException(e));
-        }
+        List<String> firstLines = FileUtil.readFirstNLines(new File(file.getPath()), 10L);
+        List<String> lastLines = FileUtil.readLastNLines(new File(file.getPath()), 10L);
 
-        return isFile && isRTE;
+        return isFile && isValidFile(firstLines) && isValidFile(lastLines);
     }
+
+    private boolean isValidFile(List<String> lines){
+        for(String line : lines){
+            if (RegexUtil.isMatched(line, "^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
+
