@@ -61,7 +61,7 @@ public class SMOMiPerformanceTask extends SMRTETask<List<String>> {
         return returnList;
     }
 
-    public SMOMiPerformanceTask(String file) {
+    public SMOMiPerformanceTask() {
         Rule rule = new RegexRule("RTE D RADTRACE.+se.external.action\\s+RADReturn");
 
         rule.addAction(new RuleAction() {
@@ -73,7 +73,6 @@ public class SMOMiPerformanceTask extends SMRTETask<List<String>> {
                 splitResultList.add(result);
             }
         });
-        //initContext(file, rule);
-        //TODO
+        addRule(rule);
     }
 }
