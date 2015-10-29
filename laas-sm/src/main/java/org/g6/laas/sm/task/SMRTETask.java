@@ -19,13 +19,6 @@ import org.g6.laas.sm.validator.RTELogValidator;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Abstract Task for SM RTE
- *
- * @param <T>
- * @author Johnson Jiang
- * @version 1.0
- */
 public abstract class SMRTETask<T> extends AbstractAnalysisTask<T> {
     DefaultInputFormatProvider provider;
     private List<Rule> rules = new ArrayList<>();

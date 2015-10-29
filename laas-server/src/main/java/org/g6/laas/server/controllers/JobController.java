@@ -37,7 +37,7 @@ public class JobController {
         jsonMap.put("is_syn", runningResult.isSyn());
         jsonMap.put("success", runningResult.isSuccess());
         jsonMap.put("rootcauses", runningResult.getRootCauses());
-        String json =  JSONUtil.toJson(jsonMap);
+
         return new ResponseEntity(JSONUtil.toJson(jsonMap), HttpStatus.OK);
     }
 

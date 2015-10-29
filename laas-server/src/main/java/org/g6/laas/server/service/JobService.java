@@ -193,7 +193,8 @@ public class JobService {
 
 
     /**
-     * To run task, need to use reflection mechanism to get the task object according to the class name in Task entity
+     * To run task, need to use reflection mechanism to get the task object
+     * according to the class name in Task entity
      *
      * @param task
      * @param paramMap
@@ -237,8 +238,6 @@ public class JobService {
         try {
             obj = future.get(20000, TimeUnit.MILLISECONDS);
             result.setResult(obj);
-            //TODO
-            //throw new TimeoutException("Just for testing and remove this line later!");
         } catch (TimeoutException te) {
             log.info("The task named " + task.getName() + "is going in asynchronous running mode");
             result.setFuture(future);

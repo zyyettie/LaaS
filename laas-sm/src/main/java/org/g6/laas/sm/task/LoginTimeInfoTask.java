@@ -21,16 +21,11 @@ import java.util.Map;
  */
 @Data
 public class LoginTimeInfoTask extends SMRTETask<Map<String, Double>> {
-    List<Line> lines;
-    SplitResult result;
+    private List<Line> lines;
+    private SplitResult result;
 
     @Override
     protected Map<String, Double> process() {
-       /* if (lines.size() > 1)
-            throw new SMRuntimeException(
-                    new IllegalStateException("must be one record while querying login time info of SM")
-            );*/
-
         if (!lines.isEmpty()) {
             Map<String, Double> resultMap = new HashMap<>();
             resultMap.put("login_time", (Double) result.get("login_time").getValue());
