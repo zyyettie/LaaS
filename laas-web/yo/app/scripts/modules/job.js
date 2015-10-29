@@ -45,6 +45,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             return data;
         },
         onRender: function () {
+            var that = this;
             this.$('select').dropdown();
             this.$('[name="selectedScenario"]').on('change', function () {
                 if (this.options[this.selectedIndex].innerHTML == 'Scenario - Top N') {
@@ -62,6 +63,11 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                     console.log(arr);
                 });
             });
+            this.$("#remove_file").on("click", function() {
+                var id = this.attributes["value"]["value"];
+                that.removeFile(id);
+                $('#fileitem_'+id).empty();
+            })
 
         },
         template: function (data) {
@@ -175,6 +181,14 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             }).fail(function() {
                 toastr.error('Cannot load files.');
             });
+        },
+        removeFile : function(id) {
+            for (var i=0; i<this.files.length; i++) {
+                if (this.files[i]["id"] == id) {
+                    this.files.splice(i, 1);
+                    break;
+                }
+            }
         }
     });
 

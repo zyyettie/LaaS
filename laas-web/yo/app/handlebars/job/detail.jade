@@ -23,13 +23,20 @@
                     .field
                         label Files
                     .field
-                        .ui.teal.large.fluid.button#add_file Add
+                        .ui.teal.large.fluid.button#add_file <i class="plus icon"></i>
                 .field
                     .ui.divided.list
                         |{{#each files}}
+                        <div id="fileitem_{{id}}">
                         .item
                             .content
-                                {{originalName}}
+                                .ui.grid
+                                    .ui.two.column.row(style="margin-top:10px;margin-bottom:10px;")
+                                        .column
+                                            label {{originalName}}
+                                        .right.aligned.column
+                                            <div id="remove_file" class="ui teal large fluid button" value="{{id}}"><i class="minus icon"></i></div>
+                        </div>
                         |{{/each}}
                 .two.fields(style="margin-top:100px;margin-bottom:70px;")
                     .field(style="padding-right:50px;")
