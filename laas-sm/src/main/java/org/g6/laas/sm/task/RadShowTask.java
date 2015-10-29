@@ -89,7 +89,7 @@ public class RadShowTask extends SMRTETask<LineSetUnit> {
         return set;
     }
 
-    public RadShowTask(String file) {
+    public RadShowTask() {
         Rule rule = new KeywordRule("RTE D RADTRACE").or(new KeywordRule("RTE D SCRIPTTRACE:"));
         rule.addAction(new RuleAction() {
             @Override
@@ -99,8 +99,6 @@ public class RadShowTask extends SMRTETask<LineSetUnit> {
                 lines.add(line);
             }
         });
-
-        //initContext(file, rule);
-        //TODO
+        addRule(rule);
     }
 }
