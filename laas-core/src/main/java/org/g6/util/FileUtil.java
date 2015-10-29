@@ -284,4 +284,64 @@ public class FileUtil {
         File f = new File(file);
         return f.getName();
     }
+
+    public static List<String> readFirstNLines(File file, long num) {
+        List<String> lines = new ArrayList();
+
+        try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+             BufferedReader reader = new BufferedReader(new InputStreamReader(bis, "utf-8"), 10 * 1024 * 1024);) {
+
+
+            String content;
+            int count = 0;
+            while ((content = reader.readLine()) != null) {
+                if (count >= num)
+                    break;
+                lines.add(content);
+                count++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return lines;
+    }
+
+    public static List<String> readLastNLines(File file, long num) {
+        List<String> result = new ArrayList<>();
+        long count = 0;
+
+        if (!file.exists() || file.isDirectory() || !file.canRead()) {
+            return result;
+        }
+
+        try (RandomAccessFile fileRead = new RandomAccessFile(file, "r");){
+            long length = fileRead.length();
+            if (length == 0L) {
+                return result;
+            } else {
+                long pos = length - 1;
+                while (pos > 0) {
+                    pos--;
+                    fileRead.seek(pos);
+                    if (fileRead.readByte() == '\n') {
+                        String line = fileRead.readLine();
+                        result.add(line);
+                        count++;
+                        if (count == num) {
+                            break;
+                        }
+                    }
+                }
+                if (pos == 0) {
+                    fileRead.seek(0);
+                    result.add(fileRead.readLine());
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
 }
