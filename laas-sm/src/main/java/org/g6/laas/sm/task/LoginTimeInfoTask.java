@@ -1,6 +1,7 @@
 package org.g6.laas.sm.task;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.g6.laas.core.log.line.Line;
 import org.g6.laas.core.log.result.SplitResult;
 import org.g6.laas.core.rule.RegexRule;
@@ -20,9 +21,30 @@ import java.util.Map;
  * @since 1.0
  */
 @Data
+@NoArgsConstructor
 public class LoginTimeInfoTask extends SMRTETask<Map<String, Double>> {
     private List<Line> lines;
     private SplitResult result;
+    private String loginUser;
+
+    @Override
+    protected void started() {
+        lines = new ArrayList<>();
+
+        Rule rule = new RegexRule("RTE D Response-Total.+format:sc\\.manage\\.ToDo\\.g application:display").or(
+                new RegexRule("")
+        );
+
+        rule.addAction(new RuleAction() {
+            @Override
+            public void satisfied(Rule rule, Object content) {
+                Line line = (Line) content;
+                lines.add(line);
+            }
+        });
+        addRule(rule);
+        super.started();
+    }
 
     @Override
     protected Map<String, Double> process() {
@@ -37,20 +59,5 @@ public class LoginTimeInfoTask extends SMRTETask<Map<String, Double>> {
             return resultMap;
         }
         return null;
-    }
-
-    public LoginTimeInfoTask() {
-        lines = new ArrayList<>();
-
-        Rule rule = new RegexRule("RTE D Response-Total.+format:sc\\.manage\\.ToDo\\.g application:display");
-        rule.addAction(new RuleAction() {
-            @Override
-            public void satisfied(Rule rule, Object content) {
-                Line line = (Line) content;
-                result = line.split();
-                lines.add(line);
-            }
-        });
-        addRule(rule);
     }
 }
