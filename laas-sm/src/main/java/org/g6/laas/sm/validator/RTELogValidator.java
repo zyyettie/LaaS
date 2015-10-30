@@ -16,7 +16,7 @@ public class RTELogValidator implements FileValidator {
         List<String> firstLines = FileUtil.readFirstNLines(new File(file.getPath()), 10L);
         List<String> lastLines = FileUtil.readLastNLines(new File(file.getPath()), 10L);
 
-        return isFile && isValidFile(firstLines) && isValidFile(lastLines);
+        return isFile && (isValidFile(firstLines) || isValidFile(lastLines));
     }
 
     private boolean isValidFile(List<String> lines){
