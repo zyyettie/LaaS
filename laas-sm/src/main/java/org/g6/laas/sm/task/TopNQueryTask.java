@@ -30,7 +30,8 @@ public class TopNQueryTask extends SMRTETask<List<Line>> {
     }
 
     public TopNQueryTask() {
-        Rule rule = new KeywordRule("RTE D DBQUERY").or(new KeywordRule("RTE D DBFIND")).or(new RegexRule("RTE D.+DBACCESS"));
+        //Rule rule = new KeywordRule("RTE D DBQUERY").or(new KeywordRule("RTE D DBFIND")).or(new RegexRule("RTE D.+DBACCESS"));
+        Rule rule = new KeywordRule("RTE D DBQUERY");
         rule.addAction(new RuleAction() {
             @Override
             public void satisfied(Rule rule, Object content) {

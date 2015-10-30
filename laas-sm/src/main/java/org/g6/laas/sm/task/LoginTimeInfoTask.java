@@ -25,7 +25,9 @@ import java.util.Map;
 public class LoginTimeInfoTask extends SMRTETask<Map<String, Double>> {
     private List<Line> lines;
     private SplitResult result;
-    private String loginUser;
+    private String user;
+    private String startTime;
+    private String endTime;
 
     @Override
     protected void started() {

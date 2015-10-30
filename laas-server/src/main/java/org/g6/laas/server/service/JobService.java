@@ -55,6 +55,10 @@ public class JobService {
         return jobRepo.findOne(id);
     }
 
+    public JobRunning findJobRunningBy(Long id){
+        return jobRunningRep.findOne(id);
+    }
+
     public void saveTaskRunningStatus(TaskRunning taskRunning, String status) {
         taskRunning.setStatus(status);
         taskRunningRepo.save(taskRunning);
@@ -102,9 +106,7 @@ public class JobService {
         f.setOriginalName(info.getName());
 
         TaskResult taskResult = new TaskResult();
-        Collection<File> files = new ArrayList();
-        files.add(f);
-        taskResult.setFiles(files);
+        taskResult.setFile(f);
         taskRunning.setResult(taskResult);
     }
 
