@@ -31,6 +31,9 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             data.job.desc = json["order"] == "desc" ? "selected='selected'" : "";
             data.job.asc = json["order"] == "asc" ? "selected='selected'" : "";
             data.job.category = json["category"];
+            data.job.user = json['user'];
+            data.job.startTime = json['startTime'];
+            data.job.endTime = json['endTime'];
             if (data.selectedScenarios != undefined && data.selectedScenarios.length > 0 && data.selectedScenarios.length > 0) {
                 for (var i = 0; i < data.scenarioList.length; i++) {
                     if (data.scenarioList[i].id == data.selectedScenarios[0].id) {
@@ -49,14 +52,19 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             var that = this;
             this.$('select').dropdown();
             this.$('[name="selectedScenario"]').on('change', function () {
+                $('#parameters').empty();
+                var render;
+                var subhtml;
                 if (this.options[this.selectedIndex].innerHTML == 'Scenario - Top N') {
-                    var render = JST['app/handlebars/job/topN'];
-                    var subhtml = render({N: 50, order: 'desc', desc: 'selected', asc: ''});
+                    render = JST['app/handlebars/job/topN'];
+                    subhtml = render({N: 50, order: 'desc'});
                     subhtml = subhtml.replace("selected=\"desc\"", "selected='selected'").replace("selected=\"asc\"", "");
                     subhtml = subhtml.replace("selected=\"DBQUERY\"", "selected='selected'").replace("selected=\"SCRIPTTRACE\"", "");
                     $('#parameters').append(subhtml);
-                } else {
-                    $('#parameters').empty();
+                } else if (this.options[this.selectedIndex].innerHTML == 'Scenario - Login Time') {
+                    render = JST['app/handlebars/job/loginTime'];
+                    subhtml = render({});
+                    $('#parameters').append(subhtml);
                 }
             });
             this.$("button").on("click", function(){
@@ -80,16 +88,25 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             } else {
                 template = JST['app/handlebars/job/detail'];
             }
-                html = template(data.job);
-                if (data.job.selectedname == 'Scenario - Top N')  {
-                    var render = JST['app/handlebars/job/topN'];
-                    var subhtml = render(data.job);
-                    subhtml = subhtml.replace("selected=\"desc\"", data.job.desc).replace("selected=\"asc\"", data.job.asc);
-                    var dbquery = LaaS.Util.getComboboxSelected(data.job.category, "DBQUERY");
-                    var scripttrace = LaaS.Util.getComboboxSelected(data.job.category, "SCRIPTTRACE");
-                    subhtml = subhtml.replace("selected=\"DBQUERY\"",dbquery).replace("selected=\"SCRIPTTRACE\"", scripttrace);
-                    html = html.replace("<div id=\"parameters\"><\/div>", "<div id=\"parameters\">"+subhtml+"<\/div>");
-                }
+
+            html = template(data.job);
+            var render;
+            var subhtml = "";
+            if (data.job.selectedname == 'Scenario - Top N')  {
+                render = JST['app/handlebars/job/topN'];
+                subhtml = render(data.job);
+                var desc =  LaaS.Util.getComboboxSelected(data.job.order, "DESC");
+                var asc =  LaaS.Util.getComboboxSelected(data.job.order, "ASC");
+                subhtml = subhtml.replace("selected=\"desc\"", desc).replace("selected=\"asc\"", asc);
+                var dbquery = LaaS.Util.getComboboxSelected(data.job.category, "DBQUERY");
+                var scripttrace = LaaS.Util.getComboboxSelected(data.job.category, "SCRIPTTRACE");
+                subhtml = subhtml.replace("selected=\"DBQUERY\"",dbquery).replace("selected=\"SCRIPTTRACE\"", scripttrace);
+            } else if (data.job.selectedname == 'Scenario - Login Time') {
+                render = JST['app/handlebars/job/loginTime'];
+                subhtml = render(data.job);
+            }
+
+            html = html.replace("<div id=\"parameters\"><\/div>", "<div id=\"parameters\">"+subhtml+"<\/div>");
 
             return html;
         },
@@ -99,7 +116,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             'click #add_file': 'addFile'
         },
         getParameter: function (json) {
-            return JSON.stringify({N: json['N'], order: json['order'], category: json['category']});
+            return JSON.stringify({N: json['N'], order: json['order'], category: json['category'], user: json['user'], startTime: json['startTime'], endTime: json['endTime']});
         },
         saveJob: function () {
             var that = this;
