@@ -13,10 +13,10 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
         },
         onRender : function(){
             this.$('#logout').on('click',function(e){
-                $.get('/laas-server/controllers/logout',function(){
-                    cleanSessionStorage();
-                    LaaS.navigate('login',true);
-                });
+			    cleanSessionStorage();
+                $.get('/laas-server/controllers/logout').always(function(){
+					LaaS.navigate('login',true);
+				});
             });
         }
     });
