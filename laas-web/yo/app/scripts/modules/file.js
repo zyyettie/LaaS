@@ -118,6 +118,32 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
         },
         serializeData:function(){
             return {files:this.files};
+        },
+        events: {
+            'click #upload_my_files':'uploadMyFiles',
+            'click #delete_my_files':'deleteMyFiles'
+        },
+        uploadMyFiles: function(){
+            alert("aaaaaaaa");
+            LaaS.mainRegion.show(new LaaS.Views.FileUploader());
+        },
+        deleteMyFiles: function() {
+            var selectFiles = [];
+            for (var i=0; i<this.files.length; i++) {
+                var fileid = this.files[i].id;
+                if ($("#file_checkbox_"+fileid).prop("checked")) {
+                    selectFiles.push(this.files[i]);
+                }
+            }
+
+            var jobView = new LaaS.Job.JobView({model:this.jobmodel, job:this.job, scenarioList:this.job.scenarioList,
+                selectedScenarios:this.job.selectedScenarios, files:selectFiles});
+            LaaS.mainRegion.show(jobView);
+            if (this.job.id == undefined) {
+                LaaS.navigate('/jobnew');
+            } else {
+                LaaS.navigate('/jobs/'+this.job.id);
+            }
         }
     });
 

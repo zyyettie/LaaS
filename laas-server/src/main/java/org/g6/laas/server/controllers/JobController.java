@@ -8,6 +8,7 @@ import org.g6.laas.server.database.entity.task.Scenario;
 import org.g6.laas.server.database.entity.task.Task;
 import org.g6.laas.server.database.entity.task.TaskRunning;
 import org.g6.laas.server.service.JobService;
+import org.g6.util.FileUtil;
 import org.g6.util.JSONUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -77,12 +78,33 @@ public class JobController {
         return retJobRunning;
     }
 
-    private Collection<File> getFiles(Collection<File> files){
+    private Collection<File> getFiles(Collection<File> files) {
         Collection<File> fileList = new ArrayList<>();
-        for(Iterator<File> ite = files.iterator();ite.hasNext();){
+        for (Iterator<File> ite = files.iterator(); ite.hasNext(); ) {
             File file = ite.next();
             fileList.add(file);
         }
         return fileList;
+    }
+
+    @RequestMapping(value = "/controllers/jobRunnings/{id}/result")
+    ResponseEntity<String> getJobRunningResult(@PathVariable Long id) {
+        JobRunning jobRunning = jobService.findJobRunningBy(id);
+        Collection<TaskRunning> taskRunnings = jobRunning.getTaskRunnings();
+        Map<String, String> resMap = new HashMap<>();
+
+        for (Iterator<TaskRunning> ite = taskRunnings.iterator(); ite.hasNext(); ) {
+            TaskRunning taskRunning = ite.next();
+            Task task = taskRunning.getTask();
+            File resultFile = taskRunning.getResult().getFile();
+            String content = FileUtil.readFullFile(new java.io.File(resultFile.getPath() + resultFile.getFileName()));
+            resMap.put(task.getName(), content);
+        }
+
+        String json = JSONUtil.toJson(resMap);
+
+        String hardcodeJson = "{\"result\":[\"task1\":\"abc\",\"task1\":\"123\"]}";
+
+        return new ResponseEntity(hardcodeJson, HttpStatus.OK);
     }
 }

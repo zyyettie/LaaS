@@ -285,6 +285,24 @@ public class FileUtil {
         return f.getName();
     }
 
+    public static String readFullFile(File file) {
+        StringBuffer sb = new StringBuffer();
+
+        try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+             BufferedReader reader = new BufferedReader(new InputStreamReader(bis, "utf-8"), 10 * 1024 * 1024);) {
+
+
+            String content;
+            while ((content = reader.readLine()) != null) {
+                sb.append(content);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return sb.toString();
+    }
+
     public static List<String> readFirstNLines(File file, long num) {
         List<String> lines = new ArrayList();
 
@@ -315,7 +333,7 @@ public class FileUtil {
             return result;
         }
 
-        try (RandomAccessFile fileRead = new RandomAccessFile(file, "r");){
+        try (RandomAccessFile fileRead = new RandomAccessFile(file, "r");) {
             long length = fileRead.length();
             if (length == 0L) {
                 return result;

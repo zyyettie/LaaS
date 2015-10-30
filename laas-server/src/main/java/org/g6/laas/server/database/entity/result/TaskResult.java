@@ -10,6 +10,7 @@ import org.g6.laas.server.database.entity.user.User;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -20,6 +21,6 @@ import java.util.Collection;
 public class TaskResult extends LaaSAuditable<User> {
     private static final long serialVersionUID = -5053098663559141920L;
 
-    @OneToMany(cascade={CascadeType.PERSIST})
-    private Collection<File> files = new ArrayList<>();
+    @OneToOne(cascade={CascadeType.PERSIST})
+    private File file;
 }
