@@ -169,8 +169,8 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 $.getJSON(appContext+"/controllers/jobs/" + response.id).done(function (json) {
                         toastr.info('Save and Run Job successfully.');var job_running_id = json.job_running_id;
                     $.when(LaaS.request('jobRunning:entity',job_running_id))
-                        .done(function (jobRunning) {
-                            var jobResultView = new JobResultView(jobRunning);
+                        .done(function (jobRunningResult) {
+                            var jobResultView = new JobResultView(jobRunningResult);
                             LaaS.mainRegion.show(jobResultView);
                         });
 
