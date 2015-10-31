@@ -67,7 +67,7 @@ LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
                 });              
             });
 
-        },
+        }
 
     });
 });

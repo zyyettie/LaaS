@@ -29,4 +29,6 @@ public class File extends LaaSAuditable<User> {
     private String originalName;
 
     private Long size;
+
+    private String isRemoved;
 }
