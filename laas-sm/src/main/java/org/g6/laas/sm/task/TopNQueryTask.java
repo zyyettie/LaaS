@@ -1,6 +1,7 @@
 package org.g6.laas.sm.task;
 
 import com.google.common.collect.Ordering;
+import org.g6.laas.core.format.provider.DefaultInputFormatProvider;
 import org.g6.laas.core.log.line.Line;
 import org.g6.laas.core.log.line.LineComparator;
 import org.g6.laas.core.rule.KeywordRule;
@@ -42,5 +43,11 @@ public class TopNQueryTask extends SMRTETask<List<Line>> {
             }
         });
         addRule(rule);
+    }
+
+    DefaultInputFormatProvider getProvider() {
+        DefaultInputFormatProvider provider = getDefaultProvider();
+        provider.setNames(new String[]{"DBQUERY","DBFIND","DBACCESS"});
+        return provider;
     }
 }
