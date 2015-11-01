@@ -1,5 +1,7 @@
 LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
     'use strict';
+    var appContext = LaaS.Util.Constants.APPCONTEXT;
+
     Views.FileUploader = Marionette.ItemView.extend({
         template: JST['app/handlebars/fileupload/upload'],
         onRender: function () {
@@ -41,7 +43,7 @@ LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
                 var formData = new FormData($('form')[0]);
                 $.ajax({
                     type: "POST",
-                    url: "/api/v1/upload",
+                    url: appContext + "/api/v1/upload",
                     data: formData,
                     processData: false,
                     contentType: false,

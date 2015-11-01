@@ -40,4 +40,8 @@ public class JobRunning extends JobSubEntity {
     public String getSummary() {
         return summary;
     }
+
+    public void addTaskRunning(TaskRunning taskRunning){
+        taskRunnings.add(taskRunning);
+    }
 }
