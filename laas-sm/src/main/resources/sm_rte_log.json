@@ -1,6 +1,6 @@
 {"file_name":"sm.log", "date_time_format":"MM/dd/yyyy HH:mm:ss","lines":
     [
-        {"name":"DBACCESS", "key":"RTE D DBACCESS","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D.+DBACCESS.+(\\d+\\.\\d+)\\s+seconds",
+        {"name":"DBACCESS", "key":"REGEX:RTE D.+DBACCESS","line_split_regex":"^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D.+DBACCESS.+(\\d+\\.\\d+)\\s+seconds",
             "fields":[
                 {"name":"process_id","type":"Integer","sortable":"false"},
                 {"name":"thread_id","type":"Integer","sortable":"false"},

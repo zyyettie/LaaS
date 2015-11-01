@@ -4,9 +4,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.g6.laas.core.exception.InputFormatNotFoundException;
+import org.g6.laas.core.exception.InputFormatException;
 import org.g6.laas.core.exception.LaaSCoreRuntimeException;
-import org.g6.laas.core.exception.Regex4LineSplitNotFoundException;
 import org.g6.laas.core.field.*;
 import org.g6.laas.core.log.line.Line;
 import org.g6.laas.core.log.line.LineAttributes;
@@ -33,19 +32,8 @@ public final class DefaultInputFormat implements InputFormat {
         List<FieldFormat> fieldFormatList = null;
         List<String> errorKeyList = new ArrayList<>();
         int counter = 0;
-        boolean isDefault = false;
 
         for (LineAttributes lineAttr : lineAttrList) {
-            // get the default one if no line format is specified for the current line
-            if (lineAttr.getName().equals("DEFAULT")) {
-                isDefault = true;
-                if(fieldFormatList == null && StringUtils.isBlank(lineSplitRegex)){
-                    fieldFormatList = lineAttr.getFieldFormats();
-                    lineSplitRegex = lineAttr.getSplitRegex();
-                }
-                continue;
-            }
-
             String lineFormatKey = lineAttr.getKey();
             if (lineFormatKey.startsWith(Constants.REGEX_PREFIX)) { // the key is regex
                 String regex = lineFormatKey.substring(Constants.REGEX_PREFIX.length());
@@ -56,7 +44,6 @@ public final class DefaultInputFormat implements InputFormat {
                     counter++;
                     fieldFormatList = lineAttr.getFieldFormats();
                     lineSplitRegex = lineAttr.getSplitRegex();
-                    isDefault = false;
                 }
             } else {
                 if (line.getContent().contains(lineFormatKey)) {
@@ -64,12 +51,11 @@ public final class DefaultInputFormat implements InputFormat {
                     counter++;
                     fieldFormatList = lineAttr.getFieldFormats();
                     lineSplitRegex = lineAttr.getSplitRegex();
-                    isDefault = false;
                 }
             }
         }
 
-        if (!isDefault && counter != 1) {
+        if (counter > 1) {
             StringBuffer sb = new StringBuffer();
             sb.append("Found more than one formats for the line which number is ")
                     .append(line.getLineNumber())
@@ -84,16 +70,11 @@ public final class DefaultInputFormat implements InputFormat {
                 }
                 keyCount++;
             }
-            throw new LaaSCoreRuntimeException(sb.toString());
+            throw new InputFormatException(sb.toString());
+        } else if (counter == 0) {
+            log.error("No matching split format defined for " + line.getContent());
+            throw new InputFormatException("No matching split format defined for " + line.getContent());
         }
-        if (fieldFormatList == null)
-            throw new InputFormatNotFoundException("InputFormat not found");
-        if (lineSplitRegex == null)
-            throw new Regex4LineSplitNotFoundException("Regex not found for " + line.getContent());
-
-        if (isDefault)
-            log.debug("Default line format is being used");
-
         String[] fieldContents = RegexUtil.getValues(line.getContent(), lineSplitRegex);
         //in this case, the default format is used to split. But the existing format including default one
         // may not be available for it, for example, if user add some comments in the log file
