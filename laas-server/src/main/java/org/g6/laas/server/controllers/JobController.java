@@ -57,7 +57,6 @@ public class JobController {
         jobRunning.setStatus("RUNNING");
 
         Collection<Scenario> scenarios = job.getScenarios();
-        Collection<TaskRunning> taskRunnings = new ArrayList<>();
         Collection<Task> tasks;
 
         for (Iterator<Scenario> it = scenarios.iterator(); it.hasNext(); ) {
@@ -68,11 +67,11 @@ public class JobController {
                 TaskRunning taskRunning = new TaskRunning();
                 taskRunning.setStatus("RUNNING");
                 taskRunning.setTask(task);
-                taskRunnings.add(taskRunning);
+                taskRunning.setJobRunning(jobRunning);
+                jobRunning.addTaskRunning(taskRunning);
             }
         }
 
-        jobRunning.setTaskRunnings(taskRunnings);
         JobRunning retJobRunning = jobService.saveJobRunning(jobRunning);
 
         return retJobRunning;
@@ -102,9 +101,6 @@ public class JobController {
         }
 
         String json = JSONUtil.toJson(resMap);
-
-        String hardcodeJson = "{\"result\":[\"task1\":\"abc\",\"task1\":\"123\"]}";
-
-        return new ResponseEntity(hardcodeJson, HttpStatus.OK);
+        return new ResponseEntity(json, HttpStatus.OK);
     }
 }
