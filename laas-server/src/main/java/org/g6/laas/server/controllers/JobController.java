@@ -53,7 +53,7 @@ public class JobController {
         JobRunning jobRunning = new JobRunning();
         jobRunning.setJob(job);
         jobRunning.setParameters(job.getParameters());
-        jobRunning.setFiles(getFiles(job.getFiles()));
+        //jobRunning.setFiles(getFiles(job.getFiles()));
         jobRunning.setStatus("RUNNING");
 
         Collection<Scenario> scenarios = job.getScenarios();

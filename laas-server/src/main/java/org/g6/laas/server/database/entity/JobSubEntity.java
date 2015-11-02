@@ -9,26 +9,19 @@ import javax.persistence.ManyToMany;
 import javax.persistence.MappedSuperclass;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @MappedSuperclass
 public abstract class JobSubEntity extends LaaSNotifiable<User> {
+
     private static final long serialVersionUID = -1538015373412995204L;
 
     private String parameters;
 
     @ManyToMany
-    private Collection<File> files = new ArrayList<>();
+    private List<File> files = new ArrayList<>();
 
-    @Override
-    public Collection<User> sendTo() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public String getSummary() {
-        return "";
-    }
 }

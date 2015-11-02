@@ -137,6 +137,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             }
 
             //this.model.url='/jobs/'+json.id;
+            delete json.files;
             this.model.save(json, {patch: true, success: function () {
                 toastr.info('Save Job successfully.');
                 that.job.id = that.model.id;
