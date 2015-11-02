@@ -60,6 +60,7 @@ public class FileUploadController {
                 fileEntity.setFileName(generatedName);
                 fileEntity.setPath(uploaded.getCanonicalPath());
                 fileEntity.setSize(size);
+                fileEntity.setIsRemoved("N");
                 org.g6.laas.server.database.entity.File saved = fileRepository.save(fileEntity);
                 results.add(new UploadResult(saved.getId(), fileName, size, "succeed"));
             } catch (IOException e) {

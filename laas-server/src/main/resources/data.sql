@@ -32,11 +32,11 @@ insert into SCENARIO_TASK(SCENARIO_ID, TASK_ID) values(4, 4)
 insert into SCENARIO_TASK(SCENARIO_ID, TASK_ID) values(5, 5)
 insert into SCENARIO_TASK(SCENARIO_ID, TASK_ID) values(6, 6)
 
-insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(1, 'sm.log', 'e:/', '1', 'sm.log')
-insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(3, 'sm.log.1', 'e:/', '1', 'sm.log.1')
-insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(4, 'sm.log.2', 'e:/', '1', 'sm.log.2')
-insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME,created_by_id) values(2, 'sm_dbquery.log', 'e:/', '1', 'sm_dbquery.log',1)
-insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME,created_by_id) values(5, 'sm_dbquery.log.1', 'e:/', '1', 'sm_dbquery.log.1',1)
+insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME,created_by_id,is_removed) values(1, 'sm.log', 'e:/', '1', 'sm.log',1,'N')
+insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME,created_by_id,is_removed) values(3, 'sm.log.1', 'e:/', '1', 'sm.log.1',1,'N')
+insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME,created_by_id,is_removed) values(4, 'sm.log.2', 'e:/', '1', 'sm.log.2',1,'N')
+insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME,created_by_id,is_removed) values(2, 'sm_dbquery.log', 'e:/', '1', 'sm_dbquery.log',1,'N')
+insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME,created_by_id,is_removed) values(5, 'sm_dbquery.log.1', 'e:/', '1', 'sm_dbquery.log.1',1,'N')
 
 
 insert into PARAMETER_DEFINE(ID, NAME, DISPLAY_INFO, TYPE, WIDTH, HEIGHT, line_occupied, DEFAULT_VALUE) values(1, 'N', 'N', 'text', 1, 1, false, '50')

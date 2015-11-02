@@ -1,5 +1,6 @@
 LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
     'use strict';
+    var appContext = LaaS.Util.Constants.APPCONTEXT;
 
     var FileView = Marionette.ItemView.extend({
         initialize : function(options){
@@ -107,7 +108,7 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
         }
     });
 
-    var MyFileView = Marionette.ItemView.extend({
+    File.MyFileView = Marionette.ItemView.extend({
         initialize : function(options){
             this.files = options.files;
         },
@@ -118,6 +119,36 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
         },
         serializeData:function(){
             return {files:this.files};
+        },
+        events: {
+            'click #upload_my_files':'uploadMyFiles',
+            'click #delete_my_files':'deleteMyFiles'
+        },
+        uploadMyFiles: function(){
+            LaaS.mainRegion.show(new LaaS.Views.FileUploader());
+        },
+        deleteMyFiles: function() {
+            var selectFiles = [];
+            for (var i=0; i<this.files.length; i++) {
+                var fileId = this.files[i].id;
+                if ($("#file_checkbox_"+fileId).prop("checked")) {
+                    selectFiles.push(this.files[i]);
+                }
+            }
+
+            $.ajax({
+                type: "POST",
+                url: appContext+"/controllers/files",
+                data: JSON.stringify(selectFiles),
+                success: function(data){
+                    $.when(LaaS.request('myFiles:entities')).done(function(data){
+                        var view = new LaaS.File.MyFileView({files:data.files});
+                        LaaS.mainRegion.show(view);
+                    });
+                },
+                dataType: "json",
+                contentType: "application/json"
+            });
         }
     });
 
@@ -164,12 +195,11 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
         },
         showMyFiles: function(){
             $.when(LaaS.request('myFiles:entities')).done(function(data){
-                var view = new MyFileView({files:data.files});
+                var view = new LaaS.File.MyFileView({files:data.files});
                 LaaS.mainRegion.show(view);
             });
         }
     });
-
 
     LaaS.addInitializer(function() {
         new Marionette.AppRouter({

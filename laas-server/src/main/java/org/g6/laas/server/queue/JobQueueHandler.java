@@ -134,10 +134,10 @@ public class JobQueueHandler implements InitializingBean {
 
     private void makeJobRunningNotifiable(JobRunning jobRunning) {
         // Need to discuss if the login user will be saved in createdBy field
-        jobRunning.getUsers().add(jobRunning.getCreatedBy());
+        //jobRunning.getUsers().add(jobRunning.getCreatedBy());
         Job job = jobRunning.getJob();
         String summary = job.getId() + " " + job.getName() + " <a href=\"http://localhost:9000/laas-server/jobs/1/jobRunnings/2\">Running Result</a>";
-        jobRunning.setSummary(summary);
+        //jobRunning.setSummary(summary);
     }
 
     public void shutDown() {

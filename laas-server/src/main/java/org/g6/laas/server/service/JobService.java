@@ -47,12 +47,14 @@ public class JobService {
     @Autowired
     private ITaskRunningRepository taskRunningRepo;
     @Autowired
-    private IJobRunningRepository jobRunningRep;
-    @Autowired
     JobQueue queue;
 
     public Job findJobBy(Long id) {
         return jobRepo.findOne(id);
+    }
+
+    public JobRunning findJobRunningBy(Long id){
+        return jobRunningRepo.findOne(id);
     }
 
     public void saveTaskRunningStatus(TaskRunning taskRunning, String status) {
@@ -74,7 +76,7 @@ public class JobService {
     }
 
     public List<JobRunning> findUnFinishedJobInQueue(String syn, String status){
-        return jobRunningRep.findUnFinishedJobInQueue(syn, status);
+        return jobRunningRepo.findUnFinishedJobInQueue(syn, status);
     }
 
     public String genReport(TaskRunningResult taskRunningResult, Task task) {
@@ -102,9 +104,7 @@ public class JobService {
         f.setOriginalName(info.getName());
 
         TaskResult taskResult = new TaskResult();
-        Collection<File> files = new ArrayList();
-        files.add(f);
-        taskResult.setFiles(files);
+        taskResult.setFile(f);
         taskRunning.setResult(taskResult);
     }
 

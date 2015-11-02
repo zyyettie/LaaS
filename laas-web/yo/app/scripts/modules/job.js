@@ -137,8 +137,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         events: {
             'click #job_save': 'saveJob',
             'click #job_run': 'runJob',
-            'click #add_file': 'addFile',
-            'click #job_show': 'showJob'
+            'click #add_file': 'addFile'
         },
         getParameter: function (json, defines) {
             if (!defines) {
@@ -176,6 +175,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             }
 
             //this.model.url='/jobs/'+json.id;
+            delete json.files;
             this.model.save(json, {patch: true, success: function () {
                 toastr.info('Save Job successfully.');
                 that.job.id = that.model.id;
@@ -270,6 +270,15 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         },
         serializeData: function () {
             return {jobs: this.jobs};
+        },
+        events:{
+            'click button.job-show': "showClicked"
+        },
+        showClicked: function(event){
+            var jobId = event.target.dataset["id"];
+            var jobController = new LaaS.Job.JobController();
+            jobController.showJob(jobId);
+            LaaS.navigate('/jobs/' + jobId + '/edit');
         }
     });
 
@@ -287,7 +296,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         }
     });
 
-    var JobController = Marionette.Controller.extend({
+    Job.JobController = Marionette.Controller.extend({
         jobnew: function () {
             $.when(LaaS.request('job:new'), LaaS.request('scenario:entities'), LaaS.request('file:entities'))
                 .done(function (job, scenario, file) {
@@ -357,7 +366,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 'jobs(/)': 'showJobs',
                 'jobs/:id(/)': 'showJob'
             },
-            controller: new JobController()
+            controller: new LaaS.Job.JobController()
         });
     });
 });

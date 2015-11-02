@@ -1,0 +1,27 @@
+.ui.centered.grid
+    .twelve.wide.column
+        .ui.segment(style="margin-top:5px;padding:20px 40px;")
+            h2#title File List
+            form.ui.form
+                .field
+                    .ui.grid
+                        .row
+                            .eight.wide.column
+                                .ui.divided.list
+                                    |{{#each files}}
+                                    .item(id="item_div_{{id}}")
+                                        .content
+                                            .ui.grid
+                                                .ui.two.column.row(style="margin-top:10px;margin-bottom:10px;")
+                                                    .column
+                                                        .ui.checkbox
+                                                            <input id="file_checkbox_{{id}}" type="checkbox" {{checked}}/>
+                                                            label {{originalName}}
+                                                    .right.aligned.column
+                                                        a {{size}}
+                                    |{{/each}}
+                .two.fields(style="margin-top:100px;margin-bottom:70px;")
+                    .field(style="padding-right:50px;")
+                        .ui.teal.large.fluid.button#upload_my_files Add Files...
+                    .field(style="padding-left:50px;")
+                        .ui.teal.large.fluid.button#delete_my_files Delete

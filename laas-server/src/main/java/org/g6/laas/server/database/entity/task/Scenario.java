@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 import org.g6.laas.server.database.entity.Category;
+import org.g6.laas.server.database.entity.Job;
 import org.g6.laas.server.database.entity.LaaSAuditable;
 import org.g6.laas.server.database.entity.ParameterDefine;
 import org.g6.laas.server.database.entity.Product;
@@ -32,6 +33,9 @@ public class Scenario extends LaaSAuditable<User> {
 
     @ManyToMany
     private List<Category> categories = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "scenarios")
+    private List<Job> jobs = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "SCENARIO_TASK",
