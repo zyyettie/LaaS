@@ -43,7 +43,7 @@ LaaS.module('Form', function(Form, LaaS, Backbone, Marionette) {
                 fieldHtml += '<label>'+parameterDefine["displayInfo"]+'</label>';
                 fieldHtml += '<input type="text" name="'+parameterDefine["name"]
                     +'" placeholder="'+(parameterDefine["defaultValue"] || "")
-                    +'" value="'+(parameters[parameterDefine["name"]] || parameterDefine["defaultValue"])
+                    +'" value="'+(parameters[parameterDefine["name"]] || parameterDefine["defaultValue"] || "")
                     +'"/>';
                 break;
             case "dropdown":
