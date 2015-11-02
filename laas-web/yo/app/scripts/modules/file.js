@@ -58,7 +58,7 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
             }
 
             var jobView = new LaaS.Job.JobView({model:this.jobmodel, job:this.job, scenarioList:this.job.scenarioList,
-                selectedScenarios:this.job.selectedScenarios, files:selectFiles});
+                selectedScenarios:this.job.selectedScenarios, files:selectFiles, selectedParameterDefines:this.job.selectedParameterDefines});
             LaaS.mainRegion.show(jobView);
             if (this.job.id == undefined) {
                 LaaS.navigate('/jobnew');
@@ -68,7 +68,7 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
         },
         cancelSelect: function() {
             var jobView = new LaaS.Job.JobView({model:this.jobmodel, job:this.job, scenarioList:this.job.scenarioList,
-                selectedScenarios:this.job.selectedScenarios, files:this.job.files});
+                selectedScenarios:this.job.selectedScenarios, files:this.job.files, selectedParameterDefines:this.job.selectedParameterDefines});
             LaaS.mainRegion.show(jobView);
             if (this.job.id == undefined) {
                 LaaS.navigate('/jobnew');
