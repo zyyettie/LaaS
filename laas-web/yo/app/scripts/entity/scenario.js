@@ -43,4 +43,15 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
         });
         return scenarios.promise();
     });
+
+    LaaS.reqres.setHandler('scenario:entitiesByUrl', function(options) {
+        var options = options || {url:baseUrl};
+        var url = options.url || baseUrl;
+        var scenarios = $.Deferred();
+        $.getJSON(url).done(function(data) {
+            var list = data._embedded ? data._embedded.scenarios : [];
+            scenarios.resolve({scenarios:list});
+        });
+        return scenarios.promise();
+    });
 });

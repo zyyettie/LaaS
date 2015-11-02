@@ -37,3 +37,25 @@ insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(3, 'sm
 insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME) values(4, 'sm.log.2', 'e:/', '1', 'sm.log.2')
 insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME,created_by_id) values(2, 'sm_dbquery.log', 'e:/', '1', 'sm_dbquery.log',1)
 insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME,created_by_id) values(5, 'sm_dbquery.log.1', 'e:/', '1', 'sm_dbquery.log.1',1)
+
+
+insert into PARAMETER_DEFINE(ID, NAME, DISPLAY_INFO, TYPE, WIDTH, HEIGHT, line_occupied, DEFAULT_VALUE) values(1, 'N', 'N', 'text', 1, 1, false, '50')
+insert into PARAMETER_DEFINE(ID, NAME, DISPLAY_INFO, TYPE, VALUE_LIST, WIDTH, HEIGHT, line_occupied, DEFAULT_VALUE) values(2, 'order', 'Order', 'dropdown', 'ASC|DESC', 1, 1, false, 'DESC')
+insert into PARAMETER_DEFINE(ID, NAME, DISPLAY_INFO, TYPE, VALUE_LIST, WIDTH, HEIGHT, line_occupied, DEFAULT_VALUE) values(3, 'category', 'Category', 'dropdown', 'DBQUERY|SCRIPTTRACE', 1, 1, false, 'DBQUERY')
+insert into PARAMETER_DEFINE(ID, NAME, DISPLAY_INFO, TYPE, WIDTH, HEIGHT, line_occupied) values(4, 'user', 'User', 'text', 1, 1, true)
+insert into PARAMETER_DEFINE(ID, NAME, DISPLAY_INFO, TYPE, WIDTH, HEIGHT, line_occupied) values(5, 'startTime', 'From', 'time', 1, 1, false)
+insert into PARAMETER_DEFINE(ID, NAME, DISPLAY_INFO, TYPE, WIDTH, HEIGHT, line_occupied) values(6, 'endTime', 'To', 'time', 1, 1, false)
+
+insert into task_parameter_defines(task_id, parameter_defines_id) values(1, 1)
+insert into task_parameter_defines(task_id, parameter_defines_id) values(1, 2)
+insert into task_parameter_defines(task_id, parameter_defines_id) values(1, 3)
+insert into task_parameter_defines(task_id, parameter_defines_id) values(3, 4)
+insert into task_parameter_defines(task_id, parameter_defines_id) values(3, 5)
+insert into task_parameter_defines(task_id, parameter_defines_id) values(3, 6)
+
+insert into scenario_parameter_defines(scenario_id, parameter_defines_id) values(1, 1)
+insert into scenario_parameter_defines(scenario_id, parameter_defines_id) values(1, 2)
+insert into scenario_parameter_defines(scenario_id, parameter_defines_id) values(1, 3)
+insert into scenario_parameter_defines(scenario_id, parameter_defines_id) values(3, 4)
+insert into scenario_parameter_defines(scenario_id, parameter_defines_id) values(3, 5)
+insert into scenario_parameter_defines(scenario_id, parameter_defines_id) values(3, 6)
