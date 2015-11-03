@@ -72,7 +72,9 @@ public abstract class SMRTETask<T> extends AbstractAnalysisTask<T> {
         this.files = files;
     }
 
-   abstract DefaultInputFormatProvider getProvider();
+    DefaultInputFormatProvider getProvider() {
+       return getDefaultProvider(new String[]{});
+    }
 
     DefaultInputFormatProvider getDefaultProvider(String[] names) {
         if (provider == null) {
