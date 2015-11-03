@@ -1,12 +1,14 @@
-package org.g6.laas.server.database.entity;
+package org.g6.laas.server.database.entity.file;
 
 
 import lombok.EqualsAndHashCode;
+import org.g6.laas.server.database.entity.Job;
+import org.g6.laas.server.database.entity.JobRunning;
+import org.g6.laas.server.database.entity.LaaSAuditable;
 import org.g6.laas.server.database.entity.user.User;
 import lombok.Data;
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Entity

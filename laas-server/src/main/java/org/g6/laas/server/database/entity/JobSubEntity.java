@@ -3,12 +3,12 @@ package org.g6.laas.server.database.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.g6.laas.server.database.entity.file.File;
 import org.g6.laas.server.database.entity.user.User;
 
 import javax.persistence.ManyToMany;
 import javax.persistence.MappedSuperclass;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Data

@@ -1,6 +1,8 @@
 package org.g6.laas;
 
 import org.g6.laas.server.database.entity.*;
+import org.g6.laas.server.database.entity.file.File;
+import org.g6.laas.server.database.entity.file.FileType;
 import org.g6.laas.server.database.entity.result.TaskResult;
 import org.g6.laas.server.database.entity.task.*;
 import org.g6.laas.server.database.entity.user.Notification;

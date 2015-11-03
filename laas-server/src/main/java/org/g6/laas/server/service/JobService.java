@@ -6,7 +6,7 @@ import org.g6.laas.core.engine.AnalysisEngine;
 import org.g6.laas.core.engine.task.AnalysisTask;
 import org.g6.laas.core.engine.task.report.ReportBuilder;
 import org.g6.laas.core.engine.task.report.ReportModel;
-import org.g6.laas.server.database.entity.File;
+import org.g6.laas.server.database.entity.file.File;
 import org.g6.laas.server.database.entity.Job;
 import org.g6.laas.server.database.entity.JobRunning;
 import org.g6.laas.server.database.entity.result.TaskResult;

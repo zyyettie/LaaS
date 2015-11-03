@@ -1,7 +1,7 @@
 package org.g6.laas.server.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import org.g6.laas.server.database.entity.File;
+import org.g6.laas.server.database.entity.file.File;
 import org.g6.laas.server.database.entity.Job;
 import org.g6.laas.server.database.entity.JobRunning;
 import org.g6.laas.server.database.entity.task.Scenario;

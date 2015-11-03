@@ -1,8 +1,6 @@
 package org.g6.laas.server.controllers;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import org.g6.laas.server.database.entity.File;
-import org.g6.laas.server.database.entity.user.User;
+import org.g6.laas.server.database.entity.file.File;
 import org.g6.laas.server.database.repository.IFileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
