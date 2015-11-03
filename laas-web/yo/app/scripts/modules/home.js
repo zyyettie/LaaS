@@ -13,10 +13,11 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
         },
         onRender : function(){
             this.$('#logout').on('click',function(e){
-			    cleanSessionStorage();
+			          cleanSessionStorage();
+                LaaS.stopTask(LaaS.Inbox.queryTask);
                 $.get('/laas-server/controllers/logout').always(function(){
-					LaaS.navigate('login',true);
-				});
+					          LaaS.navigate('login',true);
+                });
             });
         }
     });
@@ -30,6 +31,7 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
                 $(event.target).addClass('active');
                 LaaS.navigate($(this).attr('href'), true);
             });
+
         }
     });
 

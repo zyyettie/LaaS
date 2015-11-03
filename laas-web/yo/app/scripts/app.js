@@ -29,13 +29,34 @@ var isRefreshingPage=function(){
 
 _.extend(Marionette.AppRouter.prototype,{before:function(route,args){
   if(isRefreshingPage()){
-    LaaS.Home.showViewFrame();
+    console.log(route);
+    if(route != 'login(/)'){
+      LaaS.Home.showViewFrame();
+      LaaS.scheduleTask(LaaS.Inbox.queryTask);
+    }
   }
 }});
 
 window.onbeforeunload = function(){
   sessionStorage.setItem('refresh',true);
 };
+
+var internalScheduleTask = LaaS.scheduleTask = function(task){
+  console.log(task);
+  task.timeout = setTimeout(function(){
+      task.func();
+      if(!task.isOnce){
+          LaaS.stopTask(task);
+          internalScheduleTask(task);
+      }
+  },task.interval);
+};
+
+LaaS.stopTask = function(task){
+  if(task.timeout){
+    clearTimeout(task.timeout);
+  }
+}
 
 $(document).ajaxError(function (event, xhr, options,thrownError) {
   var statusCode = xhr.status;
