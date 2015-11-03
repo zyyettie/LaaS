@@ -17,6 +17,7 @@ import java.util.Collection;
 @MappedSuperclass
 @EntityListeners(NotificationListener.class)
 public abstract class LaaSNotifiable<U> extends LaaSAuditable<U> implements Notifiable<U> {
+    private String summary;
 
     public LaaSNotifiable(Long id) {
         super(id);
