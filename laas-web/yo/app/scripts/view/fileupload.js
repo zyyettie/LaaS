@@ -4,6 +4,9 @@ LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
 
     Views.FileUploader = Marionette.ItemView.extend({
         template: JST['app/handlebars/fileupload/upload'],
+        initialize : function(options){
+            this.url = options.url;
+        },
         onRender: function () {
             this.total = 0;
             var that = this;
@@ -66,10 +69,12 @@ LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
                         }
                         $('#upload').removeClass('disabled');
 
-                });              
+                        LaaS.navigate(that.url, true);
+                });
+
             });
 
-        }
+        }//end onRender
 
     });
 });

@@ -15,13 +15,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RadShowTask extends SMRTETask<LineSetUnit> {
+public class RadShowTask extends SMRTETask<String> {
     private List<Line> lines = new ArrayList<>();
     private Pattern radPattern = Pattern.compile("^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D RADTRACE.+\\]\\s+([^\\s]+)\\s+([^\\s]+)\\s+([^\\s]+)");
     private Pattern jsPattern = Pattern.compile("^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D SCRIPTTRACE:\\s+([^\\s]+)\\s+entered,");
 
     @Override
-    protected LineSetUnit process() {
+    protected String process() {
         //String regex = "^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D RADTRACE.+\\]\\s+([^\\s]+)\\s+([^\\s]+)\\s+([^\\s]+)";
         //Pattern pattern = Pattern.compile(regex);
         SMRadLineSetUnit allSet = new SMRadLineSetUnit();
@@ -31,7 +31,7 @@ public class RadShowTask extends SMRTETask<LineSetUnit> {
             set = constructSetUnit(set, it);
             allSet.addUnit(set);
         }
-        return allSet;
+        return allSet.getContent();
     }
 
     private SMRadLineSetUnit constructSetUnit( SMRadLineSetUnit set, Iterator<Line> it) {
@@ -95,7 +95,7 @@ public class RadShowTask extends SMRTETask<LineSetUnit> {
             @Override
             public void satisfied(Rule rule, Object content) {
                 Line line = (Line) content;
-                line.split();
+                //line.split();
                 lines.add(line);
             }
         });

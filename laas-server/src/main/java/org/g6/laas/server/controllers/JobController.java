@@ -53,7 +53,7 @@ public class JobController {
         JobRunning jobRunning = new JobRunning();
         jobRunning.setJob(job);
         jobRunning.setParameters(job.getParameters());
-        //jobRunning.setFiles(getFiles(job.getFiles()));
+        jobRunning.setFiles(getFiles(job.getFiles()));
         jobRunning.setStatus("RUNNING");
 
         Collection<Scenario> scenarios = job.getScenarios();
@@ -77,8 +77,8 @@ public class JobController {
         return retJobRunning;
     }
 
-    private Collection<File> getFiles(Collection<File> files) {
-        Collection<File> fileList = new ArrayList<>();
+    private List<File> getFiles(Collection<File> files) {
+        List<File> fileList = new ArrayList<>();
         for (Iterator<File> ite = files.iterator(); ite.hasNext(); ) {
             File file = ite.next();
             fileList.add(file);

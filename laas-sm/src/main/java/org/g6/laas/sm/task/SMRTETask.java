@@ -73,15 +73,17 @@ public abstract class SMRTETask<T> extends AbstractAnalysisTask<T> {
     }
 
     DefaultInputFormatProvider getProvider() {
-        return getDefaultProvider();
+       return getDefaultProvider(new String[]{});
     }
 
-    DefaultInputFormatProvider getDefaultProvider() {
+    DefaultInputFormatProvider getDefaultProvider(String[] names) {
         if (provider == null) {
             provider = new DefaultInputFormatProvider("SMRTE_SM_LOG");
         } else {
             provider.setFormatKey("SMRTE_SM_LOG");
         }
+        provider.setNames(names);
+
         return provider;
     }
 }

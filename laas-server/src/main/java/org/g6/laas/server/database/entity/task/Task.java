@@ -4,11 +4,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.g6.laas.server.database.entity.LaaSAuditable;
+import org.g6.laas.server.database.entity.ParameterDefine;
 import org.g6.laas.server.database.entity.user.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "TASK",uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
@@ -25,5 +26,8 @@ public class Task extends LaaSAuditable<User> {
     private String className;
 
     @OneToMany(mappedBy = "task")
-    private Collection<TaskRunning> taskRunnings = new ArrayList<>();
+    private List<TaskRunning> taskRunnings = new ArrayList<>();
+
+    @ManyToMany
+    private List<ParameterDefine> parameterDefines = new ArrayList<>();
 }

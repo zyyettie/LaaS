@@ -45,6 +45,17 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
         return files.promise();
     });
 
+    LaaS.reqres.setHandler('file:entitiesByUrl', function(options) {
+        var options = options || {url:baseUrl};
+        var url = options.url || baseUrl;
+        var files = $.Deferred();
+        $.getJSON(url).done(function(data) {
+            var list = data._embedded ? data._embedded.files : [];
+            files.resolve({files:list});
+        });
+        return files.promise();
+    });
+
     LaaS.reqres.setHandler('myFiles:entities', function (options) {
         var options = options || {page:0,size:10};
         var page = options.page || 0;
@@ -52,8 +63,8 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
         var files = $.Deferred();
         var userName = sessionStorage.getItem("username");
 
-        $.getJSON(baseUrl+"/search/findFilesOwnedBy?userName=" + userName).done(function(data){
-            files.resolve({files:data._embedded.files});
+        $.getJSON(baseUrl+"/search/findFilesOwnedBy?userName=" + userName+"&page=" + page + "&size=" + size).done(function(data){
+            files.resolve({files:data._embedded.files,page:data.page});
         });
         return files.promise();
     });

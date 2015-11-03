@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import org.g6.laas.server.database.entity.task.TaskRunning;
 import org.g6.laas.server.database.entity.user.User;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -24,7 +25,7 @@ public class JobRunning extends JobSubEntity {
 
     private String syn;//Y and N
 
-    @OneToMany(mappedBy = "jobRunning")
+    @OneToMany(cascade={CascadeType.PERSIST}, mappedBy = "jobRunning")
     private Collection<TaskRunning> taskRunnings = new ArrayList<>();
 
     @Override

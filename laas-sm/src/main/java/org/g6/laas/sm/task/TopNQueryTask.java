@@ -46,8 +46,6 @@ public class TopNQueryTask extends SMRTETask<List<Line>> {
     }
 
     DefaultInputFormatProvider getProvider() {
-        DefaultInputFormatProvider provider = getDefaultProvider();
-        provider.setNames(new String[]{"DBQUERY","DBFIND","DBACCESS"});
-        return provider;
+        return getDefaultProvider(new String[]{"DBQUERY","DBFIND","DBACCESS"});
     }
 }

@@ -9,7 +9,7 @@
                         input(type="text",name="name",placeholder="name", value="{{name}}")
                     .field
                         label Job Scenario
-                        select.ui.dropdown(name="selectedScenario")
+                        select.ui.dropdown(id="selectedScenario", name="selectedScenario")
                             option(value="{{selectedid}}") {{selectedname}}
                             |{{#each scenarioList}}
                             option(value="{{id}}") {{name}}
@@ -21,7 +21,7 @@
                 .field
                 .two.fields
                     .field
-                        label Files
+                        label Files<i id="add_file" class="plus icon"></i>
                     .field
                         .ui.teal.large.fluid.button#add_file <i class="plus icon"></i>
                 .field
