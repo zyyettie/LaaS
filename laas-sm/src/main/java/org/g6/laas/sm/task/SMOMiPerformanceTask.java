@@ -2,6 +2,7 @@ package org.g6.laas.sm.task;
 
 import org.g6.laas.core.field.DateTimeField;
 import org.g6.laas.core.field.IntegerField;
+import org.g6.laas.core.format.provider.DefaultInputFormatProvider;
 import org.g6.laas.core.log.line.Line;
 import org.g6.laas.core.log.result.SplitResult;
 import org.g6.laas.core.log.result.SplitResultComparator;
@@ -74,5 +75,10 @@ public class SMOMiPerformanceTask extends SMRTETask<List<String>> {
             }
         });
         addRule(rule);
+    }
+
+    @Override
+    DefaultInputFormatProvider getProvider() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

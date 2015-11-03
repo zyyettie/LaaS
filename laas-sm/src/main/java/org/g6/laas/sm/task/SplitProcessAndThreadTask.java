@@ -139,9 +139,7 @@ public class SplitProcessAndThreadTask extends SMRTETask<String> {
     }
 
     DefaultInputFormatProvider getProvider() {
-        DefaultInputFormatProvider provider = getDefaultProvider();
-        provider.setNames(new String[]{"DEFAULT"});
-        return provider;
+        return getDefaultProvider(new String[]{"DEFAULT"});
     }
 
 }
