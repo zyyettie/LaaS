@@ -20,7 +20,7 @@ LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
                     var fileNumber = this.files.length;
                     that.total += fileNumber;
                     for (var i = 0; i < fileNumber; i++) {
-                        var dislay = {name: this.files[i].name, size: Math.round(this.files[i].size / 1000) + 'KB'};
+                        var dislay = {name: this.files[i].name, size: Math.round(this.files[i].size / 1024) + 'KB'};
                         $('.ui.list').append(itemTempalte(dislay));
                     }
 

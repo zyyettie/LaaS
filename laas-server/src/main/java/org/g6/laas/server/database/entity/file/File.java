@@ -35,7 +35,6 @@ public class File extends LaaSAuditable<User> {
 
     private Long size;
 
-
     private String isRemoved;
 
     @ManyToMany(mappedBy = "files")
@@ -43,5 +42,4 @@ public class File extends LaaSAuditable<User> {
 
     @ManyToMany(mappedBy = "files")
     private List<JobRunning> jobRunnings = new ArrayList<>();
-
 }
