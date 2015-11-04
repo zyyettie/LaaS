@@ -98,13 +98,12 @@ public class JobController {
             Task task = taskRunning.getTask();
             File resultFile = taskRunning.getResult().getFile();
             String content = FileUtil.readFullFile(new java.io.File(resultFile.getPath() + resultFile.getFileName()));
-            resMap.put(task.getName(), content);
+            resMap.put("desc", content);
         }
-
         String json = JSONUtil.toJson(resMap);
 
-        String hardcodeJson = "{\"result\":[\"task1\":\"abc\",\"task1\":\"123\"]}";
+//        String hardcodeJson = "{\"result\":[{\"desc\":\"abc\"}]}";
 
-        return new ResponseEntity(hardcodeJson, HttpStatus.OK);
+        return new ResponseEntity(json, HttpStatus.OK);
     }
 }

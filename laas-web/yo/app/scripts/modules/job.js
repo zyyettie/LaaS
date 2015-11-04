@@ -77,7 +77,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 var id = this.attributes["value"]["value"];
                 that.removeFile(id);
                 $('#fileitem_'+id).empty();
-            })
+            });
 
         },
         template: function (data) {
@@ -167,14 +167,15 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
 
             this.model.save(json, {patch: true, success: function (response) {
                 $.getJSON(appContext+"/controllers/jobs/" + response.id).done(function (json) {
-                        toastr.info('Save and Run Job successfully.');var job_running_id = json.job_running_id;
+                    toastr.info('Save and Run Job successfully.');
+                    var job_running_id = json.job_running_id;
                     $.when(LaaS.request('jobRunning:entity',job_running_id))
                         .done(function (jobRunningResult) {
                             var jobResultView = new JobResultView(jobRunningResult);
                             LaaS.mainRegion.show(jobResultView);
                         });
 
-                    LaaS.navigate('/jobs/showResult');
+                    LaaS.navigate('/jobResults/'+job_running_id);
                     }).fail(function(json){
                         toastr.info('Failed due to '+json);
                     });
@@ -236,27 +237,29 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         },
         showClicked: function(event){
             var jobId = event.target.dataset["id"];
-            var jobController = new LaaS.Job.JobController();
-            jobController.showJob(jobId);
-            LaaS.navigate('/jobs/' + jobId + '/edit');
+            LaaS.navigate('/jobs/'+jobId,true);
         }
     });
 
     var JobResultView = Marionette.ItemView.extend({
         initialize: function (options) {
-            this.jobRunning = options.attributes;
+           this.jobRunning = options.attributes;
         },
-        template: function (data) {
+        template: function(){
             var template = JST['app/handlebars/job/result'];
-            var html = template(data.jobRunning);
+            var html = template();
+            //debug
             return html;
+        } ,
+        serializeData: function(){
+            return {};
         },
-        serializeData: function () {
-            return {jobRunning: this.jobRunning};
+        onRender: function(){
+            this.$('#content-placeholder').html(this.jobRunning.desc);
         }
     });
 
-    Job.JobController = Marionette.Controller.extend({
+    var JobController = Marionette.Controller.extend({
         jobnew: function () {
             $.when(LaaS.request('job:new'), LaaS.request('scenario:entities'), LaaS.request('file:entities'))
                 .done(function (job, scenario, file) {
@@ -300,6 +303,14 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 var view = new JobListView(data);
                 LaaS.mainRegion.show(view);
             });
+        },
+        showJobResult: function(job_running_id){
+            $.when(LaaS.request('jobRunning:entity',job_running_id))
+                .done(function (jobRunningResult) {
+                    var jobResultView = new JobResultView(jobRunningResult);
+                    LaaS.mainRegion.show(jobResultView);
+                });
+            LaaS.navigate('/jobResults/'+job_running_id);
         }
     });
 
@@ -309,9 +320,10 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             appRoutes: {
                 'jobnew(/)': 'jobnew',
                 'jobs(/)': 'showJobs',
-                'jobs/:id(/)': 'showJob'
+                'jobs/:id(/)': 'showJob',
+                'jobResults/:id(/)': 'showJobResult'
             },
-            controller: new LaaS.Job.JobController()
+            controller: new JobController()
         });
     });
 });

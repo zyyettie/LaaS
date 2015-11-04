@@ -70,7 +70,13 @@ public class JobService {
     }
 
     public JobRunning saveJobRunning(JobRunning jobRunning) {
-        return jobRunningRepo.save(jobRunning);
+        JobRunning savedJobRunning = jobRunningRepo.save(jobRunning);
+        for(TaskRunning taskRunning:savedJobRunning.getTaskRunnings()){
+           taskRunning.setJobRunning(savedJobRunning);
+            saveTaskRunning(taskRunning);
+        }
+        return savedJobRunning;
+//        return jobRunningRepo.save(jobRunning);
     }
 
     public TaskRunning saveTaskRunning(TaskRunning taskRunning) {

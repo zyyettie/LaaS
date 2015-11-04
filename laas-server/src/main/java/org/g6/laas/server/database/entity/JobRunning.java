@@ -28,7 +28,7 @@ public class JobRunning extends JobSubEntity {
 
     private String syn;//Y and N
 
-    @OneToMany(cascade={CascadeType.PERSIST}, mappedBy = "jobRunning")
+    @OneToMany(mappedBy = "jobRunning")
     private Collection<TaskRunning> taskRunnings = new ArrayList<>();
 
     @Override
