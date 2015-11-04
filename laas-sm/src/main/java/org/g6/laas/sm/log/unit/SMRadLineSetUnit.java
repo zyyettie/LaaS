@@ -43,26 +43,33 @@ public class SMRadLineSetUnit extends LineSetUnit {
     @Override
     public String getHtmlContent() {
         StringBuilder prefix = new StringBuilder();
-        for (int i=0; i<level; i++) {
-            prefix.append("  ");
+        StringBuilder prefix2 = new StringBuilder();
+        for (int i=0; i<level-1; i++) {
+            prefix2.append("  ");
+        }
+        if (level > 0) {
+            prefix.append(prefix2).append("  ");
         }
 
         StringBuilder content = new StringBuilder();
         if (radName !=null && radName.length()>0) {
             if (level > 0) {
-                content.append("<li>\n");
+                content.append("<li>");
             }
-            content.append(prefix).append(radName).append("<ul>").append("\n");
+            content.append(radName).append("\n").append(prefix).append("<ul>").append("\n");
         }
 
         for (IUnit unit : set) {
             content.append(prefix).append(unit.getHtmlContent());
         }
-        content.append(prefix).append("</ul>");
-        if (level > 0) {
-            content.append("</li>");
+
+        if (radName !=null && radName.length()>0) {
+            content.append(prefix).append("</ul>\n");
+            if (level > 0) {
+                content.append(prefix2).append("</li>");
+            }
+            content.append("\n");
         }
-        content.append("\n");
 
         return content.toString();
     }
