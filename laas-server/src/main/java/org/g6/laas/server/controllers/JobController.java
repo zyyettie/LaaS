@@ -57,6 +57,7 @@ public class JobController {
         jobRunning.setStatus("RUNNING");
 
         Collection<Scenario> scenarios = job.getScenarios();
+        Collection<TaskRunning> taskRunnings = new ArrayList<>();
         Collection<Task> tasks;
 
         for (Iterator<Scenario> it = scenarios.iterator(); it.hasNext(); ) {
@@ -72,6 +73,7 @@ public class JobController {
             }
         }
 
+//        jobRunning.setTaskRunnings(taskRunnings);
         JobRunning retJobRunning = jobService.saveJobRunning(jobRunning);
 
         return retJobRunning;
@@ -97,7 +99,7 @@ public class JobController {
             Task task = taskRunning.getTask();
             File resultFile = taskRunning.getResult().getFile();
             String content = FileUtil.readFullFile(new java.io.File(resultFile.getPath() + resultFile.getFileName()));
-            resMap.put(task.getName(), content);
+            resMap.put("desc", content);
         }
 
         String json = JSONUtil.toJson(resMap);

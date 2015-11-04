@@ -46,9 +46,7 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
     });
 
     var FooterView = Marionette.ItemView.extend({
-        template: function () {
-            return '<h2 style="text-align: center;">this is footer to fill something</h2>';
-        }
+        template: JST['app/handlebars/footer']
     });
 
     Home.showViewFrame = function(mainView) {
