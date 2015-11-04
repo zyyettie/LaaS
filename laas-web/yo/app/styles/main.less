@@ -5,30 +5,25 @@
 body {
    background-color: white;
 }
-.container{
-    display: flex;
-    flex-flow: row wrap;
+.laasbody{
     #header {
-        flex: 1 100%;
         min-height:75px;
         background-color: #3AA2AD;
         background-image: url(../images/laas_logo.png);
         background-repeat: no-repeat;
         background-position: left;
     }
+    .content {
+        margin-top:-28px;
+    }
     #footer {
-        flex: 1 100%;
+        margin-top:-14px;
         min-height:200px;
         background-color:lightgray;
     }
     #main {
-        flex: 2 auto;
-        order:2;
         padding-top:75px;
     }
-    #nav { order: 1; }
-    //#aside { order: 3;}
-    #footer  { order: 3; }
 }
 
 .toast-top-center {
@@ -38,7 +33,7 @@ body {
 
 #navigator.menu {
     min-height:900px;
-    min-width:300px;
+    min-width:250px;
     font-size: larger;
     padding-top: 15px;
     padding-left:5px;

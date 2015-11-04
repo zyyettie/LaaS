@@ -11,18 +11,20 @@ html
     link(rel="stylesheet", href="/bower_components/fontawesome/css/font-awesome.css")
     link(rel="stylesheet", href="/bower_components/toastr/toastr.css")
     link(rel="stylesheet", href="/bower_components/semantic/dist/semantic.min.css")
-    link(rel="stylesheet", href="/styles/main.css")
     link(rel="stylesheet", href="/styles/pagination.css")
+    link(rel="stylesheet", href="/styles/main.css")
     // endbuild
 
     title Log as a Service
   body.laas
-    .container
-      #header
-      #nav
-      #main
+    .laasbody.ui.grid
+      .row
+        #header.ui.sixteen.wide.column
+      .content.row
+        #nav.three.wide.column
+        #main.thirteen.wide.column
       //#aside
-      #footer
+      #footer.row
     #login-dialog
     #register-dialog
 
