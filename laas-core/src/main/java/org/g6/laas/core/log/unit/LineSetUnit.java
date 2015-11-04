@@ -1,8 +1,11 @@
 package org.g6.laas.core.log.unit;
 
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
+@Data
 public abstract class LineSetUnit implements IUnit {
     protected Collection<IUnit> set;
     protected int level;
@@ -21,22 +24,6 @@ public abstract class LineSetUnit implements IUnit {
         this.level = level;
     }
 
-    public Collection<IUnit> getSet() {
-        return set;
-    }
-
-    public void setSet(Collection<IUnit> set) {
-        this.set = set;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
     public void addUnit(IUnit unit) {
         this.set.add(unit);
     }
@@ -49,5 +36,10 @@ public abstract class LineSetUnit implements IUnit {
         }
 
         return content;
+    }
+
+    @Override
+    public String getHtmlContent() {
+        return getContent();
     }
 }

@@ -1,8 +1,10 @@
 package org.g6.laas.sm.log.unit;
 
+import lombok.Data;
 import org.g6.laas.core.log.line.Line;
 import org.g6.laas.core.log.unit.SingleLineUnit;
 
+@Data
 public class SMJSLineUnit extends SingleLineUnit {
     private String jsName;
 
@@ -10,16 +12,13 @@ public class SMJSLineUnit extends SingleLineUnit {
         super(line);
     }
 
-    public String getJsName() {
-        return jsName;
-    }
-
-    public void setJsName(String jsName) {
-        this.jsName = jsName;
-    }
-
     @Override
     public String getContent() {
         return "JS: "+jsName+"\n";
+    }
+
+    @Override
+    public String getHtmlContent() {
+        return "<li>"+"JS: "+jsName+"</li>\n";
     }
 }

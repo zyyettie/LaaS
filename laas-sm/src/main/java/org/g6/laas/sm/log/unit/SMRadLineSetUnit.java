@@ -1,10 +1,12 @@
 package org.g6.laas.sm.log.unit;
 
+import lombok.Data;
 import org.g6.laas.core.log.unit.IUnit;
 import org.g6.laas.core.log.unit.LineSetUnit;
 
 import java.util.Collection;
 
+@Data
 public class SMRadLineSetUnit extends LineSetUnit {
     private String radName;
     private int processId = -1;
@@ -22,30 +24,6 @@ public class SMRadLineSetUnit extends LineSetUnit {
         super(set, level);
     }
 
-    public String getRadName() {
-        return radName;
-    }
-
-    public void setRadName(String radName) {
-        this.radName = radName;
-    }
-
-    public int getProcessId() {
-        return processId;
-    }
-
-    public void setProcessId(int processId) {
-        this.processId = processId;
-    }
-
-    public int getThreadId() {
-        return threadId;
-    }
-
-    public void setThreadId(int threadId) {
-        this.threadId = threadId;
-    }
-
     @Override
     public String getContent() {
         StringBuilder content = new StringBuilder();
@@ -58,6 +36,33 @@ public class SMRadLineSetUnit extends LineSetUnit {
             }
             content.append(unit.getContent());
         }
+
+        return content.toString();
+    }
+
+    @Override
+    public String getHtmlContent() {
+        StringBuilder prefix = new StringBuilder();
+        for (int i=0; i<level; i++) {
+            prefix.append("  ");
+        }
+
+        StringBuilder content = new StringBuilder();
+        if (radName !=null && radName.length()>0) {
+            if (level > 0) {
+                content.append("<li>\n");
+            }
+            content.append(prefix).append(radName).append("<ul>").append("\n");
+        }
+
+        for (IUnit unit : set) {
+            content.append(prefix).append(unit.getHtmlContent());
+        }
+        content.append(prefix).append("</ul>");
+        if (level > 0) {
+            content.append("</li>");
+        }
+        content.append("\n");
 
         return content.toString();
     }

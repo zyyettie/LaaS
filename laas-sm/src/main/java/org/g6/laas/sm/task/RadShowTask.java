@@ -1,5 +1,6 @@
 package org.g6.laas.sm.task;
 
+import lombok.Data;
 import org.g6.laas.core.log.line.Line;
 import org.g6.laas.core.log.unit.LineSetUnit;
 import org.g6.laas.core.rule.KeywordRule;
@@ -15,15 +16,31 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Data
 public class RadShowTask extends SMRTETask<String> {
     private List<Line> lines = new ArrayList<>();
     private Pattern radPattern = Pattern.compile("^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D RADTRACE.+\\]\\s+([^\\s]+)\\s+([^\\s]+)\\s+([^\\s]+)");
     private Pattern jsPattern = Pattern.compile("^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D SCRIPTTRACE:\\s+([^\\s]+)\\s+entered,");
+    private Mode mode = Mode.HTML;
 
     @Override
     protected String process() {
-        //String regex = "^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D RADTRACE.+\\]\\s+([^\\s]+)\\s+([^\\s]+)\\s+([^\\s]+)";
-        //Pattern pattern = Pattern.compile(regex);
+        return process(this.mode);
+    }
+
+    protected String process(Mode mode) {
+        LineSetUnit allSet = processLines();
+        switch(mode) {
+            case TEXT: // text
+                return allSet.getContent();
+            case HTML: // html
+                return allSet.getHtmlContent();
+            default:
+                return "";
+        }
+    }
+
+    protected LineSetUnit processLines() {
         SMRadLineSetUnit allSet = new SMRadLineSetUnit();
         while (lines.size() > 0) {
             Iterator<Line> it = lines.iterator();
@@ -31,7 +48,7 @@ public class RadShowTask extends SMRTETask<String> {
             set = constructSetUnit(set, it);
             allSet.addUnit(set);
         }
-        return allSet.getContent();
+        return allSet;
     }
 
     private SMRadLineSetUnit constructSetUnit( SMRadLineSetUnit set, Iterator<Line> it) {
@@ -90,6 +107,11 @@ public class RadShowTask extends SMRTETask<String> {
     }
 
     public RadShowTask() {
+        this(Mode.HTML);
+    }
+
+    public RadShowTask(Mode mode) {
+        this.mode = mode;
         Rule rule = new KeywordRule("RTE D RADTRACE").or(new KeywordRule("RTE D SCRIPTTRACE:"));
         rule.addAction(new RuleAction() {
             @Override
@@ -100,5 +122,9 @@ public class RadShowTask extends SMRTETask<String> {
             }
         });
         addRule(rule);
+    }
+
+    private enum Mode {
+        TEXT, HTML
     }
 }
