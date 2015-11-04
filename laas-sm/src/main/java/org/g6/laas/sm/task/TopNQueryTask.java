@@ -1,6 +1,7 @@
 package org.g6.laas.sm.task;
 
 import com.google.common.collect.Ordering;
+import org.g6.laas.core.format.provider.DefaultInputFormatProvider;
 import org.g6.laas.core.log.line.Line;
 import org.g6.laas.core.log.line.LineComparator;
 import org.g6.laas.core.rule.KeywordRule;
@@ -30,8 +31,9 @@ public class TopNQueryTask extends SMRTETask<List<Line>> {
     }
 
     public TopNQueryTask() {
-        //Rule rule = new KeywordRule("RTE D DBQUERY").or(new KeywordRule("RTE D DBFIND")).or(new RegexRule("RTE D.+DBACCESS"));
-        Rule rule = new KeywordRule("RTE D DBQUERY");
+        Rule rule = new KeywordRule("RTE D DBQUERY")
+                .or(new RegexRule("^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D DBFIND(?:\\^[^\\^]+){6}\\^(\\d+\\.\\d+)"))
+                .or(new RegexRule("^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D.+DBACCESS.+(\\d+\\.\\d+)\\s+seconds"));
         rule.addAction(new RuleAction() {
             @Override
             public void satisfied(Rule rule, Object content) {
@@ -41,5 +43,9 @@ public class TopNQueryTask extends SMRTETask<List<Line>> {
             }
         });
         addRule(rule);
+    }
+
+    DefaultInputFormatProvider getProvider() {
+        return getDefaultProvider(new String[]{"DBQUERY","DBFIND","DBACCESS"});
     }
 }

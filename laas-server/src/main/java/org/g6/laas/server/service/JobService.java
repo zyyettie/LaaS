@@ -6,7 +6,7 @@ import org.g6.laas.core.engine.AnalysisEngine;
 import org.g6.laas.core.engine.task.AnalysisTask;
 import org.g6.laas.core.engine.task.report.ReportBuilder;
 import org.g6.laas.core.engine.task.report.ReportModel;
-import org.g6.laas.server.database.entity.File;
+import org.g6.laas.server.database.entity.file.File;
 import org.g6.laas.server.database.entity.Job;
 import org.g6.laas.server.database.entity.JobRunning;
 import org.g6.laas.server.database.entity.result.TaskResult;
@@ -47,8 +47,6 @@ public class JobService {
     @Autowired
     private ITaskRunningRepository taskRunningRepo;
     @Autowired
-    private IJobRunningRepository jobRunningRep;
-    @Autowired
     JobQueue queue;
 
     public Job findJobBy(Long id) {
@@ -56,7 +54,7 @@ public class JobService {
     }
 
     public JobRunning findJobRunningBy(Long id){
-        return jobRunningRep.findOne(id);
+        return jobRunningRepo.findOne(id);
     }
 
     public void saveTaskRunningStatus(TaskRunning taskRunning, String status) {
@@ -84,7 +82,7 @@ public class JobService {
     }
 
     public List<JobRunning> findUnFinishedJobInQueue(String syn, String status){
-        return jobRunningRep.findUnFinishedJobInQueue(syn, status);
+        return jobRunningRepo.findUnFinishedJobInQueue(syn, status);
     }
 
     public String genReport(TaskRunningResult taskRunningResult, Task task) {

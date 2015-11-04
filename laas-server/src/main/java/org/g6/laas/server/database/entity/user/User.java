@@ -3,7 +3,7 @@ package org.g6.laas.server.database.entity.user;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.g6.laas.server.database.entity.File;
+import org.g6.laas.server.database.entity.file.File;
 import org.g6.laas.server.database.entity.LaaSPersistable;
 import org.g6.laas.server.database.entity.task.Task;
 import org.g6.laas.server.database.entity.task.TaskRunning;

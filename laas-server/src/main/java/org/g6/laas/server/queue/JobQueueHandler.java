@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.server.database.entity.Job;
 import org.g6.laas.server.database.entity.JobRunning;
 import org.g6.laas.server.database.entity.task.TaskRunning;
-import org.g6.laas.server.database.repository.IJobRunningRepository;
 import org.g6.laas.server.service.JobService;
 import org.g6.laas.server.vo.FileInfo;
 import org.g6.laas.server.vo.TaskRunningResult;
@@ -133,10 +132,8 @@ public class JobQueueHandler implements InitializingBean {
     }
 
     private void makeJobRunningNotifiable(JobRunning jobRunning) {
-        // Need to discuss if the login user will be saved in createdBy field
-        jobRunning.getUsers().add(jobRunning.getCreatedBy());
         Job job = jobRunning.getJob();
-        String summary = job.getId() + " " + job.getName() + " <a href=\"http://localhost:9000/laas-server/jobs/1/jobRunnings/2\">Running Result</a>";
+        String summary = job.getId() + " " + job.getName() + " <a.class=\"jobRunning\" href=\"/jobRunnings/"+ jobRunning.getId() + "/result\">Running Result</a>";
         jobRunning.setSummary(summary);
     }
 

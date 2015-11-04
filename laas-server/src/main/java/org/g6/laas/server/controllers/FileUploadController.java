@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,12 +56,13 @@ public class FileUploadController {
                 ByteStreams.copy(inputStream, outputStream);
                 inputStream.close();
                 outputStream.close();
-                org.g6.laas.server.database.entity.File fileEntity = new org.g6.laas.server.database.entity.File();
+                org.g6.laas.server.database.entity.file.File fileEntity = new org.g6.laas.server.database.entity.file.File();
                 fileEntity.setOriginalName(fileName);
                 fileEntity.setFileName(generatedName);
                 fileEntity.setPath(uploaded.getCanonicalPath());
                 fileEntity.setSize(size);
-                org.g6.laas.server.database.entity.File saved = fileRepository.save(fileEntity);
+                fileEntity.setIsRemoved("N");
+                org.g6.laas.server.database.entity.file.File saved = fileRepository.save(fileEntity);
                 results.add(new UploadResult(saved.getId(), fileName, size, "succeed"));
             } catch (IOException e) {
                 results.add(new UploadResult(-1L, fileName, -1L, "failed"));

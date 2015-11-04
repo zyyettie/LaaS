@@ -64,7 +64,7 @@ public class JSONFileFormatAnalyzer {
 
             for (LogFieldFormat field : fields) {
                 if (field.getType().equals(Constants.FIELD_FORMAT_TYPE_DATETIME)) {
-                    // if date format is specified for a field in JSON file e.g.
+                    // if date format is not specified for a field in JSON file e.g.
                     // {"name":"datetime","type":"DateTime","sortable":"false","date_time_format": "MM/dd/yyyy HH:mm:ss"}
                     // the one defined on file level will be used
                     if (field.getDateFormat() == null) {

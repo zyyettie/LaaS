@@ -1,10 +1,15 @@
-package org.g6.laas.server.database.entity;
+package org.g6.laas.server.database.entity.file;
 
 
 import lombok.EqualsAndHashCode;
+import org.g6.laas.server.database.entity.Job;
+import org.g6.laas.server.database.entity.JobRunning;
+import org.g6.laas.server.database.entity.LaaSAuditable;
 import org.g6.laas.server.database.entity.user.User;
 import lombok.Data;
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "FILE",uniqueConstraints = @UniqueConstraint(columnNames = {"FILE_NAME", "PATH"}))
@@ -29,4 +34,12 @@ public class File extends LaaSAuditable<User> {
     private String originalName;
 
     private Long size;
+
+    private String isRemoved;
+
+    @ManyToMany(mappedBy = "files")
+    private List<Job> jobs = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "files")
+    private List<JobRunning> jobRunnings = new ArrayList<>();
 }

@@ -68,7 +68,8 @@ public class JobController {
                 TaskRunning taskRunning = new TaskRunning();
                 taskRunning.setStatus("RUNNING");
                 taskRunning.setTask(task);
-                taskRunnings.add(taskRunning);
+                taskRunning.setJobRunning(jobRunning);
+                jobRunning.addTaskRunning(taskRunning);
             }
         }
 
@@ -78,8 +79,8 @@ public class JobController {
         return retJobRunning;
     }
 
-    private Collection<File> getFiles(Collection<File> files) {
-        Collection<File> fileList = new ArrayList<>();
+    private List<File> getFiles(Collection<File> files) {
+        List<File> fileList = new ArrayList<>();
         for (Iterator<File> ite = files.iterator(); ite.hasNext(); ) {
             File file = ite.next();
             fileList.add(file);
@@ -98,12 +99,10 @@ public class JobController {
             Task task = taskRunning.getTask();
             File resultFile = taskRunning.getResult().getFile();
             String content = FileUtil.readFullFile(new java.io.File(resultFile.getPath() + resultFile.getFileName()));
-            resMap.put("desc", content);
+            resMap.put(task.getName(), content);
         }
+
         String json = JSONUtil.toJson(resMap);
-
-//        String hardcodeJson = "{\"result\":[{\"desc\":\"abc\"}]}";
-
         return new ResponseEntity(json, HttpStatus.OK);
     }
 }

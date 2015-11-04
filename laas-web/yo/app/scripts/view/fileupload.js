@@ -1,7 +1,12 @@
 LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
     'use strict';
+    var appContext = LaaS.Util.Constants.APPCONTEXT;
+
     Views.FileUploader = Marionette.ItemView.extend({
         template: JST['app/handlebars/fileupload/upload'],
+        initialize : function(options){
+            this.url = options.url;
+        },
         onRender: function () {
             this.total = 0;
             var that = this;
@@ -15,7 +20,7 @@ LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
                     var fileNumber = this.files.length;
                     that.total += fileNumber;
                     for (var i = 0; i < fileNumber; i++) {
-                        var dislay = {name: this.files[i].name, size: Math.round(this.files[i].size / 1000) + 'KB'};
+                        var dislay = {name: this.files[i].name, size: Math.round(this.files[i].size / 1024) + 'KB'};
                         $('.ui.list').append(itemTempalte(dislay));
                     }
 
@@ -41,7 +46,7 @@ LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
                 var formData = new FormData($('form')[0]);
                 $.ajax({
                     type: "POST",
-                    url: "/api/v1/upload",
+                    url: appContext + "/api/v1/upload",
                     data: formData,
                     processData: false,
                     contentType: false,
@@ -64,10 +69,12 @@ LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
                         }
                         $('#upload').removeClass('disabled');
 
-                });              
+                        LaaS.navigate(that.url, true);
+                });
+
             });
 
-        },
+        }//end onRender
 
     });
 });

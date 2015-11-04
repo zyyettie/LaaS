@@ -1,7 +1,8 @@
-package org.g6.laas.server.database.entity;
+package org.g6.laas.server.database.entity.file;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.g6.laas.server.database.entity.LaaSPersistable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +13,7 @@ import javax.persistence.UniqueConstraint;
 @Table(name="FILE_TYPE", uniqueConstraints = @UniqueConstraint(columnNames = {"TYPE"}))
 @Data
 @NoArgsConstructor
-public class FileType extends LaaSPersistable{
+public class FileType extends LaaSPersistable {
 
     private static final long serialVersionUID = 8553475553208415613L;
 

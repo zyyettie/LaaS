@@ -27,4 +27,6 @@ public class Notification extends LaaSAuditable<User> {
 
     @NonNull
     private String summary;
+
+    private String status = "NEW";
 }
