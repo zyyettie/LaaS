@@ -1,7 +1,7 @@
 package org.g6.laas.server.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import org.g6.laas.server.database.entity.File;
+import org.g6.laas.server.database.entity.file.File;
 import org.g6.laas.server.database.entity.Job;
 import org.g6.laas.server.database.entity.JobRunning;
 import org.g6.laas.server.database.entity.task.Scenario;
@@ -73,7 +73,7 @@ public class JobController {
             }
         }
 
-        jobRunning.setTaskRunnings(taskRunnings);
+//        jobRunning.setTaskRunnings(taskRunnings);
         JobRunning retJobRunning = jobService.saveJobRunning(jobRunning);
 
         return retJobRunning;
@@ -99,7 +99,7 @@ public class JobController {
             Task task = taskRunning.getTask();
             File resultFile = taskRunning.getResult().getFile();
             String content = FileUtil.readFullFile(new java.io.File(resultFile.getPath() + resultFile.getFileName()));
-            resMap.put(task.getName(), content);
+            resMap.put("desc", content);
         }
 
         String json = JSONUtil.toJson(resMap);
