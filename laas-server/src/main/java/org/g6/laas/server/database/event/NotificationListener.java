@@ -8,6 +8,7 @@ import org.g6.util.AutowireInjector;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.PostPersist;
+import javax.persistence.PostUpdate;
 import java.util.Collection;
 
 public class NotificationListener {
@@ -16,6 +17,7 @@ public class NotificationListener {
     private INotificationRepository notificationRepository;
 
     @PostPersist
+    @PostUpdate
     public void sendNotification(Notifiable<User> entity) {
         User from = entity.receiveFrom();
         Collection<User> tos = entity.sendTo();

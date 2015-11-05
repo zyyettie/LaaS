@@ -37,7 +37,7 @@ public class JobQueueHandler implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         List<JobRunning> jobRunnings = jobService.findUnFinishedJobInQueue("N", "RUNNING");
-        for(JobRunning jobRunning : jobRunnings){
+        for (JobRunning jobRunning : jobRunnings) {
             jobService.runTasks(jobRunning);
         }
     }
@@ -133,8 +133,10 @@ public class JobQueueHandler implements InitializingBean {
 
     private void makeJobRunningNotifiable(JobRunning jobRunning) {
         Job job = jobRunning.getJob();
-        String summary = job.getId() + " " + job.getName() + " <a.class=\"jobRunning\" href=\"/jobRunnings/"+ jobRunning.getId() + "/result\">Running Result</a>";
+        jobRunning.addUser(jobRunning.getCreatedBy());
+        String summary = job.getId() + " " + job.getName() + " <a.class=\"jobRunning\" href=\"/jobRunnings/" + jobRunning.getId() + "/result\">Running Result</a>";
         jobRunning.setSummary(summary);
+
     }
 
     public void shutDown() {
