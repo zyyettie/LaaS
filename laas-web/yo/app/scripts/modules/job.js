@@ -294,7 +294,8 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             return {};
         },
         onRender: function(){
-            this.$('#content-placeholder').html(this.jobRunning.desc);
+            var decoded = $("<div/>").html(this.jobRunning.desc).text();
+            this.$('#content-placeholder').html(decoded);
         }
     });
 
