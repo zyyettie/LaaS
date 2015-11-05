@@ -14,6 +14,6 @@ import java.util.List;
 @RepositoryRestResource(excerptProjection = FileSummaryProjection.class)
 public interface IFileRepository extends JpaRepository<File, Long> {
 
-    @Query(value = "SELECT f FROM File f WHERE f.isRemoved <> 'Y' and f.createdBy.name = :userName")
+    @Query(value = "SELECT f FROM File f WHERE f.isRemoved <> 'Y' and f.createdBy.name = :userName order by f.createdDate desc")
     public List<File> findFilesOwnedBy(@Param("userName")String userName);
 }

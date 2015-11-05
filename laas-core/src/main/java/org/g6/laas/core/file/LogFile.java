@@ -8,7 +8,7 @@ import java.io.File;
 @Data
 public class LogFile implements ILogFile {
     private String file;
-
+    private String name;
     private FileValidator validator;
 
     public LogFile(String file) {
@@ -18,6 +18,7 @@ public class LogFile implements ILogFile {
     public LogFile(String file, FileValidator validator) {
         this.file = file;
         this.validator = validator;
+        this.name = getName();
     }
 
     @Override
