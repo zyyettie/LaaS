@@ -25,8 +25,8 @@
                             .field
                                 label Files
                             .field
-                                #add_file(style="transform:scale(1.5);")
-                                    <i class="green plus icon"></i>
+                                #add.symbol(style="transform:scale(1.5);")
+                                    <i id="add_file" class="green plus icon"></i>
                             .field
                     .field
                         //<i id="add_file" class="plus icon"></i>
@@ -50,8 +50,8 @@
                                         .column
                                         .right.aligned.column
                                             //<div id="remove_file" class="ui teal large fluid button" value="{{id}}"><i class="minus icon"></i></div>
-                                            #remove_file(value="{{id}}", style="transform:scale(1.5);")
-                                                <i class="green minus icon"></i>
+                                            #remove.symbol(style="transform:scale(1.5);")
+                                                <i id="remove_file" value="{{id}}" class="green minus icon"></i>
                                         .column
                         </div>
                         |{{/each}}
