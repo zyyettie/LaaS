@@ -24,6 +24,7 @@ public class FileController {
             tempFile.setIsRemoved("Y");
             fileRep.save(tempFile);
         }
+        //TODO need to return success or failure info
         return new ResponseEntity("{\"id\":1}", HttpStatus.OK);
     }
 }

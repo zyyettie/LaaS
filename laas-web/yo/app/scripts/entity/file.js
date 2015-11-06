@@ -64,7 +64,8 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
         var userName = sessionStorage.getItem("username");
 
         $.getJSON(baseUrl+"/search/findFilesOwnedBy?userName=" + userName+"&page=" + page + "&size=" + size).done(function(data){
-            files.resolve({files:data._embedded.files,page:data.page});
+            var list = data._embedded ? data._embedded.files : [];
+            files.resolve({files:list,page:data.page});
         });
         return files.promise();
     });

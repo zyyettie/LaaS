@@ -89,7 +89,7 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
         },
         serializeData:function(){
             for (var i=0; i<this.files.length; i++) {
-                this.files[i].size = Math.round(this.files[i].size / 1024) + 'KB';
+                this.files[i].size = Math.round(this.files[i].size / 1024);
             }
             return {files:this.files};
         },

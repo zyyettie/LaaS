@@ -1,27 +1,34 @@
 .ui.centered.grid
     .twelve.wide.column
-        .ui.segment(style="margin-top:5px;padding:20px 40px;")
+        .ui.green.segment(style="margin-top:5px;padding:20px 40px;")
             h2#title File List
-            form.ui.form
-                .field
-                    .ui.grid
-                        .row
-                            .eight.wide.column
-                                .ui.divided.list
-                                    |{{#each files}}
-                                    .item(id="item_div_{{id}}")
-                                        .content
-                                            .ui.grid
-                                                .ui.two.column.row(style="margin-top:10px;margin-bottom:10px;")
-                                                    .column
-                                                        .ui.checkbox
-                                                            <input id="file_checkbox_{{id}}" type="checkbox" {{checked}}/>
-                                                            label {{originalName}}
-                                                    .right.aligned.column
-                                                        a {{size}}
-                                    |{{/each}}
-                .two.fields(style="margin-top:100px;margin-bottom:70px;")
-                    .field(style="padding-right:50px;")
-                        .ui.teal.large.fluid.button#upload_my_files Add Files...
-                    .field(style="padding-left:50px;")
-                        .ui.teal.large.fluid.button#delete_my_files Delete
+            table.ui.compact.celled.definition.table
+                thead.full-width
+                    tr
+                        th
+
+                        th
+                            |Name
+                        th
+                            |Size
+                        th
+                            |Type
+                tbody
+                    |{{#each files}}
+                    tr
+                        td.collapsing
+                            |<input id="file_checkbox_{{id}}" type="checkbox" {{checked}}/>
+
+                        td
+                            |{{originalName}}
+                        td
+                            |{{size}}KB
+                        td
+
+                    |{{/each}}
+                tfoot.full-width
+                    tr
+                        th
+                        th(colspan="3")
+                            .ui.teal.small.button#upload_my_files Add Files...
+                            .ui.teal.small.button#delete_my_files Delete

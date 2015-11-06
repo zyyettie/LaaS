@@ -5,10 +5,7 @@ import lombok.NoArgsConstructor;
 import org.g6.laas.server.database.entity.task.TaskRunning;
 import org.g6.laas.server.database.entity.user.User;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -30,12 +27,11 @@ public class JobRunning extends JobSubEntity {
 
     @Override
     public Collection<User> sendTo() {
-        return new ArrayList<>();
+        return getToUsers();
     }
 
-    @Override
-    public String getSummary() {
-        return "";
+    public void addUser(User user){
+        getToUsers().add(user);
     }
 
     public void addTaskRunning(TaskRunning taskRunning){
