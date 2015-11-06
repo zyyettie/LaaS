@@ -4,11 +4,10 @@
     Top 50 records:
   </div>
 </h2>
-<div style="width=95%">
+<div>
          {{#each task_running_result}}
          <div class="ui green segment">
-         {{lineNumber}} {{file.name}} {{content}}
+         {{lineNumber}} | {{file.name}} | {{content}}
          </div>
          {{/each}}
-
 </div>

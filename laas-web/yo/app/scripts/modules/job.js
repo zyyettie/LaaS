@@ -206,14 +206,19 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             this.model.save(json, {patch: true, success: function (response) {
                 $.getJSON(appContext+"/controllers/jobs/" + response.id).done(function (json) {
                     toastr.info('Save and Run Job successfully.');
-                    var job_running_id = json.job_running_id;
-                    $.when(LaaS.request('jobRunning:entity',job_running_id))
-                        .done(function (jobRunningResult) {
-                            var jobResultView = new JobResultView(jobRunningResult);
-                            LaaS.mainRegion.show(jobResultView);
-                        });
+                    var sync = json.is_syn;
+                    if(sync === true){
+                        $.when(LaaS.request('jobRunning:entity',{id:json.job_running_id}))
+                            .done(function (jobRunningResult) {
+                                var jobResultView = new JobResultView({model:jobRunningResult,sync:true});
+                                LaaS.mainRegion.show(jobResultView);
+                            });
 
-                    LaaS.navigate('/jobResults/'+job_running_id);
+                    }else{
+                        var jobResultView = new JobResultView({sync:false});
+                        LaaS.mainRegion.show(jobResultView);
+                    }
+                    LaaS.navigate('/jobResults/'+json.job_running_id);
                     }).fail(function(json){
                         toastr.info('Failed due to '+json);
                     });
@@ -282,7 +287,10 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
 
     var JobResultView = Marionette.ItemView.extend({
         initialize: function (options) {
-           this.jobRunning = options.attributes;
+            if(options.sync === true){
+                this.sync = true;
+                this.jobRunning = options.model.attributes;
+            }
         },
         template: function(){
             var template = JST['app/handlebars/job/result'];
@@ -294,8 +302,12 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             return {};
         },
         onRender: function(){
-            var decoded = $("<div/>").html(this.jobRunning.desc).text();
-            this.$('#content-placeholder').html(decoded);
+            if(this.sync === true){
+                this.$('#content-placeholder').html(this.jobRunning.desc).text();
+            }else{
+                this.$('#content-placeholder').html('<h2 class="ui header">Your job is running in the background, please check your inbox later</div>');
+            }
+//            this.$('#content-placeholder').html(decoded);
         }
     });
 

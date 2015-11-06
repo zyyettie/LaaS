@@ -1,16 +1,18 @@
-table.ui.striped.table
-    thead
-        tr
-            th Job ID
-            th Job Name
-            th Job Description
-            th Action
-    tbody
-        |{{#each jobs}}
-        tr
-            td {{id}}
-            td {{name}}
-            td {{description}}
-            td
-                button.ui.teal.button.job-show(id="{{id}}")(data-id="{{id}}") Detail
-        |{{/each}}
+.ui.grid
+    .ui.centered.fourteen.wide.column
+        table.ui.striped.table
+            thead
+                tr
+                    th Job ID
+                    th Job Name
+                    th Job Description
+                    th Action
+            tbody
+                |{{#each jobs}}
+                tr
+                    td {{id}}
+                    td {{name}}
+                    td {{description}}
+                    td
+                        button.ui.teal.button.job-show(id="{{id}}")(data-id="{{id}}") Detail
+                |{{/each}}
