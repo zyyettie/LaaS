@@ -21,9 +21,16 @@
                 .field
                 .two.fields
                     .field
-                        label Files<i id="add_file" class="plus icon"></i>
+                        .four.fields
+                            .field
+                                label Files
+                            .field
+                                #add_file(style="transform:scale(1.5);")
+                                    <i class="green plus icon"></i>
+                            .field
                     .field
-                        .ui.teal.large.fluid.button#add_file <i class="plus icon"></i>
+                        //<i id="add_file" class="plus icon"></i>
+                        //.ui.teal.large.fluid.button#add_file <i class="plus icon"></i>
                 .field
                     .ui.divided.list
                         |{{#each files}}
@@ -31,11 +38,21 @@
                         .item
                             .content
                                 .ui.grid
-                                    .ui.two.column.row(style="margin-top:10px;margin-bottom:10px;")
+                                    .ui.ten.column.row(style="margin-top:10px;margin-bottom:10px;")
                                         .column
                                             label {{originalName}}
+                                        .column
+                                        .column
+                                        .column
+                                        .column
+                                        .column
+                                        .column
+                                        .column
                                         .right.aligned.column
-                                            <div id="remove_file" class="ui teal large fluid button" value="{{id}}"><i class="minus icon"></i></div>
+                                            //<div id="remove_file" class="ui teal large fluid button" value="{{id}}"><i class="minus icon"></i></div>
+                                            #remove_file(value="{{id}}", style="transform:scale(1.5);")
+                                                <i class="green minus icon"></i>
+                                        .column
                         </div>
                         |{{/each}}
                 .two.fields(style="margin-top:100px;margin-bottom:70px;")
