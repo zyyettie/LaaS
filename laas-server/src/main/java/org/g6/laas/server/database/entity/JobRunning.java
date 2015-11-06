@@ -15,9 +15,6 @@ import java.util.Collection;
 public class JobRunning extends JobSubEntity {
     private static final long serialVersionUID = -5742125355431226460L;
 
-    @Transient
-    Collection<User> users = new ArrayList();
-
     @ManyToOne
     private Job job;
 
@@ -30,11 +27,11 @@ public class JobRunning extends JobSubEntity {
 
     @Override
     public Collection<User> sendTo() {
-        return users;
+        return getToUsers();
     }
 
     public void addUser(User user){
-        users.add(user);
+        getToUsers().add(user);
     }
 
     public void addTaskRunning(TaskRunning taskRunning){
