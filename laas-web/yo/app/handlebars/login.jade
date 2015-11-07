@@ -6,18 +6,18 @@
         .content
           |Log as a Service
     form.ui.large.form
-      .ui.stacked.segment
+      .ui.stacked.segment(style="padding:50px 31px;border-radius:0")
         .field
           .ui.left.icon.input
             i.user.icon
-            input(type="text",name="name",placeholder="User Name",value="admin")
+            input(type="text",name="name",placeholder="User Name",value="admin",style="border-radius:0;")
         .field
           .ui.left.icon.input
             i.lock.icon
-            input(type="password",name="password",placeholder="Password",value="password")
-        .ui.fluid.large.teal.button Login
+            input(type="password",name="password",placeholder="Password",value="password",style="border-radius:0;")
+        .ui.fluid.large.teal.button(style="margin-top:50px;border-radius:0;") Login
       .ui.error.message
-    .ui.message New to Us?
+    .ui.message(style="border-radius:0;") New to Us?
       a#signUp(href="#")
         |Sign Up Now
 
