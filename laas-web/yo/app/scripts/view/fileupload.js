@@ -6,6 +6,7 @@ LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
         template: JST['app/handlebars/fileupload/upload'],
         initialize : function(options){
             this.url = options.url;
+            this.fileTypes = options.fileTypes;
         },
         onRender: function () {
             this.total = 0;
@@ -74,7 +75,17 @@ LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
 
             });
 
-        }//end onRender
+        },
+        serializeData:function(){
+            return {fileTypes:this.fileTypes};
+        },
+        events: {
+            'click #upload_cancel':'cancelUpload',
+            'click #delete_my_files':'deleteMyFiles'
+        },
+        cancelUpload:function(){
+            LaaS.navigate(this.url, true);
+        }
 
     });
 });

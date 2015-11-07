@@ -98,8 +98,11 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
             'click #delete_my_files':'deleteMyFiles'
         },
         uploadMyFiles: function(){
-            LaaS.mainRegion.show(new LaaS.Views.FileUploader({'url':'/myfiles'}));
-            LaaS.navigate('/myfiles/upload');
+            $.when(LaaS.request('fileTypes:entities')).done(function(data){
+                LaaS.mainRegion.show(new LaaS.Views.FileUploader({'url':'/myfiles','fileTypes':data.fileTypes}));
+                LaaS.navigate('/myfiles/upload');
+            });
+
         },
         deleteMyFiles: function() {
             var selectFiles = [];
