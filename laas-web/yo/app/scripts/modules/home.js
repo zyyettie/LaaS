@@ -8,9 +8,7 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
     };
 
     var HeaderView = Marionette.ItemView.extend({
-        template: function () {
-            return '<h2 style="text-align: center;"><div id="logout" class="ui button">Logout</div></h2>';
-        },
+        template: JST['app/handlebars/header'],
         onRender : function(){
             this.$('#logout').on('click',function(e){
 			          cleanSessionStorage();

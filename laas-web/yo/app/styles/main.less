@@ -7,17 +7,33 @@ body {
 }
 .laasbody{
     #header {
-        min-height:75px;
+        min-height:50px;
         background-color: #3AA2AD;
         background-image: url(../images/laas_logo.png);
         background-repeat: no-repeat;
         background-position: left;
+        .dropdown.item {
+            color:white;
+            float:right;
+            margin-top:15px;
+            margin-right:150px;
+        };
+        .user.icon {
+            margin-right:10px;
+        };
+        .dropdown.icon {
+            margin-left:5px;
+        };
+        h4#logout {
+            display:inline;
+        }
+
     }
     .content {
-        margin-top:-28px;
+        margin-top:-2em;
     }
     #footer {
-        margin-top:-14px;
+        margin-top:-1em;
         min-height:200px;
         background-color:lightgray;
     }
@@ -32,9 +48,9 @@ body {
 
 
 #navigator.menu {
-    min-height:900px;
-    min-width:250px;
+    min-height:800px;
     font-size: larger;
     padding-top: 15px;
     padding-left:5px;
+    border-radius:0;
 }
