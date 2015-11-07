@@ -69,4 +69,17 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
         });
         return files.promise();
     });
+    LaaS.reqres.setHandler('fileTypes:entities', function (options) {
+        var options = options || {page:0,size:10};
+        var page = options.page || 0;
+        var size = options.size || 10;
+        var files = $.Deferred();
+        var userName = sessionStorage.getItem("username");
+
+        $.getJSON(baseUrl+"/search/findFilesOwnedBy?userName=" + userName+"&page=" + page + "&size=" + size).done(function(data){
+            var list = data._embedded ? data._embedded.files : [];
+            files.resolve({files:list,page:data.page});
+        });
+        return files.promise();
+    });
 });
