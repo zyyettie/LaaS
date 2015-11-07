@@ -28,6 +28,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/", "/themes/**", "/public/**", "/styles/**", "/fonts/**", "/images/**", "/scripts/**").permitAll()
                 .antMatchers("/controllers/logout").authenticated()
                 .antMatchers("/api/v1/jobs/**").authenticated()
+                .antMatchers("/api/v1/notifications/**").authenticated()
                 .antMatchers("/controllers/jobs/**").authenticated();
     }
 }
