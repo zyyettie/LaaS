@@ -1,4 +1,4 @@
-package org.g6.util;
+package org.g6.laas.util;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
