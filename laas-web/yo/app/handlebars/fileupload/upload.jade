@@ -4,6 +4,20 @@
             .ui.grid
                 .row
                     .four.wide.column
+                            .field
+                                label File Type
+                                select.ui.dropdown(id="selectedType", name="selectedType")
+                                    option(value="aaaaa") aaaaaaaaaa
+                                    |{{#each fileTypes}}
+                                    option(value="{{id}}") {{type}}
+                                    |{{/each}}
+                .row
+                    .four.wide.column
+                        .field
+                            label Job Description
+                            textarea(type="text",rows="3",name="description",placeholder="description") {{description}}
+                .row
+                    .four.wide.column
                         .ui.teal.fluid.left.labeled.icon.button#attaching Attaching Files&nbsp;&nbsp;....
                             i.attach.icon
                     .four.wide.column
@@ -11,7 +25,7 @@
                             i.cloud.upload.icon
                     .four.wide.column
                         .ui.teal.fluid.left.labeled.icon.button#upload_cancel Cancel
-                            i.cloud.back.icon
+                            i.reply.icon
                 .row
                     .eight.wide.column
                         form(action="/upload",method="post",enctype="multipart/form-data")
