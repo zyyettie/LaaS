@@ -16,6 +16,12 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
     });
 
     var NavView = Marionette.ItemView.extend({
+        initialize: function(){
+            this.isAdmin = LaaS.isAdmin();
+        },
+        serializeData: function(){
+            return {isAdmin:this.isAdmin};
+        },
         template: JST['app/handlebars/navigator'],
         onRender: function () {
             this.$('#sidebarmenu').sidebar('toggle');

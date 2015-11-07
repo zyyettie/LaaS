@@ -7,15 +7,16 @@
             a.item(href="/jobs") Popular Jobs
             a.item(href="/tasks") Popular Tasks
     .item
-        .header My Dashboard
+        .header Dashboard
         .menu
             a.item(href="/myfiles") My Log Files
             a.item(href="#") My Jobs
             a.item(href="#") Running History
             a.active.item#inboxMenuItem(href="/notifications/me") Inbox
                 .ui.blue.pointing.left.label 0
+    |{{#if isAdmin}}
     .item
         .header Administration
         .menu
             a.item(href="/usernew") Add User
-
+    |{{/if}}

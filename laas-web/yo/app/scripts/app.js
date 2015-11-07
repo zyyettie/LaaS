@@ -54,7 +54,7 @@ LaaS.scheduleTask = function (task) {
     }, task.interval);
 };
 
-LaaS.cleanSessionStorage = function(){
+LaaS.cleanSessionStorage = function () {
     sessionStorage.removeItem('uid');
     sessionStorage.removeItem('username');
     sessionStorage.removeItem('role');
@@ -72,6 +72,11 @@ LaaS.stopTasks = function () {
     for (var i = 0; i < length; i++) {
         LaaS.stopTask(LaaS.TaskQueue.shift());
     }
+};
+
+LaaS.isAdmin = function () {
+    var role = sessionStorage.getItem('role');
+    return role == 'ROLE_ADMIN';
 };
 
 $(document).ajaxError(function (event, xhr, options, thrownError) {
