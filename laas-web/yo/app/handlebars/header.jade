@@ -2,11 +2,11 @@
     i.user.icon
     h4#logout Logout
     i.dropdown.icon
-    .menu(style="min-width:200px;")
-        .item My Inbox
+    .menu(style="min-width:200px")
+        a.item(href="/notifications/me") My Inbox
             i.inbox.icon
         .divider(style="margin:0")
         .item My Jobs
             i.tasks.icon
-        .item My Files
+        a.item(href="/myfiles") My Files
             i.file.icon
