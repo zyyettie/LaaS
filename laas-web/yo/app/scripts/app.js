@@ -83,6 +83,7 @@ $(document).ajaxError(function (event, xhr, options, thrownError) {
     var statusCode = xhr.status;
     if (statusCode == 401 || statusCode == 403) {
         LaaS.stopTasks();
+        LaaS.cleanSessionStorage();
         LaaS.navigate('login', true);
     }
 });
