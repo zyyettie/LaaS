@@ -7,7 +7,7 @@ LaaS.module('Login', function(Login, LaaS, Backbone, Marionette) {
             this.$('.ui.form').form({
                 fields: {
                     username: {
-                        identifier  : 'username',
+                        identifier  : 'name',
                         rules: [
                             {
                                 type   : 'empty',
