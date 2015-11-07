@@ -4,7 +4,7 @@ import org.g6.laas.server.database.entity.user.Inbox;
 import org.g6.laas.server.database.entity.user.Notification;
 import org.g6.laas.server.database.entity.user.User;
 import org.g6.laas.server.database.repository.INotificationRepository;
-import org.g6.util.AutowireInjector;
+import org.g6.laas.util.AutowireInjector;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.PostPersist;
