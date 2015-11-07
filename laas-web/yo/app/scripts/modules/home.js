@@ -1,20 +1,15 @@
 LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
     'use strict';
 
-    var cleanSessionStorage = function(){
-        sessionStorage.removeItem('uid');
-        sessionStorage.removeItem('username');
-        sessionStorage.removeItem('role');
-    };
 
     var HeaderView = Marionette.ItemView.extend({
         template: JST['app/handlebars/header'],
         onRender : function(){
             this.$('#logout').on('click',function(e){
-			          cleanSessionStorage();
-                LaaS.stopTask(LaaS.Inbox.queryTask);
+                LaaS.cleanSessionStorage();
+                LaaS.stopTasks();
                 $.get('/laas-server/controllers/logout').always(function(){
-					          LaaS.navigate('login',true);
+                    LaaS.navigate('login',true);
                 });
             });
         }
@@ -23,6 +18,7 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
     var NavView = Marionette.ItemView.extend({
         template: JST['app/handlebars/navigator'],
         onRender: function () {
+            this.$('#sidebarmenu').sidebar('toggle');
             this.$('a.item').on('click', function (event) {
                 event.preventDefault();
                 $('a.item').removeClass('active');
