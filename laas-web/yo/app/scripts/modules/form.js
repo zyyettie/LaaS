@@ -35,28 +35,42 @@ LaaS.module('Form', function(Form, LaaS, Backbone, Marionette) {
         return subHtml;
     };
 
+    Form.enableDatetimeControl = function(parameterDefines) {
+        for (var i=0; parameterDefines && i<parameterDefines.length; i++) {
+            if (parameterDefines[i]["type"] == "time") {
+                var controlId = getParameterControlId(parameterDefines[i]);
+                $("#"+controlId).datetimepicker({
+                    format:"y/m/d H:i"
+                });
+            }
+        }
+    };
+
+    var getParameterControlId = function(parameterDefine) {
+        return "Parameter_" + parameterDefine["name"];
+    };
+
     var getSubFormField = function(parameterDefine, parameters) {
         var fieldHtml = "";
         fieldHtml += '<label>'+parameterDefine["displayInfo"]+'</label>';
+        var value = parameters[parameterDefine["name"]] || parameterDefine["defaultValue"] || '';
+        var controlId = getParameterControlId(parameterDefine);
         switch(parameterDefine.type) {
             case "time":
-                fieldHtml += '<input id="datetimepicker" type="text" />';
-                //var value = parameters[parameterDefine["name"]] || parameterDefine["defaultValue"] || '';
-                //fieldHtml += '<input id="datetimepicker" type="text" name="'
-                //    +parameterDefine["name"]+'" value="'+ value +'"/>';
+                fieldHtml += '<input id="' + controlId + '" type="text" name="'
+                    +parameterDefine["name"]+'" value="'+ value +'"/>';
                 break;
             case "text":
-                fieldHtml += '<input type="text" name="'+parameterDefine["name"]
+                fieldHtml += '<input id="' + controlId + '" type="text" name="'+parameterDefine["name"]
                     +'" placeholder="'+(parameterDefine["defaultValue"] || '')
-                    +'" value="'+(parameters[parameterDefine["name"]] || parameterDefine["defaultValue"] || '')
-                    +'"/>';
+                    +'" value="' + value +'"/>';
                 break;
             case "dropdown":
-                fieldHtml += '<select name="'+parameterDefine["name"]+'", class="ui dropdown">';
+                fieldHtml += '<select id="' + controlId + '" name="'+parameterDefine["name"]+'", class="ui dropdown">';
                 var valueList = parameterDefine["valueList"] ? parameterDefine["valueList"].split("|") : [];
                 var displayList = parameterDefine["displayList"] ? parameterDefine["displayList"].split("|") : [];
                 for (var i=0; i<valueList.length; i++) {
-                    fieldHtml += '<option value="'+valueList[i]+'" '+LaaS.Form.getDropDownSelected(valueList[i], parameters[parameterDefine["name"]] || parameterDefine["defaultValue"])+'>';
+                    fieldHtml += '<option value="'+valueList[i]+'" '+LaaS.Form.getDropDownSelected(valueList[i], value)+'>';
                     fieldHtml += displayList[i] || valueList[i];
                     fieldHtml += '</option>';
                 }

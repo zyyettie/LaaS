@@ -38,6 +38,13 @@ LaaS.module('Task', function(Task, LaaS, Backbone, Marionette) {
         },
         serializeData:function(){
             return {tasks:this.tasks};
+        },
+        events:{
+            'click button.task-show': "showClicked"
+        },
+        showClicked: function(event){
+            var taskId = event.target.dataset["id"];
+            LaaS.navigate('/tasks/'+taskId, true);
         }
     });
 
