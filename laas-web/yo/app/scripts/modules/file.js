@@ -1,6 +1,7 @@
 LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
     'use strict';
     var appContext = LaaS.Util.Constants.APPCONTEXT;
+    var baseTemplatePath = 'app/handlebars/file';
 
     var FileView = Marionette.ItemView.extend({
         initialize : function(options){
@@ -81,11 +82,33 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
     File.MyFileView = Marionette.ItemView.extend({
         initialize : function(options){
             this.files = options.files;
+            this.paging = options.page;
         },
         template : function(data){
             var template = JST['app/handlebars/file/mylist'];
             var html = template(data);
             return html;
+        },
+        onRender:function(){
+            var test='test';
+            if(this.paging.number + 1 <= this.paging.totalPages){
+                $('#paging').twbsPagination({
+                    totalPages: this.paging.totalPages,
+                    startPage: this.paging.number + 1,
+                    visiblePages: 6,
+                    first: 'First',
+                    prev: 'Previous',
+                    next: 'Next',
+                    last: 'Last',
+                    onPageClick: function (event, page) {
+                        var template = JST[baseTemplatePath + '/mylist'];
+                        $.when(LaaS.request('myFiles:entities',{page:page-1})).done(function (data) {
+                            var html = template({notifications: data.notifications});
+                            $('#content').html(html);
+                        });
+                    }
+                })
+            }
         },
         serializeData:function(){
             for (var i=0; i<this.files.length; i++) {
@@ -138,7 +161,7 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
         },
         showMyFiles: function(){
             $.when(LaaS.request('myFiles:entities')).done(function(data){
-                var view = new LaaS.File.MyFileView({files:data.files});
+                var view = new LaaS.File.MyFileView(data);
                 LaaS.mainRegion.show(view);
             });
         }
