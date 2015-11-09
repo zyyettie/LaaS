@@ -13,7 +13,8 @@
     "twbs-pagination": "~1.2.5",
     "blueimp-file-upload": "~9.10.6",
     "semantic": "~2.0.8",
-    "routefilter": "~0.2.1"
+    "routefilter": "~0.2.1",
+    "datetimepicker": "~2.4.5"
   },
   "resolutions": {
     "underscore": ">=1.7.0",

@@ -72,6 +72,8 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                         break;
                     }
                 }
+
+                this.$('#datetimepicker').datetimepicker();
                 /*
                 var render;
                 var subhtml;

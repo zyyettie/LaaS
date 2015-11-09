@@ -37,17 +37,21 @@ LaaS.module('Form', function(Form, LaaS, Backbone, Marionette) {
 
     var getSubFormField = function(parameterDefine, parameters) {
         var fieldHtml = "";
+        fieldHtml += '<label>'+parameterDefine["displayInfo"]+'</label>';
         switch(parameterDefine.type) {
-            case "text":
             case "time":
-                fieldHtml += '<label>'+parameterDefine["displayInfo"]+'</label>';
+                fieldHtml += '<input id="datetimepicker" type="text" />';
+                //var value = parameters[parameterDefine["name"]] || parameterDefine["defaultValue"] || '';
+                //fieldHtml += '<input id="datetimepicker" type="text" name="'
+                //    +parameterDefine["name"]+'" value="'+ value +'"/>';
+                break;
+            case "text":
                 fieldHtml += '<input type="text" name="'+parameterDefine["name"]
-                    +'" placeholder="'+(parameterDefine["defaultValue"] || "")
-                    +'" value="'+(parameters[parameterDefine["name"]] || parameterDefine["defaultValue"] || "")
+                    +'" placeholder="'+(parameterDefine["defaultValue"] || '')
+                    +'" value="'+(parameters[parameterDefine["name"]] || parameterDefine["defaultValue"] || '')
                     +'"/>';
                 break;
             case "dropdown":
-                fieldHtml += '<label>'+parameterDefine["displayInfo"]+'</label>';
                 fieldHtml += '<select name="'+parameterDefine["name"]+'", class="ui dropdown">';
                 var valueList = parameterDefine["valueList"] ? parameterDefine["valueList"].split("|") : [];
                 var displayList = parameterDefine["displayList"] ? parameterDefine["displayList"].split("|") : [];
