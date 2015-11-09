@@ -57,13 +57,14 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
     });
 
     LaaS.reqres.setHandler('myFiles:entities', function (options) {
-        var options = options || {page:0,size:10};
+        var options = options || {page:0,size:4,projection:'filesummary'};
         var page = options.page || 0;
-        var size = options.size || 10;
+        var size = options.size || 4;
+        var projection = options.projection || 'filesummary';
         var files = $.Deferred();
         var userName = sessionStorage.getItem("username");
 
-        $.getJSON(baseUrl+"/search/findFilesOwnedBy?userName=" + userName+"&page=" + page + "&size=" + size).done(function(data){
+        $.getJSON(baseUrl+"/search/findFilesOwnedBy?userName=" + userName+"&page=" + page + "&size=" + size + "&projection=" + projection).done(function(data){
             var list = data._embedded ? data._embedded.files : [];
             files.resolve({files:list,page:data.page});
         });

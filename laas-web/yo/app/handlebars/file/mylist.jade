@@ -5,20 +5,19 @@
             table.ui.compact.celled.definition.table
                 thead.full-width
                     tr
-                        th
+                        th.one.wide
 
                         th
                             |Name
-                        th
+                        th.two.wide
                             |Size
-                        th
+                        th.three.wide
                             |Type
                 tbody
                     |{{#each files}}
                     tr
-                        td.collapsing
+                        td
                             |<input id="file_checkbox_{{id}}" type="checkbox" {{checked}}/>
-
                         td
                             |{{originalName}}
                         td
@@ -32,3 +31,4 @@
                         th(colspan="3")
                             .ui.teal.small.button#upload_my_files Add Files...
                             .ui.teal.small.button#delete_my_files Delete
+                            #paging(style="text-align:center")
