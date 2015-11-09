@@ -40,4 +40,13 @@ public class LoginController {
         if (session != null)
             session.invalidate();
     }
+
+    @RequestMapping(value = "/controllers/users/current", method = RequestMethod.GET)
+    @JsonView(User.UserDTO.class)
+    public User loginedUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!(principal instanceof User))
+            throw new InvalidUserException("login required");
+        return (User)principal;
+    }
 }
