@@ -5,6 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.g6.laas.server.database.entity.LaaSAuditable;
 import org.g6.laas.server.database.entity.ParameterDefine;
+import org.g6.laas.server.database.entity.Product;
+import org.g6.laas.server.database.entity.file.FileType;
 import org.g6.laas.server.database.entity.user.User;
 
 import javax.persistence.*;
@@ -20,10 +22,17 @@ public class Task extends LaaSAuditable<User> {
 
     private static final long serialVersionUID = -8503435553208415613L;
 
-    @Column(name = "NAME")
     private String name;
-    @Column(name = "CLASSNAME")
+
     private String className;
+
+    @ManyToOne
+    private Product product;
+
+    private String description;
+
+    @ManyToOne
+    private FileType fileType;
 
     @OneToMany(mappedBy = "task")
     private List<TaskRunning> taskRunnings = new ArrayList<>();
