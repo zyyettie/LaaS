@@ -1,34 +1,29 @@
-.ui.centered.grid
-    .twelve.wide.column
-        .ui.green.segment(style="margin-top:5px;padding:20px 40px;")
-            h2#title File List
-            table.ui.compact.celled.definition.table
-                thead.full-width
-                    tr
-                        th.one.wide
+table.ui.compact.celled.definition.table
+    thead.full-width
+        tr
+            th.one.wide
 
-                        th
-                            |Name
-                        th.two.wide
-                            |Size
-                        th.three.wide
-                            |Type
-                tbody
-                    |{{#each files}}
-                    tr
-                        td
-                            |<input id="file_checkbox_{{id}}" type="checkbox" {{checked}}/>
-                        td
-                            |{{originalName}}
-                        td
-                            |{{size}}KB
-                        td
-                            |{{type.type}}
-                    |{{/each}}
-                tfoot.full-width
-                    tr
-                        th
-                        th(colspan="3")
-                            .ui.teal.small.button#upload_my_files Add Files...
-                            .ui.teal.small.button#delete_my_files Delete
-                            #paging(style="text-align:center")
+            th
+                |Name
+            th.two.wide
+                |Size
+            th.three.wide
+                |Type
+    tbody
+        |{{#each files}}
+        tr
+            td
+                |<input id="file_checkbox_{{id}}" type="checkbox" {{checked}}/>
+            td
+                |{{originalName}}
+            td
+                |{{size}}KB
+            td
+                |{{type.type}}
+        |{{/each}}
+    tfoot.full-width
+        tr
+            th
+            th(colspan="3")
+                .ui.teal.small.button#upload_my_files Add Files...
+                .ui.teal.small.button#delete_my_files Delete

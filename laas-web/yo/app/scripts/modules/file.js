@@ -84,26 +84,24 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
             this.files = options.files;
             this.paging = options.page;
         },
-        template : function(data){
-            var template = JST['app/handlebars/file/mylist'];
-            var html = template(data);
-            return html;
-        },
+        template : JST['app/handlebars/file/layout'],
         onRender:function(){
-            var test='test';
+            var template = JST[baseTemplatePath + '/mylist'];
+            var html = template({files: this.files});
+            this.$('#content').html(html);
             if(this.paging.number + 1 <= this.paging.totalPages){
-                $('#paging').twbsPagination({
+                this.$('#paging').twbsPagination({
                     totalPages: this.paging.totalPages,
                     startPage: this.paging.number + 1,
                     visiblePages: 6,
-                    first: 'First',
-                    prev: 'Previous',
-                    next: 'Next',
-                    last: 'Last',
+                    first: '<<',
+                    prev: '<',
+                    next: '>',
+                    last: '>>',
                     onPageClick: function (event, page) {
                         var template = JST[baseTemplatePath + '/mylist'];
                         $.when(LaaS.request('myFiles:entities',{page:page-1})).done(function (data) {
-                            var html = template({notifications: data.notifications});
+                            var html = template({files: data.files});
                             $('#content').html(html);
                         });
                     }
