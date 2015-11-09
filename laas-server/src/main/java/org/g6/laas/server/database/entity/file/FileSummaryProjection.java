@@ -10,4 +10,6 @@ public interface FileSummaryProjection {
     String getOriginalName();
 
     Long getSize();
+
+    FileType getType();
 }
