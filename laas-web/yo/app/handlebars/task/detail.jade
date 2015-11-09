@@ -1,14 +1,70 @@
-.ui.centered.one.column.grid(style="margin-top:5%;")
-    .ui.divided.items
-        .item
-            .image
-                img(src="/images/logo.png")
-            .content
-                a.header {{id}}  {{name}}
-                .meta
-                    span.cinema Union
-                .description
-                .extra
-                    .ui.label Max
-                    .ui.label
-                        i.globe.icon Addtional
+.ui.centered.grid
+    .twelve.wide.column
+        .ui.green.segment(style="margin-top:5px;padding:20px 40px;")
+            h2#title Task Detail
+            form.ui.form
+                .two.fields
+                    .field
+                        label Task Name
+                        input(type="text",name="name",placeholder="name",value="{{name}}")
+                    .field
+                        label Product
+                        select.ui.dropdown(id="selectedProduct", name="selectedProduct")
+                            //option(value="{{selectedid}}") {{selectedname}}
+                            |{{#each productList}}
+                            option(value="{{id}}") {{name}}
+                            |{{/each}}
+                        //input(type="text",name="name",placeholder="Product",value="{{product}}")
+                .field
+                    label Task Description
+                    textarea(type="text",rows="3",name="description",placeholder="description", value="{{description}}"){{description}}
+                .field
+                .two.fields
+                    .field
+                        label Class Name
+                        input(type="text",name="name",placeholder="Class Name",value="{{className}}")
+                    .field
+                        label Accepted File Type
+                        select.ui.dropdown(id="selectedFileType", name="selectedFileType")
+                            |{{#each fileTypeList}}
+                            option(value="{{id}}") {{type}}
+                            |{{/each}}
+                        //input(type="text",name="name",placeholder="Accepted File Type",value="{{fileType}}")
+                .two.fields
+                    .field
+                        .four.fields
+                            .field
+                                label Parameters
+                            .field
+                                #add.symbol(style="transform:scale(1.5);")
+                                    <i id="add_paramter" class="green plus icon"></i>
+                            .field
+                    .field
+                .field
+                    .ui.divided.list
+                        |{{#each parameters}}
+                        <div id="parameter_{{id}}">
+                        .item
+                            .content
+                                .ui.grid
+                                    .ui.ten.column.row(style="margin-top:10px;margin-bottom:10px;")
+                                        .column
+                                            label {{name}}
+                                        .column
+                                        .column
+                                        .column
+                                        .column
+                                        .column
+                                        .column
+                                        .column
+                                        .right.aligned.column
+                                            #remove.symbol(style="transform:scale(1.5);")
+                                                <i id="remove_parameter" value="{{id}}" class="green minus icon"></i>
+                                        .column
+                        </div>
+                        |{{/each}}
+                .two.fields(style="margin-top:100px;margin-bottom:70px;")
+                    .field(style="padding-right:50px;")
+                        .ui.teal.large.fluid.button#task_save Save
+                    .field(style="padding-left:50px;")
+                        .ui.teal.large.fluid.button#task_cancel Cancel

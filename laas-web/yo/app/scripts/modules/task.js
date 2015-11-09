@@ -3,7 +3,13 @@ LaaS.module('Task', function(Task, LaaS, Backbone, Marionette) {
 
     var TaskView = Marionette.ItemView.extend({
         initialize : function(options){
-            this.task = options.attributes;
+            this.task = options.model.attributes;
+            this.parameters = options.parameters;
+
+            this.productList = options.productList;
+            this.fileTypeList = options.fileTypeList;
+            this.selectedProduct = options.selectedProduct;
+            this.selectedFileType = options.selectedFileType;
         },
         template : function(data){
             var template = JST['app/handlebars/task/detail'];
@@ -11,7 +17,13 @@ LaaS.module('Task', function(Task, LaaS, Backbone, Marionette) {
             return html;
         },
         serializeData:function(){
-            return {task:this.task};
+            var data = {task:this.task};
+            data.task.parameters = this.parameters;
+            data.task.productList = this.productList;
+            data.task.fileTypeList = this.fileTypeList;
+            data.task.selectedProduct = this.selectedProduct;
+            data.task.selectedFileType = this.selectedFileType;
+            return data;
         }
     });
 
@@ -26,6 +38,13 @@ LaaS.module('Task', function(Task, LaaS, Backbone, Marionette) {
         },
         serializeData:function(){
             return {tasks:this.tasks};
+        },
+        events:{
+            'click button.task-show': "showClicked"
+        },
+        showClicked: function(event){
+            var taskId = event.target.dataset["id"];
+            LaaS.navigate('/tasks/'+taskId, true);
         }
     });
 
@@ -37,9 +56,17 @@ LaaS.module('Task', function(Task, LaaS, Backbone, Marionette) {
             });
         },
         showTask: function(id){
-            $.when(LaaS.request('task:entity', {'id':id})).done(function(data){
-               var view = new TaskView(data);
-                LaaS.mainRegion.show(view);
+            $.when(LaaS.request('task:entity', {'id':id}), LaaS.request('product:entities'), LaaS.request('fileType:entities'))
+                .done(function(taskModel, productList, fileTypeList){
+                $.when(LaaS.request('parameterDefine:entitiesByUrl', {'url':taskModel.attributes._links.parameterDefines.href}),
+                    LaaS.request('product:entitiesByUrl', {'url':taskModel.attributes._links.product.href}),
+                    LaaS.request('fileType:entitiesByUrl', {'url':taskModel.attributes._links.fileType.href}))
+                    .done(function(relatedParameterDefines, selectedProduct, selectedFileType) {
+                    var view = new TaskView({model:taskModel, parameters:relatedParameterDefines.parameterDefines,
+                        productList:productList.products, fileTypeList:fileTypeList.fileTypes, selectedProduct: selectedProduct.products,
+                        selectedFileType:selectedFileType.fileTypes});
+                    LaaS.mainRegion.show(view);
+                });
             });
         }
     });

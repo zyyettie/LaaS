@@ -68,6 +68,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                             var json = that.job.parameters ? JSON.parse(that.job.parameters) : {};
                             var subHtml = LaaS.Form.generateParameterSubForm(selectedParameterDefines.parameterDefines, json);
                             $('#parameters').append(subHtml);
+                            LaaS.Form.enableDatetimeControl(selectedParameterDefines.parameterDefines);
                         });
                         break;
                     }
@@ -318,7 +319,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                     LaaS.mainRegion.show(new LaaS.Job.JobView({model: job, scenarioList: scenario.scenarios, fileList: file.files}));
                     //LaaS.Home.showViewFrame(new LaaS.Job.JobView({model: job, scenarioList: scenario.scenarios, fileList: file.files}));
                 });
-        },
+        },/*
         showJob: function (id) {
             $.when(LaaS.request('job:entity', {'id':id}), LaaS.request('scenario:entities'), LaaS.request('file:entities'))
                 .done(function(jobModel, scenarioList, fileList){
@@ -349,6 +350,21 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                     }
                 })
             });
+        },*/
+        showJob: function (id) {
+            $.when(LaaS.request('job:entity', {'id':id}), LaaS.request('scenario:entities'), LaaS.request('file:entities'))
+                .done(function(jobModel, scenarioList, fileList){
+                    $.when(LaaS.request("scenario:entitiesByUrl", {"url":jobModel.attributes._links.scenarios.href}), LaaS.request("file:entitiesByUrl", {"url":jobModel.attributes._links.files.href}))
+                        .done(function(selectedScenarios, selectedFiles) {
+                            if (selectedScenarios) {
+                                $.when(LaaS.request("parameterDefine:entitiesByUrl", {"url":selectedScenarios.scenarios[0]._links.parameterDefines.href})).done(function(selectedParameterDefines) {
+                                    var view = new LaaS.Job.JobView({model:jobModel, job:jobModel.attributes, scenarioList:scenarioList.scenarios,
+                                        fileList:fileList.files, selectedScenarios:selectedScenarios.scenarios, files:selectedFiles.files, selectedParameterDefines:selectedParameterDefines.parameterDefines});
+                                    LaaS.mainRegion.show(view);
+                                });
+                            }
+                        });
+                });
         },
         showJobs: function () {
             $.when(LaaS.request('job:entities')).done(function (data) {

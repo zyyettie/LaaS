@@ -6,7 +6,7 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
     var TaskModel = Backbone.Model.extend({
         url: function(){
             var url = this.id ? baseUrl+"/" + this.id : baseUrl;
-            return url + "?projection=" + this.projection;
+            return url/* + "?projection=" + this.projection*/;
         },
         isNew: function () {
             return this.id == null || this.id == undefined;
@@ -15,11 +15,12 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
             if (options && options.id) {
                 this.id = options.id;
             }
+            /*
             if(options && options.projection){
                 this.projection = options.projection;
             }else{
                 this.projection = 'taskSummary';
-            }
+            } */
         }
     });
 
@@ -39,7 +40,18 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
         var projection = options.projection || 'taskSummary'
         var tasks = $.Deferred();
         $.getJSON(baseUrl+"?&page=" + page + "&size=" + size + "&projection=" + projection).done(function(data){
-            tasks.resolve({tasks:data._embedded.tasks,page:data.page});
+            tasks.resolve({tasks:data._embedded ? data._embedded.tasks : [], page:data.page});
+        });
+        return tasks.promise();
+    });
+
+    LaaS.reqres.setHandler('task:entitiesByUrl', function(options) {
+        var options = options || {url:baseUrl};
+        var url = options.url || baseUrl;
+        var tasks = $.Deferred();
+        $.getJSON(url).done(function(data) {
+            var list = data._embedded ? data._embedded.tasks : [];
+            tasks.resolve({tasks:list});
         });
         return tasks.promise();
     });

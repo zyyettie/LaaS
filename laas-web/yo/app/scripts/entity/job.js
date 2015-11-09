@@ -31,7 +31,7 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
         var projection = options.projection || 'jobSummary';
         var jobs = $.Deferred();
         $.getJSON(baseUrl+"?&page=" + page + "&size=" + size + "&projection=" + projection).done(function(data){
-            jobs.resolve({jobs:data._embedded.jobs,page:data.page});
+            jobs.resolve({jobs:data._embedded ? data._embedded.jobs : [], page:data.page});
         });
         return jobs.promise();
     });

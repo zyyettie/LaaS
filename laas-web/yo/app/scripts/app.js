@@ -60,6 +60,13 @@ LaaS.cleanSessionStorage = function () {
     sessionStorage.removeItem('role');
 };
 
+LaaS.resetLayout = function(){
+    LaaS.headerRegion.empty();
+    LaaS.mainNavRegion.empty();
+    LaaS.mainRegion.empty();
+    LaaS.footerRegion.empty();
+};
+
 
 LaaS.stopTask = function (task) {
     if (task.timeout) {

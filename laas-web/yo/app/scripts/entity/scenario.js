@@ -6,7 +6,7 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
     Entities.ScenarioModel = Backbone.Model.extend({
         url: function(){
             var url = this.id ? baseUrl+"/" + this.id : baseUrl;
-            return url + "?projection=" + this.projection;
+            return url/* + "?projection=" + this.projection*/;
         },
         isNew: function () {
             return this.id == null || this.id == undefined;
@@ -15,11 +15,12 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
             if (options && options.id) {
                 this.id = options.id;
             }
+            /*
             if(options && options.projection){
                 this.projection = options.projection;
             }else{
                 this.projection = 'scenarioSummary';
-            }
+            } */
         }
     });
 
@@ -39,7 +40,7 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
         var projection = options.projection || 'scenarioSummary';
         var scenarios = $.Deferred();
         $.getJSON(baseUrl+"?&page=" + page + "&size=" + size + "&projection=" + projection).done(function(data){
-            scenarios.resolve({scenarios:data._embedded.scenarios,page:data.page});
+            scenarios.resolve({scenarios:data._embedded ? data._embedded.scenarios : [], page:data.page});
         });
         return scenarios.promise();
     });
