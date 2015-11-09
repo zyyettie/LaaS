@@ -22,12 +22,12 @@ insert into TASK(ID, NAME, CLASS_NAME, PRODUCT_ID, FILE_TYPE_ID) values(4, 'Task
 insert into TASK(ID, NAME, CLASS_NAME, PRODUCT_ID, FILE_TYPE_ID) values(5, 'Task - SM-OMi Performance', 'org.g6.laas.sm.task.SMOMiPerformanceTask', 1, 1)
 insert into TASK(ID, NAME, CLASS_NAME, PRODUCT_ID, FILE_TYPE_ID) values(6, 'Task - SM RTE', 'org.g6.laas.sm.task.SMRTETask', 1, 1)
 
-insert into SCENARIO(ID, NAME) values(1, 'Scenario - Top N')
-insert into SCENARIO(ID, NAME) values(2, 'Scenario - RAD Show')
-insert into SCENARIO(ID, NAME) values(3, 'Scenario - Login Time')
-insert into SCENARIO(ID, NAME) values(4, 'Scenario - Split Process/Thread')
-insert into SCENARIO(ID, NAME) values(5, 'Scenario - SM-OMi Performance')
-insert into SCENARIO(ID, NAME) values(6, 'Scenario - SM RTE')
+insert into SCENARIO(ID, NAME, product_id) values(1, 'Scenario - Top N', 1)
+insert into SCENARIO(ID, NAME, product_id) values(2, 'Scenario - RAD Show', 1)
+insert into SCENARIO(ID, NAME, product_id) values(3, 'Scenario - Login Time', 1)
+insert into SCENARIO(ID, NAME, product_id) values(4, 'Scenario - Split Process/Thread', 1)
+insert into SCENARIO(ID, NAME, product_id) values(5, 'Scenario - SM-OMi Performance', 1)
+insert into SCENARIO(ID, NAME, product_id) values(6, 'Scenario - SM RTE', 1)
 
 insert into SCENARIO_TASK(SCENARIO_ID, TASK_ID) values(1, 1)
 insert into SCENARIO_TASK(SCENARIO_ID, TASK_ID) values(2, 2)

@@ -43,7 +43,7 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
         var url = options.url || baseUrl;
         var products = $.Deferred();
         $.getJSON(url).done(function(data) {
-            var list = data._embedded ? data._embedded.products : [];
+            var list = data._embedded ? data._embedded.products : data;
             products.resolve({products:list});
         });
         return products.promise();

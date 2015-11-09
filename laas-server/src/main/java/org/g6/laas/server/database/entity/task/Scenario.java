@@ -10,6 +10,7 @@ import org.g6.laas.server.database.entity.Job;
 import org.g6.laas.server.database.entity.LaaSAuditable;
 import org.g6.laas.server.database.entity.ParameterDefine;
 import org.g6.laas.server.database.entity.Product;
+import org.g6.laas.server.database.entity.file.FileType;
 import org.g6.laas.server.database.entity.user.User;
 
 import java.util.ArrayList;
@@ -42,6 +43,9 @@ public class Scenario extends LaaSAuditable<User> {
             inverseJoinColumns = @JoinColumn(name = "TASK_ID"),
             joinColumns = @JoinColumn(name = "SCENARIO_ID"))
     private List<Task> tasks = new ArrayList<>();
+
+    @ManyToMany
+    private List<FileType> fileTypes = new ArrayList<>();
 
     @ManyToMany
     private List<ParameterDefine> parameterDefines = new ArrayList<>();

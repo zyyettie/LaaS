@@ -3,7 +3,10 @@ LaaS.module('Scenario', function(Scenario, LaaS, Backbone, Marionette) {
 
     var ScenarioView = Marionette.ItemView.extend({
         initialize : function(options){
-            this.scenario = options.attributes;
+            this.scenario = options.model.attributes;
+            this.productList = options.productList;
+            this.tasks = options.tasks;
+            this.selectedProduct = options.selectedProduct;
         },
         template : function(data){
             var template = JST['app/handlebars/scenario/detail'];
@@ -11,7 +14,11 @@ LaaS.module('Scenario', function(Scenario, LaaS, Backbone, Marionette) {
             return html;
         },
         serializeData:function(){
-            return {scenario:this.scenario};
+            var data =  {scenario:this.scenario};
+            data.scenario.productList = this.productList;
+            data.scenario.tasks = this.tasks;
+            data.scenario.selectedProduct = this.selectedProduct;
+            return data;
         }
     });
 
@@ -26,6 +33,13 @@ LaaS.module('Scenario', function(Scenario, LaaS, Backbone, Marionette) {
         },
         serializeData:function(){
             return {scenarios:this.scenarios};
+        },
+        events:{
+            'click button.scenario-show': "showClicked"
+        },
+        showClicked: function(event){
+            var scenarioId = event.target.dataset["id"];
+            LaaS.navigate('/scenarios/'+scenarioId, true);
         }
     });
 
@@ -37,9 +51,14 @@ LaaS.module('Scenario', function(Scenario, LaaS, Backbone, Marionette) {
             });
         },
         showScenario: function(id){
-            $.when(LaaS.request('scenario:entity', {'id':id})).done(function(data){
-               var view = new ScenarioView(data);
-                LaaS.mainRegion.show(view);
+            $.when(LaaS.request('scenario:entity', {'id':id}), LaaS.request('product:entities')).done(function(scenarioModel, productList){
+                $.when(LaaS.request('task:entitiesByUrl', {'url': scenarioModel.attributes._links.tasks.href}),
+                    LaaS.request('product:entitiesByUrl', {'url':scenarioModel.attributes._links.product.href}))
+                    .done(function(relatedTasks, selectedProduct) {
+                    var view = new ScenarioView({model:scenarioModel, productList:productList.products,
+                        tasks:relatedTasks.tasks, selectedProduct:selectedProduct.products});
+                    LaaS.mainRegion.show(view);
+                })
             });
         }
     });

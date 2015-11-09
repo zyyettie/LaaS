@@ -1,14 +1,57 @@
-.ui.centered.one.column.grid(style="margin-top:5%;")
-    .ui.divided.items
-        .item
-            .image
-                img(src="/images/logo.png")
-            .content
-                a.header {{id}}  {{name}}
-                .meta
-                    span.cinema Union
-                .description
-                .extra
-                    .ui.label Max
-                    .ui.label
-                        i.globe.icon Addtional
+.ui.centered.grid
+    .twelve.wide.column
+        .ui.green.segment(style="margin-top:5px;padding:20px 40px;")
+            h2#title Scenario Detail
+            form.ui.form
+                .two.fields
+                    .field
+                        label Scenario Name
+                        input(type="text",name="name",placeholder="name",value="{{name}}")
+                    .field
+                        label Product
+                        select.ui.dropdown(id="selectedProduct", name="selectedProduct")
+                            |{{#each productList}}
+                            option(value="{{id}}") {{name}}
+                            |{{/each}}
+                .field
+                    label Scenario Description
+                    textarea(type="text",rows="3",name="description",placeholder="description", value="{{description}}"){{description}}
+                .field
+                .two.fields
+                    .field
+                        .four.fields
+                            .field
+                                label Tasks
+                            .field
+                                #add.symbol(style="transform:scale(1.5);")
+                                    <i id="add_task" class="green plus icon"></i>
+                            .field
+                    .field
+                .field
+                    .ui.divided.list
+                        |{{#each tasks}}
+                        <div id="task_{{id}}">
+                        .item
+                            .content
+                                .ui.grid
+                                    .ui.ten.column.row(style="margin-top:10px;margin-bottom:10px;")
+                                        .column
+                                            label {{name}}
+                                        .column
+                                        .column
+                                        .column
+                                        .column
+                                        .column
+                                        .column
+                                        .column
+                                        .right.aligned.column
+                                            #remove.symbol(style="transform:scale(1.5);")
+                                                <i id="remove_task" value="{{id}}" class="green minus icon"></i>
+                                        .column
+                        </div>
+                        |{{/each}}
+                .two.fields(style="margin-top:100px;margin-bottom:70px;")
+                    .field(style="padding-right:50px;")
+                        .ui.teal.large.fluid.button#scenario_save Save
+                    .field(style="padding-left:50px;")
+                        .ui.teal.large.fluid.button#scenario_cancel Cancel
