@@ -60,21 +60,21 @@ LaaS.module('Login', function(Login, LaaS, Backbone, Marionette) {
         }
     });
 
-    var  resetLayout = function(){
-        LaaS.headerRegion.empty();
-        LaaS.mainNavRegion.empty();
-        LaaS.mainRegion.empty();
-        LaaS.footerRegion.empty();
-    };
-
     var HomeController = Marionette.Controller.extend({
         login: function() {
             var uid = sessionStorage.getItem('uid')
             if(uid){
                 LaaS.navigate('/home',true);
             }else{
-                resetLayout();
-                LaaS.mainRegion.show(new LoginView());
+                $.getJSON(appContext+'/controllers/users/current',function(data){
+                    sessionStorage.setItem("uid",data.id);
+                    sessionStorage.setItem("username",data.name);
+                    sessionStorage.setItem("role",data.role.name);
+                    LaaS.navigate('/home',true);
+                }).fail(function(){
+                    LaaS.resetLayout();
+                    LaaS.mainRegion.show(new LoginView());
+                });
             }
         }
     });

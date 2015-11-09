@@ -1,7 +1,7 @@
 LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
     'use strict';
 
-
+    var appContext = LaaS.Util.Constants.APPCONTEXT;
     var HeaderView = Marionette.ItemView.extend({
         template: JST['app/handlebars/header'],
         onRender : function(){
@@ -60,6 +60,21 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
 
     var HomeController = Marionette.Controller.extend({
         showHome: function () {
+            var uid = sessionStorage.getItem('uid');
+            if(uid){
+                LaaS.Home.showViewFrame(new MainView());
+            }else{
+                $.getJSON(appContext+'/controllers/users/current',function(data){
+                    sessionStorage.setItem("uid",data.id);
+                    sessionStorage.setItem("username",data.name);
+                    sessionStorage.setItem("role",data.role.name);
+                    LaaS.Home.showViewFrame(new MainView());
+                }).fail(function(){
+                    LaaS.navigate('/login',true);
+                });
+            }
+
+
             var uid = sessionStorage.getItem('uid');
             if(uid != null && uid != undefined){
                 LaaS.Home.showViewFrame(new MainView());
