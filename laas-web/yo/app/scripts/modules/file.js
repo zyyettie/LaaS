@@ -99,8 +99,8 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
         },
         uploadMyFiles: function(){
             $.when(LaaS.request('fileTypes:entities')).done(function(data){
-                LaaS.mainRegion.show(new LaaS.Views.FileUploader({'url':'/myfiles','fileTypes':data.fileTypes}));
-                LaaS.navigate('/myfiles/upload');
+                LaaS.mainRegion.show(new LaaS.Views.FileUploader({'url':'/files/me','fileTypes':data.fileTypes}));
+                LaaS.navigate('/files/me/upload');
             });
 
         },
@@ -147,8 +147,7 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
     LaaS.addInitializer(function() {
         new Marionette.AppRouter({
             appRoutes : {
-                'files/:id(/)' : 'showFile',
-                'myfiles(/)':'showMyFiles'
+                'files/me(/)':'showMyFiles'
             },
             controller: new FileController()
         });
