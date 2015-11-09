@@ -23,14 +23,14 @@ LaaS.module('Inbox', function (Inbox, LaaS, Backbone, Marionette) {
       var html = template({notifications: this.notificationList});
       this.$('#content').html(html);
       if(this.paging.number + 1 <= this.paging.totalPages){
-        $('#paging').twbsPagination({
+        this.$('#paging').twbsPagination({
           totalPages: this.paging.totalPages,
           startPage: this.paging.number + 1,
           visiblePages: 6,
-          first: 'First',
-          prev: 'Previous',
-          next: 'Next',
-          last: 'Last',
+          first: '<<',
+          prev: '<',
+          next: '>',
+          last: '>>',
           onPageClick: function (event, page) {
             var template = JST[baseTemplatePath + '/notificationlist'];
             $.when(LaaS.request('notification:entities:me',{page:page-1})).done(function (data) {
