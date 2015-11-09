@@ -40,7 +40,7 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
         //var projection = options.projection || 'fileSummary'
         var files = $.Deferred();
         $.getJSON(baseUrl+"?&page=" + page + "&size=" + size/* + "&projection=" + projection*/).done(function(data){
-            files.resolve({files:data._embedded.files,page:data.page});
+            files.resolve({files:data._embedded ? data._embedded.files : [], page:data.page});
         });
         return files.promise();
     });

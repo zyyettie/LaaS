@@ -40,7 +40,7 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
         var projection = options.projection || 'taskSummary'
         var tasks = $.Deferred();
         $.getJSON(baseUrl+"?&page=" + page + "&size=" + size + "&projection=" + projection).done(function(data){
-            tasks.resolve({tasks:data._embedded.tasks,page:data.page});
+            tasks.resolve({tasks:data._embedded ? data._embedded.tasks : [], page:data.page});
         });
         return tasks.promise();
     });

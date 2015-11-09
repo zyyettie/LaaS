@@ -33,7 +33,7 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
         var size = options.size || 10;
         var products = $.Deferred();
         $.getJSON(baseUrl+"?&page=" + page + "&size=" + size).done(function(data){
-            products.resolve({products:data._embedded.products,page:data.page});
+            products.resolve({products:data._embedded ? data._embedded.products : [], page:data.page});
         });
         return products.promise();
     });
