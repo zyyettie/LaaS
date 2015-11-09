@@ -68,12 +68,11 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                             var json = that.job.parameters ? JSON.parse(that.job.parameters) : {};
                             var subHtml = LaaS.Form.generateParameterSubForm(selectedParameterDefines.parameterDefines, json);
                             $('#parameters').append(subHtml);
+                            LaaS.Form.enableDatetimeControl(selectedParameterDefines.parameterDefines);
                         });
                         break;
                     }
                 }
-
-                this.$('#datetimepicker').datetimepicker();
                 /*
                 var render;
                 var subhtml;
