@@ -147,7 +147,8 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
     LaaS.addInitializer(function() {
         new Marionette.AppRouter({
             appRoutes : {
-                'files/me(/)':'showMyFiles'
+                'files/me(/)':'showMyFiles',
+                'files/:id(/)' : 'showFile'
             },
             controller: new FileController()
         });
