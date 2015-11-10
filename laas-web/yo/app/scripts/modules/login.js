@@ -30,6 +30,7 @@ LaaS.module('Login', function(Login, LaaS, Backbone, Marionette) {
                     }
                 }
             });
+            $('#header').hide();
         },
         ui:{
             submitBtn:'.teal.button'

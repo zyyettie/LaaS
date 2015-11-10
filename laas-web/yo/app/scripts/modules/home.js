@@ -3,7 +3,11 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
 
     var appContext = LaaS.Util.Constants.APPCONTEXT;
     var HeaderView = Marionette.ItemView.extend({
-        template: JST['app/handlebars/header'],
+        template: function(){
+            var template = JST['app/handlebars/header'];
+            return template({username:sessionStorage.getItem("username")});
+        },
+
         onRender : function(){
             this.$('#logout').on('click',function(e){
                 LaaS.cleanSessionStorage();
@@ -15,6 +19,7 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
             this.$('.dropdown .menu .item').on('click',function(e){
                 LaaS.navigate($(this).attr('href'), true);
             });
+            $('#header').show();
         }
     });
 

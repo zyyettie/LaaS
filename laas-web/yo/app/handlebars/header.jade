@@ -1,16 +1,8 @@
 #header-right.container
-    #logout
+    #user
         i.user.icon
+        h4 {{username}}
+    #inbox
+        i.mail.icon
+    #logout
         h4 Logout
-    .ui.simple.icon.dropdown.item
-        i.setting.icon
-        h4#settings Settings
-        i.dropdown.icon
-        .menu(style="min-width:200px")
-            .item(href="/notifications/me") My Inbox
-                i.inbox.icon
-            .divider(style="margin:0")
-            .item(href="#") My Jobs
-                i.tasks.icon
-            .item(href="/myfiles") My Files
-                i.file.icon

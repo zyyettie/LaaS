@@ -8,21 +8,34 @@ body {
 
 .laasbody{
     #header {
-        min-height:60px;
-        background-color: #01A982;
-        background-image: url(../images/laas_logo.png);
-        background-repeat: no-repeat;
-        background-position: left;
+      min-height:60px;
+      background-color: #01A982;
+      background-image: url(../images/laas_logo.png);
+      background-repeat: no-repeat;
+      background-position: 20px 7px;
         #header-right {
             color:white;
             float:right;
-            margin-top:15px;
+            margin-top:20px;
             margin-right:50px;
-            #logout {
-                cursor:pointer;
+            #user{
+              display: inline;
+              border-right-style: solid;
+              border-right-color: white;
+              padding-right: 0.8em;
+              border-right-width: 2px;
             }
-            .dropdown.item{
-                margin-left:2em;
+            #logout {
+                margin-left: 1em;
+                cursor:pointer;
+                border-left-style: solid;
+                border-left-color: white;
+                padding-left: 1em;
+                border-left-width: 2px;
+            }
+            #inbox{
+                display: inline;
+                margin-left:1em;
             };
             h4,#settings {
                 display:inline;
@@ -46,7 +59,7 @@ body {
     #footer {
       min-height:50px;
       .footer-distributed{
-        background-color: #01A982;
+        background-color: #CCCCCC;
         box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.12);
         box-sizing: border-box;
         width: 100%;
@@ -123,18 +136,19 @@ body {
     #main {
         padding-top:50px;
     }
-    #navigator.menu {
-      background-color: #A0F3E9;
-      min-height:800px;
-      font-size: larger;
-      padding-top: 15px;
-      padding-left:5px;
-      border-radius:0;
-    }
+
 }
 
 .toast-top-center {
     top:50px;
+}
+#navigator.menu {
+  background-color: #A0F3E9;
+  min-height:800px;
+  font-size: larger;
+  padding-top: 15px;
+  padding-left:5px;
+  border-radius:0;
 }
 
 
