@@ -57,12 +57,12 @@ LaaS.module('Scenario', function(Scenario, LaaS, Backbone, Marionette) {
         showScenario: function(id){
             $.when(LaaS.request('scenario:entity', {'id':id}), LaaS.request('product:entities')).done(function(scenarioModel, productList){
                 $.when(LaaS.request('task:entitiesByUrl', {'url': scenarioModel.attributes._links.tasks.href}),
-                    LaaS.request('product:entitiesByUrl', {'url':scenarioModel.attributes._links.product.href}),
+                    LaaS.request('product:entityByUrl', {'url':scenarioModel.attributes._links.product.href}),
                     LaaS.request('fileType:entitiesByUrl', {'url':scenarioModel.attributes._links.fileTypes.href}),
                     LaaS.request('parameterDefine:entitiesByUrl', {'url':scenarioModel.attributes._links.parameterDefines.href}))
                     .done(function(relatedTasks, selectedProduct, selectedFileTypes, selectedParameterDefines) {
                     var view = new ScenarioView({model:scenarioModel, productList:productList.products,
-                        tasks:relatedTasks.tasks, selectedProduct:selectedProduct.products, fileTypes:selectedFileTypes.fileTypes,
+                        tasks:relatedTasks.tasks, selectedProduct:selectedProduct.product, fileTypes:selectedFileTypes.fileTypes,
                         parameterDefines:selectedParameterDefines.parameterDefines});
                     LaaS.mainRegion.show(view);
                 })

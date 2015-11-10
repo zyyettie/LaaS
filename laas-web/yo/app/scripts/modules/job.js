@@ -209,7 +209,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                     toastr.info('Save and Run Job successfully.');
                     var sync = json.is_syn;
                     if(sync === true){
-                        $.when(LaaS.request('jobRunning:entity',{id:json.job_running_id}))
+                        $.when(LaaS.request('jobResult:entity',{id:json.job_running_id}))
                             .done(function (jobRunningResult) {
                                 var jobResultView = new JobResultView({model:jobRunningResult,sync:true});
                                 LaaS.mainRegion.show(jobResultView);
@@ -373,7 +373,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             });
         },
         showJobResult: function(job_running_id){
-            $.when(LaaS.request('jobRunning:entity',job_running_id))
+            $.when(LaaS.request('jobResult:entity',job_running_id))
                 .done(function (jobRunningResult) {
                     var jobResultView = new JobResultView(jobRunningResult);
                     LaaS.mainRegion.show(jobResultView);

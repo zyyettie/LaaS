@@ -37,4 +37,20 @@ public class JobRunning extends JobSubEntity {
     public void addTaskRunning(TaskRunning taskRunning){
         taskRunnings.add(taskRunning);
     }
+
+    public String getJobName() {
+        return this.job.getName();
+    }
+
+    public String getJobDescription() {
+        return this.job.getDescription();
+    }
+
+    public String getUser() {
+        return this.getCreatedBy().getName();
+    }
+
+    public String getRunningTime() {
+        return this.getCreatedDate().toString("yyyy/MM/dd HH:mm:ss");
+    }
 }

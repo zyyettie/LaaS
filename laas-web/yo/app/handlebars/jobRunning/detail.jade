@@ -1,0 +1,53 @@
+.ui.centered.grid
+    .twelve.wide.column
+        .ui.green.segment(style="margin-top:5px;padding:20px 40px;")
+            h2#title Job Running Detail
+            form.ui.form
+                .two.fields
+                    .field
+                        label Job Name
+                        input(type="text",name="name",placeholder="name",value="{{jobName}}", readonly="true")
+                    .field
+                        label Job Scenario
+                        input(type="text", name="selectedScenario", value="{{scenario}}", , readonly="true")
+                .field
+                    label Job Description
+                    textarea(type="text",rows="3",name="description", value="{{description}}", readonly="true")
+                #parameters
+                .field
+                .two.fields
+                    .field
+                        .four.fields
+                            .field
+                                label Files
+                            .field
+                            .field
+                    .field
+                .field
+                    .ui.divided.list
+                        |{{#each files}}
+                        <div id="fileitem_{{id}}">
+                        .item
+                            .content
+                                .ui.grid
+                                    .ui.ten.column.row(style="margin-top:10px;margin-bottom:10px;")
+                                        .column
+                                            label {{originalName}}
+                                        .column
+                                        .column
+                                        .column
+                                        .column
+                                        .column
+                                        .column
+                                        .column
+                                        .right.aligned.column
+                                        .column
+                        </div>
+                        |{{/each}}
+                .two.fields(style="margin-top:100px;margin-bottom:70px;")
+                    .field(style="padding-right:50px;")
+                        .ui.teal.large.fluid.button#jobRunning_ok OK
+                    .field(style="padding-left:50px;")
+                        .ui.teal.large.fluid.button#jobRunning_rerun Re-Run
+
+
