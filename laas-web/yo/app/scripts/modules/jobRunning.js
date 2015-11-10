@@ -39,7 +39,18 @@ LaaS.module('JobRunning', function(JobRunning, LaaS, Backbone, Marionette) {
 
         },
         rerunJobRunning: function() {
+            var that = this;
+            if(this.sync === true){
+                $.when(LaaS.request('jobResult:entity',{id:this.id}))
+                    .done(function (jobRunningResult) {
+                        var jobResultView = new LaaS.JobResult.JobResultView({model:jobRunningResult, sync:true});
+                        LaaS.mainRegion.show(jobResultView);
+                    });
 
+            }else{
+                var jobResultView = new LaaS.JobResult.JobResultView({sync:false});
+                LaaS.mainRegion.show(jobResultView);
+            }
         }
     });
 
