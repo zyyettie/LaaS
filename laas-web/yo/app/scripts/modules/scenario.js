@@ -23,6 +23,16 @@ LaaS.module('Scenario', function(Scenario, LaaS, Backbone, Marionette) {
             data.scenario.fileTypes = this.fileTypes;
             data.scenario.parameterDefines = this.parameterDefines;
             return data;
+        },
+        events: {
+            'click #scenario_save': 'saveScenario',
+            'click #scenario_cancel': 'cancelScenario'
+        },
+        cancelScenario: function() {
+            window.history.back();
+        },
+        saveScenario: function() {
+
         }
     });
 

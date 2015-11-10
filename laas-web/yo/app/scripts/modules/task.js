@@ -24,6 +24,16 @@ LaaS.module('Task', function(Task, LaaS, Backbone, Marionette) {
             data.task.selectedProduct = this.selectedProduct;
             data.task.selectedFileType = this.selectedFileType;
             return data;
+        },
+        events: {
+            'click #task_save': 'saveTask',
+            'click #task_cancel': 'cancelTask'
+        },
+        cancelTask: function() {
+            window.history.back();
+        },
+        saveTask: function() {
+
         }
     });
 
