@@ -50,6 +50,32 @@
                                         .column
                         </div>
                         |{{/each}}
+                .two.fields
+                    .field
+                        label Parameters
+                    .field
+                        label File Type
+                .two.fields
+                    .field
+                        .ui.divided.list
+                            |{{#each parameterDefines}}
+                            .item
+                                .content
+                                    .ui.grid
+                                        .ui.one.column.row(style="margin-top:10px;margin-bottom:10px;")
+                                            .column
+                                                {{name}}
+                            |{{/each}}
+                    .field
+                        .ui.divided.list
+                            |{{#each fileTypes}}
+                            .item
+                                .content
+                                    .ui.grid
+                                        .ui.one.column.row(style="margin-top:10px;margin-bottom:10px;")
+                                            .column
+                                                {{type}}
+                            |{{/each}}
                 .two.fields(style="margin-top:100px;margin-bottom:70px;")
                     .field(style="padding-right:50px;")
                         .ui.teal.large.fluid.button#scenario_save Save

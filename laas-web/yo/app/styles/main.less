@@ -13,20 +13,26 @@ body {
         background-image: url(../images/laas_logo.png);
         background-repeat: no-repeat;
         background-position: left;
-        margin-left:15px;
-        .dropdown.item {
+        #header-right {
             color:white;
             float:right;
             margin-top:15px;
-            margin-right:150px;
+            margin-right:50px;
+            #logout {
+                cursor:pointer;
+            }
+            .dropdown.item{
+                margin-left:2em;
+            };
+            h4,#settings {
+                display:inline;
+            };
+            .menu .icon {
+                float:right;
+            }
         };
-        .user.icon {
-            margin-right:10px;
-        };
-        .dropdown.icon {
-            margin-left:5px;
-        };
-        h4#logout {
+
+        #logout,#settings {
             display:inline;
         };
         .menu .icon {

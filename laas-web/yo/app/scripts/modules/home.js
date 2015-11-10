@@ -12,6 +12,9 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
                     LaaS.navigate('login',true);
                 });
             });
+            this.$('.dropdown .menu .item').on('click',function(e){
+                LaaS.navigate($(this).attr('href'), true);
+            });
         }
     });
 
