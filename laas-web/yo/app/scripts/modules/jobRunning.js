@@ -26,6 +26,31 @@ LaaS.module('JobRunning', function(JobRunning, LaaS, Backbone, Marionette) {
             data.jobRunning.files = this.files;
             data.jobRunning.selectedParameterDefines = this.selectedParameterDefines ? this.selectedParameterDefines : [];
             return data;
+        },
+        events: {
+            'click #jobRunning_ok': 'backJobRunning',
+            'click #jobRunning_viewresult': 'viewResult',
+            'click #jobRunning_rerun': 'rerunJobRunning'
+        },
+        backJobRunning: function() {
+            window.history.back();
+        },
+        viewResult: function() {
+
+        },
+        rerunJobRunning: function() {
+            var that = this;
+            if(this.sync === true){
+                $.when(LaaS.request('jobResult:entity',{id:this.id}))
+                    .done(function (jobRunningResult) {
+                        var jobResultView = new LaaS.JobResult.JobResultView({model:jobRunningResult, sync:true});
+                        LaaS.mainRegion.show(jobResultView);
+                    });
+
+            }else{
+                var jobResultView = new LaaS.JobResult.JobResultView({sync:false});
+                LaaS.mainRegion.show(jobResultView);
+            }
         }
     });
 
@@ -42,11 +67,15 @@ LaaS.module('JobRunning', function(JobRunning, LaaS, Backbone, Marionette) {
             return {jobRunnings:this.jobRunnings};
         },
         events:{
-            'click button.jobRunning-show': "showClicked"
+            'click button.jobRunning-show': "showClicked",
+            'click button.jobRunning-rerun': "rerunClicked"
         },
         showClicked: function(event){
             var jobRunningId = event.target.dataset["id"];
             LaaS.navigate('/jobHistory/'+jobRunningId, true);
+        },
+        rerunClicked: function(event) {
+            var jobRunningId = event.target.dataset["id"];
         }
     });
 

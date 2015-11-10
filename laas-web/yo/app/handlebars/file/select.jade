@@ -1,34 +1,30 @@
-.ui.centered.grid
-    .twelve.wide.column
-        .ui.green.segment(style="margin-top:5px;padding:20px 40px;")
-            h2#title File List
-            table.ui.compact.celled.definition.table
-                thead.full-width
-                    tr
-                        th
+table.ui.compact.celled.definition.table
+    thead.full-width
+        tr
+            th.one.wide
 
-                        th
-                            |Name
-                        th
-                            |Size
-                        th
-                            |Type
-                tbody
-                    |{{#each files}}
-                    tr
-                        td.collapsing
-                            |<input id="file_checkbox_{{id}}" type="checkbox" {{checked}}/>
+            th
+                |Name
+            th.two.wide
+                |Size
+            th.three.wide
+                |Type
+    tbody
+        |{{#each files}}
+        tr
+            td.collapsing
+                |<input id="file_checkbox_{{id}}" type="checkbox" {{checked}}/>
 
-                        td
-                            |{{originalName}}
-                        td
-                            |{{size}}KB
-                        td
+            td
+                |{{originalName}}
+            td
+                |{{size}}KB
+            td
 
-                    |{{/each}}
-                tfoot.full-width
-                    tr
-                        th
-                        th(colspan="3")
-                            .ui.teal.small.button#select_file OK
-                            .ui.teal.small.button#select_file_cancel Cancel
+        |{{/each}}
+    tfoot.full-width
+        tr
+            th
+            th(colspan="3")
+                .ui.teal.small.button#select_file OK
+                .ui.teal.small.button#select_file_cancel Cancel

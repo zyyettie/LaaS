@@ -211,12 +211,12 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                     if(sync === true){
                         $.when(LaaS.request('jobResult:entity',{id:json.job_running_id}))
                             .done(function (jobRunningResult) {
-                                var jobResultView = new JobResultView({model:jobRunningResult,sync:true});
+                                var jobResultView = new LaaS.JobResult.JobResultView({model:jobRunningResult,sync:true});
                                 LaaS.mainRegion.show(jobResultView);
                             });
 
                     }else{
-                        var jobResultView = new JobResultView({sync:false});
+                        var jobResultView = new LaaS.JobResult.JobResultView({sync:false});
                         LaaS.mainRegion.show(jobResultView);
                     }
                     LaaS.navigate('/jobResults/'+json.job_running_id);
@@ -244,7 +244,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 thisjob.selectedname = thisjob.selectedScenarios[0].name;
             }
             $.when(LaaS.request('myFiles:entities')).done(function(data) {
-                var fileSelectView = new LaaS.File.FileSelectView({job:thisjob, files:data.files, jobmodel:that.model});
+                var fileSelectView = new LaaS.File.FileSelectView({job:thisjob, data:data, jobmodel:that.model});
                 LaaS.mainRegion.show(fileSelectView);
                 if (thisjob.id == undefined) {
                     LaaS.navigate('/jobnew/fileselect');
@@ -286,32 +286,6 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         }
     });
 
-    var JobResultView = Marionette.ItemView.extend({
-        initialize: function (options) {
-            if(options.sync === true){
-                this.sync = true;
-                this.jobRunning = options.model.attributes;
-            }
-        },
-        template: function(){
-            var template = JST['app/handlebars/job/result'];
-            var html = template();
-            //debug
-            return html;
-        } ,
-        serializeData: function(){
-            return {};
-        },
-        onRender: function(){
-            if(this.sync === true){
-                this.$('#content-placeholder').html(this.jobRunning.desc).text();
-            }else{
-                this.$('#content-placeholder').html('<h2 class="ui header">Your job is running in the background, please check your inbox later</div>');
-            }
-//            this.$('#content-placeholder').html(decoded);
-        }
-    });
-
     var JobController = Marionette.Controller.extend({
         jobnew: function () {
             $.when(LaaS.request('job:new'), LaaS.request('scenario:entities'), LaaS.request('file:entities'))
@@ -319,38 +293,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                     LaaS.mainRegion.show(new LaaS.Job.JobView({model: job, scenarioList: scenario.scenarios, fileList: file.files}));
                     //LaaS.Home.showViewFrame(new LaaS.Job.JobView({model: job, scenarioList: scenario.scenarios, fileList: file.files}));
                 });
-        },/*
-        showJob: function (id) {
-            $.when(LaaS.request('job:entity', {'id':id}), LaaS.request('scenario:entities'), LaaS.request('file:entities'))
-                .done(function(jobModel, scenarioList, fileList){
-                var scenarioModel = new LaaS.Entities.ScenarioModel();
-                scenarioModel.url = jobModel.attributes._links.scenarios.href;
-                scenarioModel.fetch({
-                    success: function(model, response) {
-                        var selectedScenarios = response._embedded.scenarios;
-                        var fileModel = new LaaS.Entities.FileModel();
-                        fileModel.url = jobModel.attributes._links.files.href;
-                        fileModel.fetch({
-                            success: function(model, response) {
-                                var selectedFiles = [];
-                                if (response._embedded != undefined && response._embedded != null) {
-                                    selectedFiles = response._embedded.files;
-                                }
-                                var view = new LaaS.Job.JobView({model:jobModel, job:jobModel.attributes, scenarioList:scenarioList.scenarios,
-                                    fileList:fileList.files, selectedScenarios:selectedScenarios, files:selectedFiles});
-                                LaaS.mainRegion.show(view);
-                            },
-                            error: function(err) {
-                                console.log(err);
-                            }
-                        })
-                    },
-                    error: function(err) {
-                        console.log(err);
-                    }
-                })
-            });
-        },*/
+        },
         showJob: function (id) {
             $.when(LaaS.request('job:entity', {'id':id}), LaaS.request('scenario:entities'), LaaS.request('file:entities'))
                 .done(function(jobModel, scenarioList, fileList){
@@ -371,14 +314,6 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 var view = new JobListView(data);
                 LaaS.mainRegion.show(view);
             });
-        },
-        showJobResult: function(job_running_id){
-            $.when(LaaS.request('jobResult:entity',job_running_id))
-                .done(function (jobRunningResult) {
-                    var jobResultView = new JobResultView(jobRunningResult);
-                    LaaS.mainRegion.show(jobResultView);
-                });
-            LaaS.navigate('/jobResults/'+job_running_id);
         }
     });
 
@@ -388,8 +323,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             appRoutes: {
                 'jobnew(/)': 'jobnew',
                 'jobs(/)': 'showJobs',
-                'jobs/:id(/)': 'showJob',
-                'jobResults/:id(/)': 'showJobResult'
+                'jobs/:id(/)': 'showJob'
             },
             controller: new JobController()
         });
