@@ -19,14 +19,33 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
 
     File.FileSelectView = Marionette.ItemView.extend({
         initialize: function(options) {
-            this.files = options.files;
+            this.files = options.data.files;
+            this.paging = options.data.page;
             this.job = options.job;
             this.jobmodel = options.jobmodel;
         },
-        template : function(data) {
-            var template = JST['app/handlebars/file/select'];
-            var html = template(data);
-            return html;
+        template : JST['app/handlebars/file/layout'],
+        onRender:function(){
+            var template = JST[baseTemplatePath + '/select'];
+            var html = template({files: this.files});
+            this.$('#content').html(html);
+            if(this.paging.number + 1 <= this.paging.totalPages){
+                this.$('#paging').twbsPagination({
+                    totalPages: this.paging.totalPages,
+                    startPage: this.paging.number + 1,
+                    visiblePages: 6,
+                    first: '<<',
+                    prev: '<',
+                    next: '>',
+                    last: '>>',
+                    onPageClick: function (event, page) {
+                        $.when(LaaS.request('myFiles:entities',{page:page-1})).done(function (data) {
+                            var html = template({files: data.files});
+                            $('#content').html(html);
+                        });
+                    }
+                })
+            }
         },
         serializeData : function() {
             if (this.job.files == undefined) {
@@ -49,7 +68,7 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
             'click #select_file':'selectFile',
             'click #select_file_cancel':'cancelSelect'
         },
-        selectFile: function() {
+            selectFile: function() {
             var selectFiles = [];
             for (var i=0; i<this.files.length; i++) {
                 var fileid = this.files[i].id;
@@ -86,6 +105,7 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
         },
         template : JST['app/handlebars/file/layout'],
         onRender:function(){
+            var that = this;
             var template = JST[baseTemplatePath + '/mylist'];
             var html = template({files: this.files});
             this.$('#content').html(html);
@@ -99,9 +119,9 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
                     next: '>',
                     last: '>>',
                     onPageClick: function (event, page) {
-                        var template = JST[baseTemplatePath + '/mylist'];
                         $.when(LaaS.request('myFiles:entities',{page:page-1})).done(function (data) {
                             var html = template({files: data.files});
+                            that.files = data.files;
                             $('#content').html(html);
                         });
                     }
@@ -140,7 +160,7 @@ LaaS.module('File', function(File, LaaS, Backbone, Marionette) {
                 data: JSON.stringify(selectFiles),
                 success: function(data){
                     $.when(LaaS.request('myFiles:entities')).done(function(data){
-                        var view = new LaaS.File.MyFileView({files:data.files});
+                        var view = new LaaS.File.MyFileView(data);
                         LaaS.mainRegion.show(view);
                     });
                 },

@@ -244,7 +244,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 thisjob.selectedname = thisjob.selectedScenarios[0].name;
             }
             $.when(LaaS.request('myFiles:entities')).done(function(data) {
-                var fileSelectView = new LaaS.File.FileSelectView({job:thisjob, files:data.files, jobmodel:that.model});
+                var fileSelectView = new LaaS.File.FileSelectView({job:thisjob, data:data, jobmodel:that.model});
                 LaaS.mainRegion.show(fileSelectView);
                 if (thisjob.id == undefined) {
                     LaaS.navigate('/jobnew/fileselect');
