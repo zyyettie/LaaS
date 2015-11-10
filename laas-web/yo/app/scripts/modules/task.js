@@ -59,11 +59,11 @@ LaaS.module('Task', function(Task, LaaS, Backbone, Marionette) {
             $.when(LaaS.request('task:entity', {'id':id}), LaaS.request('product:entities'), LaaS.request('fileType:entities'))
                 .done(function(taskModel, productList, fileTypeList){
                 $.when(LaaS.request('parameterDefine:entitiesByUrl', {'url':taskModel.attributes._links.parameterDefines.href}),
-                    LaaS.request('product:entitiesByUrl', {'url':taskModel.attributes._links.product.href}),
+                    LaaS.request('product:entityByUrl', {'url':taskModel.attributes._links.product.href}),
                     LaaS.request('fileType:entitiesByUrl', {'url':taskModel.attributes._links.fileType.href}))
                     .done(function(relatedParameterDefines, selectedProduct, selectedFileType) {
                     var view = new TaskView({model:taskModel, parameters:relatedParameterDefines.parameterDefines,
-                        productList:productList.products, fileTypeList:fileTypeList.fileTypes, selectedProduct: selectedProduct.products,
+                        productList:productList.products, fileTypeList:fileTypeList.fileTypes, selectedProduct: selectedProduct.product,
                         selectedFileType:selectedFileType.fileTypes});
                     LaaS.mainRegion.show(view);
                 });

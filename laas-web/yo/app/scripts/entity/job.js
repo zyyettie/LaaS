@@ -36,6 +36,28 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
         return jobs.promise();
     });
 
+    LaaS.reqres.setHandler('job:entitiesByUrl', function(options) {
+        var options = options || {url:baseUrl};
+        var url = options.url || baseUrl;
+        var jobs = $.Deferred();
+        $.getJSON(url).done(function(data) {
+            var list = data._embedded ? data._embedded.jobs : [];
+            jobs.resolve({jobs:list});
+        });
+        return jobs.promise();
+    });
+
+    LaaS.reqres.setHandler('job:entityByUrl', function(options) {
+        var options = options || {url:baseUrl};
+        var url = options.url || baseUrl;
+        var job = $.Deferred();
+        $.getJSON(url).done(function(data) {
+            var data = data ? data : {};
+            job.resolve(data);
+        });
+        return job.promise();
+    });
+
     LaaS.reqres.setHandler('job:entity', function(options) {
         var job = new JobModel(options);
         var defer = $.Deferred();

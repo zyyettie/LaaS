@@ -1,0 +1,24 @@
+.ui.grid
+    .ui.centered.fourteen.wide.column
+        table.ui.striped.table
+            thead
+                tr
+                    th ID
+                    th Job Name
+                    th Status
+                    th User
+                    th Execute Date
+                    th Action
+            tbody
+                |{{#each jobRunnings}}
+                tr
+                    td {{id}}
+                    td {{jobName}}
+                    td {{status}}
+                    td {{user}}
+                    td {{runningTime}}
+                    td
+                        button.ui.teal.button.jobRunning-show(id="{{id}}")(data-id="{{id}}") Detail
+                        button.ui.teal.button.jobRunning-rerun(id="{{id}}")(data-id="{{id}}") Re-Run
+                |{{/each}}
+

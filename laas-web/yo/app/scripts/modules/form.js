@@ -5,7 +5,7 @@ LaaS.module('Form', function(Form, LaaS, Backbone, Marionette) {
         return (value && target_value && value.toLowerCase() == target_value.toLowerCase()) ? "selected='selected'" : "";
     };
 
-    Form.generateParameterSubForm = function(parameterDefines, parameters) {
+    Form.generateParameterSubForm = function(parameterDefines, parameters, readonly) {
         var subHtml = "";
         var lineContained = 2;
         var elementInLine = 0;
@@ -16,7 +16,7 @@ LaaS.module('Form', function(Form, LaaS, Backbone, Marionette) {
 
             if (elementInLine < lineContained) {
                 subHtml += '<div class="field">';
-                subHtml += getSubFormField(parameterDefines[i], parameters);
+                subHtml += getSubFormField(parameterDefines[i], parameters, readonly);
                 subHtml += '</div>';
                 if (parameterDefines[i]["lineOccupied"]  || (parameterDefines[i+1] && parameterDefines[i+1]["lineOccupied"])) {
                     elementInLine = lineContained;
@@ -40,7 +40,7 @@ LaaS.module('Form', function(Form, LaaS, Backbone, Marionette) {
             if (parameterDefines[i]["type"] == "time") {
                 var controlId = getParameterControlId(parameterDefines[i]);
                 $("#"+controlId).datetimepicker({
-                    format:"y/m/d H:i"
+                    format:"Y/m/d H:i"
                 });
             }
         }
@@ -50,7 +50,7 @@ LaaS.module('Form', function(Form, LaaS, Backbone, Marionette) {
         return "Parameter_" + parameterDefine["name"];
     };
 
-    var getSubFormField = function(parameterDefine, parameters) {
+    var getSubFormField = function(parameterDefine, parameters, readonly) {
         var fieldHtml = "";
         fieldHtml += '<label>'+parameterDefine["displayInfo"]+'</label>';
         var value = parameters[parameterDefine["name"]] || parameterDefine["defaultValue"] || '';
@@ -58,15 +58,16 @@ LaaS.module('Form', function(Form, LaaS, Backbone, Marionette) {
         switch(parameterDefine.type) {
             case "time":
                 fieldHtml += '<input id="' + controlId + '" type="text" name="'
-                    +parameterDefine["name"]+'" value="'+ value +'"/>';
+                    +parameterDefine["name"]+'" value="'+ value +'" ' + (readonly ? 'readonly="true"' : '') + '/>';
                 break;
             case "text":
                 fieldHtml += '<input id="' + controlId + '" type="text" name="'+parameterDefine["name"]
                     +'" placeholder="'+(parameterDefine["defaultValue"] || '')
-                    +'" value="' + value +'"/>';
+                    +'" value="' + value +'" ' + (readonly ? 'readonly="true"' : '') + '/>';
                 break;
             case "dropdown":
-                fieldHtml += '<select id="' + controlId + '" name="'+parameterDefine["name"]+'", class="ui dropdown">';
+                fieldHtml += '<select id="' + controlId + '" name="'+parameterDefine["name"]+'", class="ui dropdown" '
+                    + (readonly ? 'disabled="disabled"' : '') +'>';
                 var valueList = parameterDefine["valueList"] ? parameterDefine["valueList"].split("|") : [];
                 var displayList = parameterDefine["displayList"] ? parameterDefine["displayList"].split("|") : [];
                 for (var i=0; i<valueList.length; i++) {
