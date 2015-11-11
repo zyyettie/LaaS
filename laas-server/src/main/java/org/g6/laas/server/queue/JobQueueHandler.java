@@ -134,7 +134,7 @@ public class JobQueueHandler implements InitializingBean {
     private void makeJobRunningNotifiable(JobRunning jobRunning) {
         Job job = jobRunning.getJob();
         jobRunning.addUser(jobRunning.getCreatedBy());
-        String summary = job.getId() + " " + job.getName() + " <a.class=\"jobRunning\" href=\"/jobRunnings/" + jobRunning.getId() + "/result\">Running Result</a>";
+        String summary = job.getId() + " " + job.getName() + " <a class=\"link_handler\" href=\"/jobRunnings/" + jobRunning.getId() + "/result\">Running Result</a>";
         jobRunning.setSummary(summary);
 
     }
