@@ -1,6 +1,7 @@
 LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
     'use strict';
     var appContext = LaaS.Util.Constants.APPCONTEXT;
+    var apiVersion = LaaS.Util.Constants.APIVERSION;
     Job.JobView = Marionette.ItemView.extend({
         initialize: function (options) {
             if (this.model == undefined) {
@@ -29,16 +30,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
 
             var json = data.job.parameters ? JSON.parse(data.job.parameters) : {};
             $.extend(data.job, json);
-            /*
-            data.job.N = json["N"];
-            data.job.order = json["order"];
-            data.job.desc = json["order"] == "desc" ? "selected='selected'" : "";
-            data.job.asc = json["order"] == "asc" ? "selected='selected'" : "";
-            data.job.category = json["category"];
-            data.job.user = json['user'];
-            data.job.startTime = json['startTime'];
-            data.job.endTime = json['endTime'];
-            */
+
             if (data.selectedScenarios != undefined && data.selectedScenarios.length > 0 && data.selectedScenarios.length > 0) {
                 for (var i = 0; i < data.scenarioList.length; i++) {
                     if (data.scenarioList[i].id == data.selectedScenarios[0].id) {
@@ -73,20 +65,6 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                         break;
                     }
                 }
-                /*
-                var render;
-                var subhtml;
-                if (this.options[this.selectedIndex].innerHTML == 'Scenario - Top N') {
-                    render = JST['app/handlebars/job/topN'];
-                    subhtml = render({N: 50, order: 'desc'});
-                    subhtml = subhtml.replace("selected=\"desc\"", "selected='selected'").replace("selected=\"asc\"", "");
-                    subhtml = subhtml.replace("selected=\"DBQUERY\"", "selected='selected'").replace("selected=\"SCRIPTTRACE\"", "");
-                    $('#parameters').append(subhtml);
-                } else if (this.options[this.selectedIndex].innerHTML == 'Scenario - Login Time') {
-                    render = JST['app/handlebars/job/loginTime'];
-                    subhtml = render({});
-                    $('#parameters').append(subhtml);
-                }   */
             });
             this.$("button").on("click", function(){
                 console.log("click detail...");
@@ -114,22 +92,6 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
 
             var json = data.job.parameters ? JSON.parse(data.job.parameters) : {};
             var subHtml = LaaS.Form.generateParameterSubForm(data.selectedParameterDefines, json);
-            /*
-            var render;
-            var subhtml = "";
-            if (data.job.selectedname == 'Scenario - Top N')  {
-                render = JST['app/handlebars/job/topN'];
-                subhtml = render(data.job);
-                var desc =  LaaS.Form.getDropDownSelected(data.job.order, "DESC");
-                var asc =  LaaS.Form.getDropDownSelected(data.job.order, "ASC");
-                subhtml = subhtml.replace("selected=\"desc\"", desc).replace("selected=\"asc\"", asc);
-                var dbquery = LaaS.Form.getDropDownSelected(data.job.category, "DBQUERY");
-                var scripttrace = LaaS.Form.getDropDownSelected(data.job.category, "SCRIPTTRACE");
-                subhtml = subhtml.replace("selected=\"DBQUERY\"",dbquery).replace("selected=\"SCRIPTTRACE\"", scripttrace);
-            } else if (data.job.selectedname == 'Scenario - Login Time') {
-                render = JST['app/handlebars/job/loginTime'];
-                subhtml = render(data.job);
-            }  */
 
             html = html.replace('<div id="parameters"></div>', '<div id="parameters">'+subHtml+'</div>');
 
@@ -155,7 +117,6 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             strJson += "}";
 
             return strJson;
-            //return JSON.stringify({N: json['N'], order: json['order'], category: json['category'], user: json['user'], startTime: json['startTime'], endTime: json['endTime']});
         },
         saveJob: function () {
             var that = this;
@@ -164,18 +125,17 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 toastr.error('Please input name and select scenario.');
                 return;
             }
-            //json.parameters = JSON.stringify({N: json['N'], order: json['order']});
+
             json.parameters = this.getParameter(json, that.job.selectedParameterDefines);
-            //json.parameters = "{N:"+json['N']+", order:"+json['order']+"}";
+
             json.scenarios = [];
-            json.scenarios.push(appContext+"/api/v1/scenarios/" + json.selectedScenario);
+            json.scenarios.push(appContext+apiVersion+"/scenarios/" + json.selectedScenario);
 
             json.files = [];
             for (var i=0; i<this.job.files.length; i++) {
-                json.files.push(appContext+"/api/v1/files/"+this.job.files[i].id);
+                json.files.push(appContext+apiVersion+"/files/"+this.job.files[i].id);
             }
 
-            //this.model.url='/jobs/'+json.id;
             this.model.save(json, {patch: true, success: function () {
                 toastr.info('Save Job successfully.');
                 that.job.id = that.model.id;
@@ -194,14 +154,13 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 toastr.error('Please input name and select scenario.');
                 return;
             }
-            //json.parameters = JSON.stringify({N: json['N'], order: json['order'], category: json['category']});
             json.parameters = this.getParameter(json, that.job.selectedParameterDefines);
             json.scenarios = [];
-            json.scenarios.push(appContext+"/api/v1/scenarios/" + json.selectedScenario);
+            json.scenarios.push(appContext+apiVersion+"/scenarios/" + json.selectedScenario);
 
             json.files = [];
             for (var i=0; i<this.job.files.length; i++) {
-                json.files.push(appContext+"/api/v1/files/"+this.job.files[i].id);
+                json.files.push(appContext+apiVersion+"/files/"+this.job.files[i].id);
             }
 
             this.model.save(json, {patch: true, success: function (response) {
@@ -232,10 +191,8 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             var thisjob = this.job;
             var that = this;
             var json = Backbone.Syphon.serialize(this);
-            //json.parameters = JSON.stringify({N: json['N'], order: json['order']});
             json.parameters = this.getParameter(json, that.job.selectedParameterDefines);
             $.extend(thisjob, json);
-            //thisjob = $.extend({}, thisjob, json);
             if (thisjob.selectedScenario != undefined && thisjob.selectedScenario.length > 0
                 && (thisjob.selectedScenarios == undefined || thisjob.selectedScenarios.length<=0 || thisjob.scenarioList[thisjob.selectedScenario].id != thisjob.selectedScenarios[0].id)) {
                 thisjob.selectedScenarios = [];
@@ -323,7 +280,8 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             appRoutes: {
                 'jobnew(/)': 'jobnew',
                 'jobs(/)': 'showJobs',
-                'jobs/:id(/)': 'showJob'
+                'jobs/:id(/)': 'showJob',
+                'jobs/:id/edit(/)': 'showJob'
             },
             controller: new JobController()
         });

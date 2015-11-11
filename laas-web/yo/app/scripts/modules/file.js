@@ -180,7 +180,7 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
             }
         },
         uploadMyFiles: function () {
-            $.when(LaaS.request('fileTypes:entities')).done(function (data) {
+            $.when(LaaS.request('fileType:entities')).done(function (data) {
                 LaaS.mainRegion.show(new LaaS.Views.FileUploader({'url': '/files/me', 'fileTypes': data.fileTypes}));
                 LaaS.navigate('/files/me/upload');
             });

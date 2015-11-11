@@ -1,7 +1,7 @@
 LaaS.module('Entities', function(Entities,LaaS, Backbone, Marionette) {
     'use strict';
 
-    var baseUrl = LaaS.Util.Constants.APPCONTEXT+'/api/v1/parameterDefines';
+    var baseUrl = LaaS.Util.Constants.APPCONTEXT+LaaS.Util.Constants.APIVERSION+'/parameterDefines';
 
     Entities.ParameterDefineModel = Backbone.Model.extend({
         url: function(){

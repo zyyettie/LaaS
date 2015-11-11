@@ -11,6 +11,7 @@ LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
         onRender: function () {
             this.total = 0;
             var that = this;
+            this.$('select').dropdown();
             this.$('#progress').hide();
             this.$('#attaching').on('click', function () {
                 $('form').append('<input type="file" multiple="multiple" name="files[]" style="display:none;">');

@@ -1,6 +1,9 @@
 LaaS.module('JobRunning', function(JobRunning, LaaS, Backbone, Marionette) {
     'use strict';
 
+    var appContext = LaaS.Util.Constants.APPCONTEXT;
+    var controllers = LaaS.Util.Constants.CONTROLLERS;
+
     var JobRunningView = Marionette.ItemView.extend({
         initialize : function(options){
             this.jobRunning = options.model.attributes;
@@ -36,21 +39,34 @@ LaaS.module('JobRunning', function(JobRunning, LaaS, Backbone, Marionette) {
             window.history.back();
         },
         viewResult: function() {
-
-        },
-        rerunJobRunning: function() {
-            var that = this;
-            if(this.sync === true){
-                $.when(LaaS.request('jobResult:entity',{id:this.id}))
+            if(this.jobRunning.status == "SUCCESS"){
+                $.when(LaaS.request('jobResult:entity',{id:this.jobRunning.id}))
                     .done(function (jobRunningResult) {
                         var jobResultView = new LaaS.JobResult.JobResultView({model:jobRunningResult, sync:true});
                         LaaS.mainRegion.show(jobResultView);
                     });
-
             }else{
                 var jobResultView = new LaaS.JobResult.JobResultView({sync:false});
                 LaaS.mainRegion.show(jobResultView);
             }
+            LaaS.navigate('/jobResults/'+this.jobRunning.id);
+        },
+        rerunJobRunning: function() {
+            $.getJSON(appContext+controllers+"/jobRunnings/" + this.jobRunning.id).done(function (json) {
+                var sync = json.is_syn;
+                if(sync === true){
+                    $.when(LaaS.request('jobResult:entity',{id:json.job_running_id}))
+                        .done(function (jobRunningResult) {
+                            var jobResultView = new LaaS.JobResult.JobResultView({model:jobRunningResult,sync:true});
+                            LaaS.mainRegion.show(jobResultView);
+                        });
+
+                }else{
+                    var jobResultView = new LaaS.JobResult.JobResultView({sync:false});
+                    LaaS.mainRegion.show(jobResultView);
+                }
+                LaaS.navigate('/jobResults/'+json.job_running_id);
+            });
         }
     });
 

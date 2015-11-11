@@ -1,7 +1,7 @@
 LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
   'use strict';
 
-  var baseUrl = LaaS.Util.Constants.APPCONTEXT + '/api/v1/notifications';
+  var baseUrl = LaaS.Util.Constants.APPCONTEXT +LaaS.Util.Constants.APIVERSION+'/notifications';
 
   LaaS.reqres.setHandler('notification:entities:me', function(options) {
     var options = options || {page:0,size:10,projection:'notificationsummary'};

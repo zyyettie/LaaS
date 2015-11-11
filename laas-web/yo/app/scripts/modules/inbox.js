@@ -2,10 +2,11 @@ LaaS.module('Inbox', function (Inbox, LaaS, Backbone, Marionette) {
   'use strict';
 
   var appContext = LaaS.Util.Constants.APPCONTEXT;
+  var apiVersion = LaaS.Util.Constants.APIVERSION;
 
   var baseTemplatePath = 'app/handlebars/notification';
   LaaS.Inbox.queryTask = new LaaS.Util.ScheduledTask(function () {
-    $.get(appContext + '/api/v1/notifications/search/findMyUnreadCount', function (data) {
+    $.get(appContext + apiVersion+'/notifications/search/findMyUnreadCount', function (data) {
       $('#inboxMenuItem .label').text(data);
     })
   }, 30000);
