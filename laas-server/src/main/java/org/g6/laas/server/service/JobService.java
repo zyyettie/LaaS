@@ -82,7 +82,7 @@ public class JobService {
 
     public String genReport(TaskRunningResult taskRunningResult, Task task, boolean isReport) {
         if(!isReport){
-           return "{\"task_running_result\":\""+taskRunningResult.getResult().toString() +"\"}";
+           return taskRunningResult.getResult().toString();
         }
 
         ReportModel model = new ReportModel();
