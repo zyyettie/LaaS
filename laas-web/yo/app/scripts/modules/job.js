@@ -30,16 +30,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
 
             var json = data.job.parameters ? JSON.parse(data.job.parameters) : {};
             $.extend(data.job, json);
-            /*
-            data.job.N = json["N"];
-            data.job.order = json["order"];
-            data.job.desc = json["order"] == "desc" ? "selected='selected'" : "";
-            data.job.asc = json["order"] == "asc" ? "selected='selected'" : "";
-            data.job.category = json["category"];
-            data.job.user = json['user'];
-            data.job.startTime = json['startTime'];
-            data.job.endTime = json['endTime'];
-            */
+
             if (data.selectedScenarios != undefined && data.selectedScenarios.length > 0 && data.selectedScenarios.length > 0) {
                 for (var i = 0; i < data.scenarioList.length; i++) {
                     if (data.scenarioList[i].id == data.selectedScenarios[0].id) {
@@ -289,7 +280,8 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             appRoutes: {
                 'jobnew(/)': 'jobnew',
                 'jobs(/)': 'showJobs',
-                'jobs/:id(/)': 'showJob'
+                'jobs/:id(/)': 'showJob',
+                'jobs/:id/edit(/)': 'showJob'
             },
             controller: new JobController()
         });
