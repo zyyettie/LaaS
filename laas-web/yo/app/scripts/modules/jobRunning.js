@@ -36,7 +36,7 @@ LaaS.module('JobRunning', function(JobRunning, LaaS, Backbone, Marionette) {
             window.history.back();
         },
         viewResult: function() {
-
+            LaaS.navigate('/jobResults/'+this.jobRunning.id, true);
         },
         rerunJobRunning: function() {
             var that = this;
@@ -46,7 +46,6 @@ LaaS.module('JobRunning', function(JobRunning, LaaS, Backbone, Marionette) {
                         var jobResultView = new LaaS.JobResult.JobResultView({model:jobRunningResult, sync:true});
                         LaaS.mainRegion.show(jobResultView);
                     });
-
             }else{
                 var jobResultView = new LaaS.JobResult.JobResultView({sync:false});
                 LaaS.mainRegion.show(jobResultView);

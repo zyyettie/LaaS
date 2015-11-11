@@ -1,7 +1,7 @@
 LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
     'use strict';
 
-    var baseUrl = LaaS.Util.Constants.APPCONTEXT+'/api/v1/scenarios';
+    var baseUrl = LaaS.Util.Constants.APPCONTEXT+LaaS.Util.Constants.APIVERSION+'/scenarios';
 
     Entities.ScenarioModel = Backbone.Model.extend({
         url: function(){
