@@ -4,11 +4,13 @@
             form(action="/upload",method="post",enctype="multipart/form-data")
                 .ui.grid
                     .row
-                        .four.wide.column
+                        .five.wide.column
                                 .field
                                     label File Type
+                                .field
                                     select.ui.dropdown(id="fileType", name="fileType")
-                                        option(value="aaaaa") aaaaaaaaaa
+                                        option(value="")
+                                            |Select File Type
                                         |{{#each fileTypes}}
                                         option(value="{{id}}") {{type}}
                                         |{{/each}}
