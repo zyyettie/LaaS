@@ -1,43 +1,36 @@
 .ui.centered.grid
     .twelve.wide.column
         .ui.green.segment(style="margin-top:5px;padding:20px 40px;")
-            form(action="/upload",method="post",enctype="multipart/form-data")
-                .ui.grid
-                    .row
-                        .five.wide.column
-                                .field
-                                    label File Type
-                                .field
-                                    select.ui.dropdown(id="fileType", name="fileType")
-                                        option(value="")
-                                            |Select File Type
-                                        |{{#each fileTypes}}
-                                        option(value="{{id}}") {{type}}
-                                        |{{/each}}
-                    .row
-                        .four.wide.column
-                            .field
-                                label Job Description
-                                textarea(type="text",rows="3",name="desc",placeholder="description") {{description}}
-                    .row
-                        .four.wide.column
-                            .ui.teal.fluid.left.labeled.icon.button#attaching Attaching Files&nbsp;&nbsp;....
-                                i.attach.icon
-                        .four.wide.column
-                            .ui.teal.fluid.left.labeled.icon.button#upload Upload
-                                i.cloud.upload.icon
-                        .four.wide.column
-                            .ui.teal.fluid.left.labeled.icon.button#upload_cancel Cancel
-                                i.reply.icon
-                    .row
-                        .eight.wide.column
+            h2#title New File
+            form.ui.form(action="/upload",method="post",enctype="multipart/form-data")
+                .two.fields
+                    .field
+                        label File Type
+                        select.ui.dropdown(id="fileType", name="fileType")
+                            option(value="")
+                                |Select File Type
+                            |{{#each fileTypes}}
+                            option(value="{{id}}") {{type}}
+                            |{{/each}}
 
-                    .row
-                        .eight.wide.column
-                            .ui.divided.list
-                    .row
-                        .eight.wide.column
-                            #progress.ui.teal.large.progress(style="margin-top:20px;",data-percent="0")
-                                .bar
-                                .label uploading files
+                .field
+                    label Job Description
+                    textarea(type="text",rows="3",name="desc",placeholder="description") {{description}}
+                four.fields
+                    .field
+                        .ui.teal.fluid.left.labeled.icon.button#attaching Attaching Files&nbsp;&nbsp;....
+                            i.attach.icon
+                    .field
 
+                    .field
+                        .ui.teal.fluid.left.labeled.icon.button#upload Upload
+                            i.cloud.upload.icon
+                    .field
+                    .field
+                        .ui.teal.fluid.left.labeled.icon.button#upload_cancel Cancel
+                            i.reply.icon
+                .field
+                    .ui.divided.list
+                .field
+                    #progress.ui.teal.large.progress(style="margin-top:20px;",data-percent="0")
+                        .bar
