@@ -1,5 +1,6 @@
 package org.g6.laas.server.service;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.core.engine.AnalysisEngine;
@@ -53,7 +54,7 @@ public class JobService {
         return jobRepo.findOne(id);
     }
 
-    public JobRunning findJobRunningBy(Long id){
+    public JobRunning findJobRunningBy(Long id) {
         return jobRunningRepo.findOne(id);
     }
 
@@ -75,11 +76,15 @@ public class JobService {
         return taskRunningRepo.save(taskRunning);
     }
 
-    public List<JobRunning> findUnFinishedJobInQueue(String syn, String status){
+    public List<JobRunning> findUnFinishedJobInQueue(String syn, String status) {
         return jobRunningRepo.findUnFinishedJobInQueue(syn, status);
     }
 
-    public String genReport(TaskRunningResult taskRunningResult, Task task) {
+    public String genReport(TaskRunningResult taskRunningResult, Task task, boolean isReport) {
+        if(!isReport){
+           return taskRunningResult.getResult().toString();
+        }
+
         ReportModel model = new ReportModel();
         model.setAttribute("task_running_result", taskRunningResult.getResult());
         ReportBuilder builder = new ReportBuilder();
@@ -116,26 +121,40 @@ public class JobService {
      */
     public JobRunningResult runTasks(JobRunning jobRunning) {
         Job job = jobRunning.getJob();
+        JobRunningResult jobRunningResult = new JobRunningResult();
         List<String> strFiles = getLogFilesFromJob(jobRunning);
+        boolean isValidFile = true;
+        for(String file : strFiles){
+            if(!FileUtil.isFile(file)){
+                jobRunningResult.getRootCauses().add(file + " isn't a valid file");
+                jobRunningResult.setSuccess(false);
+                isValidFile = false;
+            }
+        }
+
+        if(!isValidFile)
+            return jobRunningResult;
+
         Map<String, String> paramMap = JSONUtil.fromJson(job.getParameters());
 
         Collection<TaskRunning> taskRunnings = jobRunning.getTaskRunnings();
         QueueJob queueJob = new QueueJob();
         int failedTasks = 0, asynCount = 0;
         boolean isSyn = true;
-        JobRunningResult jobRunningResult = new JobRunningResult();
 
         for (Iterator<TaskRunning> ite = taskRunnings.iterator(); ite.hasNext(); ) {
             TaskRunning taskRunning = ite.next();
             Task task = taskRunning.getTask();
             TaskRunningResult taskRunningResult = null;
+            ReflectionObjWrapper taskWrapper = null;
             try {
-                Object taskObj = getTaskObj(task, paramMap, strFiles);
+                taskWrapper = getTaskObj(task, paramMap, strFiles);
+
                 //taskObj is the instance of Task class which is used to run
                 //task is the entity which contains different data loaded from database.
                 log.debug("Start running task named " + task.getName());
                 long timeStart = System.currentTimeMillis();
-                taskRunningResult = runTask(taskObj, task);
+                taskRunningResult = runTask(taskWrapper, task);
                 long duration = System.currentTimeMillis() - timeStart;
                 log.debug("Finish running task named " + task.getName() + ". The duration is " + duration / 1000 + "s");
             } catch (Exception e) {
@@ -147,7 +166,7 @@ public class JobService {
             }
             if (taskRunningResult != null) {
                 if (!taskRunningResult.isTimeout()) {
-                    String report = genReport(taskRunningResult, task);
+                    String report = genReport(taskRunningResult, task, taskWrapper != null ? taskWrapper.isReport() : true);
                     FileInfo resultFile = writeReportToFile(report);
                     handleResultFile(taskRunning, resultFile);
 
@@ -158,7 +177,7 @@ public class JobService {
                         jobRunning.setSyn("N");
                         saveJobRunning(jobRunning);
                     }
-                    queueJob.addQueueTask(taskRunning, new QueueTask(taskRunningResult.getFuture()));
+                    queueJob.addQueueTask(taskRunning, new QueueTask(taskRunningResult.getFuture(), taskRunningResult.isReport()));
                     queueJob.setJobRunning(jobRunning);
                     queue.addJob(queueJob);
                     isSyn = false;
@@ -166,7 +185,7 @@ public class JobService {
             }
         }
 
-        if(!jobRunningResult.getRootCauses().isEmpty()){
+        if (!jobRunningResult.getRootCauses().isEmpty()) {
             jobRunningResult.setSuccess(false);
             return jobRunningResult;
         }
@@ -202,7 +221,7 @@ public class JobService {
      * @return
      * @throws Exception
      */
-    private Object getTaskObj(Task task, Map<String, String> paramMap, List<String> strFiles) throws Exception {
+    private ReflectionObjWrapper getTaskObj(Task task, Map<String, String> paramMap, List<String> strFiles) throws Exception {
         Class taskClass = Class.forName(task.getClassName());
         Object taskObj = taskClass.newInstance();
         Field[] fields = taskClass.getDeclaredFields();
@@ -227,17 +246,22 @@ public class JobService {
             }
         }
 
-        return taskObj;
+        Method m2 = taskObj.getClass().getDeclaredMethod("isReport");
+        boolean isReport = (Boolean)m2.invoke(taskObj);
+
+        return new ReflectionObjWrapper(isReport, taskObj);
     }
 
-    private TaskRunningResult runTask(Object taskObj, Task task) throws ExecutionException, InterruptedException {
-        Future future = analysisEngine.submit((AnalysisTask) taskObj);
+    private TaskRunningResult runTask(ReflectionObjWrapper taskWrapper, Task task) throws ExecutionException, InterruptedException {
+        Future future = analysisEngine.submit((AnalysisTask) taskWrapper.getObj());
         TaskRunningResult result = new TaskRunningResult();
+        result.setReport(taskWrapper.isReport());
 
         Object obj;
         try {
             obj = future.get(20000, TimeUnit.MILLISECONDS);
             result.setResult(obj);
+            //throw new TimeoutException("aaa");
         } catch (TimeoutException te) {
             log.info("The task named " + task.getName() + "is going in asynchronous running mode");
             result.setFuture(future);
@@ -263,6 +287,13 @@ public class JobService {
         boolean syn;
         boolean success;
         List<String> rootCauses = new ArrayList<>();
+    }
+
+    @Data
+    @AllArgsConstructor
+    public class ReflectionObjWrapper {
+        boolean report;
+        Object obj;
     }
 
 }

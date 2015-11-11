@@ -74,7 +74,7 @@ public class JobQueueHandler implements InitializingBean {
                 Object object = queueTask.getRunningResult();
                 TaskRunningResult result = new TaskRunningResult();
                 result.setResult(object);
-                String report = jobService.genReport(result, taskRunning.getTask());
+                String report = jobService.genReport(result, taskRunning.getTask(), queueTask.isReport());
                 FileInfo resultFile = jobService.writeReportToFile(report);
 
                 jobService.handleResultFile(taskRunning, resultFile);
@@ -134,7 +134,7 @@ public class JobQueueHandler implements InitializingBean {
     private void makeJobRunningNotifiable(JobRunning jobRunning) {
         Job job = jobRunning.getJob();
         jobRunning.addUser(jobRunning.getCreatedBy());
-        String summary = job.getId() + " " + job.getName() + " <a.class=\"jobRunning\" href=\"/jobRunnings/" + jobRunning.getId() + "/result\">Running Result</a>";
+        String summary = job.getId() + " " + job.getName() + " <a class=\"link_handler\" href=\"/jobRunnings/" + jobRunning.getId() + "/result\">Running Result</a>";
         jobRunning.setSummary(summary);
 
     }

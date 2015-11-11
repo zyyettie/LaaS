@@ -44,12 +44,15 @@ LaaS.module('JobRunning', function(JobRunning, LaaS, Backbone, Marionette) {
                     .done(function (jobRunningResult) {
                         var jobResultView = new LaaS.JobResult.JobResultView({model:jobRunningResult, sync:true});
                         LaaS.mainRegion.show(jobResultView);
+                        LaaS.navigate('/jobResults/'+this.jobRunning.id);
                     });
-            }else{
+            }else if (this.jobRunning.status == "RUNNING") {
                 var jobResultView = new LaaS.JobResult.JobResultView({sync:false});
                 LaaS.mainRegion.show(jobResultView);
+                LaaS.navigate('/jobResults/'+this.jobRunning.id);
+            }else {
+
             }
-            LaaS.navigate('/jobResults/'+this.jobRunning.id);
         },
         rerunJobRunning: function() {
             $.getJSON(appContext+controllers+"/jobRunnings/" + this.jobRunning.id).done(function (json) {
@@ -84,14 +87,54 @@ LaaS.module('JobRunning', function(JobRunning, LaaS, Backbone, Marionette) {
         },
         events:{
             'click button.jobRunning-show': "showClicked",
+            'click button.jobRunning-viewResult': 'viewResult',
             'click button.jobRunning-rerun': "rerunClicked"
         },
         showClicked: function(event){
             var jobRunningId = event.target.dataset["id"];
             LaaS.navigate('/jobHistory/'+jobRunningId, true);
         },
+        viewResult: function(event) {
+            var jobRunningId = event.target.dataset["id"];
+            var jobRunning;
+            for (var i=0; i<this.jobRunnings.length; i++) {
+                if (jobRunningId == this.jobRunnings[i].id) {
+                    jobRunning = this.jobRunnings[i];
+                    break;
+                }
+            }
+            if(jobRunning.status == "SUCCESS"){
+                $.when(LaaS.request('jobResult:entity',{id:jobRunningId}))
+                    .done(function (jobRunningResult) {
+                        var jobResultView = new LaaS.JobResult.JobResultView({model:jobRunningResult, sync:true});
+                        LaaS.mainRegion.show(jobResultView);
+                        LaaS.navigate('/jobResults/'+jobRunningId);
+                    });
+            }else if (jobRunning.status == "RUNNING") {
+                var jobResultView = new LaaS.JobResult.JobResultView({sync:false});
+                LaaS.mainRegion.show(jobResultView);
+                LaaS.navigate('/jobResults/'+jobRunningId);
+            }else {
+
+            }
+        },
         rerunClicked: function(event) {
             var jobRunningId = event.target.dataset["id"];
+            $.getJSON(appContext+controllers+"/jobRunnings/" + jobRunningId).done(function (json) {
+                var sync = json.is_syn;
+                if(sync === true){
+                    $.when(LaaS.request('jobResult:entity',{id:json.job_running_id}))
+                        .done(function (jobRunningResult) {
+                            var jobResultView = new LaaS.JobResult.JobResultView({model:jobRunningResult,sync:true});
+                            LaaS.mainRegion.show(jobResultView);
+                        });
+
+                }else{
+                    var jobResultView = new LaaS.JobResult.JobResultView({sync:false});
+                    LaaS.mainRegion.show(jobResultView);
+                }
+                LaaS.navigate('/jobResults/'+json.job_running_id);
+            });
         }
     });
 

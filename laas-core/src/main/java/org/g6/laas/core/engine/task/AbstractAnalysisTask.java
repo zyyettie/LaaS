@@ -69,6 +69,11 @@ public abstract class AbstractAnalysisTask<T> implements AnalysisTask<T> {
         return result;
     }
 
+
+    public boolean isReport(){
+        return true;
+    }
+
     public String toString() {
         if (this.name == null)
             return "Unknown";

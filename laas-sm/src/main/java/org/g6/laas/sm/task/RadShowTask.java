@@ -106,6 +106,11 @@ public class RadShowTask extends SMRTETask<String> {
         return set;
     }
 
+    @Override
+    public boolean isReport(){
+        return false;
+    }
+
     public RadShowTask() {
         this(Mode.HTML);
     }

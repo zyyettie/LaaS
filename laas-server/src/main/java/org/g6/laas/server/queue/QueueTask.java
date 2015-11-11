@@ -12,6 +12,7 @@ import java.util.concurrent.Future;
 @AllArgsConstructor
 public class QueueTask {
     private Future future;
+    private boolean report;
 
     public boolean isDone(){
         return future.isDone();
