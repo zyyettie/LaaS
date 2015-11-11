@@ -29,19 +29,20 @@ LaaS.module('JobResult', function(JobResult, LaaS, Backbone, Marionette) {
 
     var JobResultController = Marionette.Controller.extend({
         showJobResult: function(job_running_id){
-            $.when(LaaS.request('jobResult:entity',job_running_id))
+            $.when(LaaS.request('jobResult:entity',{id:job_running_id}))
                 .done(function (jobRunningResult) {
-                    var jobResultView = new LaaS.JobResult.JobResultView(jobRunningResult);
+                    var jobResultView = new LaaS.JobResult.JobResultView({model:jobRunningResult,sync:true});
                     LaaS.mainRegion.show(jobResultView);
                 });
-            LaaS.navigate('/jobResults/'+job_running_id);
+            LaaS.navigate('/jobRunnings/'+job_running_id+"/result");
         }
     });
 
     LaaS.addInitializer(function () {
         new Marionette.AppRouter({
             appRoutes: {
-                'jobResults/:id(/)': 'showJobResult'
+                'jobResults/:id(/)': 'showJobResult',
+                'jobRunnings/:id/result':'showJobResult'
             },
             controller: new JobResultController()
         });
