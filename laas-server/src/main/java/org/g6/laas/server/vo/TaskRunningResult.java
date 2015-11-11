@@ -9,4 +9,5 @@ public class TaskRunningResult {
     Future future;
     boolean isTimeout = false;
     Object result;
+    boolean report;
 }
