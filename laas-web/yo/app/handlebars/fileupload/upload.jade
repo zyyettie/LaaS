@@ -16,21 +16,19 @@
                 .field
                     label Job Description
                     textarea(type="text",rows="3",name="desc",placeholder="description") {{description}}
-                four.fields
-                    .field
-                        .ui.teal.fluid.left.labeled.icon.button#attaching Attaching Files&nbsp;&nbsp;....
-                            i.attach.icon
-                    .field
-
-                    .field
-                        .ui.teal.fluid.left.labeled.icon.button#upload Upload
-                            i.cloud.upload.icon
-                    .field
-                    .field
-                        .ui.teal.fluid.left.labeled.icon.button#upload_cancel Cancel
-                            i.reply.icon
-                .field
-                    .ui.divided.list
-                .field
-                    #progress.ui.teal.large.progress(style="margin-top:20px;",data-percent="0")
-                        .bar
+                .ui.grid(style="margin-top:2em")
+                    .five.column.row
+                        .column
+                            .ui.teal.fluid.left.labeled.icon.button#attaching Attaching Files&nbsp;&nbsp;....
+                                i.attach.icon
+                        .column
+                            .ui.teal.fluid.left.labeled.icon.button#upload Upload
+                                i.cloud.upload.icon
+                        .column
+                            .ui.teal.fluid.left.labeled.icon.button#upload_cancel Cancel
+                                i.reply.icon
+                    .row
+                        .ui.divided.list
+                    .row
+                        #progress.ui.teal.large.progress(style="margin-top:20px;",data-percent="0")
+                            .bar
