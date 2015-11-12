@@ -25,6 +25,9 @@ LaaS.module('Task', function(Task, LaaS, Backbone, Marionette) {
             data.task.selectedFileType = this.selectedFileType;
             return data;
         },
+        onRender: function() {
+            this.$('select').dropdown();
+        },
         events: {
             'click #task_save': 'saveTask',
             'click #task_cancel': 'cancelTask'

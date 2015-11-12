@@ -54,7 +54,7 @@ public class SMRadLineSetUnit extends LineSetUnit {
         StringBuilder content = new StringBuilder();
         if (radName !=null && radName.length()>0) {
             if (level > 0) {
-                content.append("<li>");
+                content.append("<li class=\"jstree-open\">");
             }
             content.append(radName).append("\n").append(prefix).append("<ul>").append("\n");
         }
