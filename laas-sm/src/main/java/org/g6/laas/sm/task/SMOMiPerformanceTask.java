@@ -79,6 +79,6 @@ public class SMOMiPerformanceTask extends SMRTETask<List<String>> {
 
     @Override
     DefaultInputFormatProvider getProvider() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getDefaultProvider(new String[]{"INTEGRATION"});
     }
 }

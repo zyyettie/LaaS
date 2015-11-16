@@ -178,7 +178,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                         var jobResultView = new LaaS.JobResult.JobResultView({sync:false});
                         LaaS.mainRegion.show(jobResultView);
                     }
-                    LaaS.navigate('/jobResults/'+json.job_running_id);
+                    LaaS.navigate('/jobRunnings/'+json.job_running_id+"/result");
                     }).fail(function(json){
                         toastr.info('Failed due to '+json);
                     });
