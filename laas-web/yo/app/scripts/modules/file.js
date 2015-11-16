@@ -227,6 +227,7 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
                 url: appContext + "/controllers/files",
                 data: JSON.stringify(this.selectFiles),
                 success: function (data) {
+                    toastr.info('Delete files successfully');
                     $.when(LaaS.request('myFiles:entities')).done(function (data) {
                         var view = new LaaS.File.MyFileView(data);
                         LaaS.mainRegion.show(view);
