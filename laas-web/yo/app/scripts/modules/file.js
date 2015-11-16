@@ -222,6 +222,10 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
 
         },
         deleteMyFiles: function () {
+            if(this.selectFiles.length == 0){
+                toastr.error('Please select files that you want to delete');
+                return;
+            }
             $.ajax({
                 type: "POST",
                 url: appContext + "/controllers/files",
