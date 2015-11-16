@@ -43,13 +43,14 @@ window.onbeforeunload = function () {
 };
 
 LaaS.TaskQueue = [];
-LaaS.scheduleTask = function (task) {
+var internalSchedultTask = LaaS.scheduleTask = function (task) {
     LaaS.TaskQueue.push(task);
     task.timeout = setTimeout(function () {
+        console.log("notification task scheduled agagin.");
         task.func();
         if (!task.isOnce) {
             LaaS.stopTask(task);
-            task.timeout = setTimeout(task.func, task.interval);
+            internalSchedultTask(task);
         }
     }, task.interval);
 };

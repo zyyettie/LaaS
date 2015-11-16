@@ -18,7 +18,7 @@ LaaS.module('Inbox', function (Inbox, LaaS, Backbone, Marionette) {
         $('#inbox .label').hide();
       }
     })
-  }, 30000);
+  }, 20000);
 
   var NotificationListView = Marionette.ItemView.extend({
     initialize: function (pagedNotifications) {
