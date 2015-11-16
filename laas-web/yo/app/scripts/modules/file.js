@@ -23,9 +23,11 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
             this.paging = options.data.page;
             this.job = options.job;
             this.jobmodel = options.jobmodel;
+            this.selectFiles = [];
         },
         template: JST['app/handlebars/file/layout'],
         onRender: function () {
+            var that = this;
             var template = JST[baseTemplatePath + '/select'];
             var html = template({files: this.files});
             this.$('#content').html(html);
@@ -40,6 +42,19 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
                     last: '>>',
                     onPageClick: function (event, page) {
                         $.when(LaaS.request('myFiles:entities', {page: page - 1})).done(function (data) {
+                            that.files = data.files;
+
+                            for (var i = 0; i < data.files.length; i++) {
+                                data.files[i].selected = false;
+                                data.files[i].checked = "";
+                                for (var j = 0; j < that.selectFiles.length; j++) {
+                                    if (data.files[i].id == that.selectFiles[j].id) {
+                                        data.files[i].selected = true;
+                                        data.files[i].checked = 'checked=""';
+                                        break;
+                                    }
+                                }
+                            }
                             var html = template({files: data.files});
                             $('#content').html(html);
                         });
@@ -66,19 +81,39 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
         },
         events: {
             'click #select_file': 'selectFile',
-            'click #select_file_cancel': 'cancelSelect'
+            'click #select_file_cancel': 'cancelSelect',
+            'click [type="checkbox"]':'clickCheckbox'
         },
-        selectFile: function () {
-            var selectFiles = [];
+        clickCheckbox: function(){
+            //here is to put all the items checked on different pages in selectFiles
             for (var i = 0; i < this.files.length; i++) {
-                var fileid = this.files[i].id;
-                if ($("#file_checkbox_" + fileid).prop("checked")) {
-                    selectFiles.push(this.files[i]);
+                var isChecked = $("#file_checkbox_" + this.files[i].id).prop("checked");
+                if (!isChecked) {
+                    //need to see if this item has been pushed to the selectFiles before, if so, remove it
+                    for (var j = 0; j < this.selectFiles.length; j++) {
+                        if (this.selectFiles[j].id == this.files[i].id) {
+                            this.selectFiles.splice(j, 1);
+                            break;
+                        }
+                    }
+                } else {
+                    //meaning the item has been selected on the page
+                    var isPushed = false;
+                    for (var j = 0; j < this.selectFiles.length; j++) {
+                        if (this.selectFiles[j].id == this.files[i].id) {
+                            isPushed = true;
+                            break;
+                        }
+                    }
+                    if (!isPushed) {
+                        this.selectFiles.push(this.files[i]);
+                    }
                 }
             }
-
+        },
+        selectFile: function () {
             var jobView = new LaaS.Job.JobView({model: this.jobmodel, job: this.job, scenarioList: this.job.scenarioList,
-                selectedScenarios: this.job.selectedScenarios, files: selectFiles, selectedParameterDefines: this.job.selectedParameterDefines});
+                selectedScenarios: this.job.selectedScenarios, files: this.selectFiles, selectedParameterDefines: this.job.selectedParameterDefines});
             LaaS.mainRegion.show(jobView);
             if (this.job.id == undefined) {
                 LaaS.navigate('/jobnew');
