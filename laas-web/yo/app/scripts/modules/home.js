@@ -58,6 +58,7 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
     });
 
     Home.showViewFrame = function(mainView) {
+        //$('body').css('background-image','none');
         LaaS.headerRegion.show(new HeaderView());
         LaaS.mainNavRegion.show(new NavView());
         if(mainView){

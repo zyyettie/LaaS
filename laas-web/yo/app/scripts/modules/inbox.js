@@ -7,15 +7,16 @@ LaaS.module('Inbox', function (Inbox, LaaS, Backbone, Marionette) {
   var baseTemplatePath = 'app/handlebars/notification';
   LaaS.Inbox.queryTask = new LaaS.Util.ScheduledTask(function () {
     $.get(appContext + apiVersion+'/notifications/search/findMyUnreadCount', function (data) {
+      var data = 10;
       var count = parseInt(data);
       if(count != NaN && count > 0){
         $('#inboxMenuItem .label').text(data);
         $('#inbox .label').text(data);
-        $('#inboxMenuItem .label').show();
-        $('#inbox .label').show();
+        $('#inboxMenuItem .label').css('visibility','visible');
+        $('#inbox .label').css('visibility','visible');
       }else{
-        $('#inboxMenuItem .label').hide();
-        $('#inbox .label').hide();
+        $('#inboxMenuItem .label').css('visibility','hidden');
+        $('#inbox .label').css('visibility','hidden');
       }
     })
   }, 20000);
