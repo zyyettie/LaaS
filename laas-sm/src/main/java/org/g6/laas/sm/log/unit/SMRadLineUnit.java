@@ -23,4 +23,9 @@ public class SMRadLineUnit extends SingleLineUnit{
      public String getHtmlContent() {
         return "<li>"+radName+"\t"+panelName+"\t"+panelType+"</li>\n";
     }
+
+    @Override
+    public String getJsonContent() {
+        return radName+"\t"+panelName+"\t"+panelType;
+    }
 }

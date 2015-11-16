@@ -20,10 +20,10 @@ LaaS.module('JobResult', function(JobResult, LaaS, Backbone, Marionette) {
         onRender: function(){
             if(this.sync === true){
                 this.$('#content-placeholder').html(this.jobRunning.desc).text();
+                this.$('#tree').jstree();
             }else{
                 this.$('#content-placeholder').html('<h2 class="ui header">Your job is running in the background, please check your inbox later</div>');
             }
-//            this.$('#content-placeholder').html(decoded);
         }
     });
 

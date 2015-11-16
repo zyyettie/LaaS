@@ -20,4 +20,10 @@ public abstract class SingleLineUnit implements IUnit {
     public String getHtmlContent() {
         return getContent();
     }
+
+    @Override
+    public String getJsonContent() {
+        return "{name:\"" + getContent() + "\"}";
+    }
+
 }

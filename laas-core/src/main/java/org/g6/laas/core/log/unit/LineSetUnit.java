@@ -42,4 +42,9 @@ public abstract class LineSetUnit implements IUnit {
     public String getHtmlContent() {
         return getContent();
     }
+
+    @Override
+    public String getJsonContent() {
+        return getContent();
+    }
 }

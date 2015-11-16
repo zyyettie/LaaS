@@ -34,7 +34,9 @@ public class RadShowTask extends SMRTETask<String> {
             case TEXT: // text
                 return allSet.getContent();
             case HTML: // html
-                return allSet.getHtmlContent();
+                return "<div id='tree'>\n<ul>\n"+allSet.getHtmlContent()+"</ul>\n</div>";
+            case JSON: // JSON format
+                return allSet.getJsonContent();
             default:
                 return "";
         }
@@ -108,7 +110,9 @@ public class RadShowTask extends SMRTETask<String> {
 
     @Override
     public boolean isReport(){
-        return false;
+        if (this.mode == Mode.HTML)
+            return false;
+        return true;
     }
 
     public RadShowTask() {
@@ -130,6 +134,6 @@ public class RadShowTask extends SMRTETask<String> {
     }
 
     private enum Mode {
-        TEXT, HTML
+        TEXT, HTML, JSON
     }
 }

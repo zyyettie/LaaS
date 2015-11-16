@@ -21,4 +21,9 @@ public class SMJSLineUnit extends SingleLineUnit {
     public String getHtmlContent() {
         return "<li>"+"JS: "+jsName+"</li>\n";
     }
+
+    @Override
+    public String getJsonContent() {
+        return "JS: "+jsName;
+    }
 }

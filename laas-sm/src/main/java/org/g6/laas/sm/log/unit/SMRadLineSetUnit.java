@@ -54,7 +54,7 @@ public class SMRadLineSetUnit extends LineSetUnit {
         StringBuilder content = new StringBuilder();
         if (radName !=null && radName.length()>0) {
             if (level > 0) {
-                content.append("<li>");
+                content.append("<li class=\"jstree-open\">");
             }
             content.append(radName).append("\n").append(prefix).append("<ul>").append("\n");
         }
@@ -69,6 +69,26 @@ public class SMRadLineSetUnit extends LineSetUnit {
                 content.append(prefix2).append("</li>");
             }
             content.append("\n");
+        }
+
+        return content.toString();
+    }
+
+    @Override
+    public String getJsonContent() {
+        StringBuilder content = new StringBuilder();
+        if (radName !=null && radName.length()>0) {
+            content.append("{name:\"").append(radName).append("\", children:[");
+        }
+        for (IUnit unit : set) {
+            content.append(unit.getJsonContent()).append(", ");
+        }
+        if (set.size() > 0) {
+            content.delete(content.length()-2, content.length());
+        }
+
+        if (radName !=null && radName.length()>0) {
+            content.append("]}");
         }
 
         return content.toString();

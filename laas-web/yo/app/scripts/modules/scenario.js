@@ -24,6 +24,9 @@ LaaS.module('Scenario', function(Scenario, LaaS, Backbone, Marionette) {
             data.scenario.parameterDefines = this.parameterDefines;
             return data;
         },
+        onRender: function() {
+            this.$('select').dropdown();
+        },
         events: {
             'click #scenario_save': 'saveScenario',
             'click #scenario_cancel': 'cancelScenario'
