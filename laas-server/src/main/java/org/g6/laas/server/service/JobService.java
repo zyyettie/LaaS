@@ -246,7 +246,7 @@ public class JobService {
             }
         }
 
-        Method m2 = taskObj.getClass().getDeclaredMethod("isReport");
+        Method m2 = taskObj.getClass().getMethod("isReport");
         boolean isReport = (Boolean)m2.invoke(taskObj);
 
         return new ReflectionObjWrapper(isReport, taskObj);
