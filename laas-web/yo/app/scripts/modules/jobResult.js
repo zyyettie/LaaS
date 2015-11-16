@@ -7,22 +7,34 @@ LaaS.module('JobResult', function(JobResult, LaaS, Backbone, Marionette) {
                 this.sync = true;
                 this.jobRunning = options.model.attributes;
             }
+            if(options.success === false){
+                this.success = false;
+                this.rootcauses = options.rootcauses;
+            }
         },
         template: function(){
             var template = JST['app/handlebars/job/result'];
             var html = template();
             //debug
             return html;
-        } ,
+        },
         serializeData: function(){
             return {};
         },
         onRender: function(){
-            if(this.sync === true){
-                this.$('#content-placeholder').html(this.jobRunning.desc).text();
-                this.$('#tree').jstree();
+            if(this.success === false){
+                var rootCausesStr = "<h2 class=\"ui header\">Oops! There's something wrong with your job, the error is like below:</div>";
+                for(var i in this.rootcauses){
+                    rootCausesStr += "<p>"+this.rootcauses[i]+"</p>";
+                }
+                this.$('#content-placeholder').html(rootCausesStr);
             }else{
-                this.$('#content-placeholder').html('<h2 class="ui header">Your job is running in the background, please check your inbox later</div>');
+                if(this.sync === true){
+                    this.$('#content-placeholder').html(this.jobRunning.desc).text();
+                    this.$('#tree').jstree();
+                }else{
+                    this.$('#content-placeholder').html('<h2 class="ui header">Your job is running in the background, please check your inbox later</div>');
+                }
             }
         }
     });

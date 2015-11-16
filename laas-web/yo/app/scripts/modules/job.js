@@ -166,16 +166,23 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             this.model.save(json, {patch: true, success: function (response) {
                 $.getJSON(appContext+"/controllers/jobs/" + response.id).done(function (json) {
                     toastr.info('Save and Run Job successfully.');
-                    var sync = json.is_syn;
-                    if(sync === true){
-                        $.when(LaaS.request('jobResult:entity',{id:json.job_running_id}))
-                            .done(function (jobRunningResult) {
-                                var jobResultView = new LaaS.JobResult.JobResultView({model:jobRunningResult,sync:true});
-                                LaaS.mainRegion.show(jobResultView);
-                            });
+                    var success = json.success;
+                    if(success === true){
+                        var sync = json.is_syn;
+                        if(sync === true){
+                            $.when(LaaS.request('jobResult:entity',{id:json.job_running_id}))
+                                .done(function (jobRunningResult) {
+                                    var jobResultView = new LaaS.JobResult.JobResultView({model:jobRunningResult,sync:true});
+                                    LaaS.mainRegion.show(jobResultView);
+                                });
 
+                        }else{
+                            var jobResultView = new LaaS.JobResult.JobResultView({sync:false});
+                            LaaS.mainRegion.show(jobResultView);
+                        }
                     }else{
-                        var jobResultView = new LaaS.JobResult.JobResultView({sync:false});
+                        var rootcauses = json.rootcauses;
+                        var jobResultView = new LaaS.JobResult.JobResultView({success:false,rootcauses:rootcauses});
                         LaaS.mainRegion.show(jobResultView);
                     }
                     LaaS.navigate('/jobRunnings/'+json.job_running_id+"/result");
