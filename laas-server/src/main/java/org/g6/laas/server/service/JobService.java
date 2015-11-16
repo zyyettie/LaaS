@@ -175,6 +175,10 @@ public class JobService {
                     asynCount++;
                     if (!"N".equals(jobRunning.getSyn())) {
                         jobRunning.setSyn("N");
+                        jobRunning.getToUsers().clear();
+                        jobRunning.addUser(jobRunning.getCreatedBy());
+                        String summary = "Your job named " + job.getName() + " is running in the background, please check your inbox later";
+                        jobRunning.setSummary(summary);
                         saveJobRunning(jobRunning);
                     }
                     queueJob.addQueueTask(taskRunning, new QueueTask(taskRunningResult.getFuture(), taskRunningResult.isReport()));
@@ -204,6 +208,8 @@ public class JobService {
                 saveJobRunningStatus(jobRunning, "PARTIALLY SUCCESS");
                 jobRunningResult.setSuccess(false);
             }
+        }else{
+            jobRunningResult.setSuccess(true);
         }
         jobRunningResult.setSyn(isSyn);
 
@@ -261,7 +267,6 @@ public class JobService {
         try {
             obj = future.get(20000, TimeUnit.MILLISECONDS);
             result.setResult(obj);
-            //throw new TimeoutException("aaa");
         } catch (TimeoutException te) {
             log.info("The task named " + task.getName() + "is going in asynchronous running mode");
             result.setFuture(future);
