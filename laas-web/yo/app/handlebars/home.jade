@@ -1,2 +1,41 @@
-h1
-  |Welcome LaaS home2345!
+.ui.centered.grid(style="margin-top:0px;")
+  .thirteen.wide.column
+    .ui.top.attached.green.segment(style="min-height:500px;padding-bottom:75px;")
+      .ui.top.attached.big.label Fast Entries
+      .ui.centered.four.cards(style="margin-top:75px !important;")
+        .green.card.laas-card
+          .content
+            h3
+              a(href="/jobnew") Create New Job
+            .ui.divider
+            .description
+              |Create a new job
+          a.ui.attached.bottom.teal.button(href="/jobnew") New
+            i.plus.square.icon
+        .green.card.laas-card
+          .content
+            h3
+              a(href="/jobHistory") Running History
+            .ui.divider
+            .description
+              |Record past job running
+          a.ui.attached.bottom.teal.button(href="/jobs") Browse
+            i.folder.open.outline.icon
+        .green.card.laas-card
+          .content
+            h3
+              a(href="/files/me") My Files
+            .ui.divider
+            .description
+              |Browse My uploaded log files
+          a.ui.attached.bottom.teal.button(href="/files/me") Browse
+            i.folder.open.outline.icon
+        .green.card.laas-card
+          .content
+            h3
+              a(href="/notifications/me") Inbox
+            .ui.divider
+            .description
+              |Browse all the notifications
+          a.ui.attached.bottom.teal.button(href="/notifications/me") Browse
+            i.folder.open.outline.icon
