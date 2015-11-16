@@ -46,7 +46,7 @@ insert into scenario_file_types(scenario_id, file_types_id) values(6, 1)
 insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME,created_by_id,is_removed) values(1, 'sm.log', 'e:/', '1', 'sm.log',1,'N')
 insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME,created_by_id,is_removed) values(3, 'sm.log.1', 'e:/', '1', 'sm.log.1',1,'N')
 insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME,created_by_id,is_removed) values(4, 'sm.log.2', 'e:/', '1', 'sm.log.2',1,'N')
-insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME,created_by_id,is_removed) values(2, 'sm_dbquery.log', 'e:/', '1', 'sm_dbquery.log',1,'N')
+insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME,created_by_id,is_removed) values(2, 'sm_dbquery.log', 'c:/', '1', 'sm_dbquery.log',1,'N')
 insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME,created_by_id,is_removed) values(5, 'sm_dbquery.log.1', 'e:/', '1', 'sm_dbquery.log.1',1,'N')
 
 

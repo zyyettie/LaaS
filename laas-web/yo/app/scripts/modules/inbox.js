@@ -7,7 +7,6 @@ LaaS.module('Inbox', function (Inbox, LaaS, Backbone, Marionette) {
   var baseTemplatePath = 'app/handlebars/notification';
   LaaS.Inbox.queryTask = new LaaS.Util.ScheduledTask(function () {
     $.get(appContext + apiVersion+'/notifications/search/findMyUnreadCount', function (data) {
-      var data = 10;
       var count = parseInt(data);
       if(count != NaN && count > 0){
         $('#inboxMenuItem .label').text(data);
