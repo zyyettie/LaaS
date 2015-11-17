@@ -1,18 +1,20 @@
 .ui.grid
-    .ui.centered.fourteen.wide.column
-        table.ui.striped.table
-            thead
-                tr
-                    th Job ID
-                    th Job Name
-                    th Job Description
-                    th Action
-            tbody
-                |{{#each jobs}}
-                tr
-                    td {{id}}
-                    td {{name}}
-                    td {{description}}
-                    td
-                        button.ui.teal.button.job-show(id="{{id}}")(data-id="{{id}}") Detail
-                |{{/each}}
+    .ui.centered.twelve.wide.column
+        .ui.green.segment(style="margin-top:5px;padding:20px 40px;")
+            h2#title Job History
+            table.ui.striped.table
+                thead
+                    tr
+                        th Job ID
+                        th Job Name
+                        th Job Description
+                        th Action
+                tbody
+                    |{{#each jobs}}
+                    tr
+                        td {{id}}
+                        td {{name}}
+                        td {{description}}
+                        td
+                            button.ui.teal.button.job-show(id="{{id}}")(data-id="{{id}}") Detail
+                    |{{/each}}
