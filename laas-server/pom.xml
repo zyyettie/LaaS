@@ -20,6 +20,11 @@
             <artifactId>laas-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+		<dependency>
+            <groupId>org.g6.laas</groupId>
+            <artifactId>laas-sm</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.g6.laas</groupId>
             <artifactId>laas-web</artifactId>
