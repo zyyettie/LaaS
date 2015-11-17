@@ -17,6 +17,35 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
         }
     });
 
+
+    var checkSelected = function(that){
+        //here is to put all the items checked on different pages in selectFiles
+        for (var i = 0; i < that.files.length; i++) {
+            var isChecked = $("#file_checkbox_" + that.files[i].id).prop("checked");
+            if (!isChecked) {
+                //need to see if this item has been pushed to the selectFiles before, if so, remove it
+                for (var j = 0; j < that.selectFiles.length; j++) {
+                    if (that.selectFiles[j].id == that.files[i].id) {
+                        that.selectFiles.splice(j, 1);
+                        break;
+                    }
+                }
+            } else {
+                //meaning the item has been selected on the page
+                var isPushed = false;
+                for (var j = 0; j < that.selectFiles.length; j++) {
+                    if (that.selectFiles[j].id == that.files[i].id) {
+                        isPushed = true;
+                        break;
+                    }
+                }
+                if (!isPushed) {
+                    that.selectFiles.push(that.files[i]);
+                }
+            }
+        }
+    }
+
     File.FileSelectView = Marionette.ItemView.extend({
         initialize: function (options) {
             this.files = options.data.files;
@@ -85,31 +114,7 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
             'click [type="checkbox"]':'clickCheckbox'
         },
         clickCheckbox: function(){
-            //here is to put all the items checked on different pages in selectFiles
-            for (var i = 0; i < this.files.length; i++) {
-                var isChecked = $("#file_checkbox_" + this.files[i].id).prop("checked");
-                if (!isChecked) {
-                    //need to see if this item has been pushed to the selectFiles before, if so, remove it
-                    for (var j = 0; j < this.selectFiles.length; j++) {
-                        if (this.selectFiles[j].id == this.files[i].id) {
-                            this.selectFiles.splice(j, 1);
-                            break;
-                        }
-                    }
-                } else {
-                    //meaning the item has been selected on the page
-                    var isPushed = false;
-                    for (var j = 0; j < this.selectFiles.length; j++) {
-                        if (this.selectFiles[j].id == this.files[i].id) {
-                            isPushed = true;
-                            break;
-                        }
-                    }
-                    if (!isPushed) {
-                        this.selectFiles.push(this.files[i]);
-                    }
-                }
-            }
+            checkSelected(this);
         },
         selectFile: function () {
             var jobView = new LaaS.Job.JobView({model: this.jobmodel, job: this.job, scenarioList: this.job.scenarioList,
@@ -132,6 +137,7 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
             }
         }
     });
+
 
     File.MyFileView = Marionette.ItemView.extend({
         initialize: function (options) {
@@ -188,31 +194,7 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
             'click [type="checkbox"]':'clickCheckbox'
         },
         clickCheckbox: function(){
-            //here is to put all the items checked on different pages in selectFiles
-            for (var i = 0; i < this.files.length; i++) {
-                var isChecked = $("#file_checkbox_" + this.files[i].id).prop("checked");
-                if (!isChecked) {
-                    //need to see if this item has been pushed to the selectFiles before, if so, remove it
-                    for (var j = 0; j < this.selectFiles.length; j++) {
-                        if (this.selectFiles[j].id == this.files[i].id) {
-                            this.selectFiles.splice(j, 1);
-                            break;
-                        }
-                    }
-                } else {
-                    //meaning the item has been selected on the page
-                    var isPushed = false;
-                    for (var j = 0; j < this.selectFiles.length; j++) {
-                        if (this.selectFiles[j].id == this.files[i].id) {
-                            isPushed = true;
-                            break;
-                        }
-                    }
-                    if (!isPushed) {
-                        this.selectFiles.push(this.files[i]);
-                    }
-                }
-            }
+            checkSelected(this);
         },
         uploadMyFiles: function () {
             $.when(LaaS.request('fileType:entities')).done(function (data) {
@@ -222,11 +204,16 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
 
         },
         deleteMyFiles: function () {
+            if(this.selectFiles.length == 0){
+                toastr.error('Please select files that you want to delete');
+                return;
+            }
             $.ajax({
                 type: "POST",
                 url: appContext + "/controllers/files",
                 data: JSON.stringify(this.selectFiles),
                 success: function (data) {
+                    toastr.info('Delete files successfully');
                     $.when(LaaS.request('myFiles:entities')).done(function (data) {
                         var view = new LaaS.File.MyFileView(data);
                         LaaS.mainRegion.show(view);
