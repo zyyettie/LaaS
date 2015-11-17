@@ -32,7 +32,7 @@ public class JobController {
         List<String> rootCauses = vlidateFiles(job);
 
         if (!rootCauses.isEmpty()) {
-            jsonMap.put("success", true);
+            jsonMap.put("success", false);
             jsonMap.put("rootcauses", rootCauses);
         } else {
             JobRunning jobRunning = createRunningRecords4JobAndTask(job);
