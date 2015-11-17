@@ -13,14 +13,17 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
                 LaaS.cleanSessionStorage();
                 LaaS.stopTasks();
                 $.get('/laas-server/controllers/logout').always(function(){
-                    LaaS.navigate('login',true);
+                    LaaS.navigate('/login',true);
                 });
             });
             this.$('.dropdown .menu .item').on('click',function(e){
                 LaaS.navigate($(this).attr('href'), true);
             });
             this.$('#homepage').click(function(){
-                LaaS.navigate('home',true);
+                LaaS.navigate('/home',true);
+            });
+            this.$('#inbox').click(function(){
+                LaaS.navigate('/notifications/me',true);
             });
             $('#header').show();
         }
