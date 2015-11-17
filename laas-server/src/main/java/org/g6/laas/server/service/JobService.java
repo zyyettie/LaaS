@@ -123,18 +123,6 @@ public class JobService {
         Job job = jobRunning.getJob();
         JobRunningResult jobRunningResult = new JobRunningResult();
         List<String> strFiles = getLogFilesFromJob(jobRunning);
-        boolean isValidFile = true;
-        for(String file : strFiles){
-            if(!FileUtil.isFile(file)){
-                jobRunningResult.getRootCauses().add(file + " isn't a valid file");
-                jobRunningResult.setSuccess(false);
-                isValidFile = false;
-            }
-        }
-
-        if(!isValidFile)
-            return jobRunningResult;
-
         Map<String, String> paramMap = JSONUtil.fromJson(job.getParameters());
 
         Collection<TaskRunning> taskRunnings = jobRunning.getTaskRunnings();
