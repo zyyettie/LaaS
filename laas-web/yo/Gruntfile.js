@@ -388,7 +388,7 @@ module.exports = function (grunt) {
             dot: true,
             cwd: '<%= config.app %>',
             src:'themes/default/assets/{,*/}*.*',
-            dest:'<%= config.dist %>/styles'
+            dest:'<%= config.dist %>/'
         },{
           src: 'node_modules/apache-server-configs/dist/.htaccess',
           dest: '<%= config.dist %>/.htaccess'
