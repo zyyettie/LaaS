@@ -32,7 +32,9 @@ _.extend(Marionette.AppRouter.prototype, {
         if (LaaS.isRefreshingPage()) {
             if (route != 'login(/)') {
                 LaaS.Home.showViewFrame();
+
                 LaaS.scheduleTask(LaaS.Inbox.queryTask);
+                LaaS.TaskQueue.push(LaaS.Inbox.queryTask);
             }
         }
     }
@@ -43,8 +45,8 @@ window.onbeforeunload = function () {
 };
 
 LaaS.TaskQueue = [];
+
 var internalSchedultTask = LaaS.scheduleTask = function (task) {
-    LaaS.TaskQueue.push(task);
     task.timeout = setTimeout(function () {
         task.func();
         if (!task.isOnce) {

@@ -52,6 +52,7 @@ LaaS.module('Login', function(Login, LaaS, Backbone, Marionette) {
                        sessionStorage.setItem("username",data.name);
                        sessionStorage.setItem("role",data.role.name);
                        LaaS.scheduleTask(LaaS.Inbox.queryTask);
+                       LaaS.TaskQueue.push(LaaS.Inbox.queryTask);
                        LaaS.navigate('/home',true);
                    },
                    dataType: "json",
