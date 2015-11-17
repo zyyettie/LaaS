@@ -9,16 +9,18 @@ import java.io.File;
 public class LogFile implements ILogFile {
     private String file;
     private String name;
+    private String originalName;
     private FileValidator validator;
-
-    public LogFile(String file) {
-        this(file, null);
-    }
 
     public LogFile(String file, FileValidator validator) {
         this.file = file;
         this.validator = validator;
         this.name = getName();
+    }
+
+    public LogFile(String file, String originalName){
+        this.file = file;
+        this.originalName = originalName;
     }
 
     @Override

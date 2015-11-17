@@ -27,19 +27,36 @@ public class JobController {
 
     @RequestMapping(value = "/controllers/jobs/{jobId}")
     ResponseEntity<String> runJob(@PathVariable Long jobId) {
-        Job job = jobService.findJobBy(jobId);
-        JobRunning jobRunning = createRunningRecords4JobAndTask(job);
-
-        JobService.JobRunningResult runningResult = jobService.runTasks(jobRunning);
-
         Map<String, Object> jsonMap = new HashMap();
-        jsonMap.put("job_id", String.valueOf(job.getId()));
-        jsonMap.put("job_running_id", String.valueOf(jobRunning.getId()));
-        jsonMap.put("is_syn", runningResult.isSyn());
-        jsonMap.put("success", runningResult.isSuccess());
-        jsonMap.put("rootcauses", runningResult.getRootCauses());
+        Job job = jobService.findJobBy(jobId);
+        List<String> rootCauses = vlidateFiles(job);
+
+        if (!rootCauses.isEmpty()) {
+            jsonMap.put("success", true);
+            jsonMap.put("rootcauses", rootCauses);
+        } else {
+            JobRunning jobRunning = createRunningRecords4JobAndTask(job);
+            JobService.JobRunningResult runningResult = jobService.runTasks(jobRunning);
+
+            jsonMap.put("job_id", String.valueOf(job.getId()));
+            jsonMap.put("job_running_id", String.valueOf(jobRunning.getId()));
+            jsonMap.put("is_syn", runningResult.isSyn());
+            jsonMap.put("success", runningResult.isSuccess());
+            jsonMap.put("rootcauses", runningResult.getRootCauses());
+        }
 
         return new ResponseEntity(JSONUtil.toJson(jsonMap), HttpStatus.OK);
+    }
+
+    private List<String> vlidateFiles(Job job) {
+        List<File> strFiles = job.getFiles();
+        List<String> rootCauses = new ArrayList();
+        for (File file : strFiles) {
+            if (!FileUtil.isFile(file.getPath() + file.getFileName())) {
+                rootCauses.add(file.getOriginalName() + " isn't a valid file");
+            }
+        }
+        return rootCauses;
     }
 
     /**

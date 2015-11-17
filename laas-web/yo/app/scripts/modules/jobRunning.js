@@ -39,19 +39,41 @@ LaaS.module('JobRunning', function(JobRunning, LaaS, Backbone, Marionette) {
             window.history.back();
         },
         viewResult: function() {
-            if(this.jobRunning.status == "SUCCESS"){
-                $.when(LaaS.request('jobResult:entity',{id:this.jobRunning.id}))
-                    .done(function (jobRunningResult) {
-                        var jobResultView = new LaaS.JobResult.JobResultView({model:jobRunningResult, sync:true});
-                        LaaS.mainRegion.show(jobResultView);
-                        LaaS.navigate('/jobResults/'+this.jobRunning.id);
-                    });
-            }else if (this.jobRunning.status == "RUNNING") {
-                var jobResultView = new LaaS.JobResult.JobResultView({sync:false});
-                LaaS.mainRegion.show(jobResultView);
-                LaaS.navigate('/jobResults/'+this.jobRunning.id);
-            }else {
+            var that = this;
+            switch(this.jobRunning.status) {
+                case "SUCCESS":
+                    $.when(LaaS.request('jobResult:entity',{id:this.jobRunning.id}))
+                        .done(function (jobRunningResult) {
+                            var jobResultView = new LaaS.JobResult.JobResultView({model:jobRunningResult, sync:true});
+                            LaaS.mainRegion.show(jobResultView);
+                            LaaS.navigate('/jobResults/'+that.jobRunning.id);
+                        });
+                    break;
 
+                case "RUNNING":
+                    var jobResultView = new LaaS.JobResult.JobResultView({sync:false});
+                    LaaS.mainRegion.show(jobResultView);
+                    LaaS.navigate('/jobResults/'+that.jobRunning.id);
+                    break;
+                case "FAILED":
+                    $.when(LaaS.request('taskRunning:entitiesByUrl', {url:this.jobRunning._links.taskRunnings.href}))
+                        .done(function(taskRunnings) {
+                        if (taskRunnings != undefined) {
+                            var rootcauses = [];
+                            for (var i=0; i<taskRunnings.length; i++) {
+                                if (taskRunnings[i].rootcauses) {
+                                    rootcauses.push(taskRunnings[i].rootcauses);
+                                }
+                            }
+
+                            var jobResultView = new LaaS.JobResult.JobResultView({success:false, rootcauses:rootcauses});
+                            LaaS.mainRegion.show(jobResultView);
+                            LaaS.navigate('/jobResults/'+that.jobRunning.id);
+                        }
+                    });
+                    break;
+                default:
+                    break;
             }
         },
         rerunJobRunning: function() {
@@ -103,19 +125,41 @@ LaaS.module('JobRunning', function(JobRunning, LaaS, Backbone, Marionette) {
                     break;
                 }
             }
-            if(jobRunning.status == "SUCCESS"){
-                $.when(LaaS.request('jobResult:entity',{id:jobRunningId}))
-                    .done(function (jobRunningResult) {
-                        var jobResultView = new LaaS.JobResult.JobResultView({model:jobRunningResult, sync:true});
-                        LaaS.mainRegion.show(jobResultView);
-                        LaaS.navigate('/jobResults/'+jobRunningId);
+            switch(jobRunning.status) {
+                case "SUCCESS":
+                    $.when(LaaS.request('jobResult:entity',{id:jobRunningId}))
+                        .done(function (jobRunningResult) {
+                            var jobResultView = new LaaS.JobResult.JobResultView({model:jobRunningResult, sync:true});
+                            LaaS.mainRegion.show(jobResultView);
+                            LaaS.navigate('/jobResults/'+jobRunningId);
                     });
-            }else if (jobRunning.status == "RUNNING") {
-                var jobResultView = new LaaS.JobResult.JobResultView({sync:false});
-                LaaS.mainRegion.show(jobResultView);
-                LaaS.navigate('/jobResults/'+jobRunningId);
-            }else {
+                    break;
+                case "RUNNING":
+                    var jobResultView = new LaaS.JobResult.JobResultView({sync:false});
+                    LaaS.mainRegion.show(jobResultView);
+                    LaaS.navigate('/jobResults/'+jobRunningId);
+                    break;
+                case "FAILED":
+                    $.when(LaaS.request('jobRunning:entity', {id:jobRunningId})).done(function(jobRunning) {
+                        $.when(LaaS.request('taskRunning:entitiesByUrl', {url:jobRunning.attributes._links.taskRunnings.href}))
+                            .done(function(taskRunnings) {
+                                if (taskRunnings != undefined) {
+                                    var rootcauses = [];
+                                    for (var i=0; i<taskRunnings.length; i++) {
+                                        if (taskRunnings[i].rootcauses) {
+                                            rootcauses.push(taskRunnings[i].rootcauses);
+                                        }
+                                    }
 
+                                    var jobResultView = new LaaS.JobResult.JobResultView({success:false, rootcauses:rootcauses});
+                                    LaaS.mainRegion.show(jobResultView);
+                                    LaaS.navigate('/jobResults/'+jobRunning.id);
+                                }
+                        });
+                    });
+                    break;
+                default:
+                    break;
             }
         },
         rerunClicked: function(event) {

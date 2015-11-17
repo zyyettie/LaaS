@@ -54,12 +54,13 @@ public class FileUploadController {
             String fileName = file.getOriginalFilename();
             try {
                 String generatedName = UUID.randomUUID().toString();
-                String path = uploadedPath + "/" + todayFolder + "/" + generatedName;
-                File uploaded = new File(path);
+                String path = uploadedPath + "/" + todayFolder + "/";
+                String fullFileName = path+ generatedName;
+                File uploaded = new File(fullFileName);
                 Files.createParentDirs(uploaded);
                 long size = file.getSize();
                 InputStream inputStream = file.getInputStream();
-                OutputStream outputStream = new FileOutputStream(path);
+                OutputStream outputStream = new FileOutputStream(fullFileName);
                 ByteStreams.copy(inputStream, outputStream);
                 inputStream.close();
                 outputStream.close();
@@ -67,7 +68,7 @@ public class FileUploadController {
                 org.g6.laas.server.database.entity.file.File fileEntity = new org.g6.laas.server.database.entity.file.File();
                 fileEntity.setOriginalName(fileName);
                 fileEntity.setFileName(generatedName);
-                fileEntity.setPath(uploaded.getCanonicalPath());
+                fileEntity.setPath(path);
                 fileEntity.setSize(size);
                 fileEntity.setDescription(desc);
                 fileEntity.setIsRemoved("N");

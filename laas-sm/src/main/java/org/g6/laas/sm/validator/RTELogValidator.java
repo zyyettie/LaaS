@@ -21,7 +21,7 @@ public class RTELogValidator implements FileValidator {
 
     private boolean isValidFile(List<String> lines){
         for(String line : lines){
-            if (RegexUtil.isMatched(line, "^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D")) {
+            if (RegexUtil.isMatched(line, "^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE ")) {
                 return true;
             }
         }

@@ -1,18 +1,20 @@
 .ui.grid
-    .ui.centered.fourteen.wide.column
-        table.ui.striped.table
-            thead
-                tr
-                    th Task ID
-                    th Task Name
-                    th Task Description
-                    th Action
-            tbody
-                |{{#each tasks}}
-                tr
-                    td {{id}}
-                    td {{name}}
-                    td {{description}}
-                    td
-                        button.ui.teal.button.task-show(id="{{id}}")(data-id="{{id}}") Detail
-                |{{/each}}
+    .ui.centered.twelve.wide.column
+        .ui.green.segment(style="margin-top:5px;padding:20px 40px;")
+            h2#title Task List
+            table.ui.striped.table
+                thead
+                    tr
+                        th Task ID
+                        th Task Name
+                        th Task Description
+                        th Action
+                tbody
+                    |{{#each tasks}}
+                    tr
+                        td {{id}}
+                        td {{name}}
+                        td {{description}}
+                        td
+                            button.ui.teal.button.task-show(id="{{id}}")(data-id="{{id}}") Detail
+                    |{{/each}}

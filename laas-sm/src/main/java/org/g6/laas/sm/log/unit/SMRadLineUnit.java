@@ -21,7 +21,7 @@ public class SMRadLineUnit extends SingleLineUnit{
 
     @Override
      public String getHtmlContent() {
-        return "<li>"+radName+"\t"+panelName+"\t"+panelType+"</li>\n";
+        return "<li data-jstree='{\"icon\":false}'>"+radName+"    "+panelName+"    "+panelType+"</li>\n";
     }
 
     @Override

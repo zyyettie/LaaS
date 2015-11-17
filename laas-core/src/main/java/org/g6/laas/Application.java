@@ -39,7 +39,7 @@ public class Application {
         rules.add(rule3);
         rules.add(rule4);
 
-        LogHandler handler = new BasicLogHandler(new LogFile("C:\\gitRepo\\LaaS\\laas-core\\src\\main\\resources\\RTE_log_format.txt"), null);
+        LogHandler handler = new BasicLogHandler(new LogFile("C:\\gitRepo\\LaaS\\laas-core\\src\\main\\resources\\RTE_log_format.txt","RTE_log_format.txt"), null);
 
 
         SearchKeyWordsTask task = new SearchKeyWordsTask(rules, handler);
