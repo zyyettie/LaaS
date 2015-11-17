@@ -32,6 +32,10 @@ LaaS.module('Inbox', function (Inbox, LaaS, Backbone, Marionette) {
       var template = JST[baseTemplatePath + '/notificationlist'];
       var html = template({notifications: this.notificationList});
       this.$('#content').html(html);
+      this.$('a.link_handler').click(function(event){
+        event.preventDefault();
+        LaaS.navigate($(this).attr('href'),true);
+      });
       if(this.paging.number + 1 <= this.paging.totalPages){
         this.$('#paging').twbsPagination({
           totalPages: this.paging.totalPages,

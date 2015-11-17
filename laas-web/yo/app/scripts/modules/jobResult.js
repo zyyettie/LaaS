@@ -46,7 +46,6 @@ LaaS.module('JobResult', function(JobResult, LaaS, Backbone, Marionette) {
                     var jobResultView = new LaaS.JobResult.JobResultView({model:jobRunningResult,sync:true});
                     LaaS.mainRegion.show(jobResultView);
                 });
-            LaaS.navigate('/jobRunnings/'+job_running_id+"/result");
         }
     });
 
