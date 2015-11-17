@@ -19,7 +19,7 @@ public class SMJSLineUnit extends SingleLineUnit {
 
     @Override
     public String getHtmlContent() {
-        return "<li>"+"JS: "+jsName+"</li>\n";
+        return "<li data-jstree='{\"icon\":false}'>"+"JS: "+jsName+"</li>\n";
     }
 
     @Override
