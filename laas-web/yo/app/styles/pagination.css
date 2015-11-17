@@ -22,13 +22,13 @@
 .pagination > li:first-child > a,
 .pagination > li:first-child > span {
   margin-left: 0;
-  border-bottom-left-radius: 4px;
-  border-top-left-radius: 4px;
+  border-bottom-left-radius: 0px;
+  border-top-left-radius: 0px;
 }
 .pagination > li:last-child > a,
 .pagination > li:last-child > span {
-  border-bottom-right-radius: 4px;
-  border-top-right-radius: 4px;
+  border-bottom-right-radius: 0px;
+  border-top-right-radius: 0px;
 }
 .pagination > li > a:hover,
 .pagination > li > span:hover,
@@ -46,8 +46,7 @@
 .pagination > .active > span:focus {
   z-index: 2;
   color: #ffffff;
-  background-color: #008000;
-  border-color: #337ab7;
+  background-color: #01A982;
   cursor: default;
 }
 .pagination > .disabled > span,
