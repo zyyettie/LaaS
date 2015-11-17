@@ -7,6 +7,7 @@ import org.g6.laas.core.engine.AnalysisEngine;
 import org.g6.laas.core.engine.task.AnalysisTask;
 import org.g6.laas.core.engine.task.report.ReportBuilder;
 import org.g6.laas.core.engine.task.report.ReportModel;
+import org.g6.laas.core.file.LogFile;
 import org.g6.laas.server.database.entity.file.File;
 import org.g6.laas.server.database.entity.Job;
 import org.g6.laas.server.database.entity.JobRunning;
@@ -122,7 +123,7 @@ public class JobService {
     public JobRunningResult runTasks(JobRunning jobRunning) {
         Job job = jobRunning.getJob();
         JobRunningResult jobRunningResult = new JobRunningResult();
-        List<String> strFiles = getLogFilesFromJob(jobRunning);
+        List<LogFile> strFiles = getLogFilesFromJob(jobRunning);
         Map<String, String> paramMap = JSONUtil.fromJson(job.getParameters());
 
         Collection<TaskRunning> taskRunnings = jobRunning.getTaskRunnings();
@@ -211,17 +212,17 @@ public class JobService {
      *
      * @param task
      * @param paramMap
-     * @param strFiles
+     * @param selectFiles
      * @return
      * @throws Exception
      */
-    private ReflectionObjWrapper getTaskObj(Task task, Map<String, String> paramMap, List<String> strFiles) throws Exception {
+    private ReflectionObjWrapper getTaskObj(Task task, Map<String, String> paramMap, List<LogFile> selectFiles) throws Exception {
         Class taskClass = Class.forName(task.getClassName());
         Object taskObj = taskClass.newInstance();
         Field[] fields = taskClass.getDeclaredFields();
 
         Method m1 = taskObj.getClass().getSuperclass().getDeclaredMethod("setFiles", List.class);
-        m1.invoke(taskObj, strFiles);
+        m1.invoke(taskObj, selectFiles);
 
         for (Map.Entry<String, String> entry : paramMap.entrySet()) {
             for (int i = 0; i < fields.length; i++) {
@@ -265,11 +266,11 @@ public class JobService {
         return result;
     }
 
-    private List<String> getLogFilesFromJob(JobRunning jobRunning) {
-        List<String> files = new ArrayList<>();
+    private List<LogFile> getLogFilesFromJob(JobRunning jobRunning) {
+        List<LogFile> files = new ArrayList<>();
         for (Iterator<File> ite = jobRunning.getFiles().iterator(); ite.hasNext(); ) {
             File f = ite.next();
-            files.add(f.getPath() + f.getFileName());
+            files.add(new LogFile(f.getPath() + f.getFileName(),f.getOriginalName()));
         }
 
         return files;

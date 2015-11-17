@@ -22,7 +22,7 @@ import java.util.List;
 public abstract class SMRTETask<T> extends AbstractAnalysisTask<T> {
     DefaultInputFormatProvider provider;
     private List<Rule> rules = new ArrayList<>();
-    private List<String> files;
+    private List<LogFile> files;
 
     @Override
     protected void started() {
@@ -35,14 +35,15 @@ public abstract class SMRTETask<T> extends AbstractAnalysisTask<T> {
         InputFormat inputFormat = provider.getInputFormat();
 
         List<ILogFile> fileList = new ArrayList<>();
-        for (String file : getFiles()) {
+        //here file seems like a DTO that is used to encapsulate file name and originalName
+        for (LogFile fileDTO : getFiles()) {
             FileValidator validator = new RTELogValidator();
 
-            LogFile logFile = new LogFile(file, validator);
+            LogFile logFile = new LogFile(fileDTO.getFile(), validator);
             if(!logFile.isValid())
                 throw new LaaSValidationException(logFile.getName() + " is an invalid SM RTE log file");
 
-            fileList.add(new LogFile(file));
+            fileList.add(new LogFile(fileDTO.getFile(), fileDTO.getOriginalName()));
         }
 
         FileSorter sorter = new RTELogFileSorter();
@@ -64,11 +65,11 @@ public abstract class SMRTETask<T> extends AbstractAnalysisTask<T> {
         rules.add(rule);
     }
 
-    public List<String> getFiles() {
+    public List<LogFile> getFiles() {
         return files;
     }
 
-    public void setFiles(List<String> files) {
+    public void setFiles(List<LogFile> files) {
         this.files = files;
     }
 
