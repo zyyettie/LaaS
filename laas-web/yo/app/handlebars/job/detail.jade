@@ -25,34 +25,25 @@
                             .field
                                 label Files
                             .field
-                                #add.symbol(style="transform:scale(1.5);")
-                                    <i id="add_file" class="green plus icon"></i>
+                                #add.symbol
+                                    i.green.plus.icon(style="cursor: pointer;transform:scale(1.5);")#add_file
                             .field
                     .field
                         //.ui.teal.large.fluid.button#add_file <i class="plus icon"></i>
                 .field
                     .ui.divided.list
                         |{{#each files}}
-                        <div id="fileitem_{{id}}">
-                        .item
-                            .content
-                                .ui.grid
-                                    .ui.ten.column.row(style="margin-top:10px;margin-bottom:10px;")
-                                        .column
-                                            label {{originalName}}
-                                        .column
-                                        .column
-                                        .column
-                                        .column
-                                        .column
-                                        .column
-                                        .column
-                                        .right.aligned.column
-                                            //<div id="remove_file" class="ui teal large fluid button" value="{{id}}"><i class="minus icon"></i></div>
-                                            #remove.symbol(style="transform:scale(1.5);")
-                                                <i id="remove_file" value="{{id}}" class="green minus icon"></i>
-                                        .column
-                        </div>
+                        div(id="fileitem_{{id}}")
+                            .item
+                                .content
+                                    .ui.grid
+                                        .ui.two.column.row(style="margin-top:10px;margin-bottom:10px;")
+                                            .column
+                                                label {{originalName}}
+                                            .right.aligned.column
+                                                //<div id="remove_file" class="ui teal large fluid button" value="{{id}}"><i class="minus icon"></i></div>
+                                                #remove.symbol
+                                                    i.green.minus.icon(style="cursor: pointer;transform:scale(1.5);",value="{{id}}")#remove_file
                         |{{/each}}
                 .two.fields(style="margin-top:100px;margin-bottom:70px;")
                     .field(style="padding-right:50px;")
