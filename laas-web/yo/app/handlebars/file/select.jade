@@ -12,7 +12,7 @@ table.ui.compact.celled.definition.table
     tbody
         |{{#each files}}
         tr
-            td.collapsing
+            td.collapsing(style="text-align:center")
                 |<input id="file_checkbox_{{id}}" type="checkbox" {{checked}}/>
 
             td
@@ -27,4 +27,4 @@ table.ui.compact.celled.definition.table
             th
             th(colspan="3")
                 .ui.teal.small.button#select_file OK
-                .ui.teal.small.button#select_file_cancel Cancel
+                .ui.teal.small.button#select_file_cancel(style="margin-left:20px") Cancel

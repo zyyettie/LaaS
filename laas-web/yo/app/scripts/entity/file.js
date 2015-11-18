@@ -57,9 +57,9 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
     });
 
     LaaS.reqres.setHandler('myFiles:entities', function (options) {
-        var options = options || {page:0,size:4,projection:'filesummary'};
+        var options = options || {page:0,size:10,projection:'filesummary'};
         var page = options.page || 0;
-        var size = options.size || 4;
+        var size = options.size || 10;
         var projection = options.projection || 'filesummary';
         var files = $.Deferred();
         var userName = sessionStorage.getItem("username");

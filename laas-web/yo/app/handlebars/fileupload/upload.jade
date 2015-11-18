@@ -1,9 +1,9 @@
 .ui.centered.grid
-    .twelve.wide.column
+    .fourteen.wide.column
         .ui.green.segment(style="margin-top:5px;padding:20px 40px;")
             h2#title New File
             form.ui.form(action="/upload",method="post",enctype="multipart/form-data")
-                .two.fields
+                .four.fields
                     .field
                         label File Type
                         select.ui.dropdown(id="fileType", name="fileType")
@@ -15,7 +15,7 @@
 
                 .field
                     label Job Description
-                    textarea(type="text",rows="3",name="desc",placeholder="description") {{description}}
+                    textarea(type="text",rows="5",name="desc",placeholder="description") {{description}}
                 .ui.grid(style="margin-top:2em")
                     .five.column.row
                         .column
