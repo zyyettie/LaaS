@@ -15030,6 +15030,7 @@ ol.ui.horizontal.list li:before,
 
 .ui.green.segment:not(.inverted) {
   border-top: 2px solid #21BA45;
+  min-height:600px;
 }
 
 .ui.inverted.green.segment {
