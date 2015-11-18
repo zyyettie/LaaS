@@ -26,7 +26,7 @@
                                 label Files
                             .field
                                 #add.symbol(style="transform:scale(1.5);")
-                                    <i id="add_file" class="green plus icon"></i>
+                                    i.green.plus.icon(style="cursor: pointer;")#add_file
                             .field
                     .field
                         //<i id="add_file" class="plus icon"></i>
@@ -38,25 +38,17 @@
                         .item
                             .content
                                 .ui.grid
-                                    .ui.ten.column.row(style="margin-top:10px;margin-bottom:10px;")
+                                    .ui.two.column.row(style="margin-top:10px;margin-bottom:10px;")
                                         .column
                                             label {{originalName}}
-                                        .column
-                                        .column
-                                        .column
-                                        .column
-                                        .column
-                                        .column
-                                        .column
-                                        .right.aligned.column
+                                        .column.right.aligned
                                             //<div id="remove_file" class="ui teal large fluid button" value="{{id}}"><i class="minus icon"></i></div>
-                                            #remove.symbol(style="transform:scale(1.5);")
-                                                <i id="remove_file" value="{{id}}" class="green minus icon"></i>
-                                        .column
+                                            #remove.symbol
+                                                i.green.minus.icon(style="cursor: pointer;transform:scale(1.5);",value="{{id}}")#remove_file
                         </div>
                         |{{/each}}
                 .two.fields(style="margin-top:100px;margin-bottom:70px;")
                     .field(style="padding-right:50px;")
-                         .ui.teal.large.fluid.button#job_save Save
+                         .ui.teal.fluid.button#job_save Save
                     .field(style="padding-left:50px;")
-                         .ui.teal.large.fluid.button#job_run Save & Run
+                         .ui.teal.fluid.button#job_run Save & Run
