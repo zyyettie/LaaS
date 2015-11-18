@@ -91,7 +91,7 @@ LaaS.module('Inbox', function (Inbox, LaaS, Backbone, Marionette) {
         if($('#NEW').hasClass('active'))
           var apiAddress = appContext + "/controllers/notifications/"+$(this).attr('id');
         $.getJSON(apiAddress,function(data){
-          $(e.target).remove();
+          $(e.target).css('text-decoration','line-through');
         });
       });
     }
