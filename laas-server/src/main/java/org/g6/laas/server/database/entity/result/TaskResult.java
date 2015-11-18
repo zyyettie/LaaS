@@ -18,6 +18,6 @@ import javax.persistence.OneToOne;
 public class TaskResult extends LaaSAuditable<User> {
     private static final long serialVersionUID = -5053098663559141920L;
 
-    @OneToOne(cascade={CascadeType.PERSIST})
+    @OneToOne(cascade={CascadeType.ALL})
     private File file;
 }

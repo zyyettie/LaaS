@@ -87,7 +87,6 @@ public class JobQueueHandler implements InitializingBean {
                 taskRunning.setRootCause(e.getMessage());
             }
 
-            jobService.saveTaskRunning(taskRunning);
         }
 
         updateJobRunningStatus(queueJob.getJobRunning());
