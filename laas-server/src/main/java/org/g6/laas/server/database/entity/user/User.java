@@ -79,8 +79,6 @@ public class User extends LaaSPersistable {
     public interface UserDTO {
     }
 
-    ;
-
     @JsonView(UserDTO.class)
     @Override
     public Long getId() {

@@ -11,4 +11,6 @@ public interface NotificationSummaryProjection {
     UserSummaryProjection getFrom();
 
     String getSummary();
+
+    String getStatus();
 }

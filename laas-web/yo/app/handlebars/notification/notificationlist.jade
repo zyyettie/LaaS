@@ -2,5 +2,6 @@
    |{{#each notifications}}
    .ui.item
       .content
-         a.description(href="/notifications/{{id}}") {{{summary}}}
+         p.description(id="{{id}}",style="cursor:pointer;")
+            {{{summary}}}
    |{{/each}}

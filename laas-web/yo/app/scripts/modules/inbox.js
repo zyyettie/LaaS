@@ -18,7 +18,7 @@ LaaS.module('Inbox', function (Inbox, LaaS, Backbone, Marionette) {
         $('#inbox .label').css('visibility','hidden');
       }
     })
-  }, 20000);
+  }, 10000);
 
   var NotificationListView = Marionette.ItemView.extend({
     initialize: function (pagedNotifications) {
@@ -36,6 +36,34 @@ LaaS.module('Inbox', function (Inbox, LaaS, Backbone, Marionette) {
         event.preventDefault();
         LaaS.navigate($(this).attr('href'),true);
       });
+      this.$('#notificationMenu a.item').click(function(e){
+        $('#notificationMenu a.item').removeClass('active');
+        $(e.target).addClass('active');
+        $('#pagingWrapper').empty();
+        var clickedId = $(this).attr('id');
+        $.when(LaaS.request('notification:entities:me',{status:clickedId})).done(function(pagedNotifications){
+          $('#content').html(template({notifications:pagedNotifications.notifications}));
+          $('#pagingWrapper').html('<div id="paging">');
+          $('#paging').twbsPagination({
+            totalPages: pagedNotifications.page.totalPages,
+            startPage: pagedNotifications.page.number + 1,
+            visiblePages: 6,
+            first: '<<',
+            prev: '<',
+            next: '>',
+            last: '>>',
+            onPageClick: function (event, page) {
+              var template = JST[baseTemplatePath + '/notificationlist'];
+              var status = $('a.active.item').id;
+              $.when(LaaS.request('notification:entities:me',{page:page-1,status:status})).done(function (data) {
+                var html = template({notifications: data.notifications});
+                $('#content').html(html);
+              });
+            }
+          });
+        });
+      });
+
       if(this.paging.number + 1 <= this.paging.totalPages){
         this.$('#paging').twbsPagination({
           totalPages: this.paging.totalPages,
@@ -47,21 +75,33 @@ LaaS.module('Inbox', function (Inbox, LaaS, Backbone, Marionette) {
           last: '>>',
           onPageClick: function (event, page) {
             var template = JST[baseTemplatePath + '/notificationlist'];
-            $.when(LaaS.request('notification:entities:me',{page:page-1})).done(function (data) {
+            var status = $('a.active.item').id;
+            $.when(LaaS.request('notification:entities:me',{page:page-1,status:status})).done(function (data) {
               var html = template({notifications: data.notifications});
               $('#content').html(html);
             });
           }
         })
       }
+    },
+
+    onDomRefresh:function(){
+      this.$('p.description').click(function(e){
+        e.preventDefault();
+        if($('#NEW').hasClass('active'))
+          var apiAddress = appContext + "/controllers/notifications/"+$(this).attr('id');
+        $.getJSON(apiAddress,function(data){
+          $(e.target).remove();
+        });
+      });
     }
   });
 
   var NotificationController = Marionette.Controller.extend({
     listMyNotifications: function () {
-      $.when(LaaS.request('notification:entities:me')).done(function(pagedNotifications){
+      $.when(LaaS.request('notification:entities:me',{status:'NEW'})).done(function(pagedNotifications){
          var list = new NotificationListView(pagedNotifications);
-        LaaS.mainRegion.show(list);
+         LaaS.mainRegion.show(list);
       });
     }
   });
