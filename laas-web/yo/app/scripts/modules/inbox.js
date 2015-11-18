@@ -44,7 +44,7 @@ LaaS.module('Inbox', function (Inbox, LaaS, Backbone, Marionette) {
         $.when(LaaS.request('notification:entities:me',{status:clickedId})).done(function(pagedNotifications){
           $('#content').html(template({notifications:pagedNotifications.notifications}));
           $('#pagingWrapper').html('<div id="paging">');
-          $('#paging').twbsPagination({
+          if(pagedNotifications.page.number + 1 <= pagedNotifications.page.totalPages){$('#paging').twbsPagination({
             totalPages: pagedNotifications.page.totalPages,
             startPage: pagedNotifications.page.number + 1,
             visiblePages: 6,
@@ -54,13 +54,13 @@ LaaS.module('Inbox', function (Inbox, LaaS, Backbone, Marionette) {
             last: '>>',
             onPageClick: function (event, page) {
               var template = JST[baseTemplatePath + '/notificationlist'];
-              var status = $('a.active.item').id;
+              var status = $('#notificationMenu a.active.item').attr('id');
               $.when(LaaS.request('notification:entities:me',{page:page-1,status:status})).done(function (data) {
                 var html = template({notifications: data.notifications});
                 $('#content').html(html);
               });
             }
-          });
+          })};
         });
       });
 
@@ -75,7 +75,7 @@ LaaS.module('Inbox', function (Inbox, LaaS, Backbone, Marionette) {
           last: '>>',
           onPageClick: function (event, page) {
             var template = JST[baseTemplatePath + '/notificationlist'];
-            var status = $('a.active.item').id;
+            var status = $('#notificationMenu a.active.item').attr('id');
             $.when(LaaS.request('notification:entities:me',{page:page-1,status:status})).done(function (data) {
               var html = template({notifications: data.notifications});
               $('#content').html(html);
@@ -86,14 +86,15 @@ LaaS.module('Inbox', function (Inbox, LaaS, Backbone, Marionette) {
     },
 
     onDomRefresh:function(){
-      this.$('p.description').click(function(e){
+      this.$('#notificationlist p.description').click(function(e){
+        var clicking = this;
         e.preventDefault();
-        if($('#NEW').hasClass('active'))
+        if($('#NEW').hasClass('active')){
           var apiAddress = appContext + "/controllers/notifications/"+$(this).attr('id');
-        $.getJSON(apiAddress,function(data){
-          $(e.target).css('text-decoration','line-through');
+          $.getJSON(apiAddress,function(data){
+          $(clicking).css('text-decoration','line-through');
         });
-      });
+      }});
     }
   });
 

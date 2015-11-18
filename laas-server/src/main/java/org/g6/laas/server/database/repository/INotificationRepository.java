@@ -12,10 +12,10 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource(excerptProjection = NotificationSummaryProjection.class)
 public interface INotificationRepository extends JpaRepository<Notification, Long> {
 
-    @Query("select n from Notification n where n.inbox = ?#{principal.inbox} and n.status=:status")
+    @Query("select n from Notification n where n.inbox = ?#{principal.inbox} and n.status=:status order by n.createdDate desc")
     Page<Notification> findMyNotification(@Param("status") String status, Pageable pageable);
 
-    @Query("select n from Notification n where n.inbox = ?#{principal.inbox}")
+    @Query("select n from Notification n where n.inbox = ?#{principal.inbox } order by n.createdDate desc")
     Page<Notification> allMyNotifications(Pageable pageable);
 
     Page<Notification> findByStatus(String status, Pageable pageable);
