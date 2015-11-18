@@ -34,7 +34,13 @@ public class RadShowTask extends SMRTETask<String> {
             case TEXT: // text
                 return allSet.getContent();
             case HTML: // html
-                return "<div id='tree'>\n<ul>\n"+allSet.getHtmlContent()+"</ul>\n</div>";
+                String content = "<h2 class=\"ui header\">\n" +
+                        "  <img class=\"ui image\" src=\"/images/icons/school.png\">\n" +
+                        "  <div class=\"content\" style=\"margin-top:10px\">\n" +
+                        "    Rad Call Stack Tree:\n" +
+                        "  </div>\n" +
+                        "</h2>\n" + "<div id='tree'>\n<ul>\n"+allSet.getHtmlContent()+"</ul>\n</div>";
+                return content;
             case JSON: // JSON format
                 return allSet.getJsonContent();
             default:
