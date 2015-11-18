@@ -23,32 +23,23 @@
                             .field
                                 label Tasks
                             .field
-                                #add.symbol(style="transform:scale(1.5);")
-                                    <i id="add_task" class="green plus icon"></i>
+                                #add.symbol
+                                    i.green.plus.icon(style="cursor: pointer;transform:scale(1.5);")#add_task
                             .field
                     .field
                 .field
                     .ui.divided.list
                         |{{#each tasks}}
-                        <div id="task_{{id}}">
-                        .item
-                            .content
-                                .ui.grid
-                                    .ui.ten.column.row(style="margin-top:10px;margin-bottom:10px;")
-                                        .column
-                                            label {{name}}
-                                        .column
-                                        .column
-                                        .column
-                                        .column
-                                        .column
-                                        .column
-                                        .column
-                                        .right.aligned.column
-                                            #remove.symbol(style="transform:scale(1.5);")
-                                                <i id="remove_task" value="{{id}}" class="green minus icon"></i>
-                                        .column
-                        </div>
+                        div(id="task_{{id}}")
+                            .item
+                                .content
+                                    .ui.grid
+                                        .ui.two.column.row(style="margin-top:10px;margin-bottom:10px;")
+                                            .column
+                                                label {{name}}
+                                            .right.aligned.column
+                                                #remove.symbol
+                                                    i.green.minus.icon(style="cursor: pointer;transform:scale(1.5);",value="{{id}}")#remove_task
                         |{{/each}}
                 .two.fields
                     .field
