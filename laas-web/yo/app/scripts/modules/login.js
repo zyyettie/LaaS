@@ -31,6 +31,8 @@ LaaS.module('Login', function(Login, LaaS, Backbone, Marionette) {
                 }
             });
             $('#header').hide();
+            $('body').css('background-image','url(../images/login.jpg)');
+            $('#nav').css('visibility','hidden');
         },
         ui:{
             submitBtn:'.teal.button'
