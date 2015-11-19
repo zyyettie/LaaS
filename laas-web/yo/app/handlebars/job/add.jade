@@ -1,7 +1,7 @@
 .ui.centered.grid
-    .fourteen.wide.column
-        .ui.green.segment(style="margin-top:5px;padding:20px 40px;")
-            h2#title New Job
+    .twelve.wide.column
+        .ui.green.segment(style="margin-top:5px;padding:75px 60px;")
+            h2#title(style="margin-top: -30px;margin-bottom: 30px;;") New Job
             form.ui.form
                 .two.fields
                     .field
@@ -38,7 +38,7 @@
                             .item
                                 .content
                                     .ui.grid
-                                        .ui.two.column.row(style="margin-top:10px;margin-bottom:10px;")
+                                        .ui.five.column.row(style="margin-top:10px;margin-bottom:10px;")
                                             .column
                                                 label {{originalName}}
                                             .column.right.aligned
@@ -46,7 +46,7 @@
                                                 #remove.symbol
                                                     i.green.minus.icon(style="cursor: pointer;transform:scale(1.5);",value="{{id}}")#remove_file
                         |{{/each}}
-                .two.fields(style="margin-top:100px;margin-bottom:70px;")
+                .two.center.fields(style="margin-top:100px;margin-bottom:70px;")
                     .field(style="padding-right:50px;")
                          .ui.teal.fluid.button#job_save Save
                     .field(style="padding-left:50px;")
