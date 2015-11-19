@@ -26,6 +26,9 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
                 LaaS.navigate('/notifications/me',true);
             });
             $('#header').show();
+            $('body').css('background-image','none');
+            $('#nav').css('min-height',window.innerHeight-60);
+            $('#nav').css('visibility','visible');
         }
     });
 
