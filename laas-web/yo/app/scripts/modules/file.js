@@ -57,9 +57,10 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
         template: JST['app/handlebars/file/layout'],
         onRender: function () {
             var that = this;
-            var template = JST[baseTemplatePath + '/select'];
+            var template = JST[baseTemplatePath + '/content'];
             var html = template({files: this.files});
             this.$('#content').html(html);
+            this.$('#buttons').html(JST[baseTemplatePath + '/select']);
             if (this.paging.number + 1 < this.paging.totalPages) {
                 this.$('#paging').twbsPagination({
                     totalPages: this.paging.totalPages,
@@ -148,9 +149,10 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
         template: JST['app/handlebars/file/layout'],
         onRender: function () {
             var that = this;
-            var template = JST[baseTemplatePath + '/mylist'];
+            var template = JST[baseTemplatePath + '/content'];
             var html = template({files: this.files});
             this.$('#content').html(html);
+            this.$('#buttons').html(JST[baseTemplatePath + '/mylist']);
             if (this.paging.number + 1 <= this.paging.totalPages) {
                 this.$('#paging').twbsPagination({
                     totalPages: this.paging.totalPages,

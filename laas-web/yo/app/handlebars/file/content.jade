@@ -1,0 +1,23 @@
+table.ui.compact.celled.definition.table
+    thead.full-width
+        tr
+            th.one.wide
+
+            th
+                |Name
+            th.two.wide
+                |Size
+            th.three.wide
+                |Type
+    tbody
+        |{{#each files}}
+        tr
+            td(style="text-align:center")
+                |<input id="file_checkbox_{{id}}" type="checkbox" {{checked}}/>
+            td
+                |{{originalName}}
+            td
+                |{{size}}KB
+            td
+                |{{type.type}}
+        |{{/each}}
