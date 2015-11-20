@@ -27,6 +27,7 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
             });
             $('#header').show();
             $('body').css('background-image','none');
+            $('#nav').css({'min-height':window.innerHeight-60,'background-color':'#A0F3E9','visibility':'visible'});
         }
     });
 
@@ -67,10 +68,10 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
     Home.showViewFrame = function(mainView) {
         //$('body').css('background-image','none');
         LaaS.headerRegion.show(new HeaderView());
-        LaaS.mainNavRegion.show(new NavView());
         if(mainView){
             LaaS.mainRegion.show(mainView);
         }
+        LaaS.mainNavRegion.show(new NavView());
         LaaS.footerRegion.show(new FooterView());
     };
 

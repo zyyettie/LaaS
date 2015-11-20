@@ -3,7 +3,7 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
 
     var baseUrl = LaaS.Util.Constants.APPCONTEXT+LaaS.Util.Constants.APIVERSION+'/jobs';
 
-    var JobModel = Backbone.Model.extend({
+    Entities.JobModel = Backbone.Model.extend({
         url: function(){
             return this.id ? baseUrl+"/" + this.id : baseUrl;
         },
@@ -21,7 +21,7 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
     });
 
     LaaS.reqres.setHandler('job:new', function() {
-        return new JobModel();
+        return new LaaS.Entities.JobModel();
     });
 
     LaaS.reqres.setHandler('job:entities', function(options) {
@@ -59,7 +59,7 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
     });
 
     LaaS.reqres.setHandler('job:entity', function(options) {
-        var job = new JobModel(options);
+        var job = new LaaS.Entities.JobModel(options);
         var defer = $.Deferred();
         job.fetch().then(function () {
             defer.resolve(job);

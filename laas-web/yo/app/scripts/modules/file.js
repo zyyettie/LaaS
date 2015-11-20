@@ -44,22 +44,27 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
                 }
             }
         }
-    }
+    };
 
     File.FileSelectView = Marionette.ItemView.extend({
         initialize: function (options) {
             this.files = options.data.files;
             this.paging = options.data.page;
-            this.job = options.job;
-            this.jobmodel = options.jobmodel;
-            this.selectFiles = [];
+            var jobinfo = sessionStorage.getItem('jobinfo');
+            if (jobinfo) {
+                jobinfo = JSON.parse(jobinfo);
+                this.job = jobinfo;
+                //this.jobmodel = jobinfo.jobmodel;
+                this.selectFiles = [];
+            }
         },
         template: JST['app/handlebars/file/layout'],
         onRender: function () {
             var that = this;
-            var template = JST[baseTemplatePath + '/select'];
+            var template = JST[baseTemplatePath + '/content'];
             var html = template({files: this.files});
             this.$('#content').html(html);
+            this.$('#buttons').html(JST[baseTemplatePath + '/select']);
             if (this.paging.number + 1 < this.paging.totalPages) {
                 this.$('#paging').twbsPagination({
                     totalPages: this.paging.totalPages,
@@ -117,17 +122,25 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
             checkSelected(this);
         },
         selectFile: function () {
-            var jobView = new LaaS.Job.JobView({model: this.jobmodel, job: this.job, scenarioList: this.job.scenarioList,
-                selectedScenarios: this.job.selectedScenarios, files: this.selectFiles, selectedParameterDefines: this.job.selectedParameterDefines});
-            LaaS.mainRegion.show(jobView);
             if (this.job.id == undefined) {
+                var jobView = new LaaS.Job.JobView({model: new LaaS.Entities.JobModel(), job: this.job, scenarioList: this.job.scenarioList,
+                    selectedScenarios: this.job.selectedScenarios, files: this.selectFiles, selectedParameterDefines: this.job.selectedParameterDefines});
+                LaaS.mainRegion.show(jobView);
                 LaaS.navigate('/jobnew');
+                sessionStorage.removeItem('jobinfo');
             } else {
-                LaaS.navigate('/jobs/' + this.job.id);
+                var that = this;
+                $.when(LaaS.request('job:entity', {id:this.job.id})).done(function(jobModel) {
+                    var jobView = new LaaS.Job.JobView({model: jobModel, job: that.job, scenarioList: that.job.scenarioList,
+                        selectedScenarios: that.job.selectedScenarios, files: that.selectFiles, selectedParameterDefines: that.job.selectedParameterDefines});
+                    LaaS.mainRegion.show(jobView);
+                    LaaS.navigate('/jobs/' + that.job.id);
+                    sessionStorage.removeItem('jobinfo');
+                });
             }
         },
         cancelSelect: function () {
-            var jobView = new LaaS.Job.JobView({model: this.jobmodel, job: this.job, scenarioList: this.job.scenarioList,
+            var jobView = new LaaS.Job.JobView({model: new LaaS.Entities.JobModel(), job: this.job, scenarioList: this.job.scenarioList,
                 selectedScenarios: this.job.selectedScenarios, files: this.job.files, selectedParameterDefines: this.job.selectedParameterDefines});
             LaaS.mainRegion.show(jobView);
             if (this.job.id == undefined) {
@@ -148,9 +161,10 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
         template: JST['app/handlebars/file/layout'],
         onRender: function () {
             var that = this;
-            var template = JST[baseTemplatePath + '/mylist'];
+            var template = JST[baseTemplatePath + '/content'];
             var html = template({files: this.files});
             this.$('#content').html(html);
+            this.$('#buttons').html(JST[baseTemplatePath + '/mylist']);
             if (this.paging.number + 1 <= this.paging.totalPages) {
                 this.$('#paging').twbsPagination({
                     totalPages: this.paging.totalPages,

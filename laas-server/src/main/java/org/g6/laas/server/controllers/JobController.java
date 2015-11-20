@@ -29,7 +29,7 @@ public class JobController {
     ResponseEntity<String> runJob(@PathVariable Long jobId) {
         Map<String, Object> jsonMap = new HashMap();
         Job job = jobService.findJobBy(jobId);
-        List<String> rootCauses = vlidateFiles(job);
+        List<String> rootCauses = validateFiles(job);
 
         if (!rootCauses.isEmpty()) {
             jsonMap.put("success", false);
@@ -48,7 +48,7 @@ public class JobController {
         return new ResponseEntity(JSONUtil.toJson(jsonMap), HttpStatus.OK);
     }
 
-    private List<String> vlidateFiles(Job job) {
+    private List<String> validateFiles(Job job) {
         List<File> strFiles = job.getFiles();
         List<String> rootCauses = new ArrayList();
         for (File file : strFiles) {
@@ -74,7 +74,6 @@ public class JobController {
         jobRunning.setStatus("RUNNING");
 
         Collection<Scenario> scenarios = job.getScenarios();
-        Collection<TaskRunning> taskRunnings = new ArrayList<>();
         Collection<Task> tasks;
 
         for (Iterator<Scenario> it = scenarios.iterator(); it.hasNext(); ) {
@@ -90,7 +89,6 @@ public class JobController {
             }
         }
 
-//        jobRunning.setTaskRunnings(taskRunnings);
         JobRunning retJobRunning = jobService.saveJobRunning(jobRunning);
 
         return retJobRunning;
@@ -121,5 +119,39 @@ public class JobController {
 
         String json = JSONUtil.toJson(resMap);
         return new ResponseEntity(json, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/controllers/jobRunnings/{id}")
+    ResponseEntity<String> reRunJobRunning(@PathVariable Long id) {
+        JobRunning jobRunning = jobService.findJobRunningBy(id);
+
+        JobRunning newJobRunning = new JobRunning();
+        newJobRunning.setJob(jobRunning.getJob());
+        newJobRunning.setParameters(jobRunning.getParameters());
+        newJobRunning.setFiles(getFiles(jobRunning.getFiles()));
+        newJobRunning.setStatus("RUNNING");
+
+        for (Iterator<TaskRunning> ite = jobRunning.getTaskRunnings().iterator(); ite.hasNext(); ) {
+            TaskRunning taskRunning = ite.next();
+            TaskRunning newTaskRunning = new TaskRunning();
+
+            newTaskRunning.setStatus("RUNNING");
+            newTaskRunning.setTask(taskRunning.getTask());
+            newTaskRunning.setJobRunning(newJobRunning);
+            newJobRunning.addTaskRunning(newTaskRunning);
+        }
+
+
+        JobRunning retJobRunning = jobService.saveJobRunning(newJobRunning);
+        JobService.JobRunningResult runningResult = jobService.runTasks(retJobRunning);
+
+        Map<String, Object> jsonMap = new HashMap();
+        jsonMap.put("job_id", String.valueOf(retJobRunning.getJob().getId()));
+        jsonMap.put("job_running_id", String.valueOf(retJobRunning.getId()));
+        jsonMap.put("is_syn", runningResult.isSyn());
+        jsonMap.put("success", runningResult.isSuccess());
+        jsonMap.put("rootcauses", runningResult.getRootCauses());
+
+        return new ResponseEntity(JSONUtil.toJson(jsonMap), HttpStatus.OK);
     }
 }

@@ -47,6 +47,9 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         },
         onRender: function () {
             var that = this;
+            if (!this.job.id) {
+                this.$('#title').text('New Job');
+            }
             this.$('select').dropdown();
             this.$('[name="selectedScenario"]').on('change', function () {
                 $('#parameters').empty();
@@ -80,15 +83,9 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
 
         },
         template: function (data) {
-            var template;
-            var html;
-            if (data.job.id == undefined) {
-                template = JST['app/handlebars/job/add'];
-            } else {
-                template = JST['app/handlebars/job/detail'];
-            }
+            var template = JST['app/handlebars/job/detail'];
 
-            html = template(data.job);
+            var html = template(data.job);
 
             var json = data.job.parameters ? JSON.parse(data.job.parameters) : {};
             var subHtml = LaaS.Form.generateParameterSubForm(data.selectedParameterDefines, json);
@@ -208,7 +205,8 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 thisjob.selectedname = thisjob.selectedScenarios[0].name;
             }
             $.when(LaaS.request('myFiles:entities')).done(function(data) {
-                var fileSelectView = new LaaS.File.FileSelectView({job:thisjob, data:data, jobmodel:that.model});
+                sessionStorage.setItem('jobinfo', JSON.stringify(thisjob));
+                var fileSelectView = new LaaS.File.FileSelectView({data:data});
                 LaaS.mainRegion.show(fileSelectView);
                 if (thisjob.id == undefined) {
                     LaaS.navigate('/jobnew/fileselect');
@@ -278,6 +276,25 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 var view = new JobListView(data);
                 LaaS.mainRegion.show(view);
             });
+        },
+        selectJobFiles: function(id) {
+            var jobStr = sessionStorage.getItem('jobinfo');
+            if (jobStr) {
+                var jobJson = JSON.parse(jobStr);
+                if (id == jobJson.id) {
+                    $.when(LaaS.request('myFiles:entities')).done(function(data) {
+                        var fileSelectView = new LaaS.File.FileSelectView({data:data});
+                        LaaS.mainRegion.show(fileSelectView);
+                    }).fail(function() {
+                            toastr.error('Cannot load files.');
+                    });
+                } else {
+                    toastr.error('Cannot load files.');
+                    sessionStorage.removeItem('jobinfo');
+                }
+            } else {
+                toastr.error('Cannot load files.');
+            }
         }
     });
 
@@ -285,6 +302,8 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
     LaaS.addInitializer(function () {
         new Marionette.AppRouter({
             appRoutes: {
+                'jobnew/fileselect': 'selectJobFiles',
+                'jobs/:id/fileselect' : 'selectJobFiles',
                 'jobnew(/)': 'jobnew',
                 'jobs(/)': 'showJobs',
                 'jobs/:id(/)': 'showJob',
