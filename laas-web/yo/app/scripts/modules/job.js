@@ -47,6 +47,9 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         },
         onRender: function () {
             var that = this;
+            if (!this.job.id) {
+                this.$('#title').text('New Job');
+            }
             this.$('select').dropdown();
             this.$('[name="selectedScenario"]').on('change', function () {
                 $('#parameters').empty();
@@ -80,15 +83,9 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
 
         },
         template: function (data) {
-            var template;
-            var html;
-            if (data.job.id == undefined) {
-                template = JST['app/handlebars/job/add'];
-            } else {
-                template = JST['app/handlebars/job/detail'];
-            }
+            var template = JST['app/handlebars/job/detail'];
 
-            html = template(data.job);
+            var html = template(data.job);
 
             var json = data.job.parameters ? JSON.parse(data.job.parameters) : {};
             var subHtml = LaaS.Form.generateParameterSubForm(data.selectedParameterDefines, json);
