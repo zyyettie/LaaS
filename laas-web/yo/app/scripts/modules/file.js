@@ -55,7 +55,7 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
                 jobinfo = JSON.parse(jobinfo);
                 this.job = jobinfo;
                 //this.jobmodel = jobinfo.jobmodel;
-                this.selectFiles = [];
+                this.selectFiles = this.job.files;
             }
         },
         template: JST['app/handlebars/file/layout'],
