@@ -21,7 +21,9 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             this.fileTypes = options.fileTypes;
         },
         serializeData: function () {
-            var data = {job: this.job, scenarioList: this.scenarioList, fileList: this.fileList, selectedScenarios: this.selectedScenarios, files: this.files, selectedParameterDefines: this.selectedParameterDefines};
+            var data = {job: this.job, scenarioList: this.scenarioList, fileList: this.fileList,
+                selectedScenarios: this.selectedScenarios, files: this.files,
+                selectedParameterDefines: this.selectedParameterDefines, fileTypes: this.fileTypes};
             if (data.job.selectedname == undefined) {
                 data.job.selectedname = "Select Scenario";
             }
@@ -51,6 +53,11 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             var that = this;
             if (!this.job.id) {
                 this.$('#title').text('New Job');
+            }
+            if (this.job.selectedScenarios && this.job.selectedScenarios.length > 0 && this.job.files && this.job.files.length > 0) {
+                this.$('#selectedScenario').prop("disabled", "true");
+            } else {
+                this.$('#selectedScenario').removeProp("disabled");
             }
             this.$('select').dropdown();
             this.$('[name="selectedScenario"]').on('change', function () {
@@ -86,6 +93,9 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 var id = this.attributes["value"]["value"];
                 that.removeFile(id);
                 $('#fileitem_'+id).empty();
+                if (!that.job.files || that.job.files.length == 0) {
+                    $('#selectedScenario').removeProp("disabled");
+                }
             })
 
         },
@@ -205,6 +215,10 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             }});
         },
         addFile: function () {
+            if (!this.job.fileTypes || this.job.fileTypes.length == 0) {
+                toastr.info('Please select one Scenario!');
+                return;
+            }
             var thisjob = this.job;
             var that = this;
             var json = Backbone.Syphon.serialize(this);
