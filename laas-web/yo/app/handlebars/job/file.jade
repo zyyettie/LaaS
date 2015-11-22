@@ -1,0 +1,24 @@
+table.ui.compact.celled.definition.table
+    thead.full-width
+        tr
+            th.one.wide
+            th
+                |Name
+            th.two.wide
+                |Size
+            th.three.wide
+                |Type
+    tbody
+        |{{#each files}}
+        tr(id="fileitem_{{id}}")
+            td(style="text-align:center")
+                #remove.symbol
+                    i.green.minus.icon(style="cursor: pointer;transform:scale(1.5);",value="{{id}}")#remove_file
+            td
+                |{{originalName}}
+            td
+                |{{size}}KB
+            td
+                |{{type.type}}
+        |{{/each}}
+

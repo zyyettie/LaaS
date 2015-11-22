@@ -18,6 +18,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             this.selectedScenarios = options.selectedScenarios;
             this.files = options.files;
             this.selectedParameterDefines = options.selectedParameterDefines;
+            this.fileTypes = options.fileTypes;
         },
         serializeData: function () {
             var data = {job: this.job, scenarioList: this.scenarioList, fileList: this.fileList, selectedScenarios: this.selectedScenarios, files: this.files, selectedParameterDefines: this.selectedParameterDefines};
@@ -27,6 +28,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             data.job.scenarioList = data.scenarioList;
             data.job.files = data.files ? data.files : [];
             data.job.selectedParameterDefines = data.selectedParameterDefines ? data.selectedParameterDefines : [];
+            data.job.fileTypes = data.fileTypes ? data.fileTypes : [];
 
             var json = data.job.parameters ? JSON.parse(data.job.parameters) : {};
             $.extend(data.job, json);
@@ -57,13 +59,18 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 var id = this.selectedOptions[0].value;
                 for (var i=0; i<that.scenarioList.length; i++) {
                     if (that.scenarioList[i].id == id) {
-                        var url = that.scenarioList[i]._links.parameterDefines.href;
-                        $.when(LaaS.request("parameterDefine:entitiesByUrl", {url: url})).done(function(selectedParameterDefines) {
+                        var parameterDefinesUrl = that.scenarioList[i]._links.parameterDefines.href;
+                        var fileTypeUrl = that.scenarioList[i]._links.fileTypes.href;
+                        $.when(LaaS.request("parameterDefine:entitiesByUrl", {url: parameterDefinesUrl}),
+                            LaaS.request('fileType:entitiesByUrl', {url: fileTypeUrl}))
+                            .done(function(selectedParameterDefines, fileTypes) {
                             that.job.selectedParameterDefines = selectedParameterDefines.parameterDefines;
                             var json = that.job.parameters ? JSON.parse(that.job.parameters) : {};
                             var subHtml = LaaS.Form.generateParameterSubForm(selectedParameterDefines.parameterDefines, json);
                             $('#parameters').append(subHtml);
                             LaaS.Form.enableDatetimeControl(selectedParameterDefines.parameterDefines);
+
+                            that.job.fileTypes = fileTypes.fileTypes;
                         });
                         break;
                     }
@@ -91,6 +98,12 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             var subHtml = LaaS.Form.generateParameterSubForm(data.selectedParameterDefines, json);
 
             html = html.replace('<div id="parameters"></div>', '<div id="parameters">'+subHtml+'</div>');
+
+            if (data.job.files && data.job.files.length > 0) {
+                template = JST['app/handlebars/job/file'];
+                subHtml = template(data.job);
+                html = html.replace('<div id="files"></div>', '<div id="parameters">'+subHtml+'</div>');
+            }
 
             return html;
         },
@@ -262,9 +275,12 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                     $.when(LaaS.request("scenario:entitiesByUrl", {"url":jobModel.attributes._links.scenarios.href}), LaaS.request("file:entitiesByUrl", {"url":jobModel.attributes._links.files.href}))
                         .done(function(selectedScenarios, selectedFiles) {
                             if (selectedScenarios) {
-                                $.when(LaaS.request("parameterDefine:entitiesByUrl", {"url":selectedScenarios.scenarios[0]._links.parameterDefines.href})).done(function(selectedParameterDefines) {
+                                $.when(LaaS.request("parameterDefine:entitiesByUrl", {"url":selectedScenarios.scenarios[0]._links.parameterDefines.href}),
+                                    LaaS.request("fileType:entitiesByUrl", {url:selectedScenarios.scenarios[0]._links.fileTypes.href}))
+                                    .done(function(selectedParameterDefines, fileTypes) {
                                     var view = new LaaS.Job.JobView({model:jobModel, job:jobModel.attributes, scenarioList:scenarioList.scenarios,
-                                        fileList:fileList.files, selectedScenarios:selectedScenarios.scenarios, files:selectedFiles.files, selectedParameterDefines:selectedParameterDefines.parameterDefines});
+                                        fileList:fileList.files, selectedScenarios:selectedScenarios.scenarios, files:selectedFiles.files,
+                                        selectedParameterDefines:selectedParameterDefines.parameterDefines, fileTypes:fileTypes.fileTypes});
                                     LaaS.mainRegion.show(view);
                                 });
                             }

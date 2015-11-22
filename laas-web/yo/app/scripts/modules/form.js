@@ -30,6 +30,9 @@ LaaS.module('Form', function(Form, LaaS, Backbone, Marionette) {
         }
 
         if (elementInLine > 0) {
+            if (elementInLine < lineContained) {
+                subHtml += '<div class="field"/>';
+            }
             subHtml += '</div>';
         }
         return subHtml;
