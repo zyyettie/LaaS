@@ -60,8 +60,48 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 this.$('#selectedScenario').removeProp("disabled");
             }
             this.$('select').dropdown();
+
+            var json = this.job.parameters ? JSON.parse(this.job.parameters) : {};
+            var subHtml = LaaS.Form.generateParameterSubForm(this.selectedParameterDefines, json);
+            this.$('#parameters').html(subHtml);
+
+            if (this.job.files && this.job.files.length > 0 ) {
+                var size = 10;
+                var currentFiles = [];
+                for (var i=0; i<size && i<this.job.files.length; i++) {
+                    currentFiles.push(this.job.files[i]);
+                }
+                var template = JST['app/handlebars/job/file'];
+                var subHtml = template({files:currentFiles});
+                this.$('#files').html(subHtml);
+                var totalPages = Math.floor(this.job.files.length / size) + 1;
+                if (totalPages > 1) {
+                    this.$('#paging').twbsPagination({
+                        totalPages: totalPages,
+                        startPage: 1,
+                        visiblePages: 6,
+                        first: '<<',
+                        prev: '<',
+                        next: '>',
+                        last: '>>',
+                        onPageClick: function (event, page) {
+                            //var size = 10;
+                            var currentFiles = [];
+                            for (var i=size*(page-1); i<size*page; i++) {
+                                if (!that.job.files[i]) {
+                                    break;
+                                }
+                                currentFiles.push(that.job.files[i]);
+                            }
+                            var template = JST['app/handlebars/job/file'];
+                            var html = template({files: currentFiles});
+                            $('#files').html(html);
+                        }
+                    })
+                }
+            }
             this.$('[name="selectedScenario"]').on('change', function () {
-                $('#parameters').empty();
+                //$('#parameters').empty();
 
                 var id = this.selectedOptions[0].value;
                 for (var i=0; i<that.scenarioList.length; i++) {
@@ -74,7 +114,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                             that.job.selectedParameterDefines = selectedParameterDefines.parameterDefines;
                             var json = that.job.parameters ? JSON.parse(that.job.parameters) : {};
                             var subHtml = LaaS.Form.generateParameterSubForm(selectedParameterDefines.parameterDefines, json);
-                            $('#parameters').append(subHtml);
+                            $('#parameters').html(subHtml);
                             LaaS.Form.enableDatetimeControl(selectedParameterDefines.parameterDefines);
 
                             that.job.fileTypes = fileTypes.fileTypes;
@@ -108,12 +148,6 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             var subHtml = LaaS.Form.generateParameterSubForm(data.selectedParameterDefines, json);
 
             html = html.replace('<div id="parameters"></div>', '<div id="parameters">'+subHtml+'</div>');
-
-            if (data.job.files && data.job.files.length > 0) {
-                template = JST['app/handlebars/job/file'];
-                subHtml = template(data.job);
-                html = html.replace('<div id="files"></div>', '<div id="parameters">'+subHtml+'</div>');
-            }
 
             return html;
         },
