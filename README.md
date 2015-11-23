@@ -63,11 +63,11 @@ Add
 	email = <github account>
 
 4. In C:\git_root
-       $ git clone https://github.com/zyyettie/LaaS.git
+              $ git clone https://github.com/zyyettie/LaaS.git
 
 5. In C:\git_root\LaaS
-       $ mvn clean install
-       $ mvn idea:idea
+              $ mvn clean install
+              $ mvn idea:idea
 
 6. idea.exe.vmoptions or idea64.exe.vmoptions
 -Xms512m
