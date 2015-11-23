@@ -6,6 +6,7 @@ Powerful log analysis platform.
 
 - JDK 1.7+ [http://www.oracle.com/technetwork/java/javase/overview/index.html](http://www.oracle.com/technetwork/java/javase/overview/index.html)
 - Maven 3.0+ [http://maven.apache.org](http://maven.apache.org)
+- NodeJS [https://nodejs.org/](https://nodejs.org/)
 
 #### Maven build from Source
        $ git clone https://github.com/zyyettie/LaaS.git
@@ -62,11 +63,11 @@ Add
 	email = <github account>
 
 4. In C:\git_root
-       $ git clone https://github.com/zyyettie/CATLaaS.git
+              $ git clone https://github.com/zyyettie/LaaS.git
 
-5. In C:\git_root\CATLaaS
-       $ mvn clean install
-       $ mvn idea:idea
+5. In C:\git_root\LaaS
+              $ mvn clean install
+              $ mvn idea:idea
 
 6. idea.exe.vmoptions or idea64.exe.vmoptions
 -Xms512m
