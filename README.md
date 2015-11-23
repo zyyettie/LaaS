@@ -6,6 +6,7 @@ Powerful log analysis platform.
 
 - JDK 1.7+ [http://www.oracle.com/technetwork/java/javase/overview/index.html](http://www.oracle.com/technetwork/java/javase/overview/index.html)
 - Maven 3.0+ [http://maven.apache.org](http://maven.apache.org)
+- NodeJS [https://nodejs.org/]
 
 #### Maven build from Source
        $ git clone https://github.com/zyyettie/LaaS.git
