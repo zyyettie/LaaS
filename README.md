@@ -62,9 +62,9 @@ Add
 	email = <github account>
 
 4. In C:\git_root
-       $ git clone https://github.com/zyyettie/CATLaaS.git
+       $ git clone https://github.com/zyyettie/LaaS.git
 
-5. In C:\git_root\CATLaaS
+5. In C:\git_root\LaaS
        $ mvn clean install
        $ mvn idea:idea
 
