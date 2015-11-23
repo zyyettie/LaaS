@@ -101,8 +101,6 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 }
             }
             this.$('[name="selectedScenario"]').on('change', function () {
-                //$('#parameters').empty();
-
                 var id = this.selectedOptions[0].value;
                 for (var i=0; i<that.scenarioList.length; i++) {
                     if (that.scenarioList[i].id == id) {
@@ -134,7 +132,9 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 that.removeFile(id);
                 $('#fileitem_'+id).empty();
                 if (!that.job.files || that.job.files.length == 0) {
-                    $('#selectedScenario').removeProp("disabled");
+                    $('#files').empty();
+                    $('#paging').empty();
+                    $('#selectedScenario').parent().removeClass('disabled');
                 }
             })
 
