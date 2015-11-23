@@ -168,7 +168,7 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
             var html = template({files: this.files});
             this.$('#content').html(html);
             this.$('#buttons').html(JST[baseTemplatePath + '/mylist']);
-            if (this.paging.number + 1 <= this.paging.totalPages) {
+            if (this.paging.number + 1 < this.paging.totalPages) {
                 this.$('#paging').twbsPagination({
                     totalPages: this.paging.totalPages,
                     startPage: this.paging.number + 1,
