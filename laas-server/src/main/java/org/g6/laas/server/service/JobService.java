@@ -7,6 +7,7 @@ import org.g6.laas.core.engine.AnalysisEngine;
 import org.g6.laas.core.engine.task.AnalysisTask;
 import org.g6.laas.core.engine.task.report.ReportBuilder;
 import org.g6.laas.core.engine.task.report.ReportModel;
+import org.g6.laas.core.engine.task.workflow.WorkFlowTasks;
 import org.g6.laas.core.file.LogFile;
 import org.g6.laas.server.database.entity.file.File;
 import org.g6.laas.server.database.entity.Job;
@@ -14,6 +15,8 @@ import org.g6.laas.server.database.entity.JobRunning;
 import org.g6.laas.server.database.entity.result.TaskResult;
 import org.g6.laas.server.database.entity.task.Task;
 import org.g6.laas.server.database.entity.task.TaskRunning;
+import org.g6.laas.server.database.entity.task.Workflow;
+import org.g6.laas.server.database.entity.task.WorkflowTask;
 import org.g6.laas.server.database.repository.IJobRepository;
 import org.g6.laas.server.database.repository.IJobRunningRepository;
 import org.g6.laas.server.database.repository.ITaskRunningRepository;
@@ -133,7 +136,15 @@ public class JobService {
 
         for (Iterator<TaskRunning> ite = taskRunnings.iterator(); ite.hasNext(); ) {
             TaskRunning taskRunning = ite.next();
-            Task task = taskRunning.getTask();
+            Workflow workflow = taskRunning.getWorkflow();
+            List<WorkflowTask> workflowTasks = workflow.getTasks();
+            Task task = null;
+            if(workflowTasks.size() == 1){
+                //if there is only one Task under a workflow, just to run this task directly
+                task = workflowTasks.get(0).getTask();
+            }else{
+                //TODO need to consider workflow here
+            }
             TaskRunningResult taskRunningResult = null;
             ReflectionObjWrapper taskWrapper = null;
             try {

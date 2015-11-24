@@ -18,7 +18,7 @@ public class TaskRunning extends LaaSAuditable<User> {
     private static final long serialVersionUID = -8603475553208415613L;
 
     @ManyToOne
-    private Task task;
+    private Workflow workflow;
 
     @ManyToOne
     private JobRunning jobRunning;
