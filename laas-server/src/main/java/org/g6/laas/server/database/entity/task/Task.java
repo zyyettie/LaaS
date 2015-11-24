@@ -34,9 +34,6 @@ public class Task extends LaaSAuditable<User> {
     @ManyToOne
     private FileType fileType;
 
-    @OneToMany(mappedBy = "task")
-    private List<TaskRunning> taskRunnings = new ArrayList<>();
-
     @ManyToMany
     private List<ParameterDefine> parameterDefines = new ArrayList<>();
 }
