@@ -134,7 +134,7 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
                 $.when(LaaS.request('job:entity', {id:this.job.id})).done(function(jobModel) {
                     var jobView = new LaaS.Job.JobView({model: jobModel, job: that.job, scenarioList: that.job.scenarioList,
                         selectedScenarios: that.job.selectedScenarios, files: that.selectFiles, selectedParameterDefines: that.job.selectedParameterDefines,
-                        fileTypes:this.job.fileTypes});
+                        fileTypes:that.job.fileTypes});
                     LaaS.mainRegion.show(jobView);
                     LaaS.navigate('/jobs/' + that.job.id);
                     sessionStorage.removeItem('jobinfo');

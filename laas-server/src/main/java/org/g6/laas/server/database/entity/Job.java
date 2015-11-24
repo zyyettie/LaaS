@@ -45,6 +45,10 @@ public class Job extends JobSubEntity {
         return "";
     }
 
+    public String getScenarioName() {
+        return this.getScenario().getName();
+    }
+
     public String getJobDate() {
         if (this.getCreatedDate() == null)
             return "";

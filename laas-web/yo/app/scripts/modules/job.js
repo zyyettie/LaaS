@@ -15,16 +15,16 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             }
             this.scenarioList = options.scenarioList;
             this.fileList = options.fileList;
-            this.selectedScenarios = options.selectedScenarios;
+            this.scenario = options.scenario;
             this.files = options.files;
             this.selectedParameterDefines = options.selectedParameterDefines;
             this.fileTypes = options.fileTypes;
         },
         serializeData: function () {
             var data = {job: this.job, scenarioList: this.scenarioList, fileList: this.fileList,
-                selectedScenarios: this.selectedScenarios, files: this.files,
+                scenario: this.scenario, files: this.files,
                 selectedParameterDefines: this.selectedParameterDefines, fileTypes: this.fileTypes};
-            if (data.job.selectedname == undefined) {
+            if (!data.job.selectedname) {
                 data.job.selectedname = "Select Scenario";
             }
             data.job.scenarioList = data.scenarioList;
@@ -35,16 +35,16 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             var json = data.job.parameters ? JSON.parse(data.job.parameters) : {};
             $.extend(data.job, json);
 
-            if (data.selectedScenarios != undefined && data.selectedScenarios.length > 0 && data.selectedScenarios.length > 0) {
+            if (data.scenario) {
                 for (var i = 0; i < data.scenarioList.length; i++) {
-                    if (data.scenarioList[i].id == data.selectedScenarios[0].id) {
+                    if (data.scenarioList[i].id == data.scenario.id) {
                         data.job.scenarioList[i].selected = "selected";
                         break;
                     }
                 }
-                data.job.selectedid = data.selectedScenarios[0].id;
-                data.job.selectedname = data.selectedScenarios[0].name;
-                data.job.selectedScenarios = data.selectedScenarios;
+                data.job.selectedid = data.scenario.id;
+                data.job.selectedname = data.scenario.name;
+                data.job.scenario = data.scenario;
             }
            // }
             return data;
@@ -54,7 +54,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             if (!this.job.id) {
                 this.$('#title').text('New Job');
             }
-            if (this.job.selectedScenarios && this.job.selectedScenarios.length > 0 && this.job.files && this.job.files.length > 0) {
+            if (this.job.scenario && this.job.files && this.job.files.length > 0) {
                 this.$('#selectedScenario').prop("disabled", "true");
             } else {
                 this.$('#selectedScenario').removeProp("disabled");
@@ -182,8 +182,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
 
             json.parameters = this.getParameter(json, that.job.selectedParameterDefines);
 
-            json.scenarios = [];
-            json.scenarios.push(appContext+apiVersion+"/scenarios/" + json.selectedScenario);
+            json.scenario = appContext+apiVersion+"/scenarios/" + json.selectedScenario;
 
             json.files = [];
             for (var i=0; i<this.job.files.length; i++) {
@@ -209,8 +208,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 return;
             }
             json.parameters = this.getParameter(json, that.job.selectedParameterDefines);
-            json.scenarios = [];
-            json.scenarios.push(appContext+apiVersion+"/scenarios/" + json.selectedScenario);
+            json.scenario = appContext+apiVersion+"/scenarios/" + json.selectedScenario;
 
             json.files = [];
             for (var i=0; i<this.job.files.length; i++) {
@@ -259,11 +257,10 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             json.parameters = this.getParameter(json, that.job.selectedParameterDefines);
             $.extend(thisjob, json);
             if (thisjob.selectedScenario != undefined && thisjob.selectedScenario.length > 0
-                && (thisjob.selectedScenarios == undefined || thisjob.selectedScenarios.length<=0 || thisjob.scenarioList[thisjob.selectedScenario].id != thisjob.selectedScenarios[0].id)) {
-                thisjob.selectedScenarios = [];
-                thisjob.selectedScenarios.push(thisjob.scenarioList[thisjob.selectedScenario - 1]);
-                thisjob.selectedid = thisjob.selectedScenarios[0].id;
-                thisjob.selectedname = thisjob.selectedScenarios[0].name;
+                && (!thisjob.scenario || thisjob.scenarioList[thisjob.selectedScenario].id != thisjob.scenario.id)) {
+                thisjob.scenario = thisjob.scenarioList[thisjob.selectedScenario - 1];
+                thisjob.selectedid = thisjob.scenario.id;
+                thisjob.selectedname = thisjob.scenario.name;
             }
             $.when(LaaS.request('myFiles:entities')).done(function(data) {
                 sessionStorage.setItem('jobinfo', JSON.stringify(thisjob));
@@ -320,14 +317,14 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         showJob: function (id) {
             $.when(LaaS.request('job:entity', {'id':id}), LaaS.request('scenario:entities'), LaaS.request('file:entities'))
                 .done(function(jobModel, scenarioList, fileList){
-                    $.when(LaaS.request("scenario:entitiesByUrl", {"url":jobModel.attributes._links.scenarios.href}), LaaS.request("file:entitiesByUrl", {"url":jobModel.attributes._links.files.href}))
-                        .done(function(selectedScenarios, selectedFiles) {
-                            if (selectedScenarios) {
-                                $.when(LaaS.request("parameterDefine:entitiesByUrl", {"url":selectedScenarios.scenarios[0]._links.parameterDefines.href}),
-                                    LaaS.request("fileType:entitiesByUrl", {url:selectedScenarios.scenarios[0]._links.fileTypes.href}))
+                    $.when(LaaS.request("scenario:entityByUrl", {"url":jobModel.attributes._links.scenario.href}), LaaS.request("file:entitiesByUrl", {"url":jobModel.attributes._links.files.href}))
+                        .done(function(scenario, selectedFiles) {
+                            if (scenario) {
+                                $.when(LaaS.request("parameterDefine:entitiesByUrl", {"url":scenario._links.parameterDefines.href}),
+                                    LaaS.request("fileType:entitiesByUrl", {url:scenario._links.fileTypes.href}))
                                     .done(function(selectedParameterDefines, fileTypes) {
                                     var view = new LaaS.Job.JobView({model:jobModel, job:jobModel.attributes, scenarioList:scenarioList.scenarios,
-                                        fileList:fileList.files, selectedScenarios:selectedScenarios.scenarios, files:selectedFiles.files,
+                                        fileList:fileList.files, scenario:scenario, files:selectedFiles.files,
                                         selectedParameterDefines:selectedParameterDefines.parameterDefines, fileTypes:fileTypes.fileTypes});
                                     LaaS.mainRegion.show(view);
                                 });
