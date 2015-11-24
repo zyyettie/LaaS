@@ -46,6 +46,8 @@ public class Job extends JobSubEntity {
     }
 
     public String getJobDate() {
+        if (this.getCreatedDate() == null)
+            return "";
         return this.getCreatedDate().toString("yyyy/MM/dd HH:mm:ss");
     }
 }

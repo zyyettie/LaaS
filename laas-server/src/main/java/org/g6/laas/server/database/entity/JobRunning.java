@@ -51,6 +51,8 @@ public class JobRunning extends JobSubEntity {
     }
 
     public String getRunningTime() {
+        if (this.getCreatedDate() == null)
+            return "";
         return this.getCreatedDate().toString("yyyy/MM/dd HH:mm:ss");
     }
 }
