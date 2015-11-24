@@ -74,15 +74,12 @@ public class JobController {
         Scenario scenario = job.getScenario();
 
         for (Iterator<Workflow> ite = scenario.getWorkflows().iterator(); ite.hasNext(); ) {
-            List<WorkflowTask> tasks = ite.next().getTasks();
-            for (Iterator<WorkflowTask> wlIter = tasks.iterator(); ite.hasNext(); ) {
-                Task task = wlIter.next().getTask();
-                TaskRunning taskRunning = new TaskRunning();
-                taskRunning.setStatus("RUNNING");
-                taskRunning.setTask(task);
-                taskRunning.setJobRunning(jobRunning);
-                jobRunning.addTaskRunning(taskRunning);
-            }
+            Workflow workflow = ite.next();
+            TaskRunning taskRunning = new TaskRunning();
+            taskRunning.setStatus("RUNNING");
+            taskRunning.setWorkflow(workflow);
+            taskRunning.setJobRunning(jobRunning);
+            jobRunning.addTaskRunning(taskRunning);
         }
 
         JobRunning retJobRunning = jobService.saveJobRunning(jobRunning);
@@ -107,7 +104,6 @@ public class JobController {
 
         for (Iterator<TaskRunning> ite = taskRunnings.iterator(); ite.hasNext(); ) {
             TaskRunning taskRunning = ite.next();
-            Task task = taskRunning.getTask();
             File resultFile = taskRunning.getResult().getFile();
             String content = FileUtil.readFullFile(new java.io.File(resultFile.getPath() + resultFile.getFileName()));
             resMap.put("desc", content);
@@ -132,7 +128,7 @@ public class JobController {
             TaskRunning newTaskRunning = new TaskRunning();
 
             newTaskRunning.setStatus("RUNNING");
-            newTaskRunning.setTask(taskRunning.getTask());
+            newTaskRunning.setWorkflow(taskRunning.getWorkflow());
             newTaskRunning.setJobRunning(newJobRunning);
             newJobRunning.addTaskRunning(newTaskRunning);
         }
