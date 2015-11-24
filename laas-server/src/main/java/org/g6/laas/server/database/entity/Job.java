@@ -44,4 +44,14 @@ public class Job extends JobSubEntity {
     public String getSummary() {
         return "";
     }
+
+    public String getJobDate() {
+        return this.getCreatedDate().toString("yyyy/MM/dd HH:mm:ss");
+    }
+
+    public String getScenario() {
+        if (this.scenarios.size() > 0)
+            return this.scenarios.get(0).getName();
+        return "";
+    }
 }
