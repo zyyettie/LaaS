@@ -74,7 +74,9 @@ public class JobQueueHandler implements InitializingBean {
                 Object object = queueTask.getRunningResult();
                 TaskRunningResult result = new TaskRunningResult();
                 result.setResult(object);
-                String report = jobService.genReport(result, taskRunning.getTask(), queueTask.isReport());
+                //String report = jobService.genReport(result, taskRunning.getTask(), queueTask.isReport());
+                //TODO
+                String report ="";
                 FileInfo resultFile = jobService.writeReportToFile(report);
 
                 jobService.handleResultFile(taskRunning, resultFile);
