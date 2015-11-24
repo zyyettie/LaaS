@@ -32,17 +32,14 @@ public class Scenario extends LaaSAuditable<User> {
     @ManyToOne
     private Product product;
 
-    @ManyToMany
-    private List<Category> categories = new ArrayList<>();
+    @ManyToOne
+    private Category category;
 
-    @ManyToMany(mappedBy = "scenarios")
+    @OneToMany(mappedBy = "scenario")
     private List<Job> jobs = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(name = "SCENARIO_TASK",
-            inverseJoinColumns = @JoinColumn(name = "TASK_ID"),
-            joinColumns = @JoinColumn(name = "SCENARIO_ID"))
-    private List<Task> tasks = new ArrayList<>();
+    @OneToMany(cascade={CascadeType.ALL}, mappedBy = "scenario")
+    private List<Workflow> workflows = new ArrayList();
 
     @ManyToMany
     private List<FileType> fileTypes = new ArrayList<>();

@@ -4,9 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.server.database.entity.file.File;
 import org.g6.laas.server.database.entity.Job;
 import org.g6.laas.server.database.entity.JobRunning;
-import org.g6.laas.server.database.entity.task.Scenario;
-import org.g6.laas.server.database.entity.task.Task;
-import org.g6.laas.server.database.entity.task.TaskRunning;
+import org.g6.laas.server.database.entity.task.*;
 import org.g6.laas.server.service.JobService;
 import org.g6.util.FileUtil;
 import org.g6.util.JSONUtil;
@@ -73,14 +71,12 @@ public class JobController {
         jobRunning.setFiles(getFiles(job.getFiles()));
         jobRunning.setStatus("RUNNING");
 
-        Collection<Scenario> scenarios = job.getScenarios();
-        Collection<Task> tasks;
+        Scenario scenario = job.getScenario();
 
-        for (Iterator<Scenario> it = scenarios.iterator(); it.hasNext(); ) {
-            Scenario scenario = it.next();
-            tasks = scenario.getTasks();
-            for (Iterator<Task> ite = tasks.iterator(); ite.hasNext(); ) {
-                Task task = ite.next();
+        for (Iterator<Workflow> ite = scenario.getWorkflows().iterator(); ite.hasNext(); ) {
+            List<WorkflowTask> tasks = ite.next().getTasks();
+            for (Iterator<WorkflowTask> wlIter = tasks.iterator(); ite.hasNext(); ) {
+                Task task = wlIter.next().getTask();
                 TaskRunning taskRunning = new TaskRunning();
                 taskRunning.setStatus("RUNNING");
                 taskRunning.setTask(task);

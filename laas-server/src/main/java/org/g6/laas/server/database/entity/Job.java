@@ -26,11 +26,11 @@ public class Job extends JobSubEntity {
     @ManyToOne
     private Product product;
 
-    @ManyToMany
-    private List<Category> categories = new ArrayList<>();
+    @ManyToOne
+    private Category category;
 
-    @ManyToMany
-    private List<Scenario> scenarios = new ArrayList<>();
+    @ManyToOne
+    private Scenario scenario;
 
     @OneToMany(mappedBy = "job")
     private List<JobRunning> jobRunnings = new ArrayList<>();
@@ -47,11 +47,5 @@ public class Job extends JobSubEntity {
 
     public String getJobDate() {
         return this.getCreatedDate().toString("yyyy/MM/dd HH:mm:ss");
-    }
-
-    public String getScenario() {
-        if (this.scenarios.size() > 0)
-            return this.scenarios.get(0).getName();
-        return "";
     }
 }

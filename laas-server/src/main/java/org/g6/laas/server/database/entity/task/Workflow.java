@@ -7,6 +7,8 @@ import org.g6.laas.server.database.entity.LaaSAuditable;
 import org.g6.laas.server.database.entity.user.User;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "WORKFLOW",uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
@@ -20,4 +22,10 @@ public class Workflow extends LaaSAuditable<User> {
     private String name;
 
     private String description;
+
+    @ManyToOne
+    private Scenario scenario;
+
+    @OneToMany(cascade={CascadeType.ALL}, mappedBy = "workflow")
+    private List<WorkflowTask> tasks = new ArrayList<>();
 }
