@@ -1,16 +1,20 @@
-.ui.centered.two.column.grid(style="margin-top:5%;")
-    .column
-        .ui.segment(style="padding-left:30px;padding-right:30px;")
-            .ui.secondary.pointing.menu(style="margin-bottom:30px;")
-                a.active.item(style="padding-left:0px;")
-                    h2
-                        |Workflows
-                a.item(style="padding-left:20px;")
-                    h2
-                        |Scenario
-            .ui.divided.items
-                |{{#each workflows}}
-                .item
-                    .content
-                        a.header(href="/workflows/{{id}}")  {{name}}
-                |{{/each}}
+.ui.grid
+    .ui.centered.fourteen.wide.column
+        .ui.green.segment(style="margin-top:5px;padding:20px 40px;")
+            h2#title Workflow List
+            table.ui.striped.table
+                thead
+                    tr
+                        th Workflow ID
+                        th Workflow Name
+                        th Workflow Description
+                        th Action
+                tbody
+                    |{{#each workflows}}
+                    tr
+                        td {{id}}
+                        td {{name}}
+                        td {{description}}
+                        td
+                            button.ui.teal.tiny.button.workflow-show(id="{{id}}")(data-id="{{id}}") Detail
+                    |{{/each}}

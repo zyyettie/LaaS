@@ -1,0 +1,23 @@
+table.ui.compact.celled.definition.table
+    thead.full-width
+        tr
+            th.one.wide
+            th
+                |Name
+            th.two.wide
+                |Description
+            th.three.wide
+
+    tbody
+        |{{#each workflows}}
+        tr(id="workflowitem_{{id}}")
+            td(style="text-align:center")
+                #remove.symbol
+                    i.green.minus.icon(style="cursor: pointer;transform:scale(1.5);",value="{{id}}")#remove_workflow
+            td
+                |{{name}}
+            td
+                |{{description}}
+            td
+
+        |{{/each}}

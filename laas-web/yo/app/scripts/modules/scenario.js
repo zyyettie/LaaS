@@ -5,7 +5,7 @@ LaaS.module('Scenario', function(Scenario, LaaS, Backbone, Marionette) {
         initialize : function(options){
             this.scenario = options.model.attributes;
             this.productList = options.productList;
-            this.tasks = options.tasks;
+            this.workflows = options.workflows;
             this.selectedProduct = options.selectedProduct;
             this.fileTypes = options.fileTypes;
             this.parameterDefines = options.parameterDefines;
@@ -18,14 +18,50 @@ LaaS.module('Scenario', function(Scenario, LaaS, Backbone, Marionette) {
         serializeData:function(){
             var data =  {scenario:this.scenario};
             data.scenario.productList = this.productList;
-            data.scenario.tasks = this.tasks;
+            data.scenario.workflows = this.workflows;
             data.scenario.selectedProduct = this.selectedProduct;
             data.scenario.fileTypes = this.fileTypes;
             data.scenario.parameterDefines = this.parameterDefines;
             return data;
         },
         onRender: function() {
+            var that = this;
             this.$('select').dropdown();
+
+            if (this.workflows && this.workflows.length > 0 ) {
+                var size = 10;
+                var currentWorkflows = [];
+                for (var i=0; i<size && i<this.workflows.length; i++) {
+                    currentWorkflows.push(this.workflows[i]);
+                }
+                var template = JST['app/handlebars/scenario/workflow'];
+                var subHtml = template({workflows:currentWorkflows});
+                this.$('#workflows').html(subHtml);
+                var totalPages = Math.floor(this.workflows.length / size) + 1;
+                if (totalPages > 1) {
+                    this.$('#paging').twbsPagination({
+                        totalPages: totalPages,
+                        startPage: 1,
+                        visiblePages: 6,
+                        first: '<<',
+                        prev: '<',
+                        next: '>',
+                        last: '>>',
+                        onPageClick: function (event, page) {
+                            var currentWorkflows = [];
+                            for (var i=size*(page-1); i<size*page; i++) {
+                                if (!that.workflows[i]) {
+                                    break;
+                                }
+                                currentWorkflows.push(that.workflows[i]);
+                            }
+                            var template = JST['app/handlebars/scenario/workflow'];
+                            var html = template({workflows: currentWorkflows});
+                            $('#workflows').html(html);
+                        }
+                    })
+                }
+            }
         },
         events: {
             'click #scenario_save': 'saveScenario',
@@ -69,13 +105,13 @@ LaaS.module('Scenario', function(Scenario, LaaS, Backbone, Marionette) {
         },
         showScenario: function(id){
             $.when(LaaS.request('scenario:entity', {'id':id}), LaaS.request('product:entities')).done(function(scenarioModel, productList){
-                $.when(LaaS.request('task:entitiesByUrl', {'url': scenarioModel.attributes._links.tasks.href}),
+                $.when(LaaS.request('workflow:entitiesByUrl', {'url': scenarioModel.attributes._links.workflows.href}),
                     LaaS.request('product:entityByUrl', {'url':scenarioModel.attributes._links.product.href}),
                     LaaS.request('fileType:entitiesByUrl', {'url':scenarioModel.attributes._links.fileTypes.href}),
                     LaaS.request('parameterDefine:entitiesByUrl', {'url':scenarioModel.attributes._links.parameterDefines.href}))
-                    .done(function(relatedTasks, selectedProduct, selectedFileTypes, selectedParameterDefines) {
+                    .done(function(relatedWorkflows, selectedProduct, selectedFileTypes, selectedParameterDefines) {
                     var view = new ScenarioView({model:scenarioModel, productList:productList.products,
-                        tasks:relatedTasks.tasks, selectedProduct:selectedProduct.product, fileTypes:selectedFileTypes.fileTypes,
+                        workflows:relatedWorkflows.workflows, selectedProduct:selectedProduct.product, fileTypes:selectedFileTypes.fileTypes,
                         parameterDefines:selectedParameterDefines.parameterDefines});
                     LaaS.mainRegion.show(view);
                 })

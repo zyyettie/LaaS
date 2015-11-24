@@ -4,6 +4,11 @@ LaaS.module('Workflow', function(Workflow, LaaS, Backbone, Marionette) {
     var WorkflowView = Marionette.ItemView.extend({
         initialize : function(options){
             this.workflow = options.attributes;
+            this.productList = options.productList;
+            this.tasks = options.tasks;
+            this.selectedProduct = options.selectedProduct;
+            this.fileTypes = options.fileTypes;
+            this.parameterDefines = options.parameterDefines;
         },
         template : function(data){
             var template = JST['app/handlebars/workflow/detail'];
@@ -11,7 +16,62 @@ LaaS.module('Workflow', function(Workflow, LaaS, Backbone, Marionette) {
             return html;
         },
         serializeData:function(){
-            return {workflow:this.workflow};
+            var data = {workflow:this.workflow};
+            data.workflow.productList = this.productList;
+            data.workflow.tasks = this.tasks;
+            data.workflow.selectedProduct = this.selectedProduct;
+            data.workflow.fileTypes = this.fileTypes;
+            data.workflow.parameterDefines = this.parameterDefines;
+            return data;
+        },
+        onRender:function() {
+            var that = this;
+            this.$('select').dropdown();
+
+            if (this.tasks && this.tasks.length > 0 ) {
+                var size = 10;
+                var currentTasks = [];
+                for (var i=0; i<size && i<this.tasks.length; i++) {
+                    currentTasks.push(this.tasks[i]);
+                }
+                var template = JST['app/handlebars/workflow/task'];
+                var subHtml = template({workflows:currentWorkflows});
+                this.$('#tasks').html(subHtml);
+                var totalPages = Math.floor(this.tasks.length / size) + 1;
+                if (totalPages > 1) {
+                    this.$('#paging').twbsPagination({
+                        totalPages: totalPages,
+                        startPage: 1,
+                        visiblePages: 6,
+                        first: '<<',
+                        prev: '<',
+                        next: '>',
+                        last: '>>',
+                        onPageClick: function (event, page) {
+                            var currentTasks = [];
+                            for (var i=size*(page-1); i<size*page; i++) {
+                                if (!that.tasks[i]) {
+                                    break;
+                                }
+                                currentTasks.push(that.tasks[i]);
+                            }
+                            var template = JST['app/handlebars/workflow/task'];
+                            var html = template({workflows: currentTasks});
+                            $('#tasks').html(html);
+                        }
+                    })
+                }
+            }
+        },
+        events: {
+            'click #workflow_save': 'saveWorkflow',
+            'click #workflow_cancel': 'cancelWorkflow'
+        },
+        cancelWorkflow: function() {
+            window.history.back();
+        },
+        saveWorkflow: function() {
+
         }
     });
 
@@ -26,6 +86,13 @@ LaaS.module('Workflow', function(Workflow, LaaS, Backbone, Marionette) {
         },
         serializeData:function(){
             return {workflows:this.workflows};
+        },
+        events:{
+            'click button.workflow-show': "showClicked"
+        },
+        showClicked: function(event){
+            var workflowId = event.target.dataset["id"];
+            LaaS.navigate('/workflows/'+workflowId, true);
         }
     });
 
@@ -37,12 +104,17 @@ LaaS.module('Workflow', function(Workflow, LaaS, Backbone, Marionette) {
             });
         },
         showWorkflow: function(id){
-//            var workflow = LaaS.request("workflow:entity", id);
-//            var workflowView;
-//            LaaS.mainRegion.show(view);
-            $.when(LaaS.request('workflow:entity', {'id':id})).done(function(data){
-                var view = new WorkflowView(data);
-                LaaS.mainRegion.show(view);
+            $.when(LaaS.request('workflow:entity', {'id':id}), LaaS.request('product:entities')).done(function(workflowModel, productList){
+                $.when(LaaS.request('task:entitiesByUrl', {'url': workflowModel.attributes._links.tasks.href}),
+                        LaaS.request('product:entityByUrl', {'url':workflowModel.attributes._links.product.href}),
+                        LaaS.request('fileType:entitiesByUrl', {'url':workflowModel.attributes._links.fileTypes.href}),
+                        LaaS.request('parameterDefine:entitiesByUrl', {'url':workflowModel.attributes._links.parameterDefines.href}))
+                    .done(function(relatedTasks, selectedProduct, selectedFileTypes, selectedParameterDefines) {
+                        var view = new WorkflowView({model:workflowModel, productList:productList.products,
+                            tasks:relatedTasks.tasks, selectedProduct:selectedProduct.product, fileTypes:selectedFileTypes.fileTypes,
+                            parameterDefines:selectedParameterDefines.parameterDefines});
+                        LaaS.mainRegion.show(view);
+                    })
             });
         }
     });
