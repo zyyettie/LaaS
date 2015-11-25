@@ -22,6 +22,10 @@ insert into SCENARIO(ID, NAME, product_id) values(4, 'Scenario - Split Process/T
 insert into SCENARIO(ID, NAME, product_id) values(5, 'Scenario - SM-OMi Performance', 1)
 insert into SCENARIO(ID, NAME, product_id) values(6, 'Scenario - SM RTE', 1)
 
+insert into JOB(ID, NAME,CATEGORY_ID,PRODUCT_ID,parameters) values(1, 'Test Job',1,1,'{"N":"50","order":"desc"}')
+
+insert into JOB_SCENARIOS(JOBS_ID,SCENARIOS_ID) values(1, 1)
+
 insert into TASK(ID, NAME, CLASS_NAME, PRODUCT_ID, FILE_TYPE_ID) values(1, 'Task - Top N', 'org.g6.laas.sm.task.TopNQueryTask', 1, 1)
 insert into TASK(ID, NAME, CLASS_NAME, PRODUCT_ID, FILE_TYPE_ID) values(2, 'Task - RAD Show', 'org.g6.laas.sm.task.RadShowTask', 1, 1)
 insert into TASK(ID, NAME, CLASS_NAME, PRODUCT_ID, FILE_TYPE_ID) values(3, 'Task - Login Time', 'org.g6.laas.sm.task.LoginTimeInfo', 1, 1)
@@ -70,3 +74,5 @@ insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME,created_by_id,
 insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME,created_by_id,is_removed) values(4, 'sm.log.2', 'e:/', '1', 'sm.log.2',1,'N')
 insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME,created_by_id,is_removed) values(2, 'sm_dbquery.log', 'c:/', '1', 'sm_dbquery.log',1,'N')
 insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME,created_by_id,is_removed) values(5, 'sm_dbquery.log.1', 'e:/', '1', 'sm_dbquery.log.1',1,'N')
+
+insert into JOB_FILES(JOBS_ID, FILES_ID) values(1, 2)

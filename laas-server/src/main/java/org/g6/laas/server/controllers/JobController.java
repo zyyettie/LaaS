@@ -49,6 +49,11 @@ public class JobController {
     private List<String> validateFiles(Job job) {
         List<File> strFiles = job.getFiles();
         List<String> rootCauses = new ArrayList();
+        if(strFiles.isEmpty()){
+            rootCauses.add("No files found for analysis");
+            return rootCauses;
+        }
+
         for (File file : strFiles) {
             if (!FileUtil.isFile(file.getPath() + file.getFileName())) {
                 rootCauses.add(file.getOriginalName() + " isn't a valid file");

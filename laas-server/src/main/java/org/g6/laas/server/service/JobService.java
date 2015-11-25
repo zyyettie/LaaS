@@ -60,7 +60,7 @@ public class JobService {
         return jobRunningRepo.findOne(id);
     }
 
-    public void saveTaskRunningStatus(ScenarioRunning scenarioRunning, String status) {
+    public void saveScenarioRunningStatus(ScenarioRunning scenarioRunning, String status) {
         scenarioRunning.setStatus(status);
         scenarioRunningRepo.save(scenarioRunning);
     }
@@ -157,7 +157,7 @@ public class JobService {
                 log.debug("Finish running task named " + task.getName() + ". The duration is " + duration / 1000 + "s");
             } catch (Exception e) {
                 failedTasks++;
-                saveTaskRunningStatus(scenarioRunning, "FAILED");
+                saveScenarioRunningStatus(scenarioRunning, "FAILED");
                 String rootCause = ExceptionUtils.getRootCauseMessage(e);
                 jobRunningResult.rootCauses.add(rootCause);
                 log.error("Exception is thrown while running task" + task.getName(), e);
@@ -168,7 +168,7 @@ public class JobService {
                     FileInfo resultFile = writeReportToFile(report);
                     handleResultFile(scenarioRunning, resultFile);
 
-                    saveTaskRunningStatus(scenarioRunning, "SUCCESS");
+                    saveScenarioRunningStatus(scenarioRunning, "SUCCESS");
                 } else {
                     asynCount++;
                     if (!"N".equals(jobRunning.getSyn())) {
