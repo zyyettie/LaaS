@@ -22,8 +22,6 @@ insert into SCENARIO(ID, NAME, product_id) values(4, 'Scenario - Split Process/T
 insert into SCENARIO(ID, NAME, product_id) values(5, 'Scenario - SM-OMi Performance', 1)
 insert into SCENARIO(ID, NAME, product_id) values(6, 'Scenario - SM RTE', 1)
 
-insert into JOB(ID, NAME, scenario_id,product_id, category_id) values(1, 'Scenario - SM RTE', 1,1,1)
-
 insert into TASK(ID, NAME, CLASS_NAME, PRODUCT_ID, FILE_TYPE_ID) values(1, 'Task - Top N', 'org.g6.laas.sm.task.TopNQueryTask', 1, 1)
 insert into TASK(ID, NAME, CLASS_NAME, PRODUCT_ID, FILE_TYPE_ID) values(2, 'Task - RAD Show', 'org.g6.laas.sm.task.RadShowTask', 1, 1)
 insert into TASK(ID, NAME, CLASS_NAME, PRODUCT_ID, FILE_TYPE_ID) values(3, 'Task - Login Time', 'org.g6.laas.sm.task.LoginTimeInfo', 1, 1)
@@ -31,12 +29,12 @@ insert into TASK(ID, NAME, CLASS_NAME, PRODUCT_ID, FILE_TYPE_ID) values(4, 'Task
 insert into TASK(ID, NAME, CLASS_NAME, PRODUCT_ID, FILE_TYPE_ID) values(5, 'Task - SM-OMi Performance', 'org.g6.laas.sm.task.SMOMiPerformanceTask', 1, 1)
 insert into TASK(ID, NAME, CLASS_NAME, PRODUCT_ID, FILE_TYPE_ID) values(6, 'Task - SM RTE', 'org.g6.laas.sm.task.SMRTETask', 1, 1)
 
-insert into ORDERED_TASK(ID, SCENARIO_ID,TASK_ID,ORDER) values(1, 1,1,1)
-insert into ORDERED_TASK(ID, SCENARIO_ID,TASK_ID,ORDER) values(2, 2,2,1)
-insert into ORDERED_TASK(ID, SCENARIO_ID,TASK_ID,ORDER) values(3, 3,3,1)
-insert into ORDERED_TASK(ID, SCENARIO_ID,TASK_ID,ORDER) values(4, 4,4,1)
-insert into ORDERED_TASK(ID, SCENARIO_ID,TASK_ID,ORDER) values(5, 5,5,1)
-insert into ORDERED_TASK(ID, SCENARIO_ID,TASK_ID,ORDER) values(6, 6,6,1)
+insert into ORDERED_TASK(ID, SCENARIO_ID,TASK_ID,TASK_ORDER) values(1, 1,1,1)
+insert into ORDERED_TASK(ID, SCENARIO_ID,TASK_ID,TASK_ORDER) values(2, 2,2,1)
+insert into ORDERED_TASK(ID, SCENARIO_ID,TASK_ID,TASK_ORDER) values(3, 3,3,1)
+insert into ORDERED_TASK(ID, SCENARIO_ID,TASK_ID,TASK_ORDER) values(4, 4,4,1)
+insert into ORDERED_TASK(ID, SCENARIO_ID,TASK_ID,TASK_ORDER) values(5, 5,5,1)
+insert into ORDERED_TASK(ID, SCENARIO_ID,TASK_ID,TASK_ORDER) values(6, 6,6,1)
 
 insert into scenario_file_types(scenario_id, file_types_id) values(1, 1)
 insert into scenario_file_types(scenario_id, file_types_id) values(2, 1)
