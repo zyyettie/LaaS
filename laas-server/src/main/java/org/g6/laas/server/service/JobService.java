@@ -17,7 +17,7 @@ import org.g6.laas.server.database.entity.task.ScenarioRunning;
 import org.g6.laas.server.database.entity.task.Task;
 import org.g6.laas.server.database.repository.IJobRepository;
 import org.g6.laas.server.database.repository.IJobRunningRepository;
-import org.g6.laas.server.database.repository.ITaskRunningRepository;
+import org.g6.laas.server.database.repository.IScenarioRunningRepository;
 import org.g6.laas.server.queue.JobQueue;
 import org.g6.laas.server.queue.QueueJob;
 import org.g6.laas.server.queue.QueueTask;
@@ -48,7 +48,7 @@ public class JobService {
     @Autowired
     private IJobRunningRepository jobRunningRepo;
     @Autowired
-    private ITaskRunningRepository taskRunningRepo;
+    private IScenarioRunningRepository scenarioRunningRepo;
     @Autowired
     JobQueue queue;
 
@@ -60,9 +60,9 @@ public class JobService {
         return jobRunningRepo.findOne(id);
     }
 
-    public void saveTaskRunningStatus(ScenarioRunning taskRunning, String status) {
-        taskRunning.setStatus(status);
-        taskRunningRepo.save(taskRunning);
+    public void saveTaskRunningStatus(ScenarioRunning scenarioRunning, String status) {
+        scenarioRunning.setStatus(status);
+        scenarioRunningRepo.save(scenarioRunning);
     }
 
     public void saveJobRunningStatus(JobRunning jobRunning, String status) {
@@ -74,8 +74,8 @@ public class JobService {
         return jobRunningRepo.save(jobRunning);
     }
 
-    public ScenarioRunning saveTaskRunning(ScenarioRunning taskRunning) {
-        return taskRunningRepo.save(taskRunning);
+    public ScenarioRunning saveScenarioRunning(ScenarioRunning scenarioRunning) {
+        return scenarioRunningRepo.save(scenarioRunning);
     }
 
     public List<JobRunning> findUnFinishedJobInQueue(String syn, String status) {
@@ -104,7 +104,7 @@ public class JobService {
         return new FileInfo(path, fileName);
     }
 
-    public void handleResultFile(ScenarioRunning taskRunning, FileInfo info) {
+    public void handleResultFile(ScenarioRunning scenarioRunning, FileInfo info) {
         File f = new File();
         f.setPath(info.getPath());
         f.setFileName(info.getName());
@@ -112,7 +112,7 @@ public class JobService {
 
         TaskResult taskResult = new TaskResult();
         taskResult.setFile(f);
-        taskRunning.setResult(taskResult);
+        scenarioRunning.setResult(taskResult);
     }
 
     /**
