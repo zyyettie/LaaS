@@ -29,8 +29,8 @@ public class Job extends JobSubEntity {
     @ManyToOne
     private Category category;
 
-    @ManyToOne
-    private Scenario scenario;
+    @ManyToMany
+    private List<Scenario> scenarios = new ArrayList<>();
 
     @OneToMany(mappedBy = "job")
     private List<JobRunning> jobRunnings = new ArrayList<>();
