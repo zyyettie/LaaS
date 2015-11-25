@@ -38,8 +38,8 @@ public class Scenario extends LaaSAuditable<User> {
     @OneToMany(mappedBy = "scenario")
     private List<Job> jobs = new ArrayList<>();
 
-    @OneToMany(cascade={CascadeType.ALL}, mappedBy = "scenario")
-    private List<Workflow> workflows = new ArrayList();
+    @OneToMany(cascade={CascadeType.ALL})
+    private List<OrderedTask> orderedTasks = new ArrayList();
 
     @ManyToMany
     private List<FileType> fileTypes = new ArrayList<>();
