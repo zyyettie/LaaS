@@ -35,7 +35,7 @@ public class Scenario extends LaaSAuditable<User> {
     @ManyToOne
     private Category category;
 
-    @OneToMany(mappedBy = "scenario")
+    @ManyToMany(mappedBy = "scenarios")
     private List<Job> jobs = new ArrayList<>();
 
     @OneToMany(cascade={CascadeType.ALL})

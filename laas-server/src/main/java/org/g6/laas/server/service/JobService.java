@@ -12,8 +12,9 @@ import org.g6.laas.server.database.entity.file.File;
 import org.g6.laas.server.database.entity.Job;
 import org.g6.laas.server.database.entity.JobRunning;
 import org.g6.laas.server.database.entity.result.TaskResult;
+import org.g6.laas.server.database.entity.task.OrderedTask;
+import org.g6.laas.server.database.entity.task.ScenarioRunning;
 import org.g6.laas.server.database.entity.task.Task;
-import org.g6.laas.server.database.entity.task.TaskRunning;
 import org.g6.laas.server.database.repository.IJobRepository;
 import org.g6.laas.server.database.repository.IJobRunningRepository;
 import org.g6.laas.server.database.repository.ITaskRunningRepository;
@@ -59,7 +60,7 @@ public class JobService {
         return jobRunningRepo.findOne(id);
     }
 
-    public void saveTaskRunningStatus(TaskRunning taskRunning, String status) {
+    public void saveTaskRunningStatus(ScenarioRunning taskRunning, String status) {
         taskRunning.setStatus(status);
         taskRunningRepo.save(taskRunning);
     }
@@ -73,7 +74,7 @@ public class JobService {
         return jobRunningRepo.save(jobRunning);
     }
 
-    public TaskRunning saveTaskRunning(TaskRunning taskRunning) {
+    public ScenarioRunning saveTaskRunning(ScenarioRunning taskRunning) {
         return taskRunningRepo.save(taskRunning);
     }
 
@@ -103,7 +104,7 @@ public class JobService {
         return new FileInfo(path, fileName);
     }
 
-    public void handleResultFile(TaskRunning taskRunning, FileInfo info) {
+    public void handleResultFile(ScenarioRunning taskRunning, FileInfo info) {
         File f = new File();
         f.setPath(info.getPath());
         f.setFileName(info.getName());
@@ -126,19 +127,19 @@ public class JobService {
         List<LogFile> strFiles = getLogFilesFromJob(jobRunning);
         Map<String, String> paramMap = JSONUtil.fromJson(job.getParameters());
 
-        Collection<TaskRunning> taskRunnings = jobRunning.getTaskRunnings();
+        Collection<ScenarioRunning> scenarioRunnings = jobRunning.getScenarioRunnings();
         QueueJob queueJob = new QueueJob();
         int failedTasks = 0, asynCount = 0;
         boolean isSyn = true;
 
-        for (Iterator<TaskRunning> ite = taskRunnings.iterator(); ite.hasNext(); ) {
-            TaskRunning taskRunning = ite.next();
-            Workflow workflow = taskRunning.getWorkflow();
-            List<WorkflowTask> workflowTasks = workflow.getTasks();
+        for (Iterator<ScenarioRunning> ite = scenarioRunnings.iterator(); ite.hasNext(); ) {
+            ScenarioRunning scenarioRunning = ite.next();
+            List<OrderedTask> orderedTasks = scenarioRunning.getScenario().getOrderedTasks();
+
             Task task = null;
-            if(workflowTasks.size() == 1){
+            if(orderedTasks.size() == 1){
                 //if there is only one Task under a workflow, just to run this task directly
-                task = workflowTasks.get(0).getTask();
+                task = orderedTasks.get(0).getTask();
             }else{
                 //TODO need to consider workflow here
             }
@@ -156,7 +157,7 @@ public class JobService {
                 log.debug("Finish running task named " + task.getName() + ". The duration is " + duration / 1000 + "s");
             } catch (Exception e) {
                 failedTasks++;
-                saveTaskRunningStatus(taskRunning, "FAILED");
+                saveTaskRunningStatus(scenarioRunning, "FAILED");
                 String rootCause = ExceptionUtils.getRootCauseMessage(e);
                 jobRunningResult.rootCauses.add(rootCause);
                 log.error("Exception is thrown while running task" + task.getName(), e);
@@ -165,9 +166,9 @@ public class JobService {
                 if (!taskRunningResult.isTimeout()) {
                     String report = genReport(taskRunningResult, task, taskWrapper != null ? taskWrapper.isReport() : true);
                     FileInfo resultFile = writeReportToFile(report);
-                    handleResultFile(taskRunning, resultFile);
+                    handleResultFile(scenarioRunning, resultFile);
 
-                    saveTaskRunningStatus(taskRunning, "SUCCESS");
+                    saveTaskRunningStatus(scenarioRunning, "SUCCESS");
                 } else {
                     asynCount++;
                     if (!"N".equals(jobRunning.getSyn())) {
@@ -178,7 +179,7 @@ public class JobService {
                         jobRunning.setSummary(summary);
                         saveJobRunning(jobRunning);
                     }
-                    queueJob.addQueueTask(taskRunning, new QueueTask(taskRunningResult.getFuture(), taskRunningResult.isReport()));
+                    queueJob.addQueueTask(scenarioRunning, new QueueTask(taskRunningResult.getFuture(), taskRunningResult.isReport()));
                     queueJob.setJobRunning(jobRunning);
                     queue.addJob(queueJob);
                     isSyn = false;
@@ -198,7 +199,7 @@ public class JobService {
                 //The status of JobRunning should be set to "SUCCESS" after all tasks are run successfully
                 saveJobRunningStatus(jobRunning, "SUCCESS");
                 jobRunningResult.setSuccess(true);
-            } else if (failedTasks == taskRunnings.size()) {
+            } else if (failedTasks == scenarioRunnings.size()) {
                 saveJobRunningStatus(jobRunning, "FAILED");
                 jobRunningResult.setSuccess(false);
             } else {

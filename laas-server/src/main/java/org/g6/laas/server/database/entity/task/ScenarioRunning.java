@@ -13,12 +13,12 @@ import javax.persistence.*;
 @Data
 @Table
 @EqualsAndHashCode(callSuper = false)
-public class TaskRunning extends LaaSAuditable<User> {
+public class ScenarioRunning extends LaaSAuditable<User> {
 
     private static final long serialVersionUID = -8603475553208415613L;
 
     @ManyToOne
-    private Workflow workflow;
+    private Scenario scenario;
 
     @ManyToOne
     private JobRunning jobRunning;

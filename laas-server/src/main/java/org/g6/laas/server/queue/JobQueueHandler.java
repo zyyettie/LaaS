@@ -3,7 +3,7 @@ package org.g6.laas.server.queue;
 import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.server.database.entity.Job;
 import org.g6.laas.server.database.entity.JobRunning;
-import org.g6.laas.server.database.entity.task.TaskRunning;
+import org.g6.laas.server.database.entity.task.ScenarioRunning;
 import org.g6.laas.server.service.JobService;
 import org.g6.laas.server.vo.FileInfo;
 import org.g6.laas.server.vo.TaskRunningResult;
@@ -65,10 +65,10 @@ public class JobQueueHandler implements InitializingBean {
     }
 
     private void handleTasksInQueue(QueueJob queueJob) {
-        Map<TaskRunning, QueueTask> queueTasks = queueJob.getQueueTasks();
+        Map<ScenarioRunning, QueueTask> queueTasks = queueJob.getQueueTasks();
 
-        for (Map.Entry<TaskRunning, QueueTask> entry : queueTasks.entrySet()) {
-            TaskRunning taskRunning = entry.getKey();
+        for (Map.Entry<ScenarioRunning, QueueTask> entry : queueTasks.entrySet()) {
+            ScenarioRunning taskRunning = entry.getKey();
             QueueTask queueTask = entry.getValue();
             try {
                 Object object = queueTask.getRunningResult();
@@ -100,12 +100,12 @@ public class JobQueueHandler implements InitializingBean {
      * @param jobRunning
      */
     private void updateJobRunningStatus(JobRunning jobRunning) {
-        Collection<TaskRunning> taskRunnings = jobRunning.getTaskRunnings();
+        Collection<ScenarioRunning> taskRunnings = jobRunning.getScenarioRunnings();
         int runningCount = 0, successCount = 0, failCount = 0;
         int taskSize = taskRunnings.size();
 
-        for (Iterator<TaskRunning> ite = taskRunnings.iterator(); ite.hasNext(); ) {
-            TaskRunning tr = ite.next();
+        for (Iterator<ScenarioRunning> ite = taskRunnings.iterator(); ite.hasNext(); ) {
+            ScenarioRunning tr = ite.next();
 
             if (tr.getStatus().equals("RUNNING")) {
                 runningCount++;
