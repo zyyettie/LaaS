@@ -1,7 +1,6 @@
 package org.g6.laas.server.database.entity;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.g6.laas.server.database.entity.task.Scenario;
 import org.g6.laas.server.database.entity.user.User;
@@ -46,7 +45,7 @@ public class Job extends JobSubEntity {
     }
 
     public String getScenarioName() {
-        return this.getScenario().getName();
+        return this.getScenarios().get(0).getName();
     }
 
     public String getJobDate() {
