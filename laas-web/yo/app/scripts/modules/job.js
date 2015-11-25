@@ -8,10 +8,9 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 this.model = options.model;
             }
 
-            if (options.job == undefined) {
-                this.job = {};
-            } else {
-                this.job = jQuery.extend({}, options.job);
+            this.job = {};
+            if (options.job) {
+                $.extend(this.job, options.job);
             }
             this.scenarioList = options.scenarioList;
             this.fileList = options.fileList;
@@ -24,7 +23,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             var data = {job: this.job, scenarioList: this.scenarioList, fileList: this.fileList,
                 scenarios: this.scenarios, files: this.files,
                 selectedParameterDefines: this.selectedParameterDefines, fileTypes: this.fileTypes};
-            if (!data.job.selectedname) {
+            if (!data.job || !data.job.selectedname) {
                 data.job.selectedname = "Select Scenario";
             }
             data.job.scenarioList = data.scenarioList;
@@ -32,8 +31,8 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             data.job.selectedParameterDefines = data.selectedParameterDefines ? data.selectedParameterDefines : [];
             data.job.fileTypes = data.fileTypes ? data.fileTypes : [];
 
-            var json = data.job.parameters ? JSON.parse(data.job.parameters) : {};
-            $.extend(data.job, json);
+            //var json = data.job.parameters ? JSON.parse(data.job.parameters) : {};
+            //$.extend(data.job, json);
 
             if (data.scenarios) {
                 for (var i = 0; i < data.scenarioList.length; i++) {
@@ -156,6 +155,16 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             'click #job_run': 'runJob',
             'click #add_file': 'addFile'
         },
+        removeParameter: function (json, defines) {
+            if (!defines) {
+                return;
+            }
+
+            for (var i=0; i<defines.length; i++) {
+                var name = defines[i]["name"];
+                delete json[name];
+            }
+        },
         getParameter: function (json, defines) {
             if (!defines) {
                 return "{}";
@@ -181,6 +190,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             }
 
             json.parameters = this.getParameter(json, that.job.selectedParameterDefines);
+            this.removeParameter(json, that.job.selectedParameterDefines);
 
             json.scenarios = [];
             json.scenarios.push(appContext+apiVersion+"/scenarios/" + json.selectedScenario);
@@ -209,6 +219,8 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 return;
             }
             json.parameters = this.getParameter(json, that.job.selectedParameterDefines);
+            this.removeParameter(json, that.job.selectedParameterDefines);
+
             json.scenarios = [];
             json.scenarios.push(appContext+apiVersion+"/scenarios/" + json.selectedScenario);
 
