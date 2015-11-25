@@ -9,11 +9,11 @@ table.ui.compact.celled.definition.table
             th.three.wide
 
     tbody
-        |{{#each workflows}}
-        tr(id="workflowitem_{{id}}")
+        |{{#each tasks}}
+        tr(id="taskitem_{{id}}")
             td(style="text-align:center")
                 #remove.symbol
-                    i.green.minus.icon(style="cursor: pointer;transform:scale(1.5);",value="{{id}}")#remove_workflow
+                    i.green.minus.icon(style="cursor: pointer;transform:scale(1.5);",value="{{id}}")#remove_task
             td
                 |{{name}}
             td
