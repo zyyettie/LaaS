@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-public class OrderedTask extends LaaSAuditable<User> {
+public class OrderedTask extends LaaSAuditable<User> implements Comparable<OrderedTask>{
     private static final long serialVersionUID = -7080540921514432085L;
 
     @ManyToOne
@@ -24,4 +24,13 @@ public class OrderedTask extends LaaSAuditable<User> {
 
     @Column(name="TASK_ORDER")
     private int order;
+
+    @Override
+    public int compareTo(OrderedTask o) {
+        if(this.order < o.order)
+            return -1;
+        if(this.order > o.order)
+            return 1;
+        return 0;
+    }
 }

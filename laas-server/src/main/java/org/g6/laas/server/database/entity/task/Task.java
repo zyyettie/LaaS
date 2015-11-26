@@ -26,6 +26,12 @@ public class Task extends LaaSAuditable<User> {
 
     private String className;
 
+    @OneToMany(cascade={CascadeType.ALL}, mappedBy = "input")
+    private List<Parameter> inputParameters = new ArrayList();
+
+    @OneToMany(cascade={CascadeType.ALL}, mappedBy = "output")
+    private List<Parameter> outputParameters = new ArrayList();
+
     @ManyToOne
     private Product product;
 

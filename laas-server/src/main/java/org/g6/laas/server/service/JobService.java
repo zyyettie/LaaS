@@ -83,8 +83,8 @@ public class JobService {
     }
 
     public String genReport(ScenarioRunningResult scenarioRunningResult, Task task, boolean isReport) {
-        if(!isReport){
-           return scenarioRunningResult.getResult().toString();
+        if (!isReport) {
+            return scenarioRunningResult.getResult().toString();
         }
 
         ReportModel model = new ReportModel();
@@ -125,7 +125,8 @@ public class JobService {
         Job job = jobRunning.getJob();
         JobRunningResult jobRunningResult = new JobRunningResult();
         List<LogFile> logFiles = getLogFilesFromJob(jobRunning);
-        Map<String, String> paramMap = JSONUtil.fromJson(job.getParameters());
+        Map<String, Object> paramMap = JSONUtil.fromJson(job.getParameters());
+        paramMap.put("files", logFiles);
 
         Collection<ScenarioRunning> scenarioRunnings = jobRunning.getScenarioRunnings();
         QueueJob queueJob = new QueueJob();
@@ -137,11 +138,11 @@ public class JobService {
             List<OrderedTask> orderedTasks = scenarioRunning.getScenario().getOrderedTasks();
 
             Task task = null;
-            if(orderedTasks.size() == 1){
+            if (orderedTasks.size() == 1) {
                 //if there is only one Task under a workflow, just to run this task directly
                 task = orderedTasks.get(0).getTask();
-            }else{
-                //TODO need to consider workflow here
+            } else {
+                runWorkflow(orderedTasks, paramMap);
             }
             ScenarioRunningResult scenarioRunningResult = null;
             ReflectionObjWrapper taskWrapper = null;
@@ -206,7 +207,7 @@ public class JobService {
                 saveJobRunningStatus(jobRunning, "PARTIALLY SUCCESS");
                 jobRunningResult.setSuccess(false);
             }
-        }else{
+        } else {
             jobRunningResult.setSuccess(true);
         }
         jobRunningResult.setSyn(isSyn);
@@ -214,6 +215,22 @@ public class JobService {
         return jobRunningResult;
     }
 
+    private void runWorkflow(List<OrderedTask> orderedTasks, Map paramMap) {
+        Collections.sort(orderedTasks);
+        Task previousTask = null;
+        int count = 0;
+        for (OrderedTask orderedTask : orderedTasks) {
+            Task task = orderedTask.getTask();
+
+            if (count > 0) {
+               //need to inject the previous task in the current task to build a responsibility chain
+            }
+
+            previousTask = task;
+            count++;
+        }
+
+    }
 
     /**
      * To run task, need to use reflection mechanism to get the task object
@@ -225,7 +242,7 @@ public class JobService {
      * @return
      * @throws Exception
      */
-    private ReflectionObjWrapper getTaskObj(Task task, Map<String, String> paramMap, List<LogFile> selectFiles) throws Exception {
+    private ReflectionObjWrapper getTaskObj(Task task, Map<String, Object> paramMap, List<LogFile> selectFiles) throws Exception {
         Class taskClass = Class.forName(task.getClassName());
         Object taskObj = taskClass.newInstance();
         Field[] fields = taskClass.getDeclaredFields();
@@ -233,7 +250,7 @@ public class JobService {
         Method m1 = taskObj.getClass().getSuperclass().getDeclaredMethod("setFiles", List.class);
         m1.invoke(taskObj, selectFiles);
 
-        for (Map.Entry<String, String> entry : paramMap.entrySet()) {
+        for (Map.Entry<String, Object> entry : paramMap.entrySet()) {
             for (int i = 0; i < fields.length; i++) {
                 boolean isAccessible = true;
                 if (!fields[i].isAccessible()) {
@@ -251,7 +268,7 @@ public class JobService {
         }
 
         Method m2 = taskObj.getClass().getMethod("isReport");
-        boolean isReport = (Boolean)m2.invoke(taskObj);
+        boolean isReport = (Boolean) m2.invoke(taskObj);
 
         return new ReflectionObjWrapper(isReport, taskObj);
     }
@@ -279,7 +296,7 @@ public class JobService {
         List<LogFile> files = new ArrayList<>();
         for (Iterator<File> ite = jobRunning.getFiles().iterator(); ite.hasNext(); ) {
             File f = ite.next();
-            files.add(new LogFile(f.getPath() + f.getFileName(),f.getOriginalName()));
+            files.add(new LogFile(f.getPath() + f.getFileName(), f.getOriginalName()));
         }
 
         return files;
