@@ -1,0 +1,21 @@
+<h2 class="ui header">
+  <img class="ui image" src="/images/icons/school.png">
+  <div class="content" style="margin-top: 10px;">
+    The overview of SM-OMi integration:
+  </div>
+</h2>
+<div>
+  {{#with task_running_result}}
+  <div class="ui teal segment">
+      SM handled total request number is : <div style="color:red;display:inline;">{{totalRequestNumber}}</div><br>
+      First request finished date is : <div style="color:red;display:inline;">{{firstRequestDate}}</div><br>
+      Last request finished date is : <div style="color:red;display:inline;">{{lastRequestDate}}</div><br>
+      Total : <div style="color:red;display:inline;">{{duration}}</div> hours<br>
+      SM throughput is about : <div style="color:red;display:inline;">{{throughput}}</div> requests/hour, and each request spent : <div style="color:red;display:inline;">{{average}}</div> seconds average.<br>
+
+      <p> </p>
+      The slowest request spent: <div style="color:red;display:inline;">{{slowestRequestTime}}</div> ms, in file "{{slowestRequestLine}}", with String : {{slowestRequestLineStr}}<br>
+      The fastest request spent: <div style="color:red;display:inline;">{{fastestRequestTime}}</div> ms, in file "{{fastestRequestLine}}", with String : {{fastestRequestLineStr}}
+  </div>
+  {{/with}}
+</div>
