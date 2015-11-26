@@ -15,7 +15,7 @@ import javax.persistence.OneToOne;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class TaskResult extends LaaSAuditable<User> {
+public class ScenarioResult extends LaaSAuditable<User> {
     private static final long serialVersionUID = -5053098663559141920L;
 
     @OneToOne(cascade={CascadeType.ALL})

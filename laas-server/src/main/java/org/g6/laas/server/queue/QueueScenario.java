@@ -10,7 +10,7 @@ import java.util.concurrent.Future;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class QueueTask {
+public class QueueScenario {
     private Future future;
     private boolean report;
 
