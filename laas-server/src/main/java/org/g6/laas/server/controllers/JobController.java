@@ -34,7 +34,7 @@ public class JobController {
             jsonMap.put("rootcauses", rootCauses);
         } else {
             JobRunning jobRunning = createRunningRecords4JobAndTask(job);
-            JobService.JobRunningResult runningResult = jobService.runTasks(jobRunning);
+            JobService.JobRunningResult runningResult = jobService.runJob(jobRunning);
 
             jsonMap.put("job_id", String.valueOf(job.getId()));
             jsonMap.put("job_running_id", String.valueOf(jobRunning.getId()));
@@ -141,7 +141,7 @@ public class JobController {
 
 
         JobRunning retJobRunning = jobService.saveJobRunning(newJobRunning);
-        JobService.JobRunningResult runningResult = jobService.runTasks(retJobRunning);
+        JobService.JobRunningResult runningResult = jobService.runJob(retJobRunning);
 
         Map<String, Object> jsonMap = new HashMap();
         jsonMap.put("job_id", String.valueOf(retJobRunning.getJob().getId()));

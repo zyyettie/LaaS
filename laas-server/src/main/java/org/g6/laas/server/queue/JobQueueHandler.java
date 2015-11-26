@@ -3,10 +3,12 @@ package org.g6.laas.server.queue;
 import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.server.database.entity.Job;
 import org.g6.laas.server.database.entity.JobRunning;
+import org.g6.laas.server.database.entity.task.OrderedTask;
 import org.g6.laas.server.database.entity.task.ScenarioRunning;
+import org.g6.laas.server.database.entity.task.Task;
 import org.g6.laas.server.service.JobService;
 import org.g6.laas.server.vo.FileInfo;
-import org.g6.laas.server.vo.TaskRunningResult;
+import org.g6.laas.server.vo.ScenarioRunningResult;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +40,7 @@ public class JobQueueHandler implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         List<JobRunning> jobRunnings = jobService.findUnFinishedJobInQueue("N", "RUNNING");
         for (JobRunning jobRunning : jobRunnings) {
-            jobService.runTasks(jobRunning);
+            jobService.runJob(jobRunning);
         }
     }
 
@@ -65,28 +67,30 @@ public class JobQueueHandler implements InitializingBean {
     }
 
     private void handleTasksInQueue(QueueJob queueJob) {
-        Map<ScenarioRunning, QueueTask> queueTasks = queueJob.getQueueTasks();
+        Map<ScenarioRunning, QueueScenario> queueTasks = queueJob.getQueueScenarios();
 
-        for (Map.Entry<ScenarioRunning, QueueTask> entry : queueTasks.entrySet()) {
-            ScenarioRunning taskRunning = entry.getKey();
-            QueueTask queueTask = entry.getValue();
+        for (Map.Entry<ScenarioRunning, QueueScenario> entry : queueTasks.entrySet()) {
+            ScenarioRunning scenarioRunning = entry.getKey();
+            QueueScenario queueScenario = entry.getValue();
             try {
-                Object object = queueTask.getRunningResult();
-                TaskRunningResult result = new TaskRunningResult();
+                Object object = queueScenario.getRunningResult();
+                ScenarioRunningResult result = new ScenarioRunningResult();
                 result.setResult(object);
-                //String report = jobService.genReport(result, taskRunning.getTask(), queueTask.isReport());
-                //TODO
-                String report ="";
+                //NOTE here the scenario is only one task is run, if a workflow includes multiple tasks,
+                //need to get the last task object.
+                OrderedTask orderedTask = scenarioRunning.getScenario().getOrderedTasks().get(0);
+                String report = jobService.genReport(result, orderedTask.getTask(), queueScenario.isReport());
+
                 FileInfo resultFile = jobService.writeReportToFile(report);
 
-                jobService.handleResultFile(taskRunning, resultFile);
-                taskRunning.setStatus("SUCCESS");
+                jobService.handleResultFile(scenarioRunning, resultFile);
+                scenarioRunning.setStatus("SUCCESS");
             } catch (ExecutionException e) {
-                taskRunning.setStatus("FAILED");
-                taskRunning.setRootCause(e.getMessage());
+                scenarioRunning.setStatus("FAILED");
+                scenarioRunning.setRootCause(e.getMessage());
             } catch (InterruptedException e) {
-                taskRunning.setStatus("FAILED");
-                taskRunning.setRootCause(e.getMessage());
+                scenarioRunning.setStatus("FAILED");
+                scenarioRunning.setRootCause(e.getMessage());
             }
 
         }
@@ -141,6 +145,7 @@ public class JobQueueHandler implements InitializingBean {
 
     }
 
+    //shutdown can be configured in one property file
     public void shutDown() {
         shutdown = true;
     }

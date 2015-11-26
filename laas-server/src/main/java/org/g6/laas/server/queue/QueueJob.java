@@ -10,16 +10,16 @@ import java.util.Map;
 @Data
 public class QueueJob {
     JobRunning jobRunning;
-    Map<ScenarioRunning, QueueTask> queueTasks = new HashMap();
+    Map<ScenarioRunning, QueueScenario> queueScenarios = new HashMap();
 
-    public void addQueueTask(ScenarioRunning taskRunning, QueueTask queueTask) {
-        queueTasks.put(taskRunning, queueTask);
+    public void addQueueScenario(ScenarioRunning scenarioRunning, QueueScenario queueScenario) {
+        queueScenarios.put(scenarioRunning, queueScenario);
     }
 
     public boolean isDone() {
         boolean isDone = true;
-        for (QueueTask queueTask : queueTasks.values()) {
-            if (!queueTask.isDone())
+        for (QueueScenario queueScenario : queueScenarios.values()) {
+            if (!queueScenario.isDone())
                 isDone = false;
         }
 

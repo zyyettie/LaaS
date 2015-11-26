@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.g6.laas.server.database.entity.JobRunning;
 import org.g6.laas.server.database.entity.LaaSAuditable;
-import org.g6.laas.server.database.entity.result.TaskResult;
+import org.g6.laas.server.database.entity.result.ScenarioResult;
 import org.g6.laas.server.database.entity.user.User;
 
 import javax.persistence.*;
@@ -29,7 +29,7 @@ public class ScenarioRunning extends LaaSAuditable<User> {
     private String rootCause;
 
     @OneToOne(cascade={CascadeType.ALL})
-    private TaskResult result;
+    private ScenarioResult result;
 
     //million second
     private Long duration;

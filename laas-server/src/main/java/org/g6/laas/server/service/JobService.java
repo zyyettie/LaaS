@@ -11,7 +11,7 @@ import org.g6.laas.core.file.LogFile;
 import org.g6.laas.server.database.entity.file.File;
 import org.g6.laas.server.database.entity.Job;
 import org.g6.laas.server.database.entity.JobRunning;
-import org.g6.laas.server.database.entity.result.TaskResult;
+import org.g6.laas.server.database.entity.result.ScenarioResult;
 import org.g6.laas.server.database.entity.task.OrderedTask;
 import org.g6.laas.server.database.entity.task.ScenarioRunning;
 import org.g6.laas.server.database.entity.task.Task;
@@ -20,9 +20,9 @@ import org.g6.laas.server.database.repository.IJobRunningRepository;
 import org.g6.laas.server.database.repository.IScenarioRunningRepository;
 import org.g6.laas.server.queue.JobQueue;
 import org.g6.laas.server.queue.QueueJob;
-import org.g6.laas.server.queue.QueueTask;
+import org.g6.laas.server.queue.QueueScenario;
 import org.g6.laas.server.vo.FileInfo;
-import org.g6.laas.server.vo.TaskRunningResult;
+import org.g6.laas.server.vo.ScenarioRunningResult;
 import org.g6.util.ExceptionUtils;
 import org.g6.util.FileUtil;
 import org.g6.util.JSONUtil;
@@ -82,13 +82,13 @@ public class JobService {
         return jobRunningRepo.findUnFinishedJobInQueue(syn, status);
     }
 
-    public String genReport(TaskRunningResult taskRunningResult, Task task, boolean isReport) {
+    public String genReport(ScenarioRunningResult scenarioRunningResult, Task task, boolean isReport) {
         if(!isReport){
-           return taskRunningResult.getResult().toString();
+           return scenarioRunningResult.getResult().toString();
         }
 
         ReportModel model = new ReportModel();
-        model.setAttribute("task_running_result", taskRunningResult.getResult());
+        model.setAttribute("task_running_result", scenarioRunningResult.getResult());
         ReportBuilder builder = new ReportBuilder();
         String report = builder.build(model, task.getClassName());
 
@@ -110,9 +110,9 @@ public class JobService {
         f.setFileName(info.getName());
         f.setOriginalName(info.getName());
 
-        TaskResult taskResult = new TaskResult();
-        taskResult.setFile(f);
-        scenarioRunning.setResult(taskResult);
+        ScenarioResult scenarioResult = new ScenarioResult();
+        scenarioResult.setFile(f);
+        scenarioRunning.setResult(scenarioResult);
     }
 
     /**
@@ -121,10 +121,10 @@ public class JobService {
      * @param jobRunning
      * @return 0: Synchronous 1: asynchronous
      */
-    public JobRunningResult runTasks(JobRunning jobRunning) {
+    public JobRunningResult runJob(JobRunning jobRunning) {
         Job job = jobRunning.getJob();
         JobRunningResult jobRunningResult = new JobRunningResult();
-        List<LogFile> strFiles = getLogFilesFromJob(jobRunning);
+        List<LogFile> logFiles = getLogFilesFromJob(jobRunning);
         Map<String, String> paramMap = JSONUtil.fromJson(job.getParameters());
 
         Collection<ScenarioRunning> scenarioRunnings = jobRunning.getScenarioRunnings();
@@ -143,16 +143,16 @@ public class JobService {
             }else{
                 //TODO need to consider workflow here
             }
-            TaskRunningResult taskRunningResult = null;
+            ScenarioRunningResult scenarioRunningResult = null;
             ReflectionObjWrapper taskWrapper = null;
             try {
-                taskWrapper = getTaskObj(task, paramMap, strFiles);
+                taskWrapper = getTaskObj(task, paramMap, logFiles);
 
                 //taskObj is the instance of Task class which is used to run
                 //task is the entity which contains different data loaded from database.
                 log.debug("Start running task named " + task.getName());
                 long timeStart = System.currentTimeMillis();
-                taskRunningResult = runTask(taskWrapper, task);
+                scenarioRunningResult = runTask(taskWrapper, task);
                 long duration = System.currentTimeMillis() - timeStart;
                 log.debug("Finish running task named " + task.getName() + ". The duration is " + duration / 1000 + "s");
             } catch (Exception e) {
@@ -162,9 +162,9 @@ public class JobService {
                 jobRunningResult.rootCauses.add(rootCause);
                 log.error("Exception is thrown while running task" + task.getName(), e);
             }
-            if (taskRunningResult != null) {
-                if (!taskRunningResult.isTimeout()) {
-                    String report = genReport(taskRunningResult, task, taskWrapper != null ? taskWrapper.isReport() : true);
+            if (scenarioRunningResult != null) {
+                if (!scenarioRunningResult.isTimeout()) {
+                    String report = genReport(scenarioRunningResult, task, taskWrapper != null ? taskWrapper.isReport() : true);
                     FileInfo resultFile = writeReportToFile(report);
                     handleResultFile(scenarioRunning, resultFile);
 
@@ -179,7 +179,7 @@ public class JobService {
                         jobRunning.setSummary(summary);
                         saveJobRunning(jobRunning);
                     }
-                    queueJob.addQueueTask(scenarioRunning, new QueueTask(taskRunningResult.getFuture(), taskRunningResult.isReport()));
+                    queueJob.addQueueScenario(scenarioRunning, new QueueScenario(scenarioRunningResult.getFuture(), scenarioRunningResult.isReport()));
                     queueJob.setJobRunning(jobRunning);
                     queue.addJob(queueJob);
                     isSyn = false;
@@ -256,9 +256,9 @@ public class JobService {
         return new ReflectionObjWrapper(isReport, taskObj);
     }
 
-    private TaskRunningResult runTask(ReflectionObjWrapper taskWrapper, Task task) throws ExecutionException, InterruptedException {
+    private ScenarioRunningResult runTask(ReflectionObjWrapper taskWrapper, Task task) throws ExecutionException, InterruptedException {
         Future future = analysisEngine.submit((AnalysisTask) taskWrapper.getObj());
-        TaskRunningResult result = new TaskRunningResult();
+        ScenarioRunningResult result = new ScenarioRunningResult();
         result.setReport(taskWrapper.isReport());
 
         Object obj;
