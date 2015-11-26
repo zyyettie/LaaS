@@ -40,7 +40,7 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
         },
         template: JST['app/handlebars/navigator'],
         onRender: function () {
-            this.$('#sidebarmenu').sidebar('toggle');
+            //this.$('#sidebarmenu').sidebar('toggle');
             this.$('a.item').on('click', function (event) {
                 event.preventDefault();
                 $('a.item').removeClass('active');

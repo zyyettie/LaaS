@@ -9,11 +9,20 @@ public class HomeController {
 
     @RequestMapping(
             value = {
-                    "/",
-                    "/jobs"
+                    "/jobs/**",
+                    "/tasks/**",
+                    "/user/**",
+                    "/scenarios/**",
+                    "/files/**",
+                    "/job",
+                    "/jobs/**",
+                    "/jobHistory/**",
+                    "/jobRunnings/**",
+                    "/home",
+                    "/login"
             },
             method = RequestMethod.GET)
     public String index() {
-        return "/index.html";
+        return "index.html";
     }
 }
