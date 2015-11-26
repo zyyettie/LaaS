@@ -4,9 +4,9 @@ table.ui.compact.celled.definition.table
             th.one.wide
             th
                 |Name
-            th.two.wide
+            th.five.wide
                 |Description
-            th.three.wide
+            th.two.wide
 
     tbody
         |{{#each tasks}}
@@ -19,5 +19,11 @@ table.ui.compact.celled.definition.table
             td
                 |{{description}}
             td
-
+                .two.fields
+                    .field
+                        #up
+                            i.arrow.green.up.icon(style="cursor: pointer;transform:scale(1.5);margin-right:5px", value="{{id}}")#move_up
+                    .field
+                        #down
+                            i.arrow.green.down.icon(style="cursor: pointer;transform:scale(1.5);margin-left:5px;", value="{{id}}")#move_down
         |{{/each}}

@@ -7,6 +7,12 @@ LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
         initialize : function(options){
             this.url = options.url;
             this.fileTypes = options.fileTypes;
+            this.uploadedFiles = [];
+            var uploadedFiles = sessionStorage.getItem('uploadedFiles');
+            if (uploadedFiles) {
+                uploadedFiles = JSON.parse(uploadedFiles);
+                $.extend(this.uploadedFiles, uploadedFiles);
+            }
         },
         onRender: function () {
             this.total = 0;
@@ -68,6 +74,8 @@ LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
         
                         }else{
                             $('#progress').progress({percent:100,text:{success:'total ' + that.total + ' uploaded' }});
+                            $.extend(that.uploadedFiles, data);
+                            sessionStorage.setItem('uploadedFiles', JSON.stringify(that.uploadedFiles));
                         }
                         $('#upload').removeClass('disabled');
 
