@@ -9,6 +9,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface IJobRunningRepository extends JpaRepository<JobRunning, Long> {
-    @Query(value = "SELECT p FROM JobRunning p WHERE p.syn = :syn and p.status = :status")
+    @Query("SELECT p FROM JobRunning p WHERE p.syn = :syn and p.status = :status")
     public List<JobRunning> findUnFinishedJobInQueue(@Param("syn")String syn, @Param("status")String status);
 }

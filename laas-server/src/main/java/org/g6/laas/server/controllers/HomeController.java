@@ -19,7 +19,10 @@ public class HomeController {
                     "/jobHistory/**",
                     "/jobRunnings/**",
                     "/home",
-                    "/login"
+                    "/login",
+                    "jobnew",
+                    "files/me",
+                    "notifications/me"
             },
             method = RequestMethod.GET)
     public String index() {

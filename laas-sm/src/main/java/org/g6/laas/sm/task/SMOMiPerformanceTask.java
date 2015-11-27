@@ -11,9 +11,7 @@ import org.g6.laas.core.rule.Rule;
 import org.g6.laas.core.rule.action.RuleAction;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Get the slowest and fastest request from SM-OMi log file
@@ -22,13 +20,13 @@ import java.util.List;
  * @version 1.0
  * @since 1.0
  */
-public class SMOMiPerformanceTask extends SMRTETask<List<String>> {
+public class SMOMiPerformanceTask extends SMRTETask<Map<String,String>> {
     private List splitResultList = new ArrayList<SplitResult>();
     private SplitResult result = null;
     private List<String> returnList = new ArrayList<>();
 
     @Override
-    protected List<String> process() {
+    protected Map<String,String> process() {
         //record the request as per the original order from log file
         SplitResult firstRequestLine = (SplitResult) splitResultList.get(0);
         SplitResult lastRequestLine = (SplitResult) splitResultList.get(splitResultList.size() - 1);
@@ -39,13 +37,14 @@ public class SMOMiPerformanceTask extends SMRTETask<List<String>> {
         DecimalFormat localDecimalFormat = new DecimalFormat("#######0.00");
         double tHour = splitResultList.size() / duration;
         double average = durationTemp / (splitResultList.size() * 1000);
-        //System.out.println("SM handled total request number is : " + splitResultList.size());
-        //System.out.println("First request finished date is : " + firstRequestDate.getContent() + ",\nLast request finished date is : " + lastRequestDate.getContent() + "\nTotal :" + localDecimalFormat.format(duration) + " hour");
-        //System.out.println("SM throughput is about : " + localDecimalFormat.format(tHour) + "requests/hour, and each request spent : " + localDecimalFormat.format(average) + " seconds average.");
         int totalRequestNumber = splitResultList.size();
-        returnList.add("SM handled total request number is : " + totalRequestNumber);
-        returnList.add("First request finished date is : " + firstRequestDate.getContent() + ",\nLast request finished date is : " + lastRequestDate.getContent() + "\nTotal :" + localDecimalFormat.format(duration) + " hour");
-        returnList.add("SM throughput is about : " + localDecimalFormat.format(tHour) + " requests/hour, and each request spent : " + localDecimalFormat.format(average) + " seconds average.");
+        Map<String,String> resultMap = new HashMap<>();
+        resultMap.put("totalRequestNumber",Integer.toString(totalRequestNumber));
+        resultMap.put("firstRequestDate",firstRequestDate.getContent());
+        resultMap.put("lastRequestDate",lastRequestDate.getContent());
+        resultMap.put("duration",localDecimalFormat.format(duration));
+        resultMap.put("throughput",localDecimalFormat.format(tHour));
+        resultMap.put("average",localDecimalFormat.format(average));
 
         //Sort the SplitResult as per the execution_time ASC order
         Collections.sort(splitResultList, new SplitResultComparator());
@@ -54,12 +53,14 @@ public class SMOMiPerformanceTask extends SMRTETask<List<String>> {
         IntegerField slowestExecutionTimeField = (IntegerField) slowestRequestLine.get("execution_time");
         IntegerField fastestExecutionTimeField = (IntegerField) fastestRequestLine.get("execution_time");
 
-        //System.out.println("the slowest request spent: " + slowestExecutionTimeField.getValue() + " ms, in file " + slowestRequestLine.getLine().getFile().getName() + ", with String : " + slowestRequestLine.getLine().getContent());
-        //System.out.println("the fastest request spent: " + fastestExecutionTimeField.getValue() + " ms, in file " + fastestRequestLine.getLine().getFile().getName() + ", with String : " + fastestRequestLine.getLine().getContent());
-        returnList.add("the slowest request spent: " + slowestExecutionTimeField.getValue() + " ms, in file " + slowestRequestLine.getLine().getFile().getName() + ", with String : " + slowestRequestLine.getLine().getContent());
-        returnList.add("the fastest request spent: " + fastestExecutionTimeField.getValue() + " ms, in file " + fastestRequestLine.getLine().getFile().getName() + ", with String : " + fastestRequestLine.getLine().getContent());
+        resultMap.put("slowestRequestTime",slowestExecutionTimeField.getValue().toString());
+        resultMap.put("slowestRequestLine",slowestRequestLine.getLine().getFile().getName());
+        resultMap.put("slowestRequestLineStr",slowestRequestLine.getLine().getContent());
 
-        return returnList;
+        resultMap.put("fastestRequestTime",fastestExecutionTimeField.getValue().toString());
+        resultMap.put("fastestRequestLine",fastestRequestLine.getLine().getFile().getName());
+        resultMap.put("fastestRequestLineStr",fastestRequestLine.getLine().getContent());
+        return resultMap;
     }
 
     public SMOMiPerformanceTask() {

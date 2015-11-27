@@ -43,6 +43,11 @@ insert into scenario_file_types(scenario_id, file_types_id) values(4, 1)
 insert into scenario_file_types(scenario_id, file_types_id) values(5, 1)
 insert into scenario_file_types(scenario_id, file_types_id) values(6, 1)
 
+insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME,created_by_id,is_removed) values(1, 'sm.log', 'e:/', '1', 'sm.log',1,'N')
+insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME,created_by_id,is_removed) values(3, 'sm.log.1', 'e:/', '1', 'sm.log.1',1,'N')
+insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME,created_by_id,is_removed) values(4, 'sm.log.2', 'e:/', '1', 'sm.log.2',1,'N')
+insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME,created_by_id,is_removed) values(2, 'sm_dbquery.log', 'c:/temp/', '1', 'sm_dbquery.log',1,'N')
+insert into FILE(ID, FILE_NAME, PATH, FILE_TYPE_ID, ORIGINAL_NAME,created_by_id,is_removed) values(5, 'sm_dbquery.log.1', 'c:/temp/', '1', 'sm_dbquery.log.1',1,'N')
 
 insert into PARAMETER_DEFINE(ID, NAME, DISPLAY_INFO, TYPE, WIDTH, HEIGHT, line_occupied, DEFAULT_VALUE) values(1, 'N', 'N', 'text', 1, 1, false, '50')
 insert into PARAMETER_DEFINE(ID, NAME, DISPLAY_INFO, TYPE, VALUE_LIST, WIDTH, HEIGHT, line_occupied, DEFAULT_VALUE) values(2, 'order', 'Order', 'dropdown', 'ASC|DESC', 1, 1, false, 'DESC')
