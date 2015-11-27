@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IParameterDefineRepository extends JpaRepository<InputParameter, Long> {
+public interface IInputParameterRepository extends JpaRepository<InputParameter, Long> {
 }
