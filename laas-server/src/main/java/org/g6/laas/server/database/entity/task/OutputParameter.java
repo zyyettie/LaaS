@@ -13,12 +13,10 @@ import javax.persistence.ManyToOne;
 @Entity
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-public class Parameter extends LaaSAuditable<User> {
+public class OutputParameter extends LaaSAuditable<User> {
     private String name;
-    private String type; //String, Integer, Object
+    private String dataType; //String, Integer, Object
 
     @ManyToOne
-    private Task input;
-    @ManyToOne
-    private Task output;
+    private Task task;
 }

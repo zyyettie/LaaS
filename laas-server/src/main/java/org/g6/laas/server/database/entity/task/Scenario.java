@@ -8,7 +8,6 @@ import javax.persistence.*;
 import org.g6.laas.server.database.entity.Category;
 import org.g6.laas.server.database.entity.Job;
 import org.g6.laas.server.database.entity.LaaSAuditable;
-import org.g6.laas.server.database.entity.ParameterDefine;
 import org.g6.laas.server.database.entity.Product;
 import org.g6.laas.server.database.entity.file.FileType;
 import org.g6.laas.server.database.entity.user.User;
@@ -45,5 +44,5 @@ public class Scenario extends LaaSAuditable<User> {
     private List<FileType> fileTypes = new ArrayList<>();
 
     @ManyToMany
-    private List<ParameterDefine> parameterDefines = new ArrayList<>();
+    private List<InputParameter> inputParameters = new ArrayList<>();
 }

@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.g6.laas.server.database.entity.LaaSAuditable;
-import org.g6.laas.server.database.entity.ParameterDefine;
 import org.g6.laas.server.database.entity.Product;
 import org.g6.laas.server.database.entity.file.FileType;
 import org.g6.laas.server.database.entity.user.User;
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "TASK",uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
+@Table(name = "TASK", uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
@@ -26,11 +25,13 @@ public class Task extends LaaSAuditable<User> {
 
     private String className;
 
-    @OneToMany(cascade={CascadeType.ALL}, mappedBy = "input")
-    private List<Parameter> inputParameters = new ArrayList();
+    private int type;
 
-    @OneToMany(cascade={CascadeType.ALL}, mappedBy = "output")
-    private List<Parameter> outputParameters = new ArrayList();
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "task")
+    private List<InputParameter> inputParameters = new ArrayList<>();
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "task")
+    private List<OutputParameter> outputParameters = new ArrayList();
 
     @ManyToOne
     private Product product;
@@ -40,6 +41,4 @@ public class Task extends LaaSAuditable<User> {
     @ManyToOne
     private FileType fileType;
 
-    @ManyToMany
-    private List<ParameterDefine> parameterDefines = new ArrayList<>();
 }
