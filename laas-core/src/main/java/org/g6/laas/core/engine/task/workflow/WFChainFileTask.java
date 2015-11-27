@@ -1,7 +1,7 @@
 package org.g6.laas.core.engine.task.workflow;
 
 import org.g6.laas.core.engine.context.AnalysisContext;
-import org.g6.laas.core.engine.task.ChainTask;
+import org.g6.laas.core.engine.task.WFChainTask;
 import org.g6.laas.core.exception.LaaSCoreRuntimeException;
 import org.g6.laas.core.log.line.Line;
 import org.g6.laas.core.rule.Rule;
@@ -11,13 +11,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
-public abstract class ChainFileTask extends ChainTask {
+public abstract class WFChainFileTask extends WFChainTask {
 
-    public ChainFileTask(AnalysisContext context, Map<String, Object> retMap) {
+    public WFChainFileTask(AnalysisContext context, Map<String, Object> retMap) {
         super(context, retMap);
     }
 
-    public ChainFileTask(AnalysisContext context) {
+    public WFChainFileTask(AnalysisContext context) {
         super(context);
     }
 

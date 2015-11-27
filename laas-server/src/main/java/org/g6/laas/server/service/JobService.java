@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.g6.laas.core.engine.AnalysisEngine;
 import org.g6.laas.core.engine.task.AnalysisTask;
+import org.g6.laas.core.engine.task.ChainTask;
+import org.g6.laas.core.engine.task.TaskChain;
 import org.g6.laas.core.engine.task.report.ReportBuilder;
 import org.g6.laas.core.engine.task.report.ReportModel;
 import org.g6.laas.core.file.LogFile;
@@ -217,17 +219,27 @@ public class JobService {
 
     private void runWorkflow(List<OrderedTask> orderedTasks, Map paramMap) {
         Collections.sort(orderedTasks);
-        Task previousTask = null;
-        int count = 0;
-        for (OrderedTask orderedTask : orderedTasks) {
-            Task task = orderedTask.getTask();
 
-            if (count > 0) {
-               //need to inject the previous task in the current task to build a responsibility chain
+        TaskChain taskChain = new TaskChain();
+        String lastTaskClassName;
+        try {
+            for (OrderedTask orderedTask : orderedTasks) {
+                Task task = orderedTask.getTask();
+                Class taskClass = Class.forName(task.getClassName());
+                Object taskObj = taskClass.newInstance();
+                taskChain.addTask((ChainTask) taskObj);
+
+                lastTaskClassName = task.getClassName();
             }
 
-            previousTask = task;
-            count++;
+            Future future = analysisEngine.submit(taskChain);
+            Object obj = future.get(20000, TimeUnit.MILLISECONDS);
+
+            System.out.println("start handling the result");
+        } catch (TimeoutException te) {
+             System.out.println("Time out Exception");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
