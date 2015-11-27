@@ -18,6 +18,7 @@ public class ParameterDefine extends LaaSAuditable<User> {
 
     private String name;
     private String description;
+    private String label;
 
     // Display information of UI
     private String displayInfo;

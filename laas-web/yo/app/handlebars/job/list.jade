@@ -8,6 +8,8 @@
                         th Job ID
                         th Job Name
                         th Job Description
+                        th Scenario
+                        th Create Date
                         th Action
                 tbody
                     |{{#each jobs}}
@@ -15,6 +17,8 @@
                         td {{id}}
                         td {{name}}
                         td {{description}}
+                        td {{scenarioName}}
+                        td {{jobDate}}
                         td
                             button.ui.teal.tiny.button.job-show(id="{{id}}")(data-id="{{id}}") Detail
                     |{{/each}}

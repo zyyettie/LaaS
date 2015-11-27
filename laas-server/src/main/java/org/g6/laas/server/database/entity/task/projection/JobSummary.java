@@ -8,4 +8,6 @@ public interface JobSummary {
     Long getId();
     String getName();
     String getDescription();
+    String getJobDate();
+    String getScenarioName();
 }

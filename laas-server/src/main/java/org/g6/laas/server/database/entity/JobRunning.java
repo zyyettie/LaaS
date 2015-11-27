@@ -2,7 +2,7 @@ package org.g6.laas.server.database.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.g6.laas.server.database.entity.task.TaskRunning;
+import org.g6.laas.server.database.entity.task.ScenarioRunning;
 import org.g6.laas.server.database.entity.user.User;
 
 import javax.persistence.*;
@@ -23,7 +23,7 @@ public class JobRunning extends JobSubEntity {
     private String syn;//Y and N
 
     @OneToMany(cascade={CascadeType.ALL}, mappedBy = "jobRunning")
-    private Collection<TaskRunning> taskRunnings = new ArrayList<>();
+    private Collection<ScenarioRunning> scenarioRunnings = new ArrayList<>();
 
     @Override
     public Collection<User> sendTo() {
@@ -34,8 +34,8 @@ public class JobRunning extends JobSubEntity {
         getToUsers().add(user);
     }
 
-    public void addTaskRunning(TaskRunning taskRunning){
-        taskRunnings.add(taskRunning);
+    public void addScenarioRunning(ScenarioRunning scenarioRunning){
+        scenarioRunnings.add(scenarioRunning);
     }
 
     public String getJobName() {
@@ -51,6 +51,8 @@ public class JobRunning extends JobSubEntity {
     }
 
     public String getRunningTime() {
+        if (this.getCreatedDate() == null)
+            return "";
         return this.getCreatedDate().toString("yyyy/MM/dd HH:mm:ss");
     }
 }

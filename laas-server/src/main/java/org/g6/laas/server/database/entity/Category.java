@@ -20,6 +20,9 @@ public class Category extends LaaSPersistable {
     @Column(name="NAME")
     private String name;
 
-    @ManyToMany(cascade = CascadeType.REFRESH, mappedBy = "categories")
+    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "category")
     private Collection<Scenario> scenarios = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "category")
+    private Collection<Job> jobs = new ArrayList<>();
 }

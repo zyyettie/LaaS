@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.concurrent.Future;
 
 @Data
-public class TaskRunningResult {
+public class ScenarioRunningResult {
     Future future;
     boolean isTimeout = false;
     Object result;

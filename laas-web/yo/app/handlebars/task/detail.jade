@@ -1,6 +1,6 @@
 .ui.centered.grid
-    .twelve.wide.column
-        .ui.green.segment(style="margin-top:5px;padding:20px 40px;")
+    .fourteen.wide.column
+        .ui.green.segment(style="margin-top:5px;padding:75px 60px;")
             h2#title Task Detail
             form.ui.form
                 .two.fields
@@ -10,11 +10,9 @@
                     .field
                         label Product
                         select.ui.dropdown(id="selectedProduct", name="selectedProduct")
-                            //option(value="{{selectedid}}") {{selectedname}}
                             |{{#each productList}}
                             option(value="{{id}}") {{name}}
                             |{{/each}}
-                        //input(type="text",name="name",placeholder="Product",value="{{product}}")
                 .field
                     label Task Description
                     textarea(type="text",rows="3",name="description",placeholder="description", value="{{description}}"){{description}}
@@ -29,7 +27,6 @@
                             |{{#each fileTypeList}}
                             option(value="{{id}}") {{type}}
                             |{{/each}}
-                        //input(type="text",name="name",placeholder="Accepted File Type",value="{{fileType}}")
                 .two.fields
                     .field
                         .four.fields
@@ -41,20 +38,8 @@
                             .field
                     .field
                 .field
-                    .ui.divided.list
-                        |{{#each parameters}}
-                        div(id="parameter_{{id}}")
-                            .item
-                                .content
-                                    .ui.grid
-                                        .ui.two.column.row(style="margin-top:10px;margin-bottom:10px;")
-                                            .column
-                                                label {{name}}
-                                            .right.aligned.column
-                                                #remove.symbol
-                                                    i.green.minus.icon(style="cursor: pointer;transform:scale(1.5);",value="{{id}}")#remove_parameter
-                                            .column
-                        |{{/each}}
+                    #parameters
+                    #paging(style="text-align:right;margin-top:0em;")
                 .two.fields(style="margin-top:100px;margin-bottom:70px;")
                     .field(style="padding-right:50px;")
                         .ui.teal.large.fluid.button#task_save Save

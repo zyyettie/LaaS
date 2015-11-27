@@ -1,0 +1,29 @@
+table.ui.compact.celled.definition.table
+    thead.full-width
+        tr
+            th.one.wide
+            th
+                |Name
+            th.five.wide
+                |Description
+            th.two.wide
+
+    tbody
+        |{{#each tasks}}
+        tr(id="taskitem_{{id}}")
+            td(style="text-align:center")
+                #remove.symbol
+                    i.green.minus.icon(style="cursor: pointer;transform:scale(1.5);",value="{{id}}")#remove_task
+            td
+                |{{name}}
+            td
+                |{{description}}
+            td
+                .two.fields
+                    .field
+                        #up
+                            i.arrow.green.up.icon(style="cursor: pointer;transform:scale(1.5);margin-right:5px", value="{{id}}")#move_up
+                    .field
+                        #down
+                            i.arrow.green.down.icon(style="cursor: pointer;transform:scale(1.5);margin-left:5px;", value="{{id}}")#move_down
+        |{{/each}}

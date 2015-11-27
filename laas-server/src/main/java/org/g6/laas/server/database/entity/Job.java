@@ -1,7 +1,6 @@
 package org.g6.laas.server.database.entity;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.g6.laas.server.database.entity.task.Scenario;
 import org.g6.laas.server.database.entity.user.User;
@@ -26,8 +25,8 @@ public class Job extends JobSubEntity {
     @ManyToOne
     private Product product;
 
-    @ManyToMany
-    private List<Category> categories = new ArrayList<>();
+    @ManyToOne
+    private Category category;
 
     @ManyToMany
     private List<Scenario> scenarios = new ArrayList<>();
@@ -43,5 +42,15 @@ public class Job extends JobSubEntity {
     @Override
     public String getSummary() {
         return "";
+    }
+
+    public String getScenarioName() {
+        return this.getScenarios().get(0).getName();
+    }
+
+    public String getJobDate() {
+        if (this.getCreatedDate() == null)
+            return "";
+        return this.getCreatedDate().toString("yyyy/MM/dd HH:mm:ss");
     }
 }

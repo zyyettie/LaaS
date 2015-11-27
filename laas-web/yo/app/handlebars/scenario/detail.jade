@@ -1,6 +1,6 @@
 .ui.centered.grid
-    .twelve.wide.column
-        .ui.green.segment(style="margin-top:5px;padding:20px 40px;")
+    .fourteen.wide.column
+        .ui.green.segment(style="margin-top:5px;padding:75px 60px;")
             h2#title Scenario Detail
             form.ui.form
                 .two.fields
@@ -28,19 +28,8 @@
                             .field
                     .field
                 .field
-                    .ui.divided.list
-                        |{{#each tasks}}
-                        div(id="task_{{id}}")
-                            .item
-                                .content
-                                    .ui.grid
-                                        .ui.two.column.row(style="margin-top:10px;margin-bottom:10px;")
-                                            .column
-                                                label {{name}}
-                                            .right.aligned.column
-                                                #remove.symbol
-                                                    i.green.minus.icon(style="cursor: pointer;transform:scale(1.5);",value="{{id}}")#remove_task
-                        |{{/each}}
+                    #tasks
+                    #paging(style="text-align:right;margin-top:0em;")
                 .two.fields
                     .field
                         label Parameters

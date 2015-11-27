@@ -125,6 +125,7 @@ module.exports = function (grunt) {
               singlePage,
               connect.static('.tmp'),
               connect().use('/bower_components', connect.static('./bower_components')),
+              connect().use('/laas-server/images', connect.static(config.app + '/images')),
               connect.static(config.app)
             ];
           }

@@ -11,17 +11,18 @@ import org.g6.laas.core.file.LogFile;
 import org.g6.laas.server.database.entity.file.File;
 import org.g6.laas.server.database.entity.Job;
 import org.g6.laas.server.database.entity.JobRunning;
-import org.g6.laas.server.database.entity.result.TaskResult;
+import org.g6.laas.server.database.entity.result.ScenarioResult;
+import org.g6.laas.server.database.entity.task.OrderedTask;
+import org.g6.laas.server.database.entity.task.ScenarioRunning;
 import org.g6.laas.server.database.entity.task.Task;
-import org.g6.laas.server.database.entity.task.TaskRunning;
 import org.g6.laas.server.database.repository.IJobRepository;
 import org.g6.laas.server.database.repository.IJobRunningRepository;
-import org.g6.laas.server.database.repository.ITaskRunningRepository;
+import org.g6.laas.server.database.repository.IScenarioRunningRepository;
 import org.g6.laas.server.queue.JobQueue;
 import org.g6.laas.server.queue.QueueJob;
-import org.g6.laas.server.queue.QueueTask;
+import org.g6.laas.server.queue.QueueScenario;
 import org.g6.laas.server.vo.FileInfo;
-import org.g6.laas.server.vo.TaskRunningResult;
+import org.g6.laas.server.vo.ScenarioRunningResult;
 import org.g6.util.ExceptionUtils;
 import org.g6.util.FileUtil;
 import org.g6.util.JSONUtil;
@@ -47,7 +48,7 @@ public class JobService {
     @Autowired
     private IJobRunningRepository jobRunningRepo;
     @Autowired
-    private ITaskRunningRepository taskRunningRepo;
+    private IScenarioRunningRepository scenarioRunningRepo;
     @Autowired
     JobQueue queue;
 
@@ -59,9 +60,9 @@ public class JobService {
         return jobRunningRepo.findOne(id);
     }
 
-    public void saveTaskRunningStatus(TaskRunning taskRunning, String status) {
-        taskRunning.setStatus(status);
-        taskRunningRepo.save(taskRunning);
+    public void saveScenarioRunningStatus(ScenarioRunning scenarioRunning, String status) {
+        scenarioRunning.setStatus(status);
+        scenarioRunningRepo.save(scenarioRunning);
     }
 
     public void saveJobRunningStatus(JobRunning jobRunning, String status) {
@@ -73,21 +74,21 @@ public class JobService {
         return jobRunningRepo.save(jobRunning);
     }
 
-    public TaskRunning saveTaskRunning(TaskRunning taskRunning) {
-        return taskRunningRepo.save(taskRunning);
+    public ScenarioRunning saveScenarioRunning(ScenarioRunning scenarioRunning) {
+        return scenarioRunningRepo.save(scenarioRunning);
     }
 
     public List<JobRunning> findUnFinishedJobInQueue(String syn, String status) {
         return jobRunningRepo.findUnFinishedJobInQueue(syn, status);
     }
 
-    public String genReport(TaskRunningResult taskRunningResult, Task task, boolean isReport) {
-        if(!isReport){
-           return taskRunningResult.getResult().toString();
+    public String genReport(ScenarioRunningResult scenarioRunningResult, Task task, boolean isReport) {
+        if (!isReport) {
+            return scenarioRunningResult.getResult().toString();
         }
 
         ReportModel model = new ReportModel();
-        model.setAttribute("task_running_result", taskRunningResult.getResult());
+        model.setAttribute("task_running_result", scenarioRunningResult.getResult());
         ReportBuilder builder = new ReportBuilder();
         String report = builder.build(model, task.getClassName());
 
@@ -103,15 +104,15 @@ public class JobService {
         return new FileInfo(path, fileName);
     }
 
-    public void handleResultFile(TaskRunning taskRunning, FileInfo info) {
+    public void handleResultFile(ScenarioRunning scenarioRunning, FileInfo info) {
         File f = new File();
         f.setPath(info.getPath());
         f.setFileName(info.getName());
         f.setOriginalName(info.getName());
 
-        TaskResult taskResult = new TaskResult();
-        taskResult.setFile(f);
-        taskRunning.setResult(taskResult);
+        ScenarioResult scenarioResult = new ScenarioResult();
+        scenarioResult.setFile(f);
+        scenarioRunning.setResult(scenarioResult);
     }
 
     /**
@@ -120,46 +121,55 @@ public class JobService {
      * @param jobRunning
      * @return 0: Synchronous 1: asynchronous
      */
-    public JobRunningResult runTasks(JobRunning jobRunning) {
+    public JobRunningResult runJob(JobRunning jobRunning) {
         Job job = jobRunning.getJob();
         JobRunningResult jobRunningResult = new JobRunningResult();
-        List<LogFile> strFiles = getLogFilesFromJob(jobRunning);
-        Map<String, String> paramMap = JSONUtil.fromJson(job.getParameters());
+        List<LogFile> logFiles = getLogFilesFromJob(jobRunning);
+        Map<String, Object> paramMap = JSONUtil.fromJson(job.getParameters());
+        paramMap.put("files", logFiles);
 
-        Collection<TaskRunning> taskRunnings = jobRunning.getTaskRunnings();
+        Collection<ScenarioRunning> scenarioRunnings = jobRunning.getScenarioRunnings();
         QueueJob queueJob = new QueueJob();
         int failedTasks = 0, asynCount = 0;
         boolean isSyn = true;
 
-        for (Iterator<TaskRunning> ite = taskRunnings.iterator(); ite.hasNext(); ) {
-            TaskRunning taskRunning = ite.next();
-            Task task = taskRunning.getTask();
-            TaskRunningResult taskRunningResult = null;
+        for (Iterator<ScenarioRunning> ite = scenarioRunnings.iterator(); ite.hasNext(); ) {
+            ScenarioRunning scenarioRunning = ite.next();
+            List<OrderedTask> orderedTasks = scenarioRunning.getScenario().getOrderedTasks();
+
+            Task task = null;
+            if (orderedTasks.size() == 1) {
+                //if there is only one Task under a workflow, just to run this task directly
+                task = orderedTasks.get(0).getTask();
+            } else {
+                runWorkflow(orderedTasks, paramMap);
+            }
+            ScenarioRunningResult scenarioRunningResult = null;
             ReflectionObjWrapper taskWrapper = null;
             try {
-                taskWrapper = getTaskObj(task, paramMap, strFiles);
+                taskWrapper = getTaskObj(task, paramMap, logFiles);
 
                 //taskObj is the instance of Task class which is used to run
                 //task is the entity which contains different data loaded from database.
                 log.debug("Start running task named " + task.getName());
                 long timeStart = System.currentTimeMillis();
-                taskRunningResult = runTask(taskWrapper, task);
+                scenarioRunningResult = runTask(taskWrapper, task);
                 long duration = System.currentTimeMillis() - timeStart;
                 log.debug("Finish running task named " + task.getName() + ". The duration is " + duration / 1000 + "s");
             } catch (Exception e) {
                 failedTasks++;
-                saveTaskRunningStatus(taskRunning, "FAILED");
+                saveScenarioRunningStatus(scenarioRunning, "FAILED");
                 String rootCause = ExceptionUtils.getRootCauseMessage(e);
                 jobRunningResult.rootCauses.add(rootCause);
                 log.error("Exception is thrown while running task" + task.getName(), e);
             }
-            if (taskRunningResult != null) {
-                if (!taskRunningResult.isTimeout()) {
-                    String report = genReport(taskRunningResult, task, taskWrapper != null ? taskWrapper.isReport() : true);
+            if (scenarioRunningResult != null) {
+                if (!scenarioRunningResult.isTimeout()) {
+                    String report = genReport(scenarioRunningResult, task, taskWrapper != null ? taskWrapper.isReport() : true);
                     FileInfo resultFile = writeReportToFile(report);
-                    handleResultFile(taskRunning, resultFile);
+                    handleResultFile(scenarioRunning, resultFile);
 
-                    saveTaskRunningStatus(taskRunning, "SUCCESS");
+                    saveScenarioRunningStatus(scenarioRunning, "SUCCESS");
                 } else {
                     asynCount++;
                     if (!"N".equals(jobRunning.getSyn())) {
@@ -170,7 +180,7 @@ public class JobService {
                         jobRunning.setSummary(summary);
                         saveJobRunning(jobRunning);
                     }
-                    queueJob.addQueueTask(taskRunning, new QueueTask(taskRunningResult.getFuture(), taskRunningResult.isReport()));
+                    queueJob.addQueueScenario(scenarioRunning, new QueueScenario(scenarioRunningResult.getFuture(), scenarioRunningResult.isReport()));
                     queueJob.setJobRunning(jobRunning);
                     queue.addJob(queueJob);
                     isSyn = false;
@@ -190,14 +200,14 @@ public class JobService {
                 //The status of JobRunning should be set to "SUCCESS" after all tasks are run successfully
                 saveJobRunningStatus(jobRunning, "SUCCESS");
                 jobRunningResult.setSuccess(true);
-            } else if (failedTasks == taskRunnings.size()) {
+            } else if (failedTasks == scenarioRunnings.size()) {
                 saveJobRunningStatus(jobRunning, "FAILED");
                 jobRunningResult.setSuccess(false);
             } else {
                 saveJobRunningStatus(jobRunning, "PARTIALLY SUCCESS");
                 jobRunningResult.setSuccess(false);
             }
-        }else{
+        } else {
             jobRunningResult.setSuccess(true);
         }
         jobRunningResult.setSyn(isSyn);
@@ -205,6 +215,22 @@ public class JobService {
         return jobRunningResult;
     }
 
+    private void runWorkflow(List<OrderedTask> orderedTasks, Map paramMap) {
+        Collections.sort(orderedTasks);
+        Task previousTask = null;
+        int count = 0;
+        for (OrderedTask orderedTask : orderedTasks) {
+            Task task = orderedTask.getTask();
+
+            if (count > 0) {
+               //need to inject the previous task in the current task to build a responsibility chain
+            }
+
+            previousTask = task;
+            count++;
+        }
+
+    }
 
     /**
      * To run task, need to use reflection mechanism to get the task object
@@ -216,7 +242,7 @@ public class JobService {
      * @return
      * @throws Exception
      */
-    private ReflectionObjWrapper getTaskObj(Task task, Map<String, String> paramMap, List<LogFile> selectFiles) throws Exception {
+    private ReflectionObjWrapper getTaskObj(Task task, Map<String, Object> paramMap, List<LogFile> selectFiles) throws Exception {
         Class taskClass = Class.forName(task.getClassName());
         Object taskObj = taskClass.newInstance();
         Field[] fields = taskClass.getDeclaredFields();
@@ -224,7 +250,7 @@ public class JobService {
         Method m1 = taskObj.getClass().getSuperclass().getDeclaredMethod("setFiles", List.class);
         m1.invoke(taskObj, selectFiles);
 
-        for (Map.Entry<String, String> entry : paramMap.entrySet()) {
+        for (Map.Entry<String, Object> entry : paramMap.entrySet()) {
             for (int i = 0; i < fields.length; i++) {
                 boolean isAccessible = true;
                 if (!fields[i].isAccessible()) {
@@ -242,14 +268,14 @@ public class JobService {
         }
 
         Method m2 = taskObj.getClass().getMethod("isReport");
-        boolean isReport = (Boolean)m2.invoke(taskObj);
+        boolean isReport = (Boolean) m2.invoke(taskObj);
 
         return new ReflectionObjWrapper(isReport, taskObj);
     }
 
-    private TaskRunningResult runTask(ReflectionObjWrapper taskWrapper, Task task) throws ExecutionException, InterruptedException {
+    private ScenarioRunningResult runTask(ReflectionObjWrapper taskWrapper, Task task) throws ExecutionException, InterruptedException {
         Future future = analysisEngine.submit((AnalysisTask) taskWrapper.getObj());
-        TaskRunningResult result = new TaskRunningResult();
+        ScenarioRunningResult result = new ScenarioRunningResult();
         result.setReport(taskWrapper.isReport());
 
         Object obj;
@@ -270,7 +296,7 @@ public class JobService {
         List<LogFile> files = new ArrayList<>();
         for (Iterator<File> ite = jobRunning.getFiles().iterator(); ite.hasNext(); ) {
             File f = ite.next();
-            files.add(new LogFile(f.getPath() + f.getFileName(),f.getOriginalName()));
+            files.add(new LogFile(f.getPath() + f.getFileName(), f.getOriginalName()));
         }
 
         return files;

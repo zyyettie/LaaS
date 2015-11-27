@@ -26,7 +26,43 @@ LaaS.module('Task', function(Task, LaaS, Backbone, Marionette) {
             return data;
         },
         onRender: function() {
+            var that = this;
             this.$('select').dropdown();
+
+            if (this.parameters && this.parameters.length > 0 ) {
+                var size = 5;
+                var currentParameters = [];
+                for (var i=0; i<size && i<this.parameters.length; i++) {
+                    currentParameters.push(this.parameters[i]);
+                }
+                var template = JST['app/handlebars/task/parameter'];
+                var subHtml = template({parameters:currentParameters});
+                this.$('#parameters').html(subHtml);
+                var totalPages = Math.floor(this.parameters.length / size) + 1;
+                if (totalPages > 1) {
+                    this.$('#paging').twbsPagination({
+                        totalPages: totalPages,
+                        startPage: 1,
+                        visiblePages: 6,
+                        first: '<<',
+                        prev: '<',
+                        next: '>',
+                        last: '>>',
+                        onPageClick: function (event, page) {
+                            var currentParameters = [];
+                            for (var i=size*(page-1); i<size*page; i++) {
+                                if (!that.parameters[i]) {
+                                    break;
+                                }
+                                currentParameters.push(that.parameters[i]);
+                            }
+                            var template = JST['app/handlebars/task/parameter'];
+                            var html = template({files: currentParameters});
+                            $('#parameters').html(html);
+                        }
+                    })
+                }
+            }
         },
         events: {
             'click #task_save': 'saveTask',

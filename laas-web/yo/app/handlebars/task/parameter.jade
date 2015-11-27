@@ -1,0 +1,31 @@
+table.ui.compact.celled.definition.table
+    thead.full-width
+        tr
+            th.one.wide
+            th
+                |Name
+            th
+                |Description
+            th.three.wide
+                |Display Name
+            th.two.wide
+                |Type
+            th.three.wide
+                |Default Value
+    tbody
+        |{{#each parameters}}
+        tr(id="parameter_{{id}}")
+            td(style="text-align:center")
+                #remove.symbol
+                    i.green.minus.icon(style="cursor: pointer;transform:scale(1.5);",value="{{id}}")#remove_parameter
+            td
+                |{{name}}
+            td
+                |{{description}}
+            td
+                |{{displayInfo}}
+            td
+                |{{type}}
+            td
+                |{{defaultValue}}
+        |{{/each}}

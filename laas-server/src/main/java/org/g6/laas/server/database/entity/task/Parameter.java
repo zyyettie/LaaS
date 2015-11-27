@@ -6,18 +6,19 @@ import lombok.NoArgsConstructor;
 import org.g6.laas.server.database.entity.LaaSAuditable;
 import org.g6.laas.server.database.entity.user.User;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
-@Entity
-@Table(name = "WORKFLOW",uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
 @Data
+@Entity
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-public class Workflow extends LaaSAuditable<User> {
-    private static final long serialVersionUID = 3937898097604595839L;
-
-    @Column(name="NAME")
+public class Parameter extends LaaSAuditable<User> {
     private String name;
+    private String type; //String, Integer, Object
 
-    private String description;
+    @ManyToOne
+    private Task input;
+    @ManyToOne
+    private Task output;
 }
