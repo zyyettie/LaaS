@@ -143,7 +143,7 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
         selectFile: function () {
             if (!this.job.id) {
                 var jobView = new LaaS.Job.JobView({model: new LaaS.Entities.JobModel(), job: this.job, scenarioList: this.job.scenarioList,
-                    selectedScenarios: this.job.selectedScenarios, files: this.selectFiles, selectedParameterDefines: this.job.selectedParameterDefines,
+                    selectedScenarios: this.job.selectedScenarios, files: this.selectFiles, inputParameterDefs: this.job.inputParameterDefs,
                     fileTypes:this.job.fileTypes});
                 LaaS.mainRegion.show(jobView);
                 LaaS.navigate('/jobnew');
@@ -153,7 +153,7 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
                 var that = this;
                 $.when(LaaS.request('job:entity', {id:this.job.id})).done(function(jobModel) {
                     var jobView = new LaaS.Job.JobView({model: jobModel, job: that.job, scenarioList: that.job.scenarioList,
-                        selectedScenarios: that.job.selectedScenarios, files: that.selectFiles, selectedParameterDefines: that.job.selectedParameterDefines,
+                        selectedScenarios: that.job.selectedScenarios, files: that.selectFiles, inputParameterDefs: that.job.inputParameterDefs,
                         fileTypes:that.job.fileTypes});
                     LaaS.mainRegion.show(jobView);
                     LaaS.navigate('/jobs/' + that.job.id);
@@ -164,7 +164,7 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
         },
         cancelSelect: function () {
             var jobView = new LaaS.Job.JobView({model: new LaaS.Entities.JobModel(), job: this.job, scenarioList: this.job.scenarioList,
-                selectedScenarios: this.job.selectedScenarios, files: this.job.files, selectedParameterDefines: this.job.selectedParameterDefines,
+                selectedScenarios: this.job.selectedScenarios, files: this.job.files, inputParameterDefs: this.job.inputParameterDefs,
                 fileTypes:this.job.fileTypes});
             LaaS.mainRegion.show(jobView);
             if (!this.job.id) {

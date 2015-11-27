@@ -16,23 +16,20 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             this.fileList = options.fileList;
             this.scenarios = options.scenarios;
             this.files = options.files;
-            this.selectedParameterDefines = options.selectedParameterDefines;
+            this.inputParameterDefs = options.inputParameterDefs;
             this.fileTypes = options.fileTypes;
         },
         serializeData: function () {
             var data = {job: this.job, scenarioList: this.scenarioList, fileList: this.fileList,
                 scenarios: this.scenarios, files: this.files,
-                selectedParameterDefines: this.selectedParameterDefines, fileTypes: this.fileTypes};
+                inputParameterDefs: this.inputParameterDefs, fileTypes: this.fileTypes};
             if (!data.job || !data.job.selectedname) {
                 data.job.selectedname = "Select Scenario";
             }
             data.job.scenarioList = data.scenarioList;
             data.job.files = data.files ? data.files : [];
-            data.job.selectedParameterDefines = data.selectedParameterDefines ? data.selectedParameterDefines : [];
+            data.job.inputParameterDefs = data.inputParameterDefs ? data.inputParameterDefs : [];
             data.job.fileTypes = data.fileTypes ? data.fileTypes : [];
-
-            //var json = data.job.parameters ? JSON.parse(data.job.parameters) : {};
-            //$.extend(data.job, json);
 
             if (data.scenarios) {
                 for (var i = 0; i < data.scenarioList.length; i++) {
@@ -61,8 +58,8 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             this.$('select').dropdown();
 
             var json = this.job.parameters ? JSON.parse(this.job.parameters) : {};
-            var subHtml = LaaS.Form.generateParameterSubForm(this.selectedParameterDefines, json);
-            this.$('#parameters').html(subHtml);
+            var subHtml = LaaS.Form.generateParameterSubForm(this.inputParameterDefs, json);
+            this.$('#inputParameters').html(subHtml);
 
             if (this.job.files && this.job.files.length > 0 ) {
                 var size = 10;
@@ -103,16 +100,16 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 var id = this.selectedOptions[0].value;
                 for (var i=0; i<that.scenarioList.length; i++) {
                     if (that.scenarioList[i].id == id) {
-                        var parameterDefinesUrl = that.scenarioList[i]._links.parameterDefines.href;
+                        var inputParameterDefsUrl = that.scenarioList[i]._links.inputParameterDefs.href;
                         var fileTypeUrl = that.scenarioList[i]._links.fileTypes.href;
-                        $.when(LaaS.request("parameterDefine:entitiesByUrl", {url: parameterDefinesUrl}),
+                        $.when(LaaS.request("inputParameterDef:entitiesByUrl", {url: inputParameterDefsUrl}),
                             LaaS.request('fileType:entitiesByUrl', {url: fileTypeUrl}))
-                            .done(function(selectedParameterDefines, fileTypes) {
-                            that.job.selectedParameterDefines = selectedParameterDefines.parameterDefines;
+                            .done(function(inputParameterDefs, fileTypes) {
+                            that.job.inputParameterDefs = inputParameterDefs.inputParameterDefs;
                             var json = that.job.parameters ? JSON.parse(that.job.parameters) : {};
-                            var subHtml = LaaS.Form.generateParameterSubForm(selectedParameterDefines.parameterDefines, json);
-                            $('#parameters').html(subHtml);
-                            LaaS.Form.enableDatetimeControl(selectedParameterDefines.parameterDefines);
+                            var subHtml = LaaS.Form.generateParameterSubForm(inputParameterDefs.inputParameterDefs, json);
+                            $('#inputParameters').html(subHtml);
+                            LaaS.Form.enableDatetimeControl(inputParameterDefs.inputParameterDefs);
 
                             that.job.fileTypes = fileTypes.fileTypes;
                         });
@@ -144,9 +141,9 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             var html = template(data.job);
 
             var json = data.job.parameters ? JSON.parse(data.job.parameters) : {};
-            var subHtml = LaaS.Form.generateParameterSubForm(data.selectedParameterDefines, json);
+            var subHtml = LaaS.Form.generateParameterSubForm(data.inputParameterDefs, json);
 
-            html = html.replace('<div id="parameters"></div>', '<div id="parameters">'+subHtml+'</div>');
+            html = html.replace('<div id="inputParameters"></div>', '<div id="inputParameters">'+subHtml+'</div>');
 
             return html;
         },
@@ -189,8 +186,8 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 return;
             }
 
-            json.parameters = this.getParameter(json, that.job.selectedParameterDefines);
-            this.removeParameter(json, that.job.selectedParameterDefines);
+            json.parameters = this.getParameter(json, that.job.inputParameterDefs);
+            this.removeParameter(json, that.job.inputParameterDefs);
 
             json.scenarios = [];
             json.scenarios.push(appContext+apiVersion+"/scenarios/" + json.selectedScenario);
@@ -218,8 +215,8 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 toastr.error('Please input name and select scenario.');
                 return;
             }
-            json.parameters = this.getParameter(json, that.job.selectedParameterDefines);
-            this.removeParameter(json, that.job.selectedParameterDefines);
+            json.parameters = this.getParameter(json, that.job.inputParameterDefs);
+            this.removeParameter(json, that.job.inputParameterDefs);
 
             json.scenarios = [];
             json.scenarios.push(appContext+apiVersion+"/scenarios/" + json.selectedScenario);
@@ -268,7 +265,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             var thisjob = this.job;
             var that = this;
             var json = Backbone.Syphon.serialize(this);
-            json.parameters = this.getParameter(json, that.job.selectedParameterDefines);
+            json.parameters = this.getParameter(json, that.job.inputParameterDefs);
             $.extend(thisjob, json);
             if (thisjob.selectedScenario != undefined && thisjob.selectedScenario.length > 0
                 && (!thisjob.scenarios || this.job.scenarios.length <= 0 || thisjob.scenarioList[thisjob.selectedScenario].id != thisjob.scenarios[0].id)) {
@@ -335,12 +332,12 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                     $.when(LaaS.request("scenario:entitiesByUrl", {"url":jobModel.attributes._links.scenarios.href}), LaaS.request("file:entitiesByUrl", {"url":jobModel.attributes._links.files.href}))
                         .done(function(scenarios, selectedFiles) {
                             if (scenarios) {
-                                $.when(LaaS.request("parameterDefine:entitiesByUrl", {"url":scenarios.scenarios[0]._links.parameterDefines.href}),
+                                $.when(LaaS.request("inputParameterDef:entitiesByUrl", {"url":scenarios.scenarios[0]._links.inputParameterDefs.href}),
                                     LaaS.request("fileType:entitiesByUrl", {url:scenarios.scenarios[0]._links.fileTypes.href}))
-                                    .done(function(selectedParameterDefines, fileTypes) {
+                                    .done(function(inputParameterDefs, fileTypes) {
                                     var view = new LaaS.Job.JobView({model:jobModel, job:jobModel.attributes, scenarioList:scenarioList.scenarios,
                                         fileList:fileList.files, scenarios:scenarios.scenarios, files:selectedFiles.files,
-                                        selectedParameterDefines:selectedParameterDefines.parameterDefines, fileTypes:fileTypes.fileTypes});
+                                        inputParameterDefs:inputParameterDefs.inputParameterDefs, fileTypes:fileTypes.fileTypes});
                                     LaaS.mainRegion.show(view);
                                 });
                             }

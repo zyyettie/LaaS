@@ -8,7 +8,7 @@ LaaS.module('Scenario', function(Scenario, LaaS, Backbone, Marionette) {
             this.tasks = options.tasks;
             this.selectedProduct = options.selectedProduct;
             this.fileTypes = options.fileTypes;
-            this.parameterDefines = options.parameterDefines;
+            this.inputParameterDefs = options.inputParameterDefs;
         },
         template : function(data){
             var template = JST['app/handlebars/scenario/detail'];
@@ -21,7 +21,7 @@ LaaS.module('Scenario', function(Scenario, LaaS, Backbone, Marionette) {
             data.scenario.tasks = this.tasks;
             data.scenario.selectedProduct = this.selectedProduct;
             data.scenario.fileTypes = this.fileTypes;
-            data.scenario.parameterDefines = this.parameterDefines;
+            data.scenario.inputParameterDefs = this.inputParameterDefs;
             return data;
         },
         onRender: function() {
@@ -108,8 +108,8 @@ LaaS.module('Scenario', function(Scenario, LaaS, Backbone, Marionette) {
                 $.when(LaaS.request('orderedTask:entitiesByUrl', {'url': scenarioModel.attributes._links.orderedTasks.href}),
                     LaaS.request('product:entityByUrl', {'url':scenarioModel.attributes._links.product.href}),
                     LaaS.request('fileType:entitiesByUrl', {'url':scenarioModel.attributes._links.fileTypes.href}),
-                    LaaS.request('parameterDefine:entitiesByUrl', {'url':scenarioModel.attributes._links.parameterDefines.href}))
-                    .done(function(orderedTasks, selectedProduct, selectedFileTypes, selectedParameterDefines) {
+                    LaaS.request('inputParameterDef:entitiesByUrl', {'url':scenarioModel.attributes._links.inputParameterDefs.href}))
+                    .done(function(orderedTasks, selectedProduct, selectedFileTypes, inputParameterDefs) {
                         orderedTasks.tasks = orderedTasks.tasks.sort(function(a, b) {
                             if (a.order < b.order) {
                                 return -1;
@@ -128,7 +128,7 @@ LaaS.module('Scenario', function(Scenario, LaaS, Backbone, Marionette) {
                             }
                             var view = new ScenarioView({model:scenarioModel, productList:productList.products,
                                 tasks:orderedTasks.tasks, selectedProduct:selectedProduct.product, fileTypes:selectedFileTypes.fileTypes,
-                                parameterDefines:selectedParameterDefines.parameterDefines});
+                                inputParameterDefs:inputParameterDefs.inputParameterDefs});
                             LaaS.mainRegion.show(view);
                         });
                 });
