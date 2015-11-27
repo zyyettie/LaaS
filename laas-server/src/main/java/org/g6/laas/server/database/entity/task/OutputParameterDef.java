@@ -13,7 +13,9 @@ import javax.persistence.ManyToOne;
 @Entity
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-public class OutputParameter extends LaaSAuditable<User> {
+public class OutputParameterDef extends LaaSAuditable<User> {
+    private static final long serialVersionUID = 5446740475671050505L;
+
     private String name;
     private String dataType; //String, Integer, Object
 

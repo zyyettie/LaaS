@@ -28,10 +28,10 @@ public class Task extends LaaSAuditable<User> {
     private int type;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "task")
-    private List<InputParameter> inputParameters = new ArrayList<>();
+    private List<InputParameterDef> inputParameterDefs = new ArrayList<>();
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "task")
-    private List<OutputParameter> outputParameters = new ArrayList();
+    private List<OutputParameterDef> outputParameterDefs = new ArrayList<>();
 
     @ManyToOne
     private Product product;

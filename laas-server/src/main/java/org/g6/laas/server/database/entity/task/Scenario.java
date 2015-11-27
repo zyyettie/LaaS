@@ -44,5 +44,5 @@ public class Scenario extends LaaSAuditable<User> {
     private List<FileType> fileTypes = new ArrayList<>();
 
     @ManyToMany
-    private List<InputParameter> inputParameters = new ArrayList<>();
+    private List<InputParameterDef> inputParameterDefs = new ArrayList<>();
 }

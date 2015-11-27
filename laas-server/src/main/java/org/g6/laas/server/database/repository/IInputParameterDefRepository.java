@@ -1,9 +1,9 @@
 package org.g6.laas.server.database.repository;
 
-import org.g6.laas.server.database.entity.task.InputParameter;
+import org.g6.laas.server.database.entity.task.InputParameterDef;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IInputParameterRepository extends JpaRepository<InputParameter, Long> {
+public interface IInputParameterDefRepository extends JpaRepository<InputParameterDef, Long> {
 }

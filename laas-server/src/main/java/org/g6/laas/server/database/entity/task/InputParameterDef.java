@@ -8,14 +8,12 @@ import org.g6.laas.server.database.entity.user.User;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-public class InputParameter extends LaaSAuditable<User> {
+public class InputParameterDef extends LaaSAuditable<User> {
     private static final long serialVersionUID = -4095077639419164659L;
 
     private String name;
