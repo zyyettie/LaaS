@@ -13,7 +13,7 @@ public class TaskChain extends AbstractAnalysisTask<Object> {
      */
     Map paramMap = new HashMap();
 
-    Map outputMap = new HashMap();
+    Map<String, Object> outputMap = new HashMap();
 
 
     /**
@@ -51,7 +51,6 @@ public class TaskChain extends AbstractAnalysisTask<Object> {
     }
 
     void release() {
-
         for (int i = 0; i < n; i++) {
             tasks[i] = null;
         }
@@ -68,5 +67,17 @@ public class TaskChain extends AbstractAnalysisTask<Object> {
     public Object analyze() {
         System.out.println("Start analyzing.......");
         return doTask(paramMap, outputMap);
+    }
+
+    public void setParamMap(Map<String, Object> paramMap){
+        this.paramMap = paramMap;
+    }
+
+    public void addInput(String key, Object obj){
+        paramMap.put(key, obj);
+    }
+
+    public void addOutput(String key, Object obj){
+        outputMap.put(key, obj);
     }
 }

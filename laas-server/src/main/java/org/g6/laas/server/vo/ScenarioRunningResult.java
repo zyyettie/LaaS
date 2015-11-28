@@ -10,4 +10,5 @@ public class ScenarioRunningResult {
     boolean isTimeout = false;
     Object result;
     boolean report;
+    String reportTemplate;
 }

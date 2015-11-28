@@ -84,15 +84,15 @@ public class JobService {
         return jobRunningRepo.findUnFinishedJobInQueue(syn, status);
     }
 
-    public String genReport(ScenarioRunningResult scenarioRunningResult, Task task, boolean isReport) {
-        if (!isReport) {
-            return scenarioRunningResult.getResult().toString();
+    public String genReport(ScenarioRunningResult result) {
+        if (!result.isReport()) {
+            return result.getResult().toString();
         }
 
         ReportModel model = new ReportModel();
-        model.setAttribute("task_running_result", scenarioRunningResult.getResult());
+        model.setAttribute("task_running_result", result.getResult());
         ReportBuilder builder = new ReportBuilder();
-        String report = builder.build(model, task.getClassName());
+        String report = builder.build(model, result.getReportTemplate());
 
         return report;
     }
@@ -131,63 +131,23 @@ public class JobService {
         paramMap.put("files", logFiles);
 
         Collection<ScenarioRunning> scenarioRunnings = jobRunning.getScenarioRunnings();
-        QueueJob queueJob = new QueueJob();
-        int failedTasks = 0, asynCount = 0;
         boolean isSyn = true;
 
         for (Iterator<ScenarioRunning> ite = scenarioRunnings.iterator(); ite.hasNext(); ) {
             ScenarioRunning scenarioRunning = ite.next();
             List<OrderedTask> orderedTasks = scenarioRunning.getScenario().getOrderedTasks();
+            ScenarioRunningResult scenarioRunningResult;
+            Task task;
 
-            Task task = null;
             if (orderedTasks.size() == 1) {
                 //if there is only one Task under a workflow, just to run this task directly
                 task = orderedTasks.get(0).getTask();
+                scenarioRunningResult = runSingleTask(scenarioRunning, task, paramMap, jobRunningResult);
             } else {
-                runWorkflow(orderedTasks, paramMap);
+                scenarioRunningResult = runWorkflow(scenarioRunning, orderedTasks, paramMap, jobRunningResult);
             }
-            ScenarioRunningResult scenarioRunningResult = null;
-            ReflectionObjWrapper taskWrapper = null;
-            try {
-                taskWrapper = getTaskObj(task, paramMap, logFiles);
 
-                //taskObj is the instance of Task class which is used to run
-                //task is the entity which contains different data loaded from database.
-                log.debug("Start running task named " + task.getName());
-                long timeStart = System.currentTimeMillis();
-                scenarioRunningResult = runTask(taskWrapper, task);
-                long duration = System.currentTimeMillis() - timeStart;
-                log.debug("Finish running task named " + task.getName() + ". The duration is " + duration / 1000 + "s");
-            } catch (Exception e) {
-                failedTasks++;
-                saveScenarioRunningStatus(scenarioRunning, "FAILED");
-                String rootCause = ExceptionUtils.getRootCauseMessage(e);
-                jobRunningResult.rootCauses.add(rootCause);
-                log.error("Exception is thrown while running task" + task.getName(), e);
-            }
-            if (scenarioRunningResult != null) {
-                if (!scenarioRunningResult.isTimeout()) {
-                    String report = genReport(scenarioRunningResult, task, taskWrapper != null ? taskWrapper.isReport() : true);
-                    FileInfo resultFile = writeReportToFile(report);
-                    handleResultFile(scenarioRunning, resultFile);
-
-                    saveScenarioRunningStatus(scenarioRunning, "SUCCESS");
-                } else {
-                    asynCount++;
-                    if (!"N".equals(jobRunning.getSyn())) {
-                        jobRunning.setSyn("N");
-                        jobRunning.getToUsers().clear();
-                        jobRunning.addUser(jobRunning.getCreatedBy());
-                        String summary = "Your job named " + job.getName() + " is running in the background, please check your inbox later";
-                        jobRunning.setSummary(summary);
-                        saveJobRunning(jobRunning);
-                    }
-                    queueJob.addQueueScenario(scenarioRunning, new QueueScenario(scenarioRunningResult.getFuture(), scenarioRunningResult.isReport()));
-                    queueJob.setJobRunning(jobRunning);
-                    queue.addJob(queueJob);
-                    isSyn = false;
-                }
-            }
+            isSyn = handleScenarioRunning(scenarioRunningResult, scenarioRunning, jobRunning);
         }
 
         if (!jobRunningResult.getRootCauses().isEmpty()) {
@@ -195,53 +155,122 @@ public class JobService {
             return jobRunningResult;
         }
 
+        handleJobRunning(isSyn, jobRunning, jobRunningResult);
+
+        return jobRunningResult;
+    }
+
+    private void handleJobRunning(boolean isSyn, JobRunning jobRunning, JobRunningResult jobRunningResult){
         //Note the status of JobRunning is not required to change while moving to asynchronous mode
         if (isSyn) {
             jobRunning.setSyn("Y");
-            if (failedTasks == 0) {
-                //The status of JobRunning should be set to "SUCCESS" after all tasks are run successfully
+            if(jobRunningResult.getRootCauses().isEmpty()){
                 saveJobRunningStatus(jobRunning, "SUCCESS");
                 jobRunningResult.setSuccess(true);
-            } else if (failedTasks == scenarioRunnings.size()) {
+            } else{
                 saveJobRunningStatus(jobRunning, "FAILED");
-                jobRunningResult.setSuccess(false);
-            } else {
-                saveJobRunningStatus(jobRunning, "PARTIALLY SUCCESS");
                 jobRunningResult.setSuccess(false);
             }
         } else {
             jobRunningResult.setSuccess(true);
         }
         jobRunningResult.setSyn(isSyn);
-
-        return jobRunningResult;
     }
 
-    private void runWorkflow(List<OrderedTask> orderedTasks, Map paramMap) {
+    private boolean handleScenarioRunning(ScenarioRunningResult result, ScenarioRunning scenarioRunning, JobRunning jobRunning){
+        boolean isSyn = true;
+        if (result != null) {
+            QueueJob queueJob = new QueueJob();
+            if (!result.isTimeout()) {
+                String report = genReport(result);
+                FileInfo resultFile = writeReportToFile(report);
+                handleResultFile(scenarioRunning, resultFile);
+
+                saveScenarioRunningStatus(scenarioRunning, "SUCCESS");
+            } else {
+                if (!"N".equals(jobRunning.getSyn())) {
+                    jobRunning.setSyn("N");
+                    jobRunning.getToUsers().clear();
+                    jobRunning.addUser(jobRunning.getCreatedBy());
+                    String summary = "Your job named " + jobRunning.getJob().getName() + " is running in the background, please check your inbox later";
+                    jobRunning.setSummary(summary);
+                    saveJobRunning(jobRunning);
+                }
+                QueueScenario queueScenario = new QueueScenario(result.getFuture(), result.isReport(), result.getReportTemplate());
+                queueJob.addQueueScenario(scenarioRunning, queueScenario);
+                queueJob.setJobRunning(jobRunning);
+                queue.addJob(queueJob);
+                isSyn = false;
+            }
+        }
+
+        return isSyn;
+    }
+
+    private ScenarioRunningResult runSingleTask(ScenarioRunning scenarioRunning, Task task, Map<String, Object> paramMap, JobRunningResult jobRunningResult) {
+        ScenarioRunningResult result = null;
+        ReflectionObjWrapper taskWrapper;
+        try {
+            taskWrapper = getTaskObj(task, paramMap);
+
+            //taskObj is the instance of Task class which is used to run
+            //task is the entity which contains different data loaded from database.
+            log.debug("Start running task named " + task.getName());
+            long timeStart = System.currentTimeMillis();
+            result = runTask(taskWrapper, task);
+            long duration = System.currentTimeMillis() - timeStart;
+            log.debug("Finish running task named " + task.getName() + ". The duration is " + duration / 1000 + "s");
+        } catch (Exception e) {
+            saveScenarioRunningStatus(scenarioRunning, "FAILED");
+            String rootCause = ExceptionUtils.getRootCauseMessage(e);
+            jobRunningResult.rootCauses.add(rootCause);
+            jobRunningResult.setSuccess(false);
+            log.error("Exception is thrown while running task" + task.getName(), e);
+        }
+
+        return result;
+    }
+
+    private ScenarioRunningResult runWorkflow(ScenarioRunning scenarioRunning, List<OrderedTask> orderedTasks, Map paramMap, JobRunningResult jobRunningResult) {
         Collections.sort(orderedTasks);
 
         TaskChain taskChain = new TaskChain();
-        String lastTaskClassName;
+        taskChain.setParamMap(paramMap);
+        String lastTaskClassName = null;
+        Future future = null;
+        ScenarioRunningResult result = new ScenarioRunningResult();
+        String scenarioName = scenarioRunning.getScenario().getName();
         try {
             for (OrderedTask orderedTask : orderedTasks) {
                 Task task = orderedTask.getTask();
-                Class taskClass = Class.forName(task.getClassName());
-                Object taskObj = taskClass.newInstance();
+                String taskClassName = task.getClassName();
+                Object taskObj = ReflectUtil.newInstance(taskClassName);
                 taskChain.addTask((ChainTask) taskObj);
 
                 lastTaskClassName = task.getClassName();
             }
 
-            Future future = analysisEngine.submit(taskChain);
+            result.setReportTemplate(lastTaskClassName);
+            future = analysisEngine.submit(taskChain);
             Object obj = future.get(20000, TimeUnit.MILLISECONDS);
-
-            System.out.println("start handling the result");
+            // The type of obj is Map and two elements are included in it.
+            // one is isReport and another is result that is used to generate report.
+            Map<String, Object> resultMap = (Map<String, Object>) obj;
+            result.setResult(resultMap.get("result"));
+            result.setReport(resultMap.get("isReport") == null ? true : Boolean.parseBoolean(resultMap.get("isReport").toString()));
         } catch (TimeoutException te) {
-             System.out.println("Time out Exception");
+            log.info("The execution on scenario named " + scenarioName + "is going in asynchronous running mode due to timeout");
+            result.setFuture(future);
+            result.setTimeout(true);
         } catch (Exception e) {
-            e.printStackTrace();
+            saveScenarioRunningStatus(scenarioRunning, "FAILED");
+            String rootCause = ExceptionUtils.getRootCauseMessage(e);
+            jobRunningResult.rootCauses.add(rootCause);
+            jobRunningResult.setSuccess(false);
+            log.error("Exception happens while running task workflow for scenario named " + scenarioName, e);
         }
 
+        return result;
     }
 
     /**
@@ -250,16 +279,17 @@ public class JobService {
      *
      * @param task
      * @param paramMap
-     * @param selectFiles
      * @return
      * @throws Exception
      */
-    private ReflectionObjWrapper getTaskObj(Task task, Map<String, Object> paramMap, List<LogFile> selectFiles) throws Exception {
+    private ReflectionObjWrapper getTaskObj(Task task, Map<String, Object> paramMap) throws Exception {
         Class taskClass = Class.forName(task.getClassName());
         Object taskObj = taskClass.newInstance();
         Field[] fields = taskClass.getDeclaredFields();
 
+
         Method m1 = taskObj.getClass().getSuperclass().getDeclaredMethod("setFiles", List.class);
+        List<LogFile> selectFiles = (List<LogFile>) paramMap.get("files");
         m1.invoke(taskObj, selectFiles);
 
         for (Map.Entry<String, Object> entry : paramMap.entrySet()) {
@@ -289,11 +319,12 @@ public class JobService {
         Future future = analysisEngine.submit((AnalysisTask) taskWrapper.getObj());
         ScenarioRunningResult result = new ScenarioRunningResult();
         result.setReport(taskWrapper.isReport());
+        result.setReportTemplate(task.getClassName());
 
-        Object obj;
         try {
-            obj = future.get(20000, TimeUnit.MILLISECONDS);
+            Object obj = future.get(20000, TimeUnit.MILLISECONDS);
             result.setResult(obj);
+            throw new TimeoutException("aaa");
         } catch (TimeoutException te) {
             log.info("The task named " + task.getName() + "is going in asynchronous running mode");
             result.setFuture(future);

@@ -9,7 +9,7 @@ import java.util.Map;
 @Slf4j
 @Data
 @NoArgsConstructor
-public abstract class ChainTask<T> extends AbstractAnalysisTask<T>{
+public abstract class ChainTask<T> extends AbstractAnalysisTask<T> {
 
-    public abstract void doTask(Map paramMap,Map output, TaskChain chain);
+    public abstract void doTask(Map request, Map response, TaskChain chain);
 }
