@@ -65,7 +65,6 @@ public class TaskChain extends AbstractAnalysisTask<Object> {
 
     @Override
     public Object analyze() {
-        System.out.println("Start analyzing.......");
         return doTask(paramMap, outputMap);
     }
 

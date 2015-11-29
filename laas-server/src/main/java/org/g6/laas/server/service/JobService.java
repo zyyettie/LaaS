@@ -324,7 +324,6 @@ public class JobService {
         try {
             Object obj = future.get(20000, TimeUnit.MILLISECONDS);
             result.setResult(obj);
-            throw new TimeoutException("aaa");
         } catch (TimeoutException te) {
             log.info("The task named " + task.getName() + "is going in asynchronous running mode");
             result.setFuture(future);
