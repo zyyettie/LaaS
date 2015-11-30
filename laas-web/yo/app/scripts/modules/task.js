@@ -4,7 +4,7 @@ LaaS.module('Task', function(Task, LaaS, Backbone, Marionette) {
     var TaskView = Marionette.ItemView.extend({
         initialize : function(options){
             this.task = options.model.attributes;
-            this.parameters = options.parameters;
+            this.inputParameterDefs = options.inputParameterDefs;
 
             this.productList = options.productList;
             this.fileTypeList = options.fileTypeList;
@@ -18,7 +18,7 @@ LaaS.module('Task', function(Task, LaaS, Backbone, Marionette) {
         },
         serializeData:function(){
             var data = {task:this.task};
-            data.task.parameters = this.parameters;
+            data.task.inputParameterDefs = this.inputParameterDefs;
             data.task.productList = this.productList;
             data.task.fileTypeList = this.fileTypeList;
             data.task.selectedProduct = this.selectedProduct;
@@ -29,16 +29,16 @@ LaaS.module('Task', function(Task, LaaS, Backbone, Marionette) {
             var that = this;
             this.$('select').dropdown();
 
-            if (this.parameters && this.parameters.length > 0 ) {
+            if (this.inputParameterDefs && this.inputParameterDefs.length > 0 ) {
                 var size = 5;
-                var currentParameters = [];
-                for (var i=0; i<size && i<this.parameters.length; i++) {
-                    currentParameters.push(this.parameters[i]);
+                var currentParameterDefs = [];
+                for (var i=0; i<size && i<this.inputParameterDefs.length; i++) {
+                    currentParameterDefs.push(this.inputParameterDefs[i]);
                 }
-                var template = JST['app/handlebars/task/parameter'];
-                var subHtml = template({parameters:currentParameters});
-                this.$('#parameters').html(subHtml);
-                var totalPages = Math.floor(this.parameters.length / size) + 1;
+                var template = JST['app/handlebars/task/inputParameter'];
+                var subHtml = template({inputParameterDefs:currentParameterDefs});
+                this.$('#inputParameters').html(subHtml);
+                var totalPages = Math.floor(this.inputParameterDefs.length / size) + 1;
                 if (totalPages > 1) {
                     this.$('#paging').twbsPagination({
                         totalPages: totalPages,
@@ -49,16 +49,16 @@ LaaS.module('Task', function(Task, LaaS, Backbone, Marionette) {
                         next: '>',
                         last: '>>',
                         onPageClick: function (event, page) {
-                            var currentParameters = [];
+                            var currentParameterDefs = [];
                             for (var i=size*(page-1); i<size*page; i++) {
-                                if (!that.parameters[i]) {
+                                if (!that.inputParameterDefs[i]) {
                                     break;
                                 }
-                                currentParameters.push(that.parameters[i]);
+                                currentParameterDefs.push(that.inputParameterDefs[i]);
                             }
-                            var template = JST['app/handlebars/task/parameter'];
-                            var html = template({files: currentParameters});
-                            $('#parameters').html(html);
+                            var template = JST['app/handlebars/task/inputParameter'];
+                            var html = template({files: currentParameterDefs});
+                            $('#inputParameters').html(html);
                         }
                     })
                 }
@@ -107,11 +107,11 @@ LaaS.module('Task', function(Task, LaaS, Backbone, Marionette) {
         showTask: function(id){
             $.when(LaaS.request('task:entity', {'id':id}), LaaS.request('product:entities'), LaaS.request('fileType:entities'))
                 .done(function(taskModel, productList, fileTypeList){
-                $.when(LaaS.request('parameterDefine:entitiesByUrl', {'url':taskModel.attributes._links.parameterDefines.href}),
+                $.when(LaaS.request('inputParameterDef:entitiesByUrl', {'url':taskModel.attributes._links.inputParameterDefs.href}),
                     LaaS.request('product:entityByUrl', {'url':taskModel.attributes._links.product.href}),
                     LaaS.request('fileType:entitiesByUrl', {'url':taskModel.attributes._links.fileType.href}))
-                    .done(function(relatedParameterDefines, selectedProduct, selectedFileType) {
-                    var view = new TaskView({model:taskModel, parameters:relatedParameterDefines.parameterDefines,
+                    .done(function(inputParameterDefs, selectedProduct, selectedFileType) {
+                    var view = new TaskView({model:taskModel, inputParameterDefs:inputParameterDefs.inputParameterDefs,
                         productList:productList.products, fileTypeList:fileTypeList.fileTypes, selectedProduct: selectedProduct.product,
                         selectedFileType:selectedFileType.fileTypes});
                     LaaS.mainRegion.show(view);

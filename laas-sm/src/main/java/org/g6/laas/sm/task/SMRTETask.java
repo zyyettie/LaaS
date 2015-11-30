@@ -2,6 +2,8 @@ package org.g6.laas.sm.task;
 
 import org.g6.laas.core.engine.context.SimpleAnalysisContext;
 import org.g6.laas.core.engine.task.AbstractAnalysisTask;
+import org.g6.laas.core.engine.task.ChainTask;
+import org.g6.laas.core.engine.task.TaskChain;
 import org.g6.laas.core.exception.LaaSValidationException;
 import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.file.LogFile;
@@ -18,8 +20,9 @@ import org.g6.laas.sm.validator.RTELogValidator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public abstract class SMRTETask<T> extends AbstractAnalysisTask<T> {
+public class SMRTETask<T> extends ChainTask<T> {
     DefaultInputFormatProvider provider;
     private List<Rule> rules = new ArrayList<>();
     private List<LogFile> files;
@@ -86,5 +89,22 @@ public abstract class SMRTETask<T> extends AbstractAnalysisTask<T> {
         provider.setNames(names);
 
         return provider;
+    }
+
+
+    @Override
+    protected T process() {
+        return null;
+    }
+
+    /**
+     * do nothing here, this method should be overridden if the child class is used
+     * to build a task workflow
+     * @param request
+     * @param response
+     * @param chain
+     */
+    @Override
+    public void doTask(Map request, Map response, TaskChain chain) {
     }
 }

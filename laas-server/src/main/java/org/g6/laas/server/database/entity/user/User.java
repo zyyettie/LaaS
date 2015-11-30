@@ -5,8 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.g6.laas.server.database.entity.file.File;
 import org.g6.laas.server.database.entity.LaaSPersistable;
+import org.g6.laas.server.database.entity.task.ScenarioRunning;
 import org.g6.laas.server.database.entity.task.Task;
-import org.g6.laas.server.database.entity.task.TaskRunning;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -54,7 +54,7 @@ public class User extends LaaSPersistable {
     private Collection<Task> tasks = new ArrayList<>();
 
     @OneToMany(mappedBy = "createdBy")
-    private Collection<TaskRunning> taskRunning = new ArrayList<>();
+    private Collection<ScenarioRunning> taskRunning = new ArrayList<>();
 
     public User(Long id) {
         super(id);

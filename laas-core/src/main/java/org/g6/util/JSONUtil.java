@@ -44,9 +44,9 @@ public class JSONUtil {
         return gson.fromJson(str, type);
     }
 
-    public static Map<String, String> fromJson(String jsonStr) {
-        Map<String, String> map = fromJson(
-                jsonStr, new TypeToken<Map<String, String>>() {
+    public static Map<String, Object> fromJson(String jsonStr) {
+        Map<String, Object> map = fromJson(
+                jsonStr, new TypeToken<Map<String, Object>>() {
         }.getType());
 
         return map;

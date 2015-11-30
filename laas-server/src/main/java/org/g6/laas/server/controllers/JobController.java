@@ -34,7 +34,7 @@ public class JobController {
             jsonMap.put("rootcauses", rootCauses);
         } else {
             JobRunning jobRunning = createRunningRecords4JobAndTask(job);
-            JobService.JobRunningResult runningResult = jobService.runTasks(jobRunning);
+            JobService.JobRunningResult runningResult = jobService.runJob(jobRunning);
 
             jsonMap.put("job_id", String.valueOf(job.getId()));
             jsonMap.put("job_running_id", String.valueOf(jobRunning.getId()));
@@ -49,6 +49,11 @@ public class JobController {
     private List<String> validateFiles(Job job) {
         List<File> strFiles = job.getFiles();
         List<String> rootCauses = new ArrayList();
+        if(strFiles.isEmpty()){
+            rootCauses.add("No files found for analysis");
+            return rootCauses;
+        }
+
         for (File file : strFiles) {
             if (!FileUtil.isFile(file.getPath() + file.getFileName())) {
                 rootCauses.add(file.getOriginalName() + " isn't a valid file");
@@ -58,7 +63,7 @@ public class JobController {
     }
 
     /**
-     * Insert JobRunning and TaskRunning records into database.
+     * Insert JobRunning and ScenarioRunning records into database.
      * The status of JobRunning is set to "running" before all tasks are completed
      *
      * @param job
@@ -71,18 +76,15 @@ public class JobController {
         jobRunning.setFiles(getFiles(job.getFiles()));
         jobRunning.setStatus("RUNNING");
 
-        Scenario scenario = job.getScenario();
+        List<Scenario> scenarios = job.getScenarios();
 
-        for (Iterator<Workflow> ite = scenario.getWorkflows().iterator(); ite.hasNext(); ) {
-            List<WorkflowTask> tasks = ite.next().getTasks();
-            for (Iterator<WorkflowTask> wlIter = tasks.iterator(); ite.hasNext(); ) {
-                Task task = wlIter.next().getTask();
-                TaskRunning taskRunning = new TaskRunning();
-                taskRunning.setStatus("RUNNING");
-                taskRunning.setTask(task);
-                taskRunning.setJobRunning(jobRunning);
-                jobRunning.addTaskRunning(taskRunning);
-            }
+        for (Iterator<Scenario> ite = scenarios.iterator(); ite.hasNext(); ) {
+            Scenario scenario = ite.next();
+            ScenarioRunning scenarioRunning = new ScenarioRunning();
+            scenarioRunning.setStatus("RUNNING");
+            scenarioRunning.setScenario(scenario);
+            scenarioRunning.setJobRunning(jobRunning);
+            jobRunning.addScenarioRunning(scenarioRunning);
         }
 
         JobRunning retJobRunning = jobService.saveJobRunning(jobRunning);
@@ -102,13 +104,12 @@ public class JobController {
     @RequestMapping(value = "/controllers/jobRunnings/{id}/result")
     ResponseEntity<String> getJobRunningResult(@PathVariable Long id) {
         JobRunning jobRunning = jobService.findJobRunningBy(id);
-        Collection<TaskRunning> taskRunnings = jobRunning.getTaskRunnings();
+        Collection<ScenarioRunning> taskRunnings = jobRunning.getScenarioRunnings();
         Map<String, String> resMap = new HashMap<>();
 
-        for (Iterator<TaskRunning> ite = taskRunnings.iterator(); ite.hasNext(); ) {
-            TaskRunning taskRunning = ite.next();
-            Task task = taskRunning.getTask();
-            File resultFile = taskRunning.getResult().getFile();
+        for (Iterator<ScenarioRunning> ite = taskRunnings.iterator(); ite.hasNext(); ) {
+            ScenarioRunning scenarioRunning = ite.next();
+            File resultFile = scenarioRunning.getResult().getFile();
             String content = FileUtil.readFullFile(new java.io.File(resultFile.getPath() + resultFile.getFileName()));
             resMap.put("desc", content);
         }
@@ -127,19 +128,20 @@ public class JobController {
         newJobRunning.setFiles(getFiles(jobRunning.getFiles()));
         newJobRunning.setStatus("RUNNING");
 
-        for (Iterator<TaskRunning> ite = jobRunning.getTaskRunnings().iterator(); ite.hasNext(); ) {
-            TaskRunning taskRunning = ite.next();
-            TaskRunning newTaskRunning = new TaskRunning();
+        for (Iterator<ScenarioRunning> ite = jobRunning.getScenarioRunnings().iterator(); ite.hasNext(); ) {
+            ScenarioRunning scenarioRunning = ite.next();
+            ScenarioRunning newScenarioRunning = new ScenarioRunning();
 
-            newTaskRunning.setStatus("RUNNING");
-            newTaskRunning.setTask(taskRunning.getTask());
-            newTaskRunning.setJobRunning(newJobRunning);
-            newJobRunning.addTaskRunning(newTaskRunning);
+            newScenarioRunning.setStatus("RUNNING");
+            newScenarioRunning.setJobRunning(newJobRunning);
+            newScenarioRunning.setScenario(scenarioRunning.getScenario());
+
+            newJobRunning.addScenarioRunning(newScenarioRunning);
         }
 
 
         JobRunning retJobRunning = jobService.saveJobRunning(newJobRunning);
-        JobService.JobRunningResult runningResult = jobService.runTasks(retJobRunning);
+        JobService.JobRunningResult runningResult = jobService.runJob(retJobRunning);
 
         Map<String, Object> jsonMap = new HashMap();
         jsonMap.put("job_id", String.valueOf(retJobRunning.getJob().getId()));

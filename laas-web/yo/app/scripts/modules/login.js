@@ -32,7 +32,7 @@ LaaS.module('Login', function(Login, LaaS, Backbone, Marionette) {
             });
             $('#nav').css('visibility','hidden');
             $('#header').hide();
-            $('body').css('background-image','url(../images/login.jpg)');
+            $('body').css('background-image','url(images/login.jpg)');
         },
         ui:{
             submitBtn:'.teal.button'

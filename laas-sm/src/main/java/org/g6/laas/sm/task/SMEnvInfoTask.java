@@ -23,7 +23,7 @@ import java.util.Map;
  */
 @Data
 @NoArgsConstructor
-public class LoginTimeInfoTask extends SMRTETask<Map<String, Double>> {
+public class SMEnvInfoTask extends SMRTETask<Map<String, Double>> {
     private List<Line> lines;
     private SplitResult result;
     private String user;
@@ -51,7 +51,7 @@ public class LoginTimeInfoTask extends SMRTETask<Map<String, Double>> {
 
     @Override
     DefaultInputFormatProvider getProvider() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override

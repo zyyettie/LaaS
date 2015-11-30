@@ -9,5 +9,5 @@ public interface JobSummary {
     String getName();
     String getDescription();
     String getJobDate();
-    String getScenario();
+    String getScenarioName();
 }

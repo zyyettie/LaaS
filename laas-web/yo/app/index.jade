@@ -5,7 +5,7 @@ html
     meta(name="description",  content="")
     meta(name="viewport",     content="width=device-width")
     meta(http-equiv="X-UA-Compatible", content="IE=edge;")
-    link(rel="shortcut icon", href="/favicon.ico")
+    link(rel="shortcut icon", href="favicon.ico")
 
     // build:css({.,.tmp}) styles/main.css
     link(rel="stylesheet", href="/bower_components/fontawesome/css/font-awesome.css")
@@ -33,6 +33,7 @@ html
   include ./lib/_library
 
   // build:js({app,.tmp}) scripts/app.js
+  script(src="/scripts/vendor/semantic.js")
   script(src="/handlebars/precompiled.handlebars.home.js")
   script(src="/scripts/app.js")
   script(src="/scripts/modules/utils.js")
@@ -43,7 +44,7 @@ html
   script(src="/scripts/entity/scenario.js")
   script(src="/scripts/entity/file.js")
   script(src="/scripts/entity/notification.js")
-  script(src="/scripts/entity/parameterDefine.js")
+  script(src="/scripts/entity/parameterDef.js")
   script(src="/scripts/entity/product.js")
   script(src="/scripts/entity/fileType.js")
   script(src="/scripts/entity/taskRunning.js")
