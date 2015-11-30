@@ -69,7 +69,11 @@ LaaS.module('Login', function(Login, LaaS, Backbone, Marionette) {
             var uid = sessionStorage.getItem('uid')
             if(uid){
                 LaaS.navigate('/home',true);
-            }else{
+            }else if(LaaS.isClickingLogout){
+				LaaS.isClickingLogout = false;
+				LaaS.resetLayout();
+                LaaS.mainRegion.show(new LoginView());
+			}else{
                 $.getJSON(appContext+'/controllers/users/current',function(data){
                     sessionStorage.setItem("uid",data.id);
                     sessionStorage.setItem("username",data.name);

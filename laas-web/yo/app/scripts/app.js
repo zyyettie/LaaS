@@ -83,6 +83,8 @@ LaaS.stopTasks = function () {
     }
 };
 
+LaaS.isClickingLogout = false;
+
 LaaS.isAdmin = function () {
     var role = sessionStorage.getItem('role');
     return role == 'ROLE_ADMIN';
