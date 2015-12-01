@@ -129,6 +129,8 @@ public class JobService {
         List<LogFile> logFiles = getLogFilesFromJob(jobRunning);
         Map<String, Object> paramMap = JSONUtil.fromJson(job.getParameters());
         paramMap.put("files", logFiles);
+        //TODO will remove the below line
+        paramMap.put("userName", "falcon");
 
         Collection<ScenarioRunning> scenarioRunnings = jobRunning.getScenarioRunnings();
         boolean isSyn = true;

@@ -31,7 +31,7 @@ insert into TASK(ID, NAME, CLASS_NAME, PRODUCT_ID, FILE_TYPE_ID, TYPE) values(6,
 
 
 insert into TASK(ID, NAME, CLASS_NAME, PRODUCT_ID, FILE_TYPE_ID, TYPE) values(7, 'First Task for testing', 'org.g6.laas.sm.task.ProcessAndThreadOfUserTask', 1, 1, 0)
-insert into TASK(ID, NAME, CLASS_NAME, PRODUCT_ID, FILE_TYPE_ID, TYPE) values(8, 'Second Task for Testing', 'org.g6.laas.sm.task.SecondTask', 1, 1, 0)
+insert into TASK(ID, NAME, CLASS_NAME, PRODUCT_ID, FILE_TYPE_ID, TYPE) values(8, 'Second Task for Testing', 'org.g6.laas.sm.task.LoginUserInfoTask', 1, 1, 0)
 
 insert into ORDERED_TASK(ID, SCENARIO_ID,TASK_ID,TASK_ORDER) values(1, 1,1,1)
 insert into ORDERED_TASK(ID, SCENARIO_ID,TASK_ID,TASK_ORDER) values(2, 2,2,1)

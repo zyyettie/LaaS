@@ -6,4 +6,6 @@ import lombok.Data;
 public class LoginInfo {
     private String licenseType;
     private String clientType;
+    private String webServer;
+    private String clientVersion;
 }
