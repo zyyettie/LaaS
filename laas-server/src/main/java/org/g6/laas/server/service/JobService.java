@@ -30,6 +30,7 @@ import org.g6.util.ReflectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletContext;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -51,6 +52,9 @@ public class JobService {
     private IScenarioRunningRepository scenarioRunningRepo;
     @Autowired
     JobQueue queue;
+    @Autowired
+    private ServletContext servletContext;
+    String contextPath;
 
     public Job findJobBy(Long id) {
         return jobRepo.findOne(id);
@@ -89,6 +93,10 @@ public class JobService {
 
         ReportModel model = new ReportModel();
         model.setAttribute("task_running_result", scenarioRunningResult.getResult());
+        if(contextPath == null){
+            contextPath = servletContext.getContextPath();
+        }
+        model.setAttribute("contextPath",contextPath);
         ReportBuilder builder = new ReportBuilder();
         String report = builder.build(model, task.getClassName());
 

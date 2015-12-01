@@ -1,11 +1,9 @@
 package org.g6.laas.server.database.entity.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.g6.laas.server.database.entity.LaaSPersistable;
-import org.g6.laas.server.database.entity.user.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,7 +17,7 @@ public class Role extends LaaSPersistable {
 
     private static final long serialVersionUID = -8503475553108415613L;
 
-    @JsonView(User.UserDTO.class)
+    @JsonView(Users.UserDTO.class)
     @Column(name="NAME")
     private String name;
 
@@ -28,9 +26,9 @@ public class Role extends LaaSPersistable {
     }
 
     @OneToMany(mappedBy = "role")
-    private Collection<User> users = new ArrayList<>();
+    private Collection<Users> users = new ArrayList<>();
 
-    @JsonView(User.UserDTO.class)
+    @JsonView(Users.UserDTO.class)
     @Override
     public Long getId() {
         return super.getId();

@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.g6.laas.server.database.entity.file.File;
-import org.g6.laas.server.database.entity.user.User;
+import org.g6.laas.server.database.entity.user.Users;
 
 import javax.persistence.ManyToMany;
 import javax.persistence.MappedSuperclass;
@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @MappedSuperclass
-public abstract class JobSubEntity extends LaaSNotifiable<User> {
+public abstract class JobSubEntity extends LaaSNotifiable<Users> {
 
     private static final long serialVersionUID = -1538015373412995204L;
 

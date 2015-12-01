@@ -10,7 +10,7 @@ import org.g6.laas.server.database.entity.Job;
 import org.g6.laas.server.database.entity.LaaSAuditable;
 import org.g6.laas.server.database.entity.Product;
 import org.g6.laas.server.database.entity.file.FileType;
-import org.g6.laas.server.database.entity.user.User;
+import org.g6.laas.server.database.entity.user.Users;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-public class Scenario extends LaaSAuditable<User> {
+public class Scenario extends LaaSAuditable<Users> {
     private static final long serialVersionUID = -5373740423412420415L;
 
     @Column(name = "NAME")

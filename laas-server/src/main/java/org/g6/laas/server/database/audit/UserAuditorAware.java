@@ -1,11 +1,11 @@
 package org.g6.laas.server.database.audit;
 
-import org.g6.laas.server.database.entity.user.User;
+import org.g6.laas.server.database.entity.user.Users;
 import org.springframework.data.domain.AuditorAware;
 
-public class UserAuditorAware implements AuditorAware<User> {
+public class UserAuditorAware implements AuditorAware<Users> {
     @Override
-    public User getCurrentAuditor() {
+    public Users getCurrentAuditor() {
         return null;
     }
 }

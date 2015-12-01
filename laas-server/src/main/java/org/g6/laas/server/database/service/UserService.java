@@ -1,6 +1,6 @@
 package org.g6.laas.server.database.service;
 
-import org.g6.laas.server.database.entity.user.User;
+import org.g6.laas.server.database.entity.user.Users;
 import org.g6.laas.server.database.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,11 +10,11 @@ public class UserService {
     @Autowired
     private IUserRepository userRepo;
 
-    public void saveUser(User user) {
+    public void saveUser(Users user) {
         userRepo.save(user);
     }
 
-    public void deleteUser(User user) {
+    public void deleteUser(Users user) {
         userRepo.delete(user);
     }
 }

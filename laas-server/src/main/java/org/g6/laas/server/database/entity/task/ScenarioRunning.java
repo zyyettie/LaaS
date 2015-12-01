@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import org.g6.laas.server.database.entity.JobRunning;
 import org.g6.laas.server.database.entity.LaaSAuditable;
 import org.g6.laas.server.database.entity.result.ScenarioResult;
-import org.g6.laas.server.database.entity.user.User;
+import org.g6.laas.server.database.entity.user.Users;
 
 import javax.persistence.*;
 
@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Data
 @Table
 @EqualsAndHashCode(callSuper = false)
-public class ScenarioRunning extends LaaSAuditable<User> {
+public class ScenarioRunning extends LaaSAuditable<Users> {
 
     private static final long serialVersionUID = -8603475553208415613L;
 

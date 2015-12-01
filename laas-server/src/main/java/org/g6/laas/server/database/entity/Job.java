@@ -3,7 +3,7 @@ package org.g6.laas.server.database.entity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.g6.laas.server.database.entity.task.Scenario;
-import org.g6.laas.server.database.entity.user.User;
+import org.g6.laas.server.database.entity.user.Users;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class Job extends JobSubEntity {
     private List<JobRunning> jobRunnings = new ArrayList<>();
 
     @Override
-    public Collection<User> sendTo() {
+    public Collection<Users> sendTo() {
         return new ArrayList<>();
     }
 

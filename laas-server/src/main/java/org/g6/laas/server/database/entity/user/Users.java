@@ -17,10 +17,10 @@ import java.util.Collection;
 import java.util.Date;
 
 @Entity
-@Table(name = "USER", uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
+@Table(name = "USERS", uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
 @Data
 @NoArgsConstructor
-public class User extends LaaSPersistable {
+public class Users extends LaaSPersistable {
 
     private static final long serialVersionUID = -8503475553208415613L;
 
@@ -56,7 +56,7 @@ public class User extends LaaSPersistable {
     @OneToMany(mappedBy = "createdBy")
     private Collection<ScenarioRunning> taskRunning = new ArrayList<>();
 
-    public User(Long id) {
+    public Users(Long id) {
         super(id);
     }
 
