@@ -350,6 +350,12 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 LaaS.mainRegion.show(view);
             });
         },
+        showMyJobs: function () {
+            $.when(LaaS.request('job:myEntities')).done(function (data) {
+                var view = new JobListView(data);
+                LaaS.mainRegion.show(view);
+            });
+        },
         selectJobFiles: function(id) {
             var jobStr = sessionStorage.getItem('jobinfo');
             if (jobStr) {
@@ -379,6 +385,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 'jobs/:id/fileselect' : 'selectJobFiles',
                 'jobnew(/)': 'jobnew',
                 'jobs(/)': 'showJobs',
+                'myjobs(/)': 'showMyJobs',
                 'jobs/:id(/)': 'showJob',
                 'jobs/:id/edit(/)': 'showJob'
             },

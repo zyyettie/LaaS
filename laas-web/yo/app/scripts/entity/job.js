@@ -36,6 +36,20 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
         return jobs.promise();
     });
 
+    LaaS.reqres.setHandler('job:myEntities', function(options) {
+        var options = options || {page:0,size:10,projection:'jobSummary'};
+        var page = options.page || 0;
+        var size = options.size || 10;
+        var projection = options.projection || 'jobSummary';
+        var jobs = $.Deferred();
+        var userName = sessionStorage.getItem("username");
+        var url =  baseUrl+"/search/findJobsOwnedBy?userName=" + userName +"&page=" + page + "&size=" + size + "&projection=" + projection;
+        $.getJSON(url).done(function(data){
+            jobs.resolve({jobs:data._embedded ? data._embedded.jobs : [], page:data.page});
+        });
+        return jobs.promise();
+    });
+
     LaaS.reqres.setHandler('job:entitiesByUrl', function(options) {
         var options = options || {url:baseUrl};
         var url = options.url || baseUrl;
