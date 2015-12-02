@@ -31,9 +31,25 @@ LaaS.module('Entities', function (Entities, LaaS, Backbone, Marionette) {
         var page = options.page || 0;
         var size = options.size || 10;
         var projection = options.projection || 'jobRunningSummary';
-        var url = LaaS.Util.Constants.APPCONTEXT + LaaS.Util.Constants.APIVERSION + '/jobRunnings';
+        var url = baseUrl + "?&page=" + page + "&size=" + size + "&projection=" + projection;
         var jobRunnings = $.Deferred();
-        $.getJSON(url+"?&page=" + page + "&size=" + size + "&projection=" + projection).done(function(data){
+        $.getJSON(url).done(function(data){
+            jobRunnings.resolve({jobRunnings:data._embedded ? data._embedded.jobRunnings : [], page:data.page});
+        });
+        return jobRunnings.promise();
+    });
+
+    LaaS.reqres.setHandler('jobRunning:myEntities', function (option) {
+        var options = options || {page:0,size:10,projection:'jobRunningSummary'};
+        var page = options.page || 0;
+        var size = options.size || 10;
+        var projection = options.projection || 'jobRunningSummary';
+
+        var userName = sessionStorage.getItem("username");
+
+        var url =  baseUrl+"/search/findJobRunningsOwnedBy?userName=" + userName + "&page=" + page + "&size=" + size + "&projection=" + projection;
+        var jobRunnings = $.Deferred();
+        $.getJSON(url).done(function(data){
             jobRunnings.resolve({jobRunnings:data._embedded ? data._embedded.jobRunnings : [], page:data.page});
         });
         return jobRunnings.promise();

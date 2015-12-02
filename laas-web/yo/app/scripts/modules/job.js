@@ -28,6 +28,9 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             }
             data.job.scenarioList = data.scenarioList;
             data.job.files = data.files ? data.files : [];
+            for (var i=0; i<data.job.files.length; i++) {
+                data.job.files[i].displaySize = LaaS.Util.getFileDisplaySize(data.job.files[i].size);
+            }
             data.job.inputParameterDefs = data.inputParameterDefs ? data.inputParameterDefs : [];
             data.job.fileTypes = data.fileTypes ? data.fileTypes : [];
 

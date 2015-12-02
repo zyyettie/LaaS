@@ -189,6 +189,12 @@ LaaS.module('JobRunning', function(JobRunning, LaaS, Backbone, Marionette) {
                 LaaS.mainRegion.show(view);
             });
         },
+        showMyJobRunnings: function() {
+            $.when(LaaS.request('jobRunning:myEntities')).done(function(data){
+                var view = new JobRunningListView(data);
+                LaaS.mainRegion.show(view);
+            });
+        },
         showJobRunning: function(id){
             $.when(LaaS.request('jobRunning:entity', {'id':id})).done(function(jobRunningModel){
                 $.when(LaaS.request('job:entityByUrl', {'url': jobRunningModel.attributes._links.job.href})).done(function(job) {
@@ -211,7 +217,8 @@ LaaS.module('JobRunning', function(JobRunning, LaaS, Backbone, Marionette) {
         new Marionette.AppRouter({
             appRoutes : {
                 'jobHistory(/)': 'showJobRunnings',
-                'jobHistory/:id(/)' : 'showJobRunning'
+                'jobHistory/:id(/)' : 'showJobRunning',
+                'myJobHistory(/)' : 'showMyJobRunnings'
             },
             controller: new JobRunningController()
         });
