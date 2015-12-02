@@ -2,7 +2,6 @@ package org.g6.laas.core.engine.task.workflow;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.g6.laas.core.engine.task.ChainTask;
 
 import java.util.LinkedList;
 

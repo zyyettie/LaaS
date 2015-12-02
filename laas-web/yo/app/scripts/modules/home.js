@@ -10,6 +10,7 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
 
         onRender : function(){
             this.$('#logout').on('click',function(e){
+				LaaS.isClickingLogout = true;
                 LaaS.cleanSessionStorage();
                 LaaS.stopTasks();
                 $.get('/laas-server/controllers/logout').always(function(){
@@ -89,8 +90,6 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
                     LaaS.navigate('/login',true);
                 });
             }
-
-
             var uid = sessionStorage.getItem('uid');
             if(uid != null && uid != undefined){
                 LaaS.Home.showViewFrame(new MainView());

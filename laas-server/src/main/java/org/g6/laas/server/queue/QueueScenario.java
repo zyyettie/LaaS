@@ -13,6 +13,7 @@ import java.util.concurrent.Future;
 public class QueueScenario {
     private Future future;
     private boolean report;
+    private String reportTemplate;
 
     public boolean isDone(){
         return future.isDone();
