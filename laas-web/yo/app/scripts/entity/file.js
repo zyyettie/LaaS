@@ -70,6 +70,31 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
         });
         return files.promise();
     });
+
+    LaaS.reqres.setHandler('file:myEntitiesByTypes', function (options) {
+        var options = options || {page:0,size:10,projection:'filesummary'};
+        var page = options.page || 0;
+        var size = options.size || 10;
+        var projection = options.projection || 'filesummary';
+        var fileTypes = options.fileTypes || [];
+        var types = "";
+        for (var i=0; i<fileTypes.length; i++) {
+            if (i > 0) {
+                types += ", ";
+            }
+            types += fileTypes[i].type;
+        }
+        var files = $.Deferred();
+        var userName = sessionStorage.getItem("username");
+
+        var url = baseUrl+"/search/findFilesOwnedAndTypes?userName=" + userName+"&fileTypes="+types+"&page=" + page + "&size=" + size + "&projection=" + projection;
+        $.getJSON(url).done(function(data){
+            var list = data._embedded ? data._embedded.files : [];
+            files.resolve({files:list,page:data.page});
+        });
+        return files.promise();
+    });
+
     LaaS.reqres.setHandler('fileTypes:entities', function (options) {
         var options = options || {page:0,size:10};
         var page = options.page || 0;

@@ -274,7 +274,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 thisjob.selectedid = thisjob.scenarios[0].id;
                 thisjob.selectedname = thisjob.scenarios[0].name;
             }
-            $.when(LaaS.request('myFiles:entities')).done(function(data) {
+            $.when(LaaS.request('file:myEntitiesByTypes', {fileTypes:thisjob.fileTypes})).done(function(data) {
                 sessionStorage.setItem('jobinfo', JSON.stringify(thisjob));
                 var fileSelectView = new LaaS.File.FileSelectView({data:data});
                 LaaS.mainRegion.show(fileSelectView);

@@ -183,10 +183,16 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
             if (this.job.id) {
                 url = '/jobs/'+this.job.id+'/fileselect';
             }
-            $.when(LaaS.request('fileType:entities')).done(function (data) {
-                LaaS.mainRegion.show(new LaaS.Views.FileUploader({'url': url, 'fileTypes': data.fileTypes}));
+
+            if (this.job.fileTypes) {
+                LaaS.mainRegion.show(new LaaS.Views.FileUploader({'url': url, 'fileTypes': this.job.fileTypes}));
                 LaaS.navigate(url + '/upload');
-            });
+            } else {
+                $.when(LaaS.request('fileType:entities')).done(function (data) {
+                    LaaS.mainRegion.show(new LaaS.Views.FileUploader({'url': url, 'fileTypes': data.fileTypes}));
+                    LaaS.navigate(url + '/upload');
+                });
+            }
         }
     });
 
