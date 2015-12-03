@@ -11,15 +11,9 @@ LaaS.module('Util', function(Util, LaaS, Backbone, Marionette) {
 
     Util.getFileDisplaySize = function(size) {
         size = size | 0;
-        var unit = ["KB", "MB", "GB", "TB", "PB"];
-        var convertedSize = size;
-        for (var i=0; i<unit.length; i++) {
-            convertedSize = Math.ceil(convertedSize / 1024);
-            if (convertedSize < 1024) {
-                break;
-            }
-        }
 
-        return i>=unit.length ? ""+convertedSize+unit[unit.length - 1] :""+convertedSize+unit[i];
+        var number = Number(Math.ceil(size / 1024));
+
+        return number.toLocaleString()+" KB";
     };
 });

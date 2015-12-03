@@ -226,6 +226,7 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
                             that.files = data.files;
 
                             for (var i = 0; i < data.files.length; i++) {
+                                data.files[i].displaySize = LaaS.Util.getFileDisplaySize(data.files[i].size);
                                 data.files[i].selected = false;
                                 data.files[i].checked = "";
                                 for (var j = 0; j < that.selectFiles.length; j++) {
