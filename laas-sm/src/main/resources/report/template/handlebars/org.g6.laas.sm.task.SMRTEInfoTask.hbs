@@ -1,0 +1,27 @@
+  <h2 class="ui header">
+    <img class="ui image" src="/images/icons/school.png">
+    <div class="content" style="margin-top: 10px;">
+      The overview of SM Server Information:
+    </div>
+  </h2>
+ <div>
+    {{#with task_running_result}}
+    <div class="ui teal segment">
+        License Type: <div style="color:red;display:inline;">{{loginInfo.licenseType}}</div><br>
+        Client Type: <div style="color:red;display:inline;">{{loginInfo.clientType}}</div><br>
+        Client Version: <div style="color:red;display:inline;">{{loginInfo.clientVersion}}</div><br>
+        TSO Login: <div style="color:red;display:inline;">{{loginInfo.TSO}}</div><br>
+        CAC Login: <div style="color:red;display:inline;">{{loginInfo.CAC}}</div><br>
+
+        Apps Version: <div style="color:red;display:inline;">{{appsVersion}}</div><br>
+        Server Version: <div style="color:red;display:inline;">{{serverVersion}}</div><br>
+        Database: <div style="color:red;display:inline;">{{dbName}} {{dbCase}}</div><br>
+        Web Server: <div style="color:red;display:inline;">{{webServer}}</div><br>
+
+        debughttp enabled: <div style="color:red;display:inline;">{{debughttp}} </div> <br>
+        RTM:3 enabled: <div style="color:red;display:inline;">{{rtm3}}</div>  <br>
+        debugdbquery enabled: <div style="color:red;display:inline;">{{debugdbquery}}</div> <br>
+        FIPs Mode: <div style="color:red;display:inline;">{{FIPs}}</div>
+
+    {{/with}}
+ </div>
