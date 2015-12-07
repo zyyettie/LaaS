@@ -1,6 +1,7 @@
 package org.g6.laas.sm.task;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.g6.laas.core.engine.task.TaskChain;
 import org.g6.laas.core.file.LogFile;
 import org.g6.laas.core.format.provider.DefaultInputFormatProvider;
@@ -27,8 +28,8 @@ public class ProcessAndThreadOfUserTask extends SMRTETask<List<ProcessThread>> {
         for (SplitResult result : results) {
             ProcessThread pt = new ProcessThread();
 
-            pt.setProcessId(((Integer)result.get("process_id").getValue()).intValue());
-            pt.setThreadId(((Integer)result.get("thread_id").getValue()).intValue());
+            pt.setProcessId(((Integer) result.get("process_id").getValue()).intValue());
+            pt.setThreadId(((Integer) result.get("thread_id").getValue()).intValue());
             list.add(pt);
         }
         Collections.sort(list);
@@ -53,13 +54,15 @@ public class ProcessAndThreadOfUserTask extends SMRTETask<List<ProcessThread>> {
     @Override
     public void doTask(Map request, Map response, TaskChain chain) {
         this.setFiles((List<LogFile>) request.get("files"));
-        String userName = request.get("userName").toString();
-        initRule(userName);
-        started();
-        processRules();
-        List<ProcessThread> result = process();
-        finished();
-
+        String userName = request.get("userName") != null ? request.get("userName").toString() : null;
+        List<ProcessThread> result = null;
+        if (userName != null && !userName.trim().equals("")) {
+            initRule(userName);
+            started();
+            processRules();
+            result = process();
+            finished();
+        }
         response.put("result", result);
         chain.doTask(request, response);
     }
