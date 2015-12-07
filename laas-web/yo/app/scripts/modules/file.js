@@ -108,6 +108,7 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
                 return {files: this.files};
             }
             for (var i = 0; i < this.files.length; i++) {
+                this.files[i].displaySize = LaaS.Util.getFileDisplaySize(this.files[i].size);
                 this.files[i].selected = false;
                 this.files[i].checked = "";
                 for (var j = 0; j < this.job.files.length; j++) {
@@ -225,6 +226,7 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
                             that.files = data.files;
 
                             for (var i = 0; i < data.files.length; i++) {
+                                data.files[i].displaySize = LaaS.Util.getFileDisplaySize(data.files[i].size);
                                 data.files[i].selected = false;
                                 data.files[i].checked = "";
                                 for (var j = 0; j < that.selectFiles.length; j++) {
@@ -244,7 +246,7 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
         },
         serializeData: function () {
             for (var i = 0; i < this.files.length; i++) {
-                this.files[i].size = Math.round(this.files[i].size / 1024);
+                this.files[i].displaySize = LaaS.Util.getFileDisplaySize(this.files[i].size);
             }
             return {files: this.files};
         },

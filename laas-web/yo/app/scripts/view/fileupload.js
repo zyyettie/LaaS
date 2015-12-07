@@ -16,6 +16,7 @@ LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
         },
         onRender: function () {
             this.total = 0;
+            var totalSize = 0;
             var that = this;
             this.$('select').dropdown();
             this.$('#progress').hide();
@@ -28,7 +29,8 @@ LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
                     var fileNumber = this.files.length;
                     that.total += fileNumber;
                     for (var i = 0; i < fileNumber; i++) {
-                        var dislay = {name: this.files[i].name, size: Math.round(this.files[i].size / 1024) + 'KB'};
+                        totalSize += this.file[i].size | 0;
+                        var dislay = {name: this.files[i].name, size: LaaS.Util.getFileDisplaySize(this.files[i].size)};
                         $('.ui.list').append(itemTempalte(dislay));
                     }
 
