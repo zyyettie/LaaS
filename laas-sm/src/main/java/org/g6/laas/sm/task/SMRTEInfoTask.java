@@ -156,6 +156,10 @@ public class SMRTEInfoTask extends SMRTETask<SMRTEInfo> {
         SMRTEInfo result = process();
         finished();
 
+        if(result != null && pt != null){
+            result.setProcessId(pt.getProcessId());
+            result.setThreadId(pt.getThreadId());
+        }
         response.put("result", result);
 
         chain.doTask(request, response);
