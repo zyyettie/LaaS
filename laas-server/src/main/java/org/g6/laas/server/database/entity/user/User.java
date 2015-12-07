@@ -56,6 +56,9 @@ public class User extends LaaSPersistable {
     @OneToMany(mappedBy = "createdBy")
     private Collection<ScenarioRunning> taskRunning = new ArrayList<>();
 
+    @OneToOne
+    private Quota quota;
+
     public User(Long id) {
         super(id);
     }
