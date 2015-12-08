@@ -1,0 +1,46 @@
+.ui.centered.grid
+    .fourteen.wide.column
+        .ui.green.segment(style="margin-top:5px;padding:75px 60px;")
+            h2#title(style="margin-top: -30px;margin-bottom: 30px;;") Input Parameter Definition Detail
+            form.ui.form
+                .two.fields
+                    .field
+                        label Name
+                        input(type="text",name="name",placeholder="name",value="{{name}}")
+                    .field
+                        label Display Info
+                        input(type="text",name="displayInfo",placeholder="Display Info",value="{{displayInfo}}")
+                .field
+                    label Description
+                    textarea(type="text",rows="3",name="description",placeholder="description", value="{{description}}"){{description}}
+                .two.fields
+                    .field
+                        label Type
+                        select.ui.dropdown(id="type", name="type")
+                            option(value="text") text
+                            option(value="dropdown") dropdown
+                            option(value="time") time
+                    .field
+                        label Default Value
+                        input(type="text",name="defaultValue",placeholder="",value="{{defaultValue}}")
+                .two.fields
+                    .field
+                        label Display List
+                        textarea(type="text",rows="3",name="displayList",placeholder="", value="{{displayList}}"){{displayList}}
+                    .field
+                        label Value List
+                        textarea(type="text",rows="3",name="valueList",placeholder="", value="{{valueList}}"){{valueList}}
+                .two.fields
+                    .field
+                        .ui.checked.checkbox
+                            <input type="checkbox" id="lineOccupied_{{id}}" {{lineOccupied}}>
+                            label Occupy One Line
+                    .field
+                #tasks
+                .field
+                .two.fields(style="margin-top:100px;margin-bottom:70px;")
+                    .field(style="padding-right:50px;")
+                        .ui.teal.large.fluid.button#inputParameterDef_save OK
+                    .field(style="padding-left:50px;")
+                        .ui.teal.large.fluid.button#inputParameterDef_cancel Cancel
+

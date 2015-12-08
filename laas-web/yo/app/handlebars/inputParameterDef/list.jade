@@ -1,0 +1,26 @@
+.ui.grid
+    .ui.centered.fourteen.wide.column
+        .ui.green.segment(style="margin-top:5px;padding:20px 40px;")
+            h2#title Input Parameter Definition List
+            table.ui.striped.table
+                thead
+                    tr
+                        th ID
+                        th Name
+                        th Display Info
+                        th Type
+                        th Default Value
+                        th Description
+                        th Action
+                tbody
+                    |{{#each inputParameterDefs}}
+                    tr
+                        td {{id}}
+                        td {{name}}
+                        td {{displayInfo}}
+                        td {{type}}
+                        td {{defaultValue}}
+                        td {{description}}
+                        td
+                            button.ui.teal.tiny.button.inputParameterDef-show(id="{{id}}")(data-id="{{id}}") Detail
+                    |{{/each}}
