@@ -36,7 +36,11 @@
                             <input type="checkbox" id="lineOccupied_{{id}}" {{lineOccupied}}>
                             label Occupy One Line
                     .field
-                #tasks
+                .field
+                    label Used By Tasks
+                .field
+                    #tasks
+                    #paging(style="text-align:right;margin-top:0em;")
                 .field
                 .two.fields(style="margin-top:100px;margin-bottom:70px;")
                     .field(style="padding-right:50px;")
