@@ -67,6 +67,9 @@ public class JobQueueHandler implements InitializingBean {
     private void handleScenarioInQueue(QueueJob queueJob) {
         Map<ScenarioRunning, QueueScenario> queueTasks = queueJob.getQueueScenarios();
 
+        JobRunning jobRunning = queueJob.getJobRunning();
+        String loginUser = jobRunning.getCreatedBy().getName();
+
         for (Map.Entry<ScenarioRunning, QueueScenario> entry : queueTasks.entrySet()) {
             ScenarioRunning scenarioRunning = entry.getKey();
             QueueScenario queueScenario = entry.getValue();
@@ -81,7 +84,7 @@ public class JobQueueHandler implements InitializingBean {
                 //need to get the last task object.
                 String report = jobService.genReport(result);
 
-                FileInfo resultFile = jobService.writeReportToFile(report);
+                FileInfo resultFile = jobService.writeReportToFile(report, loginUser);
 
                 jobService.handleResultFile(scenarioRunning, resultFile);
                 scenarioRunning.setStatus("SUCCESS");
@@ -94,7 +97,7 @@ public class JobQueueHandler implements InitializingBean {
             }
         }
 
-        updateJobRunningStatus(queueJob.getJobRunning());
+        updateJobRunningStatus(jobRunning);
     }
 
     /**
