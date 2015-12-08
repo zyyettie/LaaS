@@ -4,6 +4,7 @@ import lombok.Data;
 import org.g6.laas.core.format.provider.DefaultInputFormatProvider;
 import org.g6.laas.core.log.line.Line;
 import org.g6.laas.core.log.result.SplitResult;
+import org.g6.laas.core.rule.RegexRule;
 import org.g6.laas.core.rule.Rule;
 import org.g6.laas.core.rule.TrueRule;
 import org.g6.laas.core.rule.action.RuleAction;
@@ -28,6 +29,8 @@ import java.util.Map;
 @Data
 public class SplitProcessAndThreadTask extends SMRTETask<String> {
     private Map<String, ProcessIdHelper> splitMap;
+    private int processId;
+    private int threadId;
 
     /**
      * return the result
@@ -36,7 +39,7 @@ public class SplitProcessAndThreadTask extends SMRTETask<String> {
      */
     @Override
     protected String process() {
-        String tempRootPath = FileUtil.getvalue("zip_file_temp_path","sm.properties");
+        String tempRootPath = FileUtil.getvalue("zip_file_temp_path", "sm.properties");
         String fileName = System.currentTimeMillis() + ".zip";
         String zipFile = FileUtil.getvalue("result_file_full_path", "sm.properties") + fileName;
         FileUtil.deleteDir(tempRootPath);
@@ -59,9 +62,21 @@ public class SplitProcessAndThreadTask extends SMRTETask<String> {
         return fileName;
     }
 
-    public SplitProcessAndThreadTask() {
+    @Override
+    void initRule() {
         splitMap = new HashMap<>();
+        String pattern = null;
+        if (processId > 0 && threadId > 0) {
+            pattern = "^\\s*(" + processId + ")\\(\\s+(" + threadId + ")\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+).+";
+        } else if (processId > 0) {
+            pattern = "^\\s*(" + processId + ")\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+).+";
+        } else if (threadId > 0) {
+            pattern = "^\\s*(\\d+)\\(\\s+(" + threadId + ")\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+).+";
+        }
         Rule rule = new TrueRule();
+        if(pattern != null){
+            rule = rule.and(new RegexRule(pattern));
+        }
         rule.addAction(new RuleAction() {
             @Override
             public void satisfied(Rule rule, Object content) {
@@ -75,7 +90,7 @@ public class SplitProcessAndThreadTask extends SMRTETask<String> {
 
     private void handleLine(Map<String, ProcessIdHelper> splitMap, SplitResult result, Line line) {
         //NOTE: mostly this happens while no matching regex can be used to split a line
-        if(result == null) return;
+        if (result == null) return;
         String processId = String.valueOf((Integer) result.get("process_id").getValue());
         String threadId = String.valueOf((Integer) result.get("thread_id").getValue());
 

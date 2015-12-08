@@ -30,8 +30,11 @@ public class SMRTETask<T> extends ChainTask<T> {
     @Override
     protected void started() {
         super.started();
+        initRule();
         initContext();
     }
+
+    void initRule(){}
 
     private void initContext() {
         FormatProvider provider = getProvider();
