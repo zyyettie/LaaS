@@ -37,7 +37,8 @@ public class SplitProcessAndThreadTask extends SMRTETask<String> {
     @Override
     protected String process() {
         String tempRootPath = FileUtil.getvalue("zip_file_temp_path","sm.properties");
-        String zipFile = FileUtil.getvalue("result_file_full_path", "sm.properties") + System.currentTimeMillis() + ".zip";
+        String fileName = System.currentTimeMillis() + ".zip";
+        String zipFile = FileUtil.getvalue("result_file_full_path", "sm.properties") + fileName;
         FileUtil.deleteDir(tempRootPath);
         FileUtil.createDir(tempRootPath);
 
@@ -55,7 +56,7 @@ public class SplitProcessAndThreadTask extends SMRTETask<String> {
         }
 
         CompressionUtil.compress(tempRootPath, zipFile);
-        return zipFile;
+        return fileName;
     }
 
     public SplitProcessAndThreadTask() {
@@ -141,5 +142,4 @@ public class SplitProcessAndThreadTask extends SMRTETask<String> {
     DefaultInputFormatProvider getProvider() {
         return getDefaultProvider(new String[]{"DEFAULT"});
     }
-
 }

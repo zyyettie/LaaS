@@ -7,12 +7,14 @@ import org.g6.laas.server.database.entity.user.Quota;
 import org.g6.laas.server.database.repository.IFileRepository;
 import org.g6.laas.server.database.repository.IFileTypeRepository;
 import org.g6.laas.server.database.repository.IQuotaRepository;
+import org.g6.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -93,6 +95,38 @@ public class FileUploadController {
 
         }
         return results;
+    }
+
+    @RequestMapping(value = "/download/{fileName}")
+    public String handleFileUpload(@PathVariable String fileName, HttpServletRequest request,
+                                 HttpServletResponse response){
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("multipart/form-data");
+        response.setHeader("Content-Disposition", "attachment;fileName="
+                + fileName);
+        try {
+            String path = FileUtil.getvalue("result_file_full_path", "sm.properties");
+            InputStream inputStream = new FileInputStream(new File(path
+                    + File.separator + fileName));
+
+            OutputStream os = response.getOutputStream();
+            byte[] b = new byte[2048];
+            int length;
+            while ((length = inputStream.read(b)) > 0) {
+                os.write(b, 0, length);
+            }
+            os.close();
+
+            inputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //  返回值要注意，要不然就出现下面这句错误！
+        //java+getOutputStream() has already been called for this response
+        return null;
+
     }
 
 }
