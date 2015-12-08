@@ -20,4 +20,7 @@ public class SMRTEInfo implements Serializable {
     private boolean debugdbquery;
     private boolean rtm3;
     private boolean debughttp;
+
+    private int processId;
+    private int threadId;
 }

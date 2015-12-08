@@ -42,13 +42,13 @@ public class SMRTEInfoTask extends SMRTETask<SMRTEInfo> {
 
         for (String content : lines) {
             handleLoginInfo(content, loginInfo, serverInfo);
-            handleServerInfo(content, loginInfo, serverInfo);
+            handleServerInfo(content, serverInfo);
         }
         serverInfo.setLoginInfo(loginInfo);
         return serverInfo;
     }
 
-    private void handleServerInfo(String content, LoginInfo loginInfo, SMRTEInfo serverInfo) {
+    private void handleServerInfo(String content, SMRTEInfo serverInfo) {
         if (RegexUtil.isMatched(content, SQL_SERVER_INFO)) {
             String[] values = RegexUtil.getValues(content, SQL_SERVER_INFO);
             serverInfo.setDbName(values[0]);
@@ -156,6 +156,10 @@ public class SMRTEInfoTask extends SMRTETask<SMRTEInfo> {
         SMRTEInfo result = process();
         finished();
 
+        if(result != null && pt != null){
+            result.setProcessId(pt.getProcessId());
+            result.setThreadId(pt.getThreadId());
+        }
         response.put("result", result);
 
         chain.doTask(request, response);
