@@ -3,8 +3,10 @@ package org.g6.laas.server.controllers;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import org.g6.laas.server.database.entity.file.FileType;
+import org.g6.laas.server.database.entity.user.Quota;
 import org.g6.laas.server.database.repository.IFileRepository;
 import org.g6.laas.server.database.repository.IFileTypeRepository;
+import org.g6.laas.server.database.repository.IQuotaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,6 +32,9 @@ public class FileUploadController {
     private IFileRepository fileRepository;
     @Autowired
     private IFileTypeRepository fileTypeRep;
+
+    @Autowired
+    private IQuotaRepository quotaRepository;
 
     @RequestMapping(value = "/upload", method = RequestMethod.GET)
     public
@@ -76,6 +81,11 @@ public class FileUploadController {
                 fileEntity.setType(type);
 
                 org.g6.laas.server.database.entity.file.File saved = fileRepository.save(fileEntity);
+
+                Quota quota = quotaRepository.findUserQuota(saved.getCreatedBy().getName());
+                quota.setUsedSpace(quota.getUsedSpace() + size);
+                Quota updatedQuota = quotaRepository.save(quota);
+
                 results.add(new UploadResult(saved.getId(), fileName, size, "succeed"));
             } catch (IOException e) {
                 results.add(new UploadResult(-1L, fileName, -1L, "failed"));

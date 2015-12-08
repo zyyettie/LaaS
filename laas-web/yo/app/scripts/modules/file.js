@@ -180,17 +180,20 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
             if (!this.job) {
                 return;
             }
+            var that = this;
             var url = '/jobnew/fileselect';
             if (this.job.id) {
                 url = '/jobs/'+this.job.id+'/fileselect';
             }
 
             if (this.job.fileTypes) {
-                LaaS.mainRegion.show(new LaaS.Views.FileUploader({'url': url, 'fileTypes': this.job.fileTypes}));
-                LaaS.navigate(url + '/upload');
+                $.when(LaaS.request('quota:entityOfCurrentUser')).done(function (quota) {
+                    LaaS.mainRegion.show(new LaaS.Views.FileUploader({'url': url, 'fileTypes': that.job.fileTypes, 'quota':quota.quota}));
+                    LaaS.navigate(url + '/upload');
+                });
             } else {
-                $.when(LaaS.request('fileType:entities')).done(function (data) {
-                    LaaS.mainRegion.show(new LaaS.Views.FileUploader({'url': url, 'fileTypes': data.fileTypes}));
+                $.when(LaaS.request('fileType:entities'), LaaS.request('quota:entityOfCurrentUser')).done(function (data, quota) {
+                    LaaS.mainRegion.show(new LaaS.Views.FileUploader({'url': url, 'fileTypes': data.fileTypes, 'quota':quota.quota}));
                     LaaS.navigate(url + '/upload');
                 });
             }
@@ -259,8 +262,8 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
             checkSelected(this);
         },
         uploadMyFiles: function () {
-            $.when(LaaS.request('fileType:entities')).done(function (data) {
-                LaaS.mainRegion.show(new LaaS.Views.FileUploader({'url': '/files/me', 'fileTypes': data.fileTypes}));
+            $.when(LaaS.request('fileType:entities'), LaaS.request('quota:entityOfCurrentUser')).done(function (data, quota) {
+                LaaS.mainRegion.show(new LaaS.Views.FileUploader({'url': '/files/me', 'fileTypes': data.fileTypes, 'quota':quota.quota}));
                 LaaS.navigate('/files/me/upload');
             });
 

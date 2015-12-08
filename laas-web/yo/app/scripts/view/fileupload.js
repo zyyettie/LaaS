@@ -7,6 +7,8 @@ LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
         initialize : function(options){
             this.url = options.url;
             this.fileTypes = options.fileTypes;
+            this.quota = options.quota ? options.quota : {spaceQuota:0, usedSpace:0, maxFileSize:0};
+            this.uploadedFileSize = 0;
             this.uploadedFiles = [];
             var uploadedFiles = sessionStorage.getItem('uploadedFiles');
             if (uploadedFiles) {
@@ -16,7 +18,6 @@ LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
         },
         onRender: function () {
             this.total = 0;
-            var totalSize = 0;
             var that = this;
             this.$('select').dropdown();
             this.$('#progress').hide();
@@ -29,9 +30,9 @@ LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
                     var fileNumber = this.files.length;
                     that.total += fileNumber;
                     for (var i = 0; i < fileNumber; i++) {
-                        totalSize += this.file[i].size | 0;
-                        var dislay = {name: this.files[i].name, size: LaaS.Util.getFileDisplaySize(this.files[i].size)};
-                        $('.ui.list').append(itemTempalte(dislay));
+                        that.uploadedFileSize += this.files[i].size | 0;
+                        var display = {name: this.files[i].name, size: LaaS.Util.getFileDisplaySize(this.files[i].size)};
+                        $('.ui.list').append(itemTempalte(display));
                     }
 
                 });
@@ -47,6 +48,12 @@ LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
                 }
             };
             this.$('#upload').click(function () {
+                if (that.quota.spaceQuota<that.quota.usedSpace+that.uploadedFileSize) {
+                    toastr.error('Over your quota!');
+                    return;
+                } else {
+                    //for (var i=0; i<that.quota.files)
+                }
                 $('#progress').removeClass('error success');    
                 $('#progress').addClass('active');
                 $('#progress').progress({percent:0});

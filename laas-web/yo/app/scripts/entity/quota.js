@@ -1,7 +1,7 @@
 LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
     'use strict';
 
-    var baseUrl = LaaS.Util.Constants.APPCONTEXT+LaaS.Util.Constants.APIVERSION+'/quota';
+    var baseUrl = LaaS.Util.Constants.APPCONTEXT+LaaS.Util.Constants.APIVERSION+'/quotas';
 
     Entities.QuotaModel = Backbone.Model.extend({
         url:function() {
@@ -18,13 +18,12 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
         }
     });
 
-    LaaS.reqres.setHandler('quota:entityByUser', function(options) {
+    LaaS.reqres.setHandler('quota:entityOfCurrentUser', function(options) {
         var quota = $.Deferred();
         var userName = sessionStorage.getItem("username");
 
         $.getJSON(baseUrl+"/search/findUserQuota?userName=" + userName).done(function(data){
-            var list = data._embedded ? data._embedded.files : [];
-            quota.resolve({files:list,page:data.page});
+            quota.resolve({quota:data._embedded.quotas[0]});
         });
         return quota.promise();
     });
