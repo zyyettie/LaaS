@@ -13,14 +13,16 @@ public class ReflectUtil {
     }
 
     public static void set(Field field, Object obj, Object value) throws IllegalAccessException {
-        if (field.getType().getName().equals("int")) {
-            field.setInt(obj, Integer.valueOf(value.toString()));
-        } else if (field.getType().getName().equals("long")) {
-            field.setLong(obj, Long.valueOf(value.toString()));
-        } else if (field.getType().getName().equals("double")) {
-            field.setDouble(obj, Double.valueOf(value.toString()));
-        } else {
-            field.set(obj, value);
+        if (value != null && !value.toString().equals("")) {
+            if (field.getType().getName().equals("int")) {
+                field.setInt(obj, Integer.valueOf(value.toString()));
+            } else if (field.getType().getName().equals("long")) {
+                field.setLong(obj, Long.valueOf(value.toString()));
+            } else if (field.getType().getName().equals("double")) {
+                field.setDouble(obj, Double.valueOf(value.toString()));
+            } else {
+                field.set(obj, value);
+            }
         }
     }
 }
