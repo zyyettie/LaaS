@@ -7,6 +7,7 @@ import org.g6.laas.server.database.entity.user.Quota;
 import org.g6.laas.server.database.repository.IFileRepository;
 import org.g6.laas.server.database.repository.IFileTypeRepository;
 import org.g6.laas.server.database.repository.IQuotaRepository;
+import org.g6.laas.sm.exception.SMRuntimeException;
 import org.g6.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -62,7 +63,7 @@ public class FileUploadController {
             try {
                 String generatedName = UUID.randomUUID().toString();
                 String path = uploadedPath + "/" + todayFolder + "/";
-                String fullFileName = path+ generatedName;
+                String fullFileName = path + generatedName;
                 File uploaded = new File(fullFileName);
                 Files.createParentDirs(uploaded);
                 long size = file.getSize();
@@ -99,33 +100,33 @@ public class FileUploadController {
 
     @RequestMapping(value = "/download/{fileName}")
     public String downloadFile(@PathVariable String fileName, HttpServletRequest request,
-                                 HttpServletResponse response){
+                               HttpServletResponse response) {
+        fileName = getRealFileName(fileName);
         response.setCharacterEncoding("utf-8");
         response.setContentType("multipart/form-data");
-        response.setHeader("Content-Disposition", "attachment;fileName="
-                + fileName);
-        try {
-            String path = FileUtil.getvalue("result_file_full_path", "sm.properties");
-            InputStream inputStream = new FileInputStream(new File(path
-                    + File.separator + fileName));
+        response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 
-            OutputStream os = response.getOutputStream();
+        String path = FileUtil.getvalue("result_file_full_path", "sm.properties");
+        try (InputStream inputStream = new FileInputStream(new File(path
+                + File.separator + fileName)); OutputStream os = response.getOutputStream();) {
+
             byte[] b = new byte[2048];
             int length;
             while ((length = inputStream.read(b)) > 0) {
                 os.write(b, 0, length);
             }
-            os.close();
-
-            inputStream.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new SMRuntimeException("The error happens while downloading a file named " + fileName, e);
         }
 
         return null;
+    }
 
+    private String getRealFileName(String fileName) {
+        if (fileName.indexOf("__") > 0) {
+            fileName = fileName.replace("__", ".");
+        }
+        return fileName;
     }
 
 }
