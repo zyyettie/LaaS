@@ -8,7 +8,7 @@
      <table class="ui selectable striped celled tiny table">
          <tbody>
              {{#each task_running_result}}
-             <tr>
+             <tr class="clickable-line" data-fileId={{file.id}} data-lineNumber={{lineNumber}}>
                 <td>{{lineNumber}}</td>
                 <td>{{file.originalName}}</td>
                 <td>{{content}}</td>
