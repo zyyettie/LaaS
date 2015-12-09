@@ -97,13 +97,16 @@ public class JobService {
         return report;
     }
 
-    public FileInfo writeReportToFile(String report) {
-        String path = FileUtil.getvalue("result_file_full_path", "sm.properties");
-        //TODO NOTE to avoid concurrent operation, should add login name in the path.
+    public FileInfo writeReportToFile(String report, String userName) {
+        String root = FileUtil.getvalue("result_file_full_path", "sm.properties");
+        String targetFilePath = root + FileUtil.separator +userName + FileUtil.separator;
+        if(!FileUtil.isDir(targetFilePath)){
+            FileUtil.createDir(targetFilePath);
+        }
         String fileName = System.currentTimeMillis() + ".laas";
-        FileUtil.writeFile(report, path + fileName);
+        FileUtil.writeFile(report, targetFilePath + fileName);
 
-        return new FileInfo(path, fileName);
+        return new FileInfo(targetFilePath, fileName);
     }
 
     public void handleResultFile(ScenarioRunning scenarioRunning, FileInfo info) {
@@ -129,8 +132,6 @@ public class JobService {
         List<LogFile> logFiles = getLogFilesFromJob(jobRunning);
         Map<String, Object> paramMap = JSONUtil.fromJson(job.getParameters());
         paramMap.put("files", logFiles);
-        //TODO will remove the below line
-        paramMap.put("userName", "falcon");
 
         Collection<ScenarioRunning> scenarioRunnings = jobRunning.getScenarioRunnings();
         boolean isSyn = true;
@@ -185,7 +186,8 @@ public class JobService {
             QueueJob queueJob = new QueueJob();
             if (!result.isTimeout()) {
                 String report = genReport(result);
-                FileInfo resultFile = writeReportToFile(report);
+                String loginUser = jobRunning.getCreatedBy().getName();
+                FileInfo resultFile = writeReportToFile(report, loginUser);
                 handleResultFile(scenarioRunning, resultFile);
 
                 saveScenarioRunningStatus(scenarioRunning, "SUCCESS");

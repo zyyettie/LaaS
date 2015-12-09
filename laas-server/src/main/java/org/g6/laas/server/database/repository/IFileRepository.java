@@ -18,4 +18,7 @@ public interface IFileRepository extends JpaRepository<File, Long> {
 
     @Query(value = "SELECT f FROM File f WHERE f.isRemoved <> 'Y' and f.createdBy.name = :userName order by f.createdDate desc")
     public Page<File> findFilesOwnedBy(@Param("userName")String userName, Pageable pageable);
+
+    @Query(value = "SELECT f FROM File f WHERE f.isRemoved <> 'Y' and f.createdBy.name = :userName and f.type.type in (:fileTypes) order by f.createdDate desc")
+    public Page<File> findFilesOwnedAndTypes(@Param("userName")String userName, @Param("fileTypes")String fileTypes, Pageable pageable);
 }

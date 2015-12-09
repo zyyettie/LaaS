@@ -108,6 +108,7 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
                 return {files: this.files};
             }
             for (var i = 0; i < this.files.length; i++) {
+                this.files[i].displaySize = LaaS.Util.getFileDisplaySize(this.files[i].size);
                 this.files[i].selected = false;
                 this.files[i].checked = "";
                 for (var j = 0; j < this.job.files.length; j++) {
@@ -179,14 +180,23 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
             if (!this.job) {
                 return;
             }
+            var that = this;
             var url = '/jobnew/fileselect';
             if (this.job.id) {
                 url = '/jobs/'+this.job.id+'/fileselect';
             }
-            $.when(LaaS.request('fileType:entities')).done(function (data) {
-                LaaS.mainRegion.show(new LaaS.Views.FileUploader({'url': url, 'fileTypes': data.fileTypes}));
-                LaaS.navigate(url + '/upload');
-            });
+
+            if (this.job.fileTypes) {
+                $.when(LaaS.request('quota:entityOfCurrentUser')).done(function (quota) {
+                    LaaS.mainRegion.show(new LaaS.Views.FileUploader({'url': url, 'fileTypes': that.job.fileTypes, 'quota':quota.quota}));
+                    LaaS.navigate(url + '/upload');
+                });
+            } else {
+                $.when(LaaS.request('fileType:entities'), LaaS.request('quota:entityOfCurrentUser')).done(function (data, quota) {
+                    LaaS.mainRegion.show(new LaaS.Views.FileUploader({'url': url, 'fileTypes': data.fileTypes, 'quota':quota.quota}));
+                    LaaS.navigate(url + '/upload');
+                });
+            }
         }
     });
 
@@ -219,6 +229,7 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
                             that.files = data.files;
 
                             for (var i = 0; i < data.files.length; i++) {
+                                data.files[i].displaySize = LaaS.Util.getFileDisplaySize(data.files[i].size);
                                 data.files[i].selected = false;
                                 data.files[i].checked = "";
                                 for (var j = 0; j < that.selectFiles.length; j++) {
@@ -238,7 +249,7 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
         },
         serializeData: function () {
             for (var i = 0; i < this.files.length; i++) {
-                this.files[i].size = Math.round(this.files[i].size / 1024);
+                this.files[i].displaySize = LaaS.Util.getFileDisplaySize(this.files[i].size);
             }
             return {files: this.files};
         },
@@ -251,8 +262,8 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
             checkSelected(this);
         },
         uploadMyFiles: function () {
-            $.when(LaaS.request('fileType:entities')).done(function (data) {
-                LaaS.mainRegion.show(new LaaS.Views.FileUploader({'url': '/files/me', 'fileTypes': data.fileTypes}));
+            $.when(LaaS.request('fileType:entities'), LaaS.request('quota:entityOfCurrentUser')).done(function (data, quota) {
+                LaaS.mainRegion.show(new LaaS.Views.FileUploader({'url': '/files/me', 'fileTypes': data.fileTypes, 'quota':quota.quota}));
                 LaaS.navigate('/files/me/upload');
             });
 

@@ -28,6 +28,9 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             }
             data.job.scenarioList = data.scenarioList;
             data.job.files = data.files ? data.files : [];
+            for (var i=0; i<data.job.files.length; i++) {
+                data.job.files[i].displaySize = LaaS.Util.getFileDisplaySize(data.job.files[i].size);
+            }
             data.job.inputParameterDefs = data.inputParameterDefs ? data.inputParameterDefs : [];
             data.job.fileTypes = data.fileTypes ? data.fileTypes : [];
 
@@ -273,7 +276,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 thisjob.selectedid = thisjob.scenarios[0].id;
                 thisjob.selectedname = thisjob.scenarios[0].name;
             }
-            $.when(LaaS.request('myFiles:entities')).done(function(data) {
+            $.when(LaaS.request('file:myEntitiesByTypes', {fileTypes:thisjob.fileTypes})).done(function(data) {
                 sessionStorage.setItem('jobinfo', JSON.stringify(thisjob));
                 var fileSelectView = new LaaS.File.FileSelectView({data:data});
                 LaaS.mainRegion.show(fileSelectView);
@@ -349,6 +352,12 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 LaaS.mainRegion.show(view);
             });
         },
+        showMyJobs: function () {
+            $.when(LaaS.request('job:myEntities')).done(function (data) {
+                var view = new JobListView(data);
+                LaaS.mainRegion.show(view);
+            });
+        },
         selectJobFiles: function(id) {
             var jobStr = sessionStorage.getItem('jobinfo');
             if (jobStr) {
@@ -378,6 +387,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 'jobs/:id/fileselect' : 'selectJobFiles',
                 'jobnew(/)': 'jobnew',
                 'jobs(/)': 'showJobs',
+                'myjobs(/)': 'showMyJobs',
                 'jobs/:id(/)': 'showJob',
                 'jobs/:id/edit(/)': 'showJob'
             },

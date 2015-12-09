@@ -3,14 +3,19 @@ package org.g6.laas.server.controllers;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import org.g6.laas.server.database.entity.file.FileType;
+import org.g6.laas.server.database.entity.user.Quota;
 import org.g6.laas.server.database.repository.IFileRepository;
 import org.g6.laas.server.database.repository.IFileTypeRepository;
+import org.g6.laas.server.database.repository.IQuotaRepository;
+import org.g6.laas.sm.exception.SMRuntimeException;
+import org.g6.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -30,6 +35,9 @@ public class FileUploadController {
     private IFileRepository fileRepository;
     @Autowired
     private IFileTypeRepository fileTypeRep;
+
+    @Autowired
+    private IQuotaRepository quotaRepository;
 
     @RequestMapping(value = "/upload", method = RequestMethod.GET)
     public
@@ -55,7 +63,7 @@ public class FileUploadController {
             try {
                 String generatedName = UUID.randomUUID().toString();
                 String path = uploadedPath + "/" + todayFolder + "/";
-                String fullFileName = path+ generatedName;
+                String fullFileName = path + generatedName;
                 File uploaded = new File(fullFileName);
                 Files.createParentDirs(uploaded);
                 long size = file.getSize();
@@ -76,6 +84,11 @@ public class FileUploadController {
                 fileEntity.setType(type);
 
                 org.g6.laas.server.database.entity.file.File saved = fileRepository.save(fileEntity);
+
+                Quota quota = quotaRepository.findUserQuota(saved.getCreatedBy().getName());
+                quota.setUsedSpace(quota.getUsedSpace() + size);
+                Quota updatedQuota = quotaRepository.save(quota);
+
                 results.add(new UploadResult(saved.getId(), fileName, size, "succeed"));
             } catch (IOException e) {
                 results.add(new UploadResult(-1L, fileName, -1L, "failed"));
@@ -83,6 +96,37 @@ public class FileUploadController {
 
         }
         return results;
+    }
+
+    @RequestMapping(value = "/download/{fileName}")
+    public String downloadFile(@PathVariable String fileName, HttpServletRequest request,
+                               HttpServletResponse response) {
+        fileName = getRealFileName(fileName);
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("multipart/form-data");
+        response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+
+        String path = FileUtil.getvalue("result_file_full_path", "sm.properties");
+        try (InputStream inputStream = new FileInputStream(new File(path
+                + File.separator + fileName)); OutputStream os = response.getOutputStream();) {
+
+            byte[] b = new byte[2048];
+            int length;
+            while ((length = inputStream.read(b)) > 0) {
+                os.write(b, 0, length);
+            }
+        } catch (Exception e) {
+            throw new SMRuntimeException("The error happens while downloading a file named " + fileName, e);
+        }
+
+        return null;
+    }
+
+    private String getRealFileName(String fileName) {
+        if (fileName.indexOf("__") > 0) {
+            fileName = fileName.replace("__", ".");
+        }
+        return fileName;
     }
 
 }

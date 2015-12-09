@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.*;
 
 public class FileUtil {
+    public final static String separator = File.separator;
 
     public static Map<String, String> getPropertyValues(String file) {
         Properties p = new Properties();
