@@ -17,7 +17,7 @@ public class Role extends LaaSPersistable {
 
     private static final long serialVersionUID = -8503475553108415613L;
 
-    @JsonView(Users.UserDTO.class)
+    @JsonView(User.UserDTO.class)
     @Column(name="NAME")
     private String name;
 
@@ -26,9 +26,9 @@ public class Role extends LaaSPersistable {
     }
 
     @OneToMany(mappedBy = "role")
-    private Collection<Users> users = new ArrayList<>();
+    private Collection<User> users = new ArrayList<>();
 
-    @JsonView(Users.UserDTO.class)
+    @JsonView(User.UserDTO.class)
     @Override
     public Long getId() {
         return super.getId();

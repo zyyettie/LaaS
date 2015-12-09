@@ -208,7 +208,6 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             }});
         },
         runJob: function () {
-            console.log("save & run the job");
             var that = this;
             var json = Backbone.Syphon.serialize(this);
             if (json.name == '' || json.selectedScenario == '') {

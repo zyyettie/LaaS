@@ -1,0 +1,35 @@
+.ui.centered.grid
+    .fourteen.wide.column
+        .ui.green.segment(style="margin-top:5px;padding:75px 60px;")
+            form.ui.large.form
+                    .two.fields
+                        .one.wide.field(style="text-align: right;")
+                            i.big.teal.user.icon
+                        .eight.wide.field
+                            h2 Create new account
+                    .two.fields(style="margin-top:1.5em;")
+                        .three.wide.required.field(style="text-align: right;padding-top: 1em;")
+                            label UserName
+                        .eight.wide.field
+                            input(type="text",name="name",placeholder="UserName")
+                    .two.fields
+                        .three.wide.field(style="text-align: right;padding-top: 1em;")
+                            label Email
+                        .eight.wide.field
+                            input(type="text",name="mail",placeholder="Email")
+                    .two.fields
+                        .three.wide.field(style="text-align: right;padding-top: 1em;")
+                            label Password
+                        .eight.wide.field
+                            input(type="password",name="password",placeholder="Password")
+                    .two.fields
+                        .three.wide.field(style="text-align: right;padding-top: 1em;")
+                            label Confirm Password
+                        .eight.wide.field
+                            input(type="password",name="confirm-password",placeholder="Confirm Password")
+                    .four.center.fields
+                        .field
+                        .field
+                            .ui.teal.fluid.button(style="margin-top: 2em; margin-left: -5.5em;")#register Register
+                        .field
+                            .ui.teal.fluid.button(href="/login",style="margin-top: 2em; margin-left: -5.5em;")#cancel Cancel

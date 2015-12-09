@@ -32,7 +32,7 @@ module.exports = function (grunt) {
     }
     if (/^\/laas-server/.test(url)||/^\/laas-server\/tasks/.test(url) || /^\/laas-server\/login/.test(url) || /^\/laas-server\/user/.test(url) || /^\/laas-server\/scenarios/.test(url)
         || /^\/laas-server\/files/.test(url) || /^\/laas-server\/home/.test(url) || /^\/laas-server\/job/.test(url) || /^\/laas-server\/upload/.test(url) || /^\/laas-server\/jobs/.test(url)
-        || /^\/laas-server\/jobHistory/.test(url)) {
+        || /^\/laas-server\/jobHistory/.test(url) || /^\/laas-server\/register/.test(url)) {
       req.url = '/index.html';
     }
     return next();

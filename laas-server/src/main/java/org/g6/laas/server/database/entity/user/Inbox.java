@@ -10,6 +10,7 @@ import java.util.Collection;
 @Data
 @RequiredArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "INBOX")
 public class Inbox extends LaaSPersistable {
@@ -18,7 +19,7 @@ public class Inbox extends LaaSPersistable {
 
     @NonNull
     @OneToOne(mappedBy = "inbox")
-    private Users user;
+    private User user;
 
     @OneToMany(mappedBy = "inbox")
     private Collection<Notification> notifications = new ArrayList<>();

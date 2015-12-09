@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import org.g6.laas.server.database.entity.LaaSAuditable;
 import org.g6.laas.server.database.entity.Product;
 import org.g6.laas.server.database.entity.file.FileType;
-import org.g6.laas.server.database.entity.user.Users;
+import org.g6.laas.server.database.entity.user.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class Task extends LaaSAuditable<Users> {
+public class Task extends LaaSAuditable<User> {
 
     private static final long serialVersionUID = -8503435553208415613L;
 

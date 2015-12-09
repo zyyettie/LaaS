@@ -7,7 +7,7 @@ import org.g6.laas.server.database.entity.result.ScenarioResult;
 import org.g6.laas.server.database.entity.task.*;
 import org.g6.laas.server.database.entity.user.Notification;
 import org.g6.laas.server.database.entity.user.Role;
-import org.g6.laas.server.database.entity.user.Users;
+import org.g6.laas.server.database.entity.user.User;
 import org.g6.laas.server.database.entity.user.Inbox;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -23,7 +23,7 @@ public class RestfulConfiguration extends RepositoryRestMvcConfiguration {
 
     @Override
     protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
-        config.exposeIdsFor(Users.class, Role.class, Notification.class, Inbox.class, Category.class, File.class, FileType.class,
+        config.exposeIdsFor(User.class, Role.class, Notification.class, Inbox.class, Category.class, File.class, FileType.class,
                 Product.class, Scenario.class, Task.class, ScenarioRunning.class, Job.class, JobRunning.class, ScenarioResult.class,
                 FileType.class);
         try {

@@ -25,6 +25,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/controllers/login").permitAll()
+                .antMatchers("/controllers/register").permitAll()
                 .antMatchers(HttpMethod.GET, "/", "/themes/**", "/public/**", "/styles/**", "/fonts/**", "/images/**", "/scripts/**").permitAll()
                 .antMatchers("/controllers/logout").permitAll()
                 .antMatchers("/api/v1/jobs/**").authenticated()

@@ -5,9 +5,15 @@
   </div>
 </h2>
 <div>
-         {{#each task_running_result}}
-         <div class="ui teal segment">
-         {{lineNumber}} | {{file.originalName}} | {{content}}
-         </div>
-         {{/each}}
+     <table class="ui selectable striped celled tiny table">
+         <tbody>
+             {{#each task_running_result}}
+             <tr>
+                <td>{{lineNumber}}</td>
+                <td>{{file.originalName}}</td>
+                <td>{{content}}</td>
+             </tr>
+             {{/each}}
+         </tbody>
+     </table>
 </div>

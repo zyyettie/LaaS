@@ -1,7 +1,7 @@
 package org.g6.laas.server.controllers;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import org.g6.laas.server.database.entity.user.Users;
+import org.g6.laas.server.database.entity.user.User;
 import org.g6.laas.server.database.repository.IUserRepository;
 import org.g6.laas.server.exception.InvalidUserException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +23,9 @@ public class LoginController {
     private IUserRepository userRepository;
 
     @RequestMapping(value = "/controllers/login")
-    @JsonView(Users.UserDTO.class)
-    Users login(@RequestBody Users request) {
-        Users loginingUser = userRepository.findByName(request.getName()); //hardcode TODO
+    @JsonView(User.UserDTO.class)
+    User login(@RequestBody User request) {
+        User loginingUser = userRepository.findByName(request.getName()); //hardcode TODO
         if (loginingUser == null || !loginingUser.getPassword().equals(request.getPassword()))
             throw new InvalidUserException("user name or password is wrong.");
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(loginingUser, loginingUser.getPassword(), loginingUser.getAuthorities());
@@ -42,11 +42,11 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/controllers/users/current", method = RequestMethod.GET)
-    @JsonView(Users.UserDTO.class)
-    public Users loginedUser() {
+    @JsonView(User.UserDTO.class)
+    public User loginedUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(!(principal instanceof Users))
+        if(!(principal instanceof User))
             throw new InvalidUserException("login required");
-        return (Users)principal;
+        return (User)principal;
     }
 }

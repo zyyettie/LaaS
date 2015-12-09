@@ -3,7 +3,7 @@ package org.g6.laas.server.database.entity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.g6.laas.server.database.entity.task.ScenarioRunning;
-import org.g6.laas.server.database.entity.user.Users;
+import org.g6.laas.server.database.entity.user.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -26,11 +26,11 @@ public class JobRunning extends JobSubEntity {
     private Collection<ScenarioRunning> scenarioRunnings = new ArrayList<>();
 
     @Override
-    public Collection<Users> sendTo() {
+    public Collection<User> sendTo() {
         return getToUsers();
     }
 
-    public void addUser(Users user){
+    public void addUser(User user){
         getToUsers().add(user);
     }
 

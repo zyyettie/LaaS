@@ -20,7 +20,7 @@ import java.util.Date;
 @Table(name = "USERS", uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
 @Data
 @NoArgsConstructor
-public class Users extends LaaSPersistable {
+public class User extends LaaSPersistable {
 
     private static final long serialVersionUID = -8503475553208415613L;
 
@@ -56,7 +56,7 @@ public class Users extends LaaSPersistable {
     @OneToMany(mappedBy = "createdBy")
     private Collection<ScenarioRunning> taskRunning = new ArrayList<>();
 
-    public Users(Long id) {
+    public User(Long id) {
         super(id);
     }
 

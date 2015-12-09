@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "NOTIFICATION")
-public class Notification extends LaaSAuditable<Users> {
+public class Notification extends LaaSAuditable<User> {
 
     private static final long serialVersionUID = -7457760948182175014L;
 
@@ -24,7 +24,7 @@ public class Notification extends LaaSAuditable<Users> {
 
     @NonNull
     @ManyToOne
-    private Users from;
+    private User from;
 
     @NonNull
     @JsonView(NotificationSummary.class)

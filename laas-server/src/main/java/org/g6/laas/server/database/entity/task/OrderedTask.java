@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.g6.laas.server.database.entity.LaaSAuditable;
-import org.g6.laas.server.database.entity.user.Users;
+import org.g6.laas.server.database.entity.user.User;
 
 import javax.persistence.*;
 
@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-public class OrderedTask extends LaaSAuditable<Users> implements Comparable<OrderedTask>{
+public class OrderedTask extends LaaSAuditable<User> implements Comparable<OrderedTask>{
     private static final long serialVersionUID = -7080540921514432085L;
 
     @ManyToOne
