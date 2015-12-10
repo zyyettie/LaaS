@@ -22,7 +22,11 @@ import java.util.List;
 public class TopNQueryTask extends SMRTETask<List<Line>> {
     private int N = 50;
     private String order = "desc";
+    private String category;
     private List<Line> lines = new ArrayList<>();
+
+    private final String CATEGORY_DBQUERY = "DBQUERY";
+    private final String CATEGORY_SCRIPTTRACE = "SCRIPTTRACE";
 
     @Override
     protected List<Line> process() {
@@ -30,10 +34,18 @@ public class TopNQueryTask extends SMRTETask<List<Line>> {
         return order.equalsIgnoreCase("desc") ? ordering.leastOf(lines, N) : ordering.greatestOf(lines, N);
     }
 
-    public TopNQueryTask() {
-        Rule rule = new KeywordRule("RTE D DBQUERY")
-                .or(new RegexRule("^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D DBFIND(?:\\^[^\\^]+){6}\\^(\\d+\\.\\d+)"))
-                .or(new RegexRule("^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D.+DBACCESS.+(\\d+\\.\\d+)\\s+seconds"));
+    @Override
+    void initRule() {
+        Rule rule = null;
+        if (category.equals(CATEGORY_DBQUERY)) {
+            rule = new KeywordRule("RTE D DBQUERY")
+                    .or(new RegexRule("^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D DBFIND(?:\\^[^\\^]+){6}\\^(\\d+\\.\\d+)"))
+                    .or(new RegexRule("^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D.+DBACCESS.+(\\d+\\.\\d+)\\s+seconds"));
+
+        } else if (category.equals(CATEGORY_SCRIPTTRACE)) {
+            rule = new RegexRule("^[\\s:/\\w\\(\\)]+RTE D SCRIPTTRACE:\\s(.+)\\sexited.+elapsed: (\\d+) ms");
+        }
+
         rule.addAction(new RuleAction() {
             @Override
             public void satisfied(Rule rule, Object content) {
@@ -46,6 +58,12 @@ public class TopNQueryTask extends SMRTETask<List<Line>> {
     }
 
     DefaultInputFormatProvider getProvider() {
-        return getDefaultProvider(new String[]{"DBQUERY","DBFIND","DBACCESS"});
+        String[] formats = null;
+        if (category.equals(CATEGORY_DBQUERY)) {
+            formats = new String[]{"DBQUERY", "DBFIND", "DBACCESS"};
+        } else if (category.equals(CATEGORY_SCRIPTTRACE)) {
+            formats = new String[]{"SCRIPTTRACE"};
+        }
+        return getDefaultProvider(formats);
     }
 }
