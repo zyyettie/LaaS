@@ -1,6 +1,6 @@
 LaaS.module('JobResult', function(JobResult, LaaS, Backbone, Marionette) {
     'use strict';
-
+    var appContext = LaaS.Util.Constants.APPCONTEXT;
     JobResult.JobResultView = Marionette.ItemView.extend({
         initialize: function (options) {
             if(options.sync === true){
@@ -37,6 +37,11 @@ LaaS.module('JobResult', function(JobResult, LaaS, Backbone, Marionette) {
                     this.$('#content-placeholder').html('<h2 class="ui header">Your job is running in the background, please check your inbox later</div>');
                 }
             }
+            this.$('a.downloadlink').click(function(event){
+                event.preventDefault();
+                event.stopPropagation();
+                $('#downloadingIFrame').attr('src',appContext+$(this).attr('href'));
+            });
         }
     });
 
