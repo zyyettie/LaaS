@@ -3,10 +3,10 @@ insert into ROLE(ID, NAME) values (2, 'ROLE_USER')
 insert into INBOX(ID) values (1)
 insert into INBOX(ID) values (2)
 
-insert into USERS(ID,NAME,password,ROLE_ID,inbox_id) values(1,'admin','password',1,1)
-insert into USERS(ID,NAME,password,ROLE_ID,inbox_id) values(2,'user1','password',2,2)
 insert into QUOTA(ID, MAX_FILE_SIZE, SPACE_QUOTA, USED_SPACE) values(1, 104857600, 209715200, 0)
 insert into QUOTA(ID, MAX_FILE_SIZE, SPACE_QUOTA, USED_SPACE) values(2, 104857600, 209715200, 0)
+insert into USERS(ID,NAME,password,ROLE_ID,inbox_id, quota_id) values(1,'admin','password',1,1,1)
+insert into USERS(ID,NAME,password,ROLE_ID,inbox_id, quota_id) values(2,'user1','password',2,2,2)
 
 insert into PRODUCT(ID, NAME) values(1, 'Service Manager')
 

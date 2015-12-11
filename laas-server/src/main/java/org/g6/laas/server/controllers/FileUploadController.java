@@ -85,7 +85,7 @@ public class FileUploadController {
 
                 org.g6.laas.server.database.entity.file.File saved = fileRepository.save(fileEntity);
 
-                Quota quota = quotaRepository.findUserQuota(saved.getCreatedBy().getName());
+                Quota quota = saved.getCreatedBy().getQuota();
                 quota.setUsedSpace(quota.getUsedSpace() + size);
                 Quota updatedQuota = quotaRepository.save(quota);
 
