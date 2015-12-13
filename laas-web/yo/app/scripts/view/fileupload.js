@@ -4,10 +4,10 @@ LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
 
     Views.FileUploader = Marionette.ItemView.extend({
         template: JST['app/handlebars/fileupload/upload'],
-        initialize : function(options){
+        initialize: function (options) {
             this.url = options.url;
             this.fileTypes = options.fileTypes;
-            this.quota = options.quota ? options.quota : {spaceQuota:0, usedSpace:0, maxFileSize:0};
+            this.quota = options.quota ? options.quota : {spaceQuota: 0, usedSpace: 0, maxFileSize: 0};
             this.uploadedFileSize = 0;
             this.uploadedFiles = [];
             var uploadedFiles = sessionStorage.getItem('uploadedFiles');
@@ -42,21 +42,26 @@ LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
                 if (e.lengthComputable) {
                     var max = e.total;
                     var current = e.loaded;
-                    var Percentage = Math.round((current * 100) / max); 
-                    $('#progress').progress({percent:Percentage});
-                    $('#progress .label').text(''+ Percentage + ' % uploaded');              
+                    var Percentage = Math.round((current * 100) / max);
+                    $('#progress').progress({percent: Percentage});
+                    $('#progress .label').text('' + Percentage + ' % uploaded');
                 }
             };
             this.$('#upload').click(function () {
-                if (that.quota.spaceQuota<that.quota.usedSpace+that.uploadedFileSize) {
+                if($("#fileType").val() == ''){
+                    $('#errors').html('Please select File Type first');
+                    $('#errors').show();
+                    return;
+                }
+                if (that.quota.spaceQuota < that.quota.usedSpace + that.uploadedFileSize) {
                     toastr.error('Over your quota!');
                     return;
                 } else {
                     //for (var i=0; i<that.quota.files)
                 }
-                $('#progress').removeClass('error success');    
+                $('#progress').removeClass('error success');
                 $('#progress').addClass('active');
-                $('#progress').progress({percent:0});
+                $('#progress').progress({percent: 0});
                 $('#progress .label').text('uploading');
                 $('#progress').show();
                 $(this).toggleClass("disabled");
@@ -73,35 +78,35 @@ LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
                             uploadingxhr.upload.addEventListener('progress', uploadingCallback, false);
                         }
                         return uploadingxhr;
-                    }                 
-                }).always(function(data,textStatus,error){
-                    $('#progress').removeClass('active');
-                    if(textStatus != 'success'){
+                    }
+                }).always(function (data, textStatus, error) {
+                        $('#progress').removeClass('active');
+                        if (textStatus != 'success') {
                             $('#progress').addClass('error');
-                            $('#progress').progress({percent:100});
+                            $('#progress').progress({percent: 100});
                             $('#progress .label').text('upload failed');
-        
-                        }else{
-                            $('#progress').progress({percent:100,text:{success:'total ' + that.total + ' uploaded' }});
+
+                        } else {
+                            $('#progress').progress({percent: 100, text: {success: 'total ' + that.total + ' uploaded' }});
                             $.extend(that.uploadedFiles, data);
                             sessionStorage.setItem('uploadedFiles', JSON.stringify(that.uploadedFiles));
                         }
                         $('#upload').removeClass('disabled');
 
                         LaaS.navigate(that.url, true);
-                });
+                    });
 
             });
 
         },
-        serializeData:function(){
-            return {fileTypes:this.fileTypes};
+        serializeData: function () {
+            return {fileTypes: this.fileTypes};
         },
         events: {
-            'click #upload_cancel':'cancelUpload',
-            'click #delete_my_files':'deleteMyFiles'
+            'click #upload_cancel': 'cancelUpload',
+            'click #delete_my_files': 'deleteMyFiles'
         },
-        cancelUpload:function(){
+        cancelUpload: function () {
             LaaS.navigate(this.url, true);
         }
 
