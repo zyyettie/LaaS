@@ -49,7 +49,7 @@ LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
             };
             this.$('#upload').click(function () {
                 if($("#fileType").val() == ''){
-                    $('#errors').html('Please select File Type first');
+                    $('#errors').html('<li>Please select File Type first</li>');
                     $('#errors').show();
                     return;
                 }

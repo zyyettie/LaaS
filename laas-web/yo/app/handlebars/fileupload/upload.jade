@@ -1,7 +1,8 @@
 .ui.centered.grid
     .fourteen.wide.column
         .ui.green.segment(style="margin-top:5px;padding:20px 40px;")
-            #errors(style="display:none")
+            .ui.error.message#errors(style="display:none")
+                ul.list
             h2#title New File
             form.ui.form(action="/upload",method="post",enctype="multipart/form-data")
                 .four.fields
