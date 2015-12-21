@@ -100,7 +100,8 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 }
             }
             this.$('[name="selectedScenario"]').on('change', function () {
-                var id = this.selectedOptions[0].value;
+                console.log("You are selecting " + $("#selectedScenario option:selected").text());
+                var id = $('#selectedScenario').val();
                 for (var i=0; i<that.scenarioList.length; i++) {
                     if (that.scenarioList[i].id == id) {
                         var inputParameterDefsUrl = that.scenarioList[i]._links.inputParameterDefs.href;
