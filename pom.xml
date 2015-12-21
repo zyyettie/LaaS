@@ -61,7 +61,7 @@
     <modules>
         <module>laas-core</module>
         <module>laas-sm</module>
-        <module>laas-apache</module>
+        <module>laas-bigdata</module>
         <module>laas-web</module>
         <module>laas-server</module>       
     </modules>
