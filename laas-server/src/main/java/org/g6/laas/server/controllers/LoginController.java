@@ -25,7 +25,7 @@ public class LoginController {
     @RequestMapping(value = "/controllers/login")
     @JsonView(User.UserDTO.class)
     User login(@RequestBody User request) {
-        User loginingUser = userRepository.findByName(request.getName()); //hardcode TODO
+        User loginingUser = userRepository.findByName(request.getName());
         if (loginingUser == null || !loginingUser.getPassword().equals(request.getPassword()))
             throw new InvalidUserException("user name or password is wrong.");
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(loginingUser, loginingUser.getPassword(), loginingUser.getAuthorities());

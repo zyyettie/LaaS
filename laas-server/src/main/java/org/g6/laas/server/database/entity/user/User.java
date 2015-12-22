@@ -3,8 +3,8 @@ package org.g6.laas.server.database.entity.user;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.g6.laas.server.database.entity.file.File;
 import org.g6.laas.server.database.entity.LaaSPersistable;
+import org.g6.laas.server.database.entity.file.File;
 import org.g6.laas.server.database.entity.task.ScenarioRunning;
 import org.g6.laas.server.database.entity.task.Task;
 import org.springframework.data.annotation.CreatedDate;
@@ -56,7 +56,7 @@ public class User extends LaaSPersistable {
     @OneToMany(mappedBy = "createdBy")
     private Collection<ScenarioRunning> taskRunning = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.PERSIST})
     private Quota quota;
 
     public User(Long id) {
