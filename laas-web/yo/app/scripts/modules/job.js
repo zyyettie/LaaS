@@ -24,7 +24,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 scenarios: this.scenarios, files: this.files,
                 inputParameterDefs: this.inputParameterDefs, fileTypes: this.fileTypes};
             if (!data.job || !data.job.selectedname) {
-                data.job.selectedname = "Select Scenario";
+                data.job.selectedname = "Select Service";
             }
             data.job.scenarioList = data.scenarioList;
             data.job.files = data.files ? data.files : [];
@@ -186,7 +186,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             var that = this;
             var json = Backbone.Syphon.serialize(this);
             if (json.name == '' || json.selectedScenario == '') {
-                toastr.error('Please input name and select scenario.');
+                toastr.error('Please input name and select service.');
                 return;
             }
 
@@ -214,8 +214,18 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         runJob: function () {
             var that = this;
             var json = Backbone.Syphon.serialize(this);
-            if (json.name == '' || json.selectedScenario == '') {
-                toastr.error('Please input name and select scenario.');
+            var errors = [];
+            if(json.name == ''){
+                errors.push('Please input Job Name');
+            }
+            if (json.selectedScenario == '') {
+                errors.push('Please select a scenario');
+            }
+            if(this.job.files.length == 0){
+                errors.push('Please select at least a file');
+            }
+
+            if(LaaS.Util.showErrors(errors)){
                 return;
             }
             json.parameters = this.getParameter(json, that.job.inputParameterDefs);

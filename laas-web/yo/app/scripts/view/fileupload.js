@@ -48,17 +48,20 @@ LaaS.module('Views', function (Views, LaaS, Backbone, Marionette) {
                 }
             };
             this.$('#upload').click(function () {
+                var errors=[];
                 if($("#fileType").val() == ''){
-                    $('#errors').html('<li>Please select File Type first</li>');
-                    $('#errors').show();
-                    return;
+                    errors.push('Please select File Type first');
                 }
                 if (that.quota.spaceQuota < that.quota.usedSpace + that.uploadedFileSize) {
-                    toastr.error('Over your quota!');
-                    return;
+                    errors.push('The total file size is over your quota, please delete some files!');
                 } else {
+                    //here needs to validate the quota of a file
                     //for (var i=0; i<that.quota.files)
                 }
+                if(LaaS.Util.showErrors(errors)){
+                    return;
+                }
+
                 $('#progress').removeClass('error success');
                 $('#progress').addClass('active');
                 $('#progress').progress({percent: 0});

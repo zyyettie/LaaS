@@ -1,5 +1,6 @@
 .ui.centered.grid
     .fourteen.wide.column
+        .ui.error.message#errors(style="display:none")
         .ui.green.segment(style="margin-top:5px;padding:75px 60px;")
             h2#title(style="margin-top: -30px;margin-bottom: 30px;;") Job Detail
             form.ui.form
@@ -8,7 +9,7 @@
                         label Job Name
                         input(type="text",name="name",placeholder="name",value="{{name}}")
                     .field
-                        label Job Scenario
+                        label Service
                         select.ui.dropdown(id="selectedScenario", name="selectedScenario")
                             option(value="{{selectedid}}") {{selectedname}}
                             |{{#each scenarioList}}
