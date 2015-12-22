@@ -28,7 +28,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             }
             data.job.scenarioList = data.scenarioList;
             data.job.files = data.files ? data.files : [];
-            for (var i=0; i<data.job.files.length; i++) {
+            for (var i = 0; i < data.job.files.length; i++) {
                 data.job.files[i].displaySize = LaaS.Util.getFileDisplaySize(data.job.files[i].size);
             }
             data.job.inputParameterDefs = data.inputParameterDefs ? data.inputParameterDefs : [];
@@ -45,7 +45,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 data.job.selectedname = data.scenarios[0].name;
                 data.job.scenarios = data.scenarios;
             }
-           // }
+            // }
             return data;
         },
         onRender: function () {
@@ -64,14 +64,14 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             var subHtml = LaaS.Form.generateParameterSubForm(this.inputParameterDefs, json);
             this.$('#inputParameters').html(subHtml);
 
-            if (this.job.files && this.job.files.length > 0 ) {
+            if (this.job.files && this.job.files.length > 0) {
                 var size = 10;
                 var currentFiles = [];
-                for (var i=0; i<size && i<this.job.files.length; i++) {
+                for (var i = 0; i < size && i < this.job.files.length; i++) {
                     currentFiles.push(this.job.files[i]);
                 }
                 var template = JST['app/handlebars/job/file'];
-                var subHtml = template({files:currentFiles});
+                var subHtml = template({files: currentFiles});
                 this.$('#files').html(subHtml);
                 var totalPages = Math.floor(this.job.files.length / size) + 1;
                 if (totalPages > 1) {
@@ -86,7 +86,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                         onPageClick: function (event, page) {
                             //var size = 10;
                             var currentFiles = [];
-                            for (var i=size*(page-1); i<size*page; i++) {
+                            for (var i = size * (page - 1); i < size * page; i++) {
                                 if (!that.job.files[i]) {
                                     break;
                                 }
@@ -102,35 +102,35 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             this.$('[name="selectedScenario"]').on('change', function () {
                 console.log("You are selecting " + $("#selectedScenario option:selected").text());
                 var id = $('#selectedScenario').val();
-                for (var i=0; i<that.scenarioList.length; i++) {
+                for (var i = 0; i < that.scenarioList.length; i++) {
                     if (that.scenarioList[i].id == id) {
                         var inputParameterDefsUrl = that.scenarioList[i]._links.inputParameterDefs.href;
                         var fileTypeUrl = that.scenarioList[i]._links.fileTypes.href;
                         $.when(LaaS.request("inputParameterDef:entitiesByUrl", {url: inputParameterDefsUrl}),
-                            LaaS.request('fileType:entitiesByUrl', {url: fileTypeUrl}))
-                            .done(function(inputParameterDefs, fileTypes) {
-                            that.job.inputParameterDefs = inputParameterDefs.inputParameterDefs;
-                            var json = that.job.parameters ? JSON.parse(that.job.parameters) : {};
-                            var subHtml = LaaS.Form.generateParameterSubForm(inputParameterDefs.inputParameterDefs, json);
-                            $('#inputParameters').html(subHtml);
-                            LaaS.Form.enableDatetimeControl(inputParameterDefs.inputParameterDefs);
+                                LaaS.request('fileType:entitiesByUrl', {url: fileTypeUrl}))
+                            .done(function (inputParameterDefs, fileTypes) {
+                                that.job.inputParameterDefs = inputParameterDefs.inputParameterDefs;
+                                var json = that.job.parameters ? JSON.parse(that.job.parameters) : {};
+                                var subHtml = LaaS.Form.generateParameterSubForm(inputParameterDefs.inputParameterDefs, json);
+                                $('#inputParameters').html(subHtml);
+                                LaaS.Form.enableDatetimeControl(inputParameterDefs.inputParameterDefs);
 
-                            that.job.fileTypes = fileTypes.fileTypes;
-                        });
+                                that.job.fileTypes = fileTypes.fileTypes;
+                            });
                         break;
                     }
                 }
             });
-            this.$("button").on("click", function(){
+            this.$("button").on("click", function () {
                 console.log("click detail...");
-                $.attr("data-id", function(arr){
+                $.attr("data-id", function (arr) {
                     console.log(arr);
                 });
             });
-            this.$("#remove_file").on("click", function() {
+            this.$("#remove_file").on("click", function () {
                 var id = this.attributes["value"]["value"];
                 that.removeFile(id);
-                $('#fileitem_'+id).empty();
+                $('#fileitem_' + id).empty();
                 if (!that.job.files || that.job.files.length == 0) {
                     $('#files').empty();
                     $('#paging').empty();
@@ -147,7 +147,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             var json = data.job.parameters ? JSON.parse(data.job.parameters) : {};
             var subHtml = LaaS.Form.generateParameterSubForm(data.inputParameterDefs, json);
 
-            html = html.replace('<div id="inputParameters"></div>', '<div id="inputParameters">'+subHtml+'</div>');
+            html = html.replace('<div id="inputParameters"></div>', '<div id="inputParameters">' + subHtml + '</div>');
 
             return html;
         },
@@ -161,7 +161,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 return;
             }
 
-            for (var i=0; i<defines.length; i++) {
+            for (var i = 0; i < defines.length; i++) {
                 var name = defines[i]["name"];
                 delete json[name];
             }
@@ -172,11 +172,11 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             }
 
             var strJson = "{";
-            for (var i=0; i<defines.length; i++) {
-                if (i>0) {
+            for (var i = 0; i < defines.length; i++) {
+                if (i > 0) {
                     strJson += ", ";
                 }
-                strJson += '"'+defines[i]["name"] + '":"' + json[defines[i]["name"]]+'"';
+                strJson += '"' + defines[i]["name"] + '":"' + json[defines[i]["name"]] + '"';
             }
             strJson += "}";
 
@@ -194,11 +194,11 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
             this.removeParameter(json, that.job.inputParameterDefs);
 
             json.scenarios = [];
-            json.scenarios.push(appContext+apiVersion+"/scenarios/" + json.selectedScenario);
+            json.scenarios.push(appContext + apiVersion + "/scenarios/" + json.selectedScenario);
 
             json.files = [];
-            for (var i=0; i<this.job.files.length; i++) {
-                json.files.push(appContext+apiVersion+"/files/"+this.job.files[i].id);
+            for (var i = 0; i < this.job.files.length; i++) {
+                json.files.push(appContext + apiVersion + "/files/" + this.job.files[i].id);
             }
 
             this.model.save(json, {patch: true, success: function () {
@@ -211,64 +211,77 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 toastr.error('Save Job failed.');
             }});
         },
-        runJob: function () {
-            var that = this;
-            var json = Backbone.Syphon.serialize(this);
-            var errors = [];
-            if(json.name == ''){
-                errors.push('Please input Job Name');
-            }
-            if (json.selectedScenario == '') {
-                errors.push('Please select a scenario');
-            }
-            if(this.job.files.length == 0){
-                errors.push('Please select at least a file');
-            }
-
-            if(LaaS.Util.showErrors(errors)){
-                return;
-            }
+        runMainJob: function(json, that){
             json.parameters = this.getParameter(json, that.job.inputParameterDefs);
-            this.removeParameter(json, that.job.inputParameterDefs);
+            that.removeParameter(json, that.job.inputParameterDefs);
 
             json.scenarios = [];
-            json.scenarios.push(appContext+apiVersion+"/scenarios/" + json.selectedScenario);
+            json.scenarios.push(appContext + apiVersion + "/scenarios/" + json.selectedScenario);
 
             json.files = [];
-            for (var i=0; i<this.job.files.length; i++) {
-                json.files.push(appContext+apiVersion+"/files/"+this.job.files[i].id);
+            for (var i = 0; i < that.job.files.length; i++) {
+                json.files.push(appContext + apiVersion + "/files/" + this.job.files[i].id);
             }
 
             this.model.save(json, {patch: true, success: function (response) {
-                $.getJSON(appContext+"/controllers/jobs/" + response.id).done(function (json) {
+                $.getJSON(appContext + "/controllers/jobs/" + response.id).done(function (json) {
                     toastr.info('Save and Run Job successfully.');
                     var success = json.success;
-                    if(success === true){
+                    if (success === true) {
                         var sync = json.is_syn;
-                        if(sync === true){
-                            $.when(LaaS.request('jobResult:entity',{id:json.job_running_id}))
+                        if (sync === true) {
+                            $.when(LaaS.request('jobResult:entity', {id: json.job_running_id}))
                                 .done(function (jobRunningResult) {
-                                    var jobResultView = new LaaS.JobResult.JobResultView({model:jobRunningResult,sync:true});
+                                    var jobResultView = new LaaS.JobResult.JobResultView({model: jobRunningResult, sync: true});
                                     LaaS.mainRegion.show(jobResultView);
                                 });
 
-                        }else{
-                            var jobResultView = new LaaS.JobResult.JobResultView({sync:false});
+                        } else {
+                            var jobResultView = new LaaS.JobResult.JobResultView({sync: false});
                             LaaS.mainRegion.show(jobResultView);
                         }
-                    }else{
+                    } else {
                         var rootcauses = json.rootcauses;
-                        var jobResultView = new LaaS.JobResult.JobResultView({success:false,rootcauses:rootcauses});
+                        var jobResultView = new LaaS.JobResult.JobResultView({success: false, rootcauses: rootcauses});
                         LaaS.mainRegion.show(jobResultView);
                     }
-                    LaaS.navigate('/jobRunnings/'+json.job_running_id+"/result");
-                    }).fail(function(json){
-                        toastr.info('Failed due to '+json);
+                    LaaS.navigate('/jobRunnings/' + json.job_running_id + "/result");
+                }).fail(function (json) {
+                        toastr.info('Failed due to ' + json);
                     });
 
             }, error: function () {
                 toastr.error('Save Job failed.');
             }});
+        },
+        runJob: function () {
+            var that = this;
+            var json = Backbone.Syphon.serialize(this);
+            var errors = [];
+            if (json.name == '') {
+                errors.push('Please input Job Name');
+            } else {
+                $.when(LaaS.request('job:findByName',{name: json.name})).done(function (data) {
+                    if (data.length > 0) {
+                        errors.push("Job Name " + json.name + " exists already, please input another name");
+                    }
+
+                    if (json.selectedScenario == '') {
+                        errors.push('Please select a scenario');
+                    }
+                    if (that.job.files.length == 0) {
+                        errors.push('Please select at least a file');
+                    }
+
+                    if (LaaS.Util.showErrors(errors)) {
+                        return;
+                    }
+
+                    that.runMainJob(json, that);
+                });
+
+            }
+
         },
         addFile: function () {
             if (!this.job.fileTypes || this.job.fileTypes.length == 0) {
@@ -287,21 +300,21 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 thisjob.selectedid = thisjob.scenarios[0].id;
                 thisjob.selectedname = thisjob.scenarios[0].name;
             }
-            $.when(LaaS.request('file:myEntitiesByTypes', {fileTypes:thisjob.fileTypes})).done(function(data) {
+            $.when(LaaS.request('file:myEntitiesByTypes', {fileTypes: thisjob.fileTypes})).done(function (data) {
                 sessionStorage.setItem('jobinfo', JSON.stringify(thisjob));
-                var fileSelectView = new LaaS.File.FileSelectView({data:data});
+                var fileSelectView = new LaaS.File.FileSelectView({data: data});
                 LaaS.mainRegion.show(fileSelectView);
                 if (thisjob.id == undefined) {
                     LaaS.navigate('/jobnew/fileselect');
                 } else {
-                    LaaS.navigate('/jobs/'+thisjob.id+'/fileselect');
+                    LaaS.navigate('/jobs/' + thisjob.id + '/fileselect');
                 }
-            }).fail(function() {
-                toastr.error('Cannot load files.');
-            });
+            }).fail(function () {
+                    toastr.error('Cannot load files.');
+                });
         },
-        removeFile : function(id) {
-            for (var i=0; i<this.files.length; i++) {
+        removeFile: function (id) {
+            for (var i = 0; i < this.files.length; i++) {
                 if (this.files[i]["id"] == id) {
                     this.files.splice(i, 1);
                     break;
@@ -322,12 +335,12 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         serializeData: function () {
             return {jobs: this.jobs};
         },
-        events:{
+        events: {
             'click button.job-show': "showClicked"
         },
-        showClicked: function(event){
+        showClicked: function (event) {
             var jobId = event.target.dataset["id"];
-            LaaS.navigate('/jobs/'+jobId,true);
+            LaaS.navigate('/jobs/' + jobId, true);
         }
     });
 
@@ -340,19 +353,19 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 });
         },
         showJob: function (id) {
-            $.when(LaaS.request('job:entity', {'id':id}), LaaS.request('scenario:entities'), LaaS.request('file:entities'))
-                .done(function(jobModel, scenarioList, fileList){
-                    $.when(LaaS.request("scenario:entitiesByUrl", {"url":jobModel.attributes._links.scenarios.href}), LaaS.request("file:entitiesByUrl", {"url":jobModel.attributes._links.files.href}))
-                        .done(function(scenarios, selectedFiles) {
+            $.when(LaaS.request('job:entity', {'id': id}), LaaS.request('scenario:entities'), LaaS.request('file:entities'))
+                .done(function (jobModel, scenarioList, fileList) {
+                    $.when(LaaS.request("scenario:entitiesByUrl", {"url": jobModel.attributes._links.scenarios.href}), LaaS.request("file:entitiesByUrl", {"url": jobModel.attributes._links.files.href}))
+                        .done(function (scenarios, selectedFiles) {
                             if (scenarios) {
-                                $.when(LaaS.request("inputParameterDef:entitiesByUrl", {"url":scenarios.scenarios[0]._links.inputParameterDefs.href}),
-                                    LaaS.request("fileType:entitiesByUrl", {url:scenarios.scenarios[0]._links.fileTypes.href}))
-                                    .done(function(inputParameterDefs, fileTypes) {
-                                    var view = new LaaS.Job.JobView({model:jobModel, job:jobModel.attributes, scenarioList:scenarioList.scenarios,
-                                        fileList:fileList.files, scenarios:scenarios.scenarios, files:selectedFiles.files,
-                                        inputParameterDefs:inputParameterDefs.inputParameterDefs, fileTypes:fileTypes.fileTypes});
-                                    LaaS.mainRegion.show(view);
-                                });
+                                $.when(LaaS.request("inputParameterDef:entitiesByUrl", {"url": scenarios.scenarios[0]._links.inputParameterDefs.href}),
+                                        LaaS.request("fileType:entitiesByUrl", {url: scenarios.scenarios[0]._links.fileTypes.href}))
+                                    .done(function (inputParameterDefs, fileTypes) {
+                                        var view = new LaaS.Job.JobView({model: jobModel, job: jobModel.attributes, scenarioList: scenarioList.scenarios,
+                                            fileList: fileList.files, scenarios: scenarios.scenarios, files: selectedFiles.files,
+                                            inputParameterDefs: inputParameterDefs.inputParameterDefs, fileTypes: fileTypes.fileTypes});
+                                        LaaS.mainRegion.show(view);
+                                    });
                             }
                         });
                 });
@@ -369,17 +382,17 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
                 LaaS.mainRegion.show(view);
             });
         },
-        selectJobFiles: function(id) {
+        selectJobFiles: function (id) {
             var jobStr = sessionStorage.getItem('jobinfo');
             if (jobStr) {
                 var jobJson = JSON.parse(jobStr);
                 if (id == jobJson.id) {
-                    $.when(LaaS.request('myFiles:entities')).done(function(data) {
-                        var fileSelectView = new LaaS.File.FileSelectView({data:data});
+                    $.when(LaaS.request('myFiles:entities')).done(function (data) {
+                        var fileSelectView = new LaaS.File.FileSelectView({data: data});
                         LaaS.mainRegion.show(fileSelectView);
-                    }).fail(function() {
+                    }).fail(function () {
                             toastr.error('Cannot load files.');
-                    });
+                        });
                 } else {
                     toastr.error('Cannot load files.');
                     sessionStorage.removeItem('jobinfo');
@@ -395,7 +408,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         new Marionette.AppRouter({
             appRoutes: {
                 'jobnew/fileselect': 'selectJobFiles',
-                'jobs/:id/fileselect' : 'selectJobFiles',
+                'jobs/:id/fileselect': 'selectJobFiles',
                 'jobnew(/)': 'jobnew',
                 'jobs(/)': 'showJobs',
                 'myjobs(/)': 'showMyJobs',
