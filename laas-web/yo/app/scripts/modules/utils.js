@@ -31,4 +31,9 @@ LaaS.module('Util', function (Util, LaaS, Backbone, Marionette) {
             return false;
         }
     }
+
+    Util.showError = function (error) {
+        $('#errors').html(error);
+        $('#errors').show();
+    }
 });

@@ -285,7 +285,7 @@ LaaS.module('Job', function (Job, LaaS, Backbone, Marionette) {
         },
         addFile: function () {
             if (!this.job.fileTypes || this.job.fileTypes.length == 0) {
-                toastr.info('Please select one Scenario!');
+                LaaS.Util.showError('Please select one Service');
                 return;
             }
             var thisjob = this.job;
