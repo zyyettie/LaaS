@@ -13,13 +13,23 @@ LaaS.module('Register', function(Register, LaaS, Backbone, Marionette) {
         template : JST['app/handlebars/register'],
         onRender:function(){
             this.$('.ui.form').form({
-                fields: {
+                fields:{
                     username: {
-                        identifier  : 'userName',
+                        identifier  : 'name',
                         rules: [
                             {
                                 type   : 'empty',
-                                prompt : 'Please enter your user name'
+                                prompt : 'Please enter a username'
+                            }
+                        ]
+                    },
+                    email: {
+                        identifier  : 'email',
+                        optional    : true,
+                        rules: [
+                            {
+                                type   : 'email',
+                                prompt : 'Please enter a valid email'
                             }
                         ]
                     },
@@ -28,11 +38,20 @@ LaaS.module('Register', function(Register, LaaS, Backbone, Marionette) {
                         rules: [
                             {
                                 type   : 'empty',
-                                prompt : 'Please enter your password'
+                                prompt : 'Please enter a password'
                             },
                             {
-                                type   : 'length[6]',
-                                prompt : 'Your password must be at least 6 characters'
+                                type : 'minLength[6]',
+                                prompt : 'password must be at least 6 characters'
+                            }
+                        ]
+                    },
+                    confirmpassword: {
+                        identifier  : 'confirmpassword',
+                        rules: [
+                            {
+                                type   : 'match[password]',
+                                prompt : 'Password and Confirm Password don’t match'
                             }
                         ]
                     }
@@ -42,20 +61,15 @@ LaaS.module('Register', function(Register, LaaS, Backbone, Marionette) {
             $('#header').hide();
             $('body').css('background-image','url(images/login.jpg)');
         },
-        ui:{
-            submitBtn:'.teal.button'
-        },
-
         events:{
-            'click @ui.submitBtn' : 'validateForm',
-            'click #register': 'register',
+            'click #register': 'validateForm',
             'click #cancel': 'cancelRegister'
         },
         register : function(){
+            var $form = $('.ui.form');
+            var user = $form.form('get values');
             var model = new RegisterModel();
-            var json = this;
-            json = Backbone.Syphon.serialize(json);
-            model.save(json, {patch: true, success: function (option) {
+            model.save(user, {patch: true, success: function (option) {
                 toastr.info('User '+ option.attributes.name+' register successfully.');
                 LaaS.navigate('/regDone',true);
             }, error: function (option) {
@@ -69,22 +83,7 @@ LaaS.module('Register', function(Register, LaaS, Backbone, Marionette) {
         },
         validateForm : function(event){
             if($('.ui.form').form('validate form')){
-                var user = $('.ui.form').form('get values');
-                $.ajax({
-                    type: "POST",
-                    url: appContext+"/controllers/login",
-                    data: JSON.stringify(user),
-                    success: function(data){
-                        sessionStorage.setItem("uid",data.id);
-                        sessionStorage.setItem("username",data.name);
-                        sessionStorage.setItem("role",data.role.name);
-                        LaaS.scheduleTask(LaaS.Inbox.queryTask);
-                        LaaS.TaskQueue.push(LaaS.Inbox.queryTask);
-                        LaaS.navigate('/home',true);
-                    },
-                    dataType: "json",
-                    contentType: "application/json"
-                });
+                this.register();
             }
         }
     });
