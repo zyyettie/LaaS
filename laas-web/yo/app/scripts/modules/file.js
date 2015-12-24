@@ -270,7 +270,9 @@ LaaS.module('File', function (File, LaaS, Backbone, Marionette) {
         },
         deleteMyFiles: function () {
             if(this.selectFiles.length == 0){
-                toastr.error('Please select files that you want to delete');
+                var errors = [];
+                errors.push('Please select files that you want to delete');
+                LaaS.Util.showErrors(errors);
                 return;
             }
             $.ajax({

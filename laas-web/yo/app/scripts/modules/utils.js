@@ -17,22 +17,23 @@ LaaS.module('Util', function (Util, LaaS, Backbone, Marionette) {
         return number.toLocaleString() + " KB";
     };
 
-    Util.addErrors = function (errors, error) {
-
-    }
-
     Util.showErrors = function (errors) {
         var errorStr = '';
         for (var i = 0; i < errors.length; i++) {
             errorStr += '<li>' + errors[i] + '</li>'
         }
-        $('#errors').html(errorStr);
-        $('#errors').show();
 
-        if(errors.length > 0){
+        if (errors.length > 0) {
+            $('#errors').html(errorStr);
+            $('#errors').show();
             return true;
-        }else{
+        } else {
             return false;
         }
+    }
+
+    Util.showError = function (error) {
+        $('#errors').html(error);
+        $('#errors').show();
     }
 });

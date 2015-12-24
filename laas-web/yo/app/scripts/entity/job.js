@@ -50,6 +50,16 @@ LaaS.module('Entities', function(Entities, LaaS, Backbone, Marionette) {
         return jobs.promise();
     });
 
+    LaaS.reqres.setHandler('job:findByName', function(options) {
+        var url = baseUrl + "/search/findByName?name=" + options.name;
+        var jobs = $.Deferred();
+        $.getJSON(url).done(function(data) {
+            var list = data._embedded ? data._embedded.jobs : [];
+            jobs.resolve(list);
+        });
+        return jobs.promise();
+    });
+
     LaaS.reqres.setHandler('job:entitiesByUrl', function(options) {
         var options = options || {url:baseUrl};
         var url = options.url || baseUrl;

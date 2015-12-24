@@ -14,4 +14,7 @@ import java.util.List;
 public interface IJobRepository  extends JpaRepository<Job, Long> {
     @Query("SELECT j FROM Job j WHERE j.createdBy.name = :userName order by j.createdDate desc")
     public Page<Job> findJobsOwnedBy(@Param("userName")String userName, Pageable pageable);
+
+    @Query
+    public Job findByName(@Param("name")String name);
 }
