@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<!DOCTYPE digester-rules PUBLIC
+        "-//Apache Commons //DTD digester-rules XML V1.0//EN"
+        "digester-rules.dtd">
+<digester-rules>
+    <pattern value="web-app">

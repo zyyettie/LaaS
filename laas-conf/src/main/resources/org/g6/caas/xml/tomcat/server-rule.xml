@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+        <!DOCTYPE digester-rules PUBLIC
+                "-//Apache Commons //DTD digester-rules XML V1.0//EN"
+                "digester-rules.dtd">
+<digester-rules>
+<pattern value="Server">
+    <object-create-rule classname="org.g6.caas.xml.tomcat.Server"/>
+    <set-properties-rule>
+        <alias attr-name="port" prop-name="port"/>
+        <alias attr-name="shutdown" prop-name="shutDown"/>
+        <alias attr-name="address" prop-name="address"/>
+        <alias attr-name="className" prop-name="className"/>
+    </set-properties-rule>
+
+</pattern>
+</digester-rules>
