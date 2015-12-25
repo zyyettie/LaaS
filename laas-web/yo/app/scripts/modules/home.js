@@ -20,6 +20,9 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
             this.$('.dropdown .menu .item').on('click',function(e){
                 LaaS.navigate($(this).attr('href'), true);
             });
+//            this.$('#mailtous').click(function(){
+//                alert('email to:');
+//            });
             this.$('#homepage').click(function(){
                 LaaS.navigate('/home',true);
             });
