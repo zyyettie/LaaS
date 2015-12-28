@@ -36,6 +36,6 @@ public class FileController {
             quotaRep.save(quota);
         }
 
-        return new ResponseEntity("{\"SUCCESS\":TRUE}", HttpStatus.OK);
+        return new ResponseEntity("{}", HttpStatus.OK);
     }
 }

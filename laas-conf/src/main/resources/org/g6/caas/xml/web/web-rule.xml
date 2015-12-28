@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<!DOCTYPE digester-rules PUBLIC
+        "-//Apache Commons //DTD digester-rules XML V1.0//EN"
+        "digester-rules.dtd">
+<digester-rules>
+    <pattern value="web-app">
+        <object-create-rule classname="org.g6.caas.xml.web.WebApp"/>
+        <set-properties-rule>
+            <alias attr-name="version" prop-name="version"/>
+            <alias attr-name="metadata-complete" prop-name="metadataComplete"/>
+            <alias attr-name="xmlns" prop-name="xmlns"/>
+            <alias attr-name="xmlns:xsi" prop-name="xmlns_xsi"/>
+            <alias attr-name="xsi:schemaLocation" prop-name="xsi_schemaLocation"/>
+        </set-properties-rule>
+
+        <bean-property-setter-rule pattern="display-name" propertyname="displayName"/>
+        <bean-property-setter-rule pattern="description" propertyname="description"/>
+
+        <pattern value="context-param">
+            <object-create-rule classname="org.g6.caas.xml.web.ContextParam"/>
+            <bean-property-setter-rule pattern="param-name" propertyname="name"/>
+            <bean-property-setter-rule pattern="param-value" propertyname="value"/>
+            <set-next-rule methodname="addContextParam"/>
+        </pattern>
+
+        <pattern value="filter">
+            <object-create-rule classname="org.g6.caas.xml.web.Filter"/>
+            <bean-property-setter-rule pattern="icon" propertyname="icon"/>
+            <bean-property-setter-rule pattern="display-name" propertyname="displayName"/>
+            <bean-property-setter-rule pattern="filter-name" propertyname="name"/>
+            <bean-property-setter-rule pattern="filter-class" propertyname="filterClass"/>
+
+            <pattern value="init-param">
+                <object-create-rule classname="org.g6.caas.xml.web.InitParam"/>
+                <bean-property-setter-rule pattern="param-name" propertyname="name"/>
+                <bean-property-setter-rule pattern="param-value" propertyname="value"/>
+                <set-next-rule methodname="addInitParam"/>
+            </pattern>
+
+            <set-next-rule methodname="addFilter"/>
+        </pattern>
+
+        <pattern value="filter-mapping">
+            <object-create-rule classname="org.g6.caas.xml.web.FilterMapping"/>
+            <bean-property-setter-rule pattern="filter-name" propertyname="name"/>
+            <pattern value="url-pattern">
+                <object-create-rule classname="org.g6.caas.xml.web.UrlPattern"/>
+                <bean-property-setter-rule propertyname="value"/>
+                <set-next-rule methodname="addUrlPattern"/>
+            </pattern>
+            <set-next-rule methodname="addFilterMapping"/>
+        </pattern>
+
+        <pattern value="listener">
+            <object-create-rule classname="org.g6.caas.xml.web.Listener"/>
+            <bean-property-setter-rule pattern="listener-class" propertyname="listenerClass"/>
+            <set-next-rule methodname="addListener"/>
+        </pattern>
+
+        <pattern value="servlet">
+            <object-create-rule classname="org.g6.caas.xml.web.Servlet"/>
+            <bean-property-setter-rule pattern="icon" propertyname="icon"/>
+            <bean-property-setter-rule pattern="display-name" propertyname="displayName"/>
+            <bean-property-setter-rule pattern="servlet-name" propertyname="name"/>
+            <bean-property-setter-rule pattern="servlet-class" propertyname="servletClass"/>
+            <bean-property-setter-rule pattern="jsp-file" propertyname="jspFile"/>
+            <bean-property-setter-rule pattern="load-on-startup" propertyname="loadOnStartup"/>
+
+            <pattern value="init-param">
+                <object-create-rule classname="org.g6.caas.xml.web.InitParam"/>
+                <bean-property-setter-rule pattern="param-name" propertyname="name"/>
+                <bean-property-setter-rule pattern="param-value" propertyname="value"/>
+                <set-next-rule methodname="addInitParam"/>
+            </pattern>
+
+            <set-next-rule methodname="addServlet"/>
+        </pattern>
+
+        <pattern value="servlet-mapping">
+            <object-create-rule classname="org.g6.caas.xml.web.ServletMapping"/>
+            <bean-property-setter-rule pattern="servlet-name" propertyname="name"/>
+            <pattern value="url-pattern">
+                <object-create-rule classname="org.g6.caas.xml.web.UrlPattern"/>
+                <bean-property-setter-rule propertyname="value"/>
+                <set-next-rule methodname="addUrlPattern"/>
+            </pattern>
+            <set-next-rule methodname="addServletMapping"/>
+        </pattern>
+
+        <pattern value="session-config">
+            <object-create-rule classname="org.g6.caas.xml.web.SessionConfig"/>
+            <bean-property-setter-rule pattern="session-timeout" propertyname="timeout"/>
+            <set-next-rule methodname="setSessionConfig"/>
+        </pattern>
+
+        <pattern value="welcome-file-list">
+            <object-create-rule classname="org.g6.caas.xml.web.WelcomeFileList"/>
+            <pattern value="welcome-file">
+                <object-create-rule classname="org.g6.caas.xml.web.WelcomeFile"/>
+                <bean-property-setter-rule propertyname="value"/>
+                <set-next-rule methodname="addWelcomeFile"/>
+            </pattern>
+            <set-next-rule methodname="setWelcomeFileList"/>
+        </pattern>
+
+        <pattern value="error-page">
+            <object-create-rule classname="org.g6.caas.xml.web.ErrorPage"/>
+            <bean-property-setter-rule pattern="error-code" propertyname="code"/>
+            <bean-property-setter-rule pattern="exception-type" propertyname="exceptionType"/>
+            <bean-property-setter-rule pattern="location" propertyname="location"/>
+            <set-next-rule methodname="addErrorPage"/>
+        </pattern>
+
+        <pattern value="jsp-config">
+            <object-create-rule classname="org.g6.caas.xml.web.JspConfig"/>
+            <pattern value="taglib">
+                <object-create-rule classname="org.g6.caas.xml.web.Taglib"/>
+                <bean-property-setter-rule pattern="taglib-uri" propertyname="uri"/>
+                <bean-property-setter-rule pattern="taglib-location" propertyname="location"/>
+                <set-next-rule methodname="addTaglib"/>
+            </pattern>
+            <pattern value="jsp-property-group">
+                <object-create-rule classname="org.g6.caas.xml.web.JspPropertyGroup"/>
+                <bean-property-setter-rule pattern="el-ignored" propertyname="elIgnored"/>
+                <bean-property-setter-rule pattern="page-encoding" propertyname="pageEncoding"/>
+                <bean-property-setter-rule pattern="scripting-invalid" propertyname="scriptingInvalid"/>
+                <pattern value="url-pattern">
+                    <object-create-rule classname="org.g6.caas.xml.web.UrlPattern"/>
+                    <bean-property-setter-rule propertyname="value"/>
+                    <set-next-rule methodname="addUrlPattern"/>
+                </pattern>
+                <set-next-rule methodname="setJspPropertyGroup"/>
+            </pattern>
+
+            <set-next-rule methodname="setJspConfig"/>
+        </pattern>
+        <pattern value="env-entry">
+            <object-create-rule classname="org.g6.caas.xml.web.EnvEntry"/>
+            <bean-property-setter-rule pattern="env-entry-name" propertyname="name"/>
+            <bean-property-setter-rule pattern="env-entry-type" propertyname="type"/>
+            <bean-property-setter-rule pattern="env-entry-value" propertyname="value"/>
+            <bean-property-setter-rule pattern="description" propertyname="description"/>
+            <set-next-rule methodname="setEnvEntry"/>
+        </pattern>
+    </pattern>
+</digester-rules>
