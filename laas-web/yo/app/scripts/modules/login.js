@@ -4,6 +4,9 @@ LaaS.module('Login', function(Login, LaaS, Backbone, Marionette) {
     var LoginView = Login.LoginView = Marionette.ItemView.extend({
         template : JST['app/handlebars/login'],
         onRender:function(){
+            this.$el = this.$el.children();
+            this.$el.unwrap();
+            this.setElement(this.$el);
             this.$('.ui.form').form({
                 fields: {
                     username: {

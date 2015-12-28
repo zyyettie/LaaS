@@ -14,7 +14,7 @@ LaaS.module('Home', function (Home, LaaS, Backbone, Marionette) {
                 LaaS.cleanSessionStorage();
                 LaaS.stopTasks();
                 $.get('/laas-server/controllers/logout').always(function(){
-                    LaaS.navigate('/login',true);
+                    window.location.href = appContext + '/login';
                 });
             });
             this.$('.dropdown .menu .item').on('click',function(e){
