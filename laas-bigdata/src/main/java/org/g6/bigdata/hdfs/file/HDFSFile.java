@@ -1,6 +1,7 @@
-package org.g6.laas.core.file;
+package org.g6.bigdata.hdfs.file;
 
 import lombok.Data;
+import org.g6.laas.core.file.ILogFile;
 import org.g6.laas.core.file.validator.FileValidator;
 
 @Data
