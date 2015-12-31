@@ -17,9 +17,9 @@
                     .field
                         label Type
                         select.ui.dropdown(id="type", name="type")
-                            option(value="text") text
-                            option(value="dropdown") dropdown
-                            option(value="time") time
+                            |{{#each typeList}}
+                            <option id="{{type}}" value="{{type}}" {{selected}}>{{type}}</option>
+                            |{{/each}}
                     .field
                         label Default Value
                         input(type="text",name="defaultValue",placeholder="",value="{{defaultValue}}")

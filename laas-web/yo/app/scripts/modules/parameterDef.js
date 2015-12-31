@@ -13,6 +13,13 @@ LaaS.module('ParameterDef', function (ParameterDef, LaaS, Backbone, Marionette) 
             return html;
         },
         serializeData: function () {
+            var typeList = [{type:"text"}, {type:"dropdown"}, {type:"time"}];
+            for (var i=0; i<typeList.length; i++ ) {
+                if (typeList[i].type == this.inputParameterDef.type) {
+                    typeList[i].selected = "selected";
+                }
+            }
+            this.inputParameterDef.typeList = typeList;
             return {inputParameterDef: this.inputParameterDef};
         },
         onRender: function() {
