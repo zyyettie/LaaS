@@ -7,7 +7,10 @@ import org.g6.laas.server.database.entity.LaaSAuditable;
 import org.g6.laas.server.database.entity.user.User;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -22,6 +25,9 @@ public class InputParameterDef extends LaaSAuditable<User> {
 
     @ManyToOne
     private Task task;
+
+    @ManyToMany(mappedBy="inputParameterDefs")
+    private List<Scenario> scenarios = new ArrayList<>();
 
     // Display information of UI
     private String displayInfo;

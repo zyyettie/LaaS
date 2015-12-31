@@ -1,0 +1,18 @@
+table.ui.compact.celled.definition.table
+    thead.full-width
+        tr
+            th.one.wide
+            th.seven.wide
+                |Name
+            th
+                |Description
+
+    tbody
+        |{{#each scenarios}}
+        tr(id="scenarioitem_{{id}}")
+            td(style="text-align:center")
+            td
+                |{{name}}
+            td
+                |{{description}}
+        |{{/each}}

@@ -6,6 +6,7 @@ LaaS.module('ParameterDef', function (ParameterDef, LaaS, Backbone, Marionette) 
         initialize: function (options) {
             this.inputParameterDef = options.inputParameterDef;
             this.tasks = options.tasks;
+            this.scenarios = options.scenarios;
         },
         template: function (data) {
             var template = JST['app/handlebars/inputParameterDef/detail'];
@@ -23,6 +24,8 @@ LaaS.module('ParameterDef', function (ParameterDef, LaaS, Backbone, Marionette) 
             return {inputParameterDef: this.inputParameterDef};
         },
         onRender: function() {
+            var that = this;
+
             this.$('select').dropdown();
 
             if (this.tasks && this.tasks.length > 0 ) {
@@ -59,6 +62,41 @@ LaaS.module('ParameterDef', function (ParameterDef, LaaS, Backbone, Marionette) 
                     })
                 }
             }
+
+            if (this.scenarios && this.scenarios.length > 0 ) {
+                var size = 10;
+                var currentScenarios = [];
+                for (var i=0; i<size && i<this.scenarios.length; i++) {
+                    currentScenarios.push(this.scenarios[i]);
+                }
+                var template = JST['app/handlebars/inputParameterDef/scenario'];
+                var subHtml = template({scenarios:currentScenarios});
+                this.$('#scenarios').html(subHtml);
+                var totalPages = Math.floor(this.scenarios.length / size) + 1;
+                if (totalPages > 1) {
+                    this.$('#paging').twbsPagination({
+                        totalPages: totalPages,
+                        startPage: 1,
+                        visiblePages: 6,
+                        first: '<<',
+                        prev: '<',
+                        next: '>',
+                        last: '>>',
+                        onPageClick: function (event, page) {
+                            var currentScenarios = [];
+                            for (var i=size*(page-1); i<size*page; i++) {
+                                if (!that.scenarios[i]) {
+                                    break;
+                                }
+                                currentScenarios.push(that.scenarios[i]);
+                            }
+                            var template = JST['app/handlebars/inputParameterDef/scenario'];
+                            var html = template({scenarios: currentScenarios});
+                            $('#scenarios').html(html);
+                        }
+                    })
+                }
+            }
         }
     });
 
@@ -87,8 +125,10 @@ LaaS.module('ParameterDef', function (ParameterDef, LaaS, Backbone, Marionette) 
         showInputParameterDef: function (id) {
             $.when(LaaS.request('inputParameterDef:entity', {'id': id})).done(function (data) {
                 if (data.attributes._links.task) {
-                    $.when(LaaS.request('task:entityByUrl', {url:data.attributes._links.task.href})).done(function(task) {
-                        var view = new InputParameterDefView({inputParameterDef:data.attributes, tasks:[task]});
+                    $.when(LaaS.request('task:entityByUrl', {url:data.attributes._links.task.href}),
+                        LaaS.request('scenario:entitiesByUrl', {url:data.attributes._links.scenarios.href}))
+                        .done(function(task, scenarios) {
+                        var view = new InputParameterDefView({inputParameterDef:data.attributes, tasks:[task], scenarios:scenarios.scenarios});
                         LaaS.mainRegion.show(view);
                     });
                 } else {
