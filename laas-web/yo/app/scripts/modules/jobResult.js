@@ -32,7 +32,6 @@ LaaS.module('JobResult', function(JobResult, LaaS, Backbone, Marionette) {
                 if(this.sync === true){
                     this.$('#content-placeholder').html(this.jobRunning.desc).text();
                     this.$('#tree').jstree();
-                    this.$('#context').html("<object>this is a testing inner html</object>");
                 }else{
                     this.$('#content-placeholder').html('<h2 class="ui header">Your job is running in the background, please check your inbox later</div>');
                 }
