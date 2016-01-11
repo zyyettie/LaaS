@@ -30,7 +30,7 @@ public class UserController {
         user.setRole(role);
 
         Quota quota = new Quota();
-        quota.setUsedSpace(524288000);
+        quota.setSpaceQuota(524288000);
         user.setQuota(quota);
 
         User u = userRepository.save(user);

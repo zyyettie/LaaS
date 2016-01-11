@@ -2,6 +2,7 @@ package org.g6.laas.sm.task;
 
 import org.g6.laas.core.field.DateTimeField;
 import org.g6.laas.core.field.IntegerField;
+import org.g6.laas.core.file.LogFile;
 import org.g6.laas.core.format.provider.DefaultInputFormatProvider;
 import org.g6.laas.core.log.line.Line;
 import org.g6.laas.core.log.result.SplitResult;
@@ -54,11 +55,11 @@ public class SMOMiPerformanceTask extends SMRTETask<Map<String,String>> {
         IntegerField fastestExecutionTimeField = (IntegerField) fastestRequestLine.get("execution_time");
 
         resultMap.put("slowestRequestTime",slowestExecutionTimeField.getValue().toString());
-        resultMap.put("slowestRequestLine",slowestRequestLine.getLine().getFile().getName());
+        resultMap.put("slowestRequestLine", ((LogFile) slowestRequestLine.getLine().getFile()).getOriginalName());
         resultMap.put("slowestRequestLineStr",slowestRequestLine.getLine().getContent());
 
         resultMap.put("fastestRequestTime",fastestExecutionTimeField.getValue().toString());
-        resultMap.put("fastestRequestLine",fastestRequestLine.getLine().getFile().getName());
+        resultMap.put("fastestRequestLine",((LogFile)fastestRequestLine.getLine().getFile()).getOriginalName());
         resultMap.put("fastestRequestLineStr",fastestRequestLine.getLine().getContent());
         return resultMap;
     }
