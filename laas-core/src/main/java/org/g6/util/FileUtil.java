@@ -1,22 +1,33 @@
 package org.g6.util;
 
-import com.google.common.io.Resources;
 import org.g6.laas.core.exception.LaaSCoreRuntimeException;
 import org.g6.laas.core.exception.LaaSExceptionHandler;
 
 import java.io.*;
 import java.net.URISyntaxException;
-import java.net.URL;
+import java.net.URLDecoder;
 import java.util.*;
 
 public class FileUtil {
     public final static String separator = File.separator;
 
+    public static String getJarCurrentPath() {
+        String jarURLPath;
+        try {
+            jarURLPath = URLDecoder.decode(FileUtil.class.getProtectionDomain().getCodeSource().getLocation().getFile(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new LaaSCoreRuntimeException("Error happens when getting the current jar path", e);
+        }
+
+        String path = new File(jarURLPath).getPath();
+        return path.endsWith(File.separator) ? path : path + File.separator;
+    }
+
     public static Map<String, String> getPropertyValues(String file) {
         Properties p = new Properties();
         Map<String, String> propMap = new HashMap();
         try {
-            p.load(new FileInputStream(getFile(file)));
+            p.load(FileUtil.class.getResourceAsStream(file));
             for (Map.Entry<Object, Object> entry : p.entrySet()) {
                 String key = (String) entry.getKey();
                 String value = (String) entry.getValue();
@@ -28,10 +39,10 @@ public class FileUtil {
         }
     }
 
-    public static String getvalue(String key, String file) {
+    public static String getValue(String key, String file) {
         Properties p = new Properties();
         try {
-            p.load(new FileInputStream(getFile(file)));
+            p.load(FileUtil.class.getResourceAsStream(file));
             for (Map.Entry<Object, Object> entry : p.entrySet()) {
                 if (key.equals(entry.getKey())) {
                     return (String) entry.getValue();
@@ -44,19 +55,15 @@ public class FileUtil {
     }
 
     /**
-     * @param file the format of this parameter should be package/file e.g. org/g6/laas/sm/sm_rte_log.json
+     * @param file the format of this parameter should be package/file e.g. /org/g6/laas/sm/sm_rte_log.json
      * @return
      * @throws URISyntaxException
      */
     public static File getFile(String file) {
-        URL url = Resources.getResource(file);
-        File result = null;
-        try {
-            result = new File(url.toURI());
-        } catch (URISyntaxException e) {
-            throw new LaaSCoreRuntimeException(file + " is not found.");
-        }
-        return result;
+        if(file.startsWith("/"))
+            file = file.substring(file.indexOf("/"));
+
+        return new File(getJarCurrentPath() + file);
     }
 
     /**

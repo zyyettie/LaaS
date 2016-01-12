@@ -26,7 +26,7 @@ public class FileFormatCache {
 
     @Cacheable("formatFiles")
     public String getFormatFile(String key) {
-        Map<String, String> propMap = FileUtil.getPropertyValues("input_format.properties");
+        Map<String, String> propMap = FileUtil.getPropertyValues("/input_format.properties");
         return propMap.get(key);
     }
 

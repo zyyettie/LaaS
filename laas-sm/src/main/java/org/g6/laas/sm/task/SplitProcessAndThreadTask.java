@@ -39,10 +39,10 @@ public class SplitProcessAndThreadTask extends SMRTETask<String> {
      */
     @Override
     protected String process() {
-        String tempRootPath = FileUtil.getvalue("zip_file_temp_path", "sm.properties");
+        String tempRootPath = FileUtil.getValue("zip_file_temp_path", "/server.properties");
         long fileNum = System.currentTimeMillis();
         String fileName = fileNum + ".zip";
-        String zipFile = FileUtil.getvalue("result_file_full_path", "sm.properties") + fileName;
+        String zipFile = FileUtil.getValue("result_file_full_path", "/server.properties") + fileName;
         FileUtil.deleteDir(tempRootPath);
         FileUtil.createDir(tempRootPath);
 

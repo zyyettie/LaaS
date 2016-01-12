@@ -106,7 +106,7 @@ public class FileUploadController {
         response.setContentType("multipart/form-data");
         response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 
-        String path = FileUtil.getvalue("result_file_full_path", "sm.properties");
+        String path = FileUtil.getValue("result_file_full_path", "/server.properties");
         try (InputStream inputStream = new FileInputStream(new File(path
                 + File.separator + fileName)); OutputStream os = response.getOutputStream();) {
 

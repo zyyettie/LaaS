@@ -98,7 +98,7 @@ public class JobService {
     }
 
     public FileInfo writeReportToFile(String report, String userName) {
-        String root = FileUtil.getvalue("result_file_full_path", "sm.properties");
+        String root = FileUtil.getValue("result_file_full_path", "/server.properties");
         String targetFilePath = root + FileUtil.separator +userName + FileUtil.separator;
         if(!FileUtil.isDir(targetFilePath)){
             FileUtil.createDir(targetFilePath);
