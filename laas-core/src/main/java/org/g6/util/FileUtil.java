@@ -11,18 +11,6 @@ import java.util.*;
 public class FileUtil {
     public final static String separator = File.separator;
 
-    public static String getJarCurrentPath() {
-        String jarURLPath;
-        try {
-            jarURLPath = URLDecoder.decode(FileUtil.class.getProtectionDomain().getCodeSource().getLocation().getFile(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new LaaSCoreRuntimeException("Error happens when getting the current jar path", e);
-        }
-
-        String path = new File(jarURLPath).getPath();
-        return path.endsWith(File.separator) ? path : path + File.separator;
-    }
-
     public static Map<String, String> getPropertyValues(String file) {
         Properties p = new Properties();
         Map<String, String> propMap = new HashMap();
@@ -55,15 +43,14 @@ public class FileUtil {
     }
 
     /**
-     * @param file the format of this parameter should be package/file e.g. /org/g6/laas/sm/sm_rte_log.json
+     * Get the InputStream of a file
+     * @param file  if the file starts with /, the JVM will look for it from the root of class path.
+     *              otherwise, starts looking from the package where the class is.
+     *              Normally always recommend starting with /
      * @return
-     * @throws URISyntaxException
      */
-    public static File getFile(String file) {
-        if(file.startsWith("/"))
-            file = file.substring(file.indexOf("/"));
-
-        return new File(getJarCurrentPath() + file);
+    public static InputStream getInputStreamOfFileInClassPath(String file){
+         return FileUtil.class.getResourceAsStream(file);
     }
 
     /**

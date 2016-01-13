@@ -1,43 +1,33 @@
 package org.g6.laas.core.format.cache;
 
-import com.google.common.io.Files;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.g6.laas.core.exception.LaaSCoreRuntimeException;
 import org.g6.laas.core.format.FieldFormat;
 import org.g6.laas.core.log.line.LineAttributes;
 import org.g6.util.Constants;
+import org.g6.util.FileUtil;
 import org.g6.util.JSONUtil;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 public class JSONFileFormatAnalyzer {
-    private File formatFile;
+    private InputStream is;
 
-    JSONFileFormatAnalyzer(File formatFile) {
-        this.formatFile = formatFile;
+    JSONFileFormatAnalyzer(InputStream is) {
+        this.is = is;
     }
 
     public List<LineAttributes> getFileFormatDataFromJsonFile() {
         List<LineAttributes> lineAttrList = new ArrayList<>();
-        List<String> lineList;
-        try {
-            lineList = Files.readLines(formatFile, Charset.defaultCharset());
-        } catch (IOException e) {
-            String errMsg = "format definition file read fail";
-            log.error(errMsg);
-            throw new LaaSCoreRuntimeException(errMsg, e);
-        }
+        List<String> lineList = FileUtil.readFile(is);
 
         String jsonStr = "";
         for (String str : lineList) {

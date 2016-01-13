@@ -19,7 +19,7 @@ public class FileFormatCache {
     @Cacheable("inputFormats")
     public List<LineAttributes> getFileFormat(String key) {
         String formatFile = getFormatFile(key);
-        JSONFileFormatAnalyzer analyzer = new JSONFileFormatAnalyzer(FileUtil.getFile(formatFile));
+        JSONFileFormatAnalyzer analyzer = new JSONFileFormatAnalyzer(FileUtil.getInputStreamOfFileInClassPath(formatFile));
 
         return analyzer.getFileFormatDataFromJsonFile();
     }
