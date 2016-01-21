@@ -25,9 +25,9 @@ import java.util.List;
 public class TopNTask {
 
     public static void main(String[] args){
-        JavaSparkContext sc = SparkUtil.getSparkContext("yarn");
+        JavaSparkContext sc = SparkUtil.getSparkContext(args[0]);
         JavaPairRDD<LongWritable, Text> javaPairRDD = sc.newAPIHadoopFile(
-                "hdfs://path/*.csv",
+                args[1],
                 TextInputFormat.class,
                 LongWritable.class,
                 Text.class,
@@ -81,6 +81,7 @@ public class TopNTask {
         List<LogLine> lineList = words.collect();
 
         Collections.sort(lineList);
+
         int count = 0;
         for(LogLine line : lineList){
             System.out.println(line.getContent());
