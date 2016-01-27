@@ -1,6 +1,8 @@
 package org.g6.laas.core.field;
 
-public interface Field<T> extends Comparable<Field> {
+import java.io.Serializable;
+
+public interface Field<T> extends Serializable, Comparable<Field> {
 
     String getContent();
 

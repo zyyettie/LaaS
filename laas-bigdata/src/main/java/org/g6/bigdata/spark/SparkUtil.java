@@ -28,8 +28,17 @@ public class SparkUtil {
         return new JavaSparkContext(conf);
     }
 
+    public static JavaSparkContext getSparkContext() {
+        SparkConf conf = new SparkConf().setAppName("LaaS - Log as a Service");
+        return new JavaSparkContext(conf);
+    }
+
     public static JavaSparkContext getSparkContext(String master) {
         SparkConf conf = new SparkConf().setAppName("").setMaster(master);
         return new JavaSparkContext(conf);
+    }
+
+    public static JavaSparkContext getSparkContext(String master, String appName, String sparkHome, String[] jarFile){
+        return  new JavaSparkContext(master, appName, sparkHome, jarFile);
     }
 }

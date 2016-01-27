@@ -2,6 +2,7 @@ package org.g6.bigdata.hdfs;
 
 import lombok.Data;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IOUtils;
@@ -13,11 +14,27 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.util.List;
 
 @Data
 public class HDFSUtil {
     private String serverUri;
     private Configuration conf = new Configuration();
+
+    public void put(List<String> lines, String remote) {
+        Path path = new Path(remote);
+        Configuration conf = new Configuration();
+
+        try (FileSystem fs = path.getFileSystem(conf);
+                            FSDataOutputStream output = fs.create(path);) {
+            for (String line : lines) {
+                output.write(line.getBytes("UTF-8"));
+                output.flush();
+            }
+        } catch (IOException e) {
+            throw new BigDataRuntimeException("Errors happen while putting strings to " + remote, e);
+        }
+    }
 
     /**
      * Upload local file to Hadoop HDFS system
@@ -42,8 +59,8 @@ public class HDFSUtil {
     /**
      * upload a file from stream to HDFS system
      *
-     * @param inStream  the stream of a file
-     * @param remote    remote file in HDFS system
+     * @param inStream the stream of a file
+     * @param remote   remote file in HDFS system
      */
     public void put(InputStream inStream, String remote) {
         try (FileSystem fs = FileSystem.get(URI.create(serverUri), this.conf);
@@ -89,7 +106,7 @@ public class HDFSUtil {
      */
     public void del(final String remote) {
         Path dstPath = new Path(remote);
-        try (FileSystem fs = FileSystem.get(URI.create(serverUri), this.conf)){
+        try (FileSystem fs = FileSystem.get(URI.create(serverUri), this.conf)) {
             if (fs.exists(dstPath)) {
                 fs.delete(dstPath, true);
             } else {

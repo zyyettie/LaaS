@@ -1,94 +1,90 @@
 package org.g6.bigdata.Task.spark;
 
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.InputSplit;
-import org.apache.hadoop.mapreduce.lib.input.FileSplit;
-import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
-import org.apache.spark.api.java.JavaNewHadoopRDD;
-import org.apache.spark.api.java.JavaPairRDD;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.FlatMapFunction;
-import org.apache.spark.api.java.function.Function2;
+import org.apache.spark.api.java.function.Function;
+import org.g6.bigdata.hdfs.HDFSUtil;
 import org.g6.bigdata.log.LogLine;
 import org.g6.bigdata.spark.SparkUtil;
+import org.g6.laas.core.field.DoubleField;
+import org.g6.laas.core.field.Field;
 import org.g6.util.RegexUtil;
-import scala.Tuple2;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is the task used for TopN based on SM RTE log files.
+ * After this class is compiled and is packaged in a jar file,
+ * the jar must be uploaded in Spark environment. After that, execute the command like this:
+ * ./spark-submit --master yarn-client --class org.g6.bigdata.Task.spark.TopNTask \
+ * --jars $(echo /home/johnson/share/*.jar | tr ' ' ',') \
+ * /home/johnson/share/laas-bigdata-1.0.jar \
+ * /laas/sm_dbquery.log.1 \
+ * hdfs://localhost:9000/laas/topN_result.log
+ * <p/>
+ * Note:
+ * 1. jars is used to specify all the dependency jars.
+ * 2. --master get the description of all the values about this parameter in SparkUtil class.
+ * 3. if --jars and --master have not to be specified in command line, refer to getSparkContext in SparkUtil
+ */
+@Slf4j
 public class TopNTask {
 
-    public static void main(String[] args){
-        JavaSparkContext sc = SparkUtil.getSparkContext(args[0]);
-        JavaPairRDD<LongWritable, Text> javaPairRDD = sc.newAPIHadoopFile(
-                args[1],
-                TextInputFormat.class,
-                LongWritable.class,
-                Text.class,
-                new Configuration()
-        );
-        JavaNewHadoopRDD<LongWritable, Text> hadoopRDD = (JavaNewHadoopRDD) javaPairRDD;
+    public static void main(String[] args) {
+        if (args.length < 2) {
+            log.error("There must be two elements in args, existing.............");
+            System.exit(0);
+        } else {
+            log.info("the first arg is: " + args[0] + " and the second arg is: " + args[1]);
+        }
 
-        JavaRDD<LogLine> lines = hadoopRDD.mapPartitionsWithInputSplit(
-                new Function2<InputSplit, Iterator<Tuple2<LongWritable, Text>>, Iterator<LogLine>>() {
-                    @Override
-                    public Iterator<LogLine> call(InputSplit inputSplit, final Iterator<Tuple2<LongWritable, Text>> lines) throws Exception {
-                        FileSplit fileSplit = (FileSplit) inputSplit;
-                        final String fileName = fileSplit.getPath().getName();
-                        return new Iterator<LogLine>() {
-                            @Override
-                            public boolean hasNext() {
-                                return lines.hasNext();
-                            }
-                            @Override
-                            public LogLine next() {
-                                Tuple2<LongWritable, Text> entry = lines.next();
-                                return new LogLine(entry._2().toString(), fileName);
-                            }
+        JavaSparkContext sc = SparkUtil.getSparkContext();
+        JavaRDD<String> lines = sc.textFile(args[0]);
 
-                            @Override
-                            public void remove() {
-                                  //do nothing
-                            }
-                        };
-                    }
-                },
-                true
-        );
+        log.info("Start doing RDD transformation");
 
-        JavaRDD<LogLine> words = lines.flatMap(new FlatMapFunction<LogLine, LogLine>() {
+        JavaRDD<LogLine> filterRDD = lines.flatMap(new FlatMapFunction<String, LogLine>() {
             @Override
-            public Iterable<LogLine> call(LogLine line) {
-                String content = line.getContent();
+            public Iterable<LogLine> call(String lineContent) throws Exception {
                 String pattern = "^\\s*(\\d+)\\(\\s+(\\d+)\\)\\s+(\\d+/\\d+/\\d+\\s+\\d+:\\d+:\\d+)\\s+RTE D DBQUERY(?:\\^[^\\^]+){6}\\^(\\d+\\.\\d+)";
+                String[] values = RegexUtil.getValues(lineContent, pattern);
+                List<LogLine> lineList = new ArrayList();
 
-                String[] values = RegexUtil.getValues(content, pattern);
-
-                if(values != null) {
-                    line.setSortValue(Double.parseDouble(values[3]));
-                    return Arrays.asList(line);
+                if (values != null) {
+                    Field field = new DoubleField(values[3]);
+                    LogLine line = new LogLine(lineContent, field);
+                    lineList.add(line);
                 }
-                return null;
+                return lineList;
             }
         });
 
-        List<LogLine> lineList = words.collect();
+        // false : descending, true : ascending
+        JavaRDD<LogLine> sortRDD = filterRDD.sortBy(new Function<LogLine, Double>() {
+            @Override
+            public Double call(LogLine logLine) throws Exception {
+                DoubleField df = (DoubleField) logLine.getSortedField();
+                return df.getValue();
+            }
+        }, false, 1);
 
-        Collections.sort(lineList);
+        List<LogLine> lineList = sortRDD.top(50);
 
-        int count = 0;
-        for(LogLine line : lineList){
-            System.out.println(line.getContent());
-            count ++;
-            if (count > 50)
-                break;
+        if (lineList != null) {
+            log.info("the record size is:" + lineList.size());
         }
+
+        new HDFSUtil().put(convert(lineList), args[1]);
     }
 
+    private static List<String> convert(List<LogLine> lines) {
+        List<String> list = new ArrayList();
+        for (LogLine line : lines) {
+            list.add(line.getContent() + "\r\n");
+        }
+        return list;
+    }
 }
